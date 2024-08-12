@@ -68,7 +68,15 @@ describe('getDraftResponse', () => {
           status: 'NotStarted',
         },
         carrier: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
         },
         declaration: {
           status: 'NotStarted',
@@ -147,6 +155,10 @@ describe('getDraftResponse', () => {
               email: 'contact2@example.com',
               phone: '0987654321',
             },
+            sicCodes: {
+              status: 'Complete',
+              values: ['SIC1', 'SIC2'],
+            },
           },
           wasteCollection: {
             wasteSource: {
@@ -168,19 +180,22 @@ describe('getDraftResponse', () => {
           },
         },
         carrier: {
-          status: 'Complete',
-          value: {
-            contact: {
-              organisationName: 'Organisation2',
-              name: 'Contact2',
-              email: 'contact2@example.com',
-              phone: '0987654321',
-            },
-            address: {
-              addressLine1: 'Address Line 2',
-              townCity: 'City2',
-              country: 'Country2',
-            },
+          contact: {
+            status: 'Complete',
+            organisationName: 'Organisation2',
+            name: 'Contact2',
+            email: 'contact2@example.com',
+            phone: '0987654321',
+          },
+          address: {
+            status: 'Complete',
+            addressLine1: 'Address Line 2',
+            townCity: 'City2',
+            country: 'Country2',
+          },
+          modeOfTransport: {
+            status: 'Complete',
+            value: 'Road',
           },
         },
         declaration: {
@@ -196,6 +211,7 @@ describe('getDraftResponse', () => {
         },
       },
     };
+
     expect(validate(value)).toBe(true);
   });
 });

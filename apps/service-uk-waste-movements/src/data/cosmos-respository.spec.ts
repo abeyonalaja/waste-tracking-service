@@ -233,19 +233,18 @@ describe(CosmosRepository, () => {
           },
         },
         carrier: {
-          status: 'Complete',
-          value: {
-            contact: {
-              organisationName: 'Organisation2',
-              name: 'Contact2',
-              email: 'contact2@example.com',
-              phone: '0987654321',
-            },
-            address: {
-              addressLine1: 'Address Line 2',
-              townCity: 'City2',
-              country: 'Country2',
-            },
+          contact: {
+            status: 'Complete',
+            organisationName: 'Organisation2',
+            name: 'Contact2',
+            email: 'contact2@example.com',
+            phone: '0987654321',
+          },
+          address: {
+            status: 'Complete',
+            addressLine1: 'Address Line 2',
+            townCity: 'City2',
+            country: 'Country2',
           },
         },
         declaration: {
@@ -360,19 +359,18 @@ describe(CosmosRepository, () => {
           },
         },
         carrier: {
-          status: 'Complete',
-          value: {
-            contact: {
-              organisationName: 'Organisation2',
-              name: 'Contact2',
-              email: 'contact2@example.com',
-              phone: '0987654321',
-            },
-            address: {
-              addressLine1: 'Address Line 2',
-              townCity: 'City2',
-              country: 'Country2',
-            },
+          contact: {
+            status: 'Complete',
+            organisationName: 'Organisation2',
+            name: 'Contact2',
+            email: 'contact2@example.com',
+            phone: '0987654321',
+          },
+          address: {
+            status: 'Complete',
+            addressLine1: 'Address Line 2',
+            townCity: 'City2',
+            country: 'Country2',
           },
         },
         declaration: {

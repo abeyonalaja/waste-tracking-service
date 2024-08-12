@@ -8,6 +8,12 @@ export type UkwmPhysicalForm =
 
 export type UkwmQuantityUnit = 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre';
 export type UkwmWasteQuantityType = 'EstimateData' | 'ActualData';
+export type UkwmWasteTransport =
+  | 'Road'
+  | 'Rail'
+  | 'Sea'
+  | 'Air'
+  | 'InlandWaterways';
 
 export interface UkwmAccountIdRequest {
   accountId: string;
@@ -15,11 +21,6 @@ export interface UkwmAccountIdRequest {
 export interface UkwmIdRequest {
   id: string;
 }
-
-export type UkwmDraftContact =
-  | { status: 'NotStarted' }
-  | ({ status: 'Started' } & Partial<UkwmContact>)
-  | ({ status: 'Complete' } & UkwmContact);
 
 export interface UkwmAddress {
   buildingNameOrNumber?: string;
@@ -170,21 +171,30 @@ export type UkwmDraftReceiverDetail =
       value: UkwmReceiverDetail;
     };
 
-type DraftAddress =
+export type UkwmDraftAddress =
   | { status: 'NotStarted' }
   | ({ status: 'Started' } & Partial<UkwmAddress>)
   | ({ status: 'Complete' } & UkwmAddress);
 
-type DraftContact =
+export type UkwmDraftContact =
   | { status: 'NotStarted' }
   | ({ status: 'Started' } & Partial<UkwmContact>)
   | ({ status: 'Complete' } & UkwmContact);
 
+export interface UkwmDraftSicCodes {
+  status: 'NotStarted' | 'Complete';
+  values: string[];
+}
+
+export type UkwmDraftModeOfTransport =
+  | { status: 'NotStarted' }
+  | ({ status: 'Complete' } & { value: UkwmWasteTransport });
+
 export interface UkwmDraftProducer {
   reference: string;
-  sicCode?: string;
-  contact: DraftContact;
-  address: DraftAddress;
+  sicCodes: UkwmDraftSicCodes;
+  contact: UkwmDraftContact;
+  address: UkwmDraftAddress;
 }
 
 export type UkwmDraftWasteSource =
@@ -197,7 +207,7 @@ export interface UkwmDraftWasteCollection {
   carrierRegistrationNumber?: string;
   localAuthority?: string;
   expectedWasteCollectionDate?: UkwmExpectedWasteCollectionDate;
-  address: DraftAddress;
+  address: UkwmDraftAddress;
 }
 
 export type UkwmProducerAndWasteCollectionDetail =
@@ -240,34 +250,28 @@ export interface UkwmDraft {
   wasteInformation: UkwmWasteInformation;
   receiver: UkwmDraftReceiverDetail;
   producerAndCollection: UkwmProducerAndWasteCollectionDetail;
-  carrier: UkwmDraftCarrierDetail;
+  carrier: UkwmDraftCarrier;
   declaration: UkwmDraftSubmissionDeclaration;
   state: UkwmSubmissionState;
 }
 
-export type UkwmDraftCarrierDetail =
-  | { status: 'NotStarted' }
-  | {
-      status: 'Complete';
-      value: UkwmCarrierDetail;
-    };
+export interface UkwmDraftCarrier {
+  contact: UkwmDraftContact;
+  address: UkwmDraftAddress;
+  modeOfTransport: UkwmDraftModeOfTransport;
+}
 
 export type GetUkwmSubmissionResponse = UkwmDraft;
 
 export type UkwmCreateDraftRequest = Pick<UkwmDraftProducer, 'reference'>;
 export type UkwmCreateDraftResponse = UkwmDraft;
 
-export type UkwmGetDraftProducerAddressDetailsResponse = DraftAddress;
+export type UkwmGetDraftProducerAddressDetailsResponse = UkwmDraftAddress;
 
 export type UkwmSetDraftProducerAddressDetailsRequest = UkwmAddress;
 
-export type UkwmDraftAddress =
-  | { status: 'NotStarted' }
-  | ({ status: 'Started' } & Partial<UkwmAddress>)
-  | ({ status: 'Complete' } & UkwmAddress);
-
 export type UkwmGetDraftProducerContactDetailResponse =
-  | DraftContact
+  | UkwmDraftContact
   | undefined;
 
 export type UkwmSetDraftProducerContactDetailRequest = UkwmContact;

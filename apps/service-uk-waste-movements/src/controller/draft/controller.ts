@@ -469,7 +469,15 @@ export default class SubmissionController {
           status: 'Complete',
           producer: {
             reference: s.producer.reference,
-            sicCode: s.producer.sicCode,
+            sicCodes: s.producer.sicCode
+              ? {
+                  status: 'Complete',
+                  values: [s.producer.sicCode],
+                }
+              : {
+                  status: 'NotStarted',
+                  values: [],
+                },
             address: {
               status: 'Complete',
               ...s.producer.address,
@@ -503,9 +511,18 @@ export default class SubmissionController {
           value: s.receiver,
         };
 
-        const draftCarrier: api.DraftCarrierDetail = {
-          status: 'Complete',
-          value: s.carrier,
+        const draftCarrier: api.DraftCarrier = {
+          address: {
+            status: 'Complete',
+            ...s.carrier.address,
+          },
+          contact: {
+            status: 'Complete',
+            ...s.carrier.contact,
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
         };
 
         const draftDeclaration: api.DraftDeclaration = {
@@ -611,7 +628,10 @@ export default class SubmissionController {
               address: {
                 status: 'NotStarted',
               },
-              sicCode: '',
+              sicCodes: {
+                status: 'NotStarted',
+                values: [],
+              },
               reference: request.reference,
             },
             wasteCollection: {
@@ -624,7 +644,15 @@ export default class SubmissionController {
             },
           },
           carrier: {
-            status: 'NotStarted',
+            address: {
+              status: 'NotStarted',
+            },
+            contact: {
+              status: 'NotStarted',
+            },
+            modeOfTransport: {
+              status: 'NotStarted',
+            },
           },
           receiver: {
             status: 'NotStarted',

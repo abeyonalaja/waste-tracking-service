@@ -361,7 +361,7 @@ export type DraftReceiverDetail =
       value: ReceiverDetail;
     };
 
-type DraftAddress =
+export type DraftAddress =
   | { status: 'NotStarted' }
   | ({ status: 'Started' } & Partial<Address>)
   | ({ status: 'Complete' } & Address);
@@ -375,9 +375,18 @@ export type DraftWasteSource =
   | { status: 'NotStarted' }
   | ({ status: 'Complete' } & { value: string });
 
+export interface DraftSicCodes {
+  status: 'NotStarted' | 'Complete';
+  values: string[];
+}
+
+export type DraftModeOfTransport =
+  | { status: 'NotStarted' }
+  | ({ status: 'Complete' } & { value: WasteTransport });
+
 export interface DraftProducer {
   reference: string;
-  sicCode?: string;
+  sicCodes: DraftSicCodes;
   contact: DraftContact;
   address: DraftAddress;
 }
@@ -418,12 +427,11 @@ export type DraftDeclaration =
       value: Declaration;
     };
 
-export type DraftCarrierDetail =
-  | { status: 'NotStarted' }
-  | {
-      status: 'Complete';
-      value: CarrierDetail;
-    };
+export interface DraftCarrier {
+  contact: DraftContact;
+  address: DraftAddress;
+  modeOfTransport: DraftModeOfTransport;
+}
 
 export type DraftStateStatus =
   | 'InProgress'
@@ -441,7 +449,7 @@ export interface Draft {
   wasteInformation: WasteInformation;
   receiver: DraftReceiverDetail;
   producerAndCollection: ProducerAndWasteCollectionDetail;
-  carrier: DraftCarrierDetail;
+  carrier: DraftCarrier;
   declaration: DraftDeclaration;
   state: DraftState;
 }

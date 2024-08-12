@@ -1705,20 +1705,23 @@ export const db: DB = {
         },
       },
       carrier: {
-        status: 'Complete',
-        value: {
-          contact: {
-            organisationName: 'Carrier Producer Inc.',
-            name: 'Jane Doe',
-            email: 'janedoe@example.com',
-            phone: '+1234567890',
-          },
-          address: {
-            addressLine1: '456 Avenue',
-            townCity: 'Pleven',
-            postcode: '5800',
-            country: 'Bulgaria',
-          },
+        contact: {
+          status: 'Complete',
+          organisationName: 'Carrier Producer Inc.',
+          name: 'Jane Doe',
+          email: 'janedoe@example.com',
+          phone: '+1234567890',
+        },
+        address: {
+          status: 'Complete',
+          addressLine1: '456 Avenue',
+          townCity: 'Pleven',
+          postcode: '5800',
+          country: 'Bulgaria',
+        },
+        modeOfTransport: {
+          status: 'Complete',
+          value: 'Road',
         },
       },
       receiver: {
@@ -1744,7 +1747,10 @@ export const db: DB = {
         status: 'Complete',
         producer: {
           reference: 'REF123',
-          sicCode: 'SIC5678',
+          sicCodes: {
+            status: 'Complete',
+            values: ['SIC5678'],
+          },
           contact: {
             status: 'Complete',
             organisationName: 'Waste Producer Inc.',

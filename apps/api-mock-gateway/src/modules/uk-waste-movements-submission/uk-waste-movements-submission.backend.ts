@@ -238,7 +238,10 @@ export function createDraft(
         address: {
           status: 'NotStarted',
         },
-        sicCode: '',
+        sicCodes: {
+          status: 'NotStarted',
+          values: [],
+        },
         reference: reference,
       },
       wasteCollection: {
@@ -251,7 +254,15 @@ export function createDraft(
       },
     },
     carrier: {
-      status: 'NotStarted',
+      address: {
+        status: 'NotStarted',
+      },
+      contact: {
+        status: 'NotStarted',
+      },
+      modeOfTransport: {
+        status: 'NotStarted',
+      },
     },
     declaration: {
       status: 'CannotStart',

@@ -9,7 +9,7 @@ export type {
   ProducerAndWasteCollectionDetail,
   GetDraftRequest,
   GetDraftResponse,
-  DraftCarrierDetail,
+  DraftCarrier,
   GetDraftsRequest,
   GetDraftsResponse,
   GetDraftsResult,

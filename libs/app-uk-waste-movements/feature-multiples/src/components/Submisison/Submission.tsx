@@ -201,6 +201,8 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
           {data.producerAndCollection.status === 'Complete' &&
             data.producerAndCollection.producer.address.status === 'Complete' &&
             data.producerAndCollection.producer.contact.status === 'Complete' &&
+            data.producerAndCollection.producer.sicCodes.status ===
+              'Complete' &&
             data.producerAndCollection.wasteCollection.address.status ===
               'Complete' &&
             data.producerAndCollection.wasteCollection.wasteSource.status ===
@@ -244,7 +246,10 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
                   },
                   {
                     key: 'Producer Standard Industrial Classification (SIC) code',
-                    value: data.producerAndCollection.producer.sicCode,
+                    value:
+                      data.producerAndCollection.producer.sicCodes.values.join(
+                        ', ',
+                      ),
                   },
                   {
                     key: 'Waste collection address',
@@ -301,50 +306,56 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
           summary="The waste carrier and collection details of the waste"
           sections={sections}
           toggle={toggleSection}
-          status={data.carrier.status}
+          status={
+            data.carrier.address.status === 'Complete' &&
+            data.carrier.contact.status === 'Complete'
+              ? 'Complete'
+              : 'Incomplete'
+          }
         >
-          {data.carrier.status === 'Complete' && (
-            <SummaryList
-              items={[
-                {
-                  key: 'Carrier organisation name',
-                  value: data.carrier.value.contact.organisationName,
-                },
-                {
-                  key: 'Carrier address',
-                  value: (
-                    <>
-                      {data.carrier.value.address.addressLine1}
-                      <br />
-                      {data.carrier.value.address.addressLine2 && (
-                        <>
-                          {data.carrier.value.address.addressLine2}
-                          <br />
-                        </>
-                      )}
-                      {data.carrier.value.address.townCity}
-                      <br />
-                      {data.carrier.value.address.postcode}
-                      <br />
-                      {data.carrier.value.address.country}
-                    </>
-                  ),
-                },
-                {
-                  key: 'Carrier contact name',
-                  value: data.carrier.value.contact.name,
-                },
-                {
-                  key: 'Carrier contact email address',
-                  value: data.carrier.value.contact.email,
-                },
-                {
-                  key: 'Carrier contact phone number',
-                  value: data.carrier.value.contact.phone,
-                },
-              ]}
-            />
-          )}
+          {data.carrier.contact.status === 'Complete' &&
+            data.carrier.address.status === 'Complete' && (
+              <SummaryList
+                items={[
+                  {
+                    key: 'Carrier organisation name',
+                    value: data.carrier.contact.organisationName,
+                  },
+                  {
+                    key: 'Carrier address',
+                    value: (
+                      <>
+                        {data.carrier.address.addressLine1}
+                        <br />
+                        {data.carrier.address.addressLine2 && (
+                          <>
+                            {data.carrier.address.addressLine2}
+                            <br />
+                          </>
+                        )}
+                        {data.carrier.address.townCity}
+                        <br />
+                        {data.carrier.address.postcode}
+                        <br />
+                        {data.carrier.address.country}
+                      </>
+                    ),
+                  },
+                  {
+                    key: 'Carrier contact name',
+                    value: data.carrier.contact.name,
+                  },
+                  {
+                    key: 'Carrier contact email address',
+                    value: data.carrier.contact.email,
+                  },
+                  {
+                    key: 'Carrier contact phone number',
+                    value: data.carrier.contact.phone,
+                  },
+                ]}
+              />
+            )}
         </AccordionSection>
         <AccordionSection
           id="receiverDetails"

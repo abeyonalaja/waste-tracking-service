@@ -788,7 +788,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         carrier: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
         },
         declaration: {
           status: 'NotStarted',
@@ -854,8 +862,12 @@ describe(SubmissionController, () => {
 
       const response = await subject.createDraft({ accountId, reference: ref });
 
-      const expectedDraft = {
-        carrier: { status: 'NotStarted' },
+      const expectedDraft: Draft = {
+        carrier: {
+          address: { status: 'NotStarted' },
+          contact: { status: 'NotStarted' },
+          modeOfTransport: { status: 'NotStarted' },
+        },
         declaration: { status: 'CannotStart' },
         id: id,
         producerAndCollection: {
@@ -863,7 +875,10 @@ describe(SubmissionController, () => {
             address: { status: 'NotStarted' },
             contact: { status: 'NotStarted' },
             reference: 'testRef',
-            sicCode: '',
+            sicCodes: {
+              status: 'NotStarted',
+              values: [],
+            },
           },
           status: 'Started',
           wasteCollection: {
@@ -875,6 +890,7 @@ describe(SubmissionController, () => {
             },
           },
         },
+
         receiver: { status: 'NotStarted' },
         state: { status: 'InProgress', timestamp: new Date() },
         wasteInformation: { status: 'NotStarted' },
@@ -913,7 +929,10 @@ describe(SubmissionController, () => {
         status: 'Complete',
         producer: {
           reference: 'testRef',
-          sicCode: '01110',
+          sicCodes: {
+            status: 'Complete',
+            values: ['01110'],
+          },
           contact: {
             status: 'Complete',
             organisationName: 'Test Organisation',
@@ -955,7 +974,15 @@ describe(SubmissionController, () => {
         },
       },
       carrier: {
-        status: 'NotStarted',
+        address: {
+          status: 'NotStarted',
+        },
+        contact: {
+          status: 'NotStarted',
+        },
+        modeOfTransport: {
+          status: 'NotStarted',
+        },
       },
       declaration: {
         status: 'NotStarted',
@@ -1006,7 +1033,10 @@ describe(SubmissionController, () => {
         status: 'Started',
         producer: {
           reference: 'testRef',
-          sicCode: '01110',
+          sicCodes: {
+            status: 'Complete',
+            values: ['01110'],
+          },
           contact: {
             status: 'Complete',
             organisationName: 'Test Organisation',
@@ -1048,7 +1078,15 @@ describe(SubmissionController, () => {
         },
       },
       carrier: {
-        status: 'NotStarted',
+        address: {
+          status: 'NotStarted',
+        },
+        contact: {
+          status: 'NotStarted',
+        },
+        modeOfTransport: {
+          status: 'NotStarted',
+        },
       },
       declaration: {
         status: 'NotStarted',
@@ -1072,7 +1110,10 @@ describe(SubmissionController, () => {
           status: 'Started',
           producer: {
             reference: 'testRef',
-            sicCode: '01110',
+            sicCodes: {
+              status: 'Complete',
+              values: ['01110'],
+            },
             contact: {
               status: 'Complete',
               organisationName: 'Test Organisation',
@@ -1114,7 +1155,15 @@ describe(SubmissionController, () => {
           },
         },
         carrier: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
         },
         declaration: {
           status: 'NotStarted',
@@ -1176,7 +1225,10 @@ describe(SubmissionController, () => {
           status: 'Complete',
           producer: {
             reference: 'producerRef123',
-            sicCode: '12345',
+            sicCodes: {
+              status: 'Complete',
+              values: ['12345'],
+            },
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
@@ -1218,7 +1270,15 @@ describe(SubmissionController, () => {
           },
         },
         carrier: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
         },
         declaration: {
           status: 'NotStarted',
@@ -1261,7 +1321,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         carrier: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
         },
         declaration: {
           status: 'NotStarted',
@@ -1301,7 +1369,10 @@ describe(SubmissionController, () => {
           status: 'Complete',
           producer: {
             reference: 'producerRef123',
-            sicCode: '12345',
+            sicCodes: {
+              status: 'Complete',
+              values: ['12345'],
+            },
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
@@ -1327,7 +1398,15 @@ describe(SubmissionController, () => {
           },
         },
         carrier: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
         },
         declaration: {
           status: 'NotStarted',
@@ -1361,7 +1440,10 @@ describe(SubmissionController, () => {
           status: 'Complete',
           producer: {
             reference: 'producerRef123',
-            sicCode: '12345',
+            sicCodes: {
+              status: 'Complete',
+              values: ['12345'],
+            },
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
@@ -1387,7 +1469,15 @@ describe(SubmissionController, () => {
           },
         },
         carrier: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
         },
         declaration: {
           status: 'NotStarted',
@@ -1431,7 +1521,10 @@ describe(SubmissionController, () => {
           status: 'Complete',
           producer: {
             reference: 'producerRef123',
-            sicCode: '12345',
+            sicCodes: {
+              status: 'Complete',
+              values: ['12345'],
+            },
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
@@ -1473,7 +1566,15 @@ describe(SubmissionController, () => {
           },
         },
         carrier: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
         },
         declaration: {
           status: 'NotStarted',
@@ -1512,7 +1613,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         carrier: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
         },
         declaration: {
           status: 'NotStarted',
@@ -1552,7 +1661,10 @@ describe(SubmissionController, () => {
           status: 'Complete',
           producer: {
             reference: 'producerRef123',
-            sicCode: '12345',
+            sicCodes: {
+              status: 'Complete',
+              values: ['12345'],
+            },
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
@@ -1578,7 +1690,15 @@ describe(SubmissionController, () => {
           },
         },
         carrier: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
         },
         declaration: {
           status: 'NotStarted',
@@ -1607,7 +1727,10 @@ describe(SubmissionController, () => {
           status: 'Complete',
           producer: {
             reference: 'producerRef123',
-            sicCode: '12345',
+            sicCodes: {
+              status: 'Complete',
+              values: ['12345'],
+            },
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
@@ -1634,7 +1757,15 @@ describe(SubmissionController, () => {
           },
         },
         carrier: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
         },
         declaration: {
           status: 'NotStarted',

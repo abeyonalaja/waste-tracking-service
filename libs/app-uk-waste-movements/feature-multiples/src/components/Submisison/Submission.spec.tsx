@@ -48,7 +48,10 @@ const mockData: UkwmDraft = {
         postcode: 'AB12 3CD',
         country: 'Country',
       },
-      sicCode: 'SIC1234',
+      sicCodes: {
+        status: 'Complete',
+        values: ['SIC1234'],
+      },
     },
     wasteCollection: {
       expectedWasteCollectionDate: {
@@ -72,20 +75,23 @@ const mockData: UkwmDraft = {
     },
   },
   carrier: {
-    status: 'Complete',
-    value: {
-      contact: {
-        organisationName: 'Carrier Org',
-        name: 'Carrier Name',
-        email: 'carrier@example.com',
-        phone: '1234567891',
-      },
-      address: {
-        addressLine1: '121 Lane',
-        townCity: 'Waste City',
-        postcode: 'ZZ12 8HQ',
-        country: 'Republic of Waste',
-      },
+    contact: {
+      status: 'Complete',
+      organisationName: 'Carrier Org',
+      name: 'Carrier Name',
+      email: 'carrier@example.com',
+      phone: '1234567891',
+    },
+    address: {
+      status: 'Complete',
+      addressLine1: '121 Lane',
+      townCity: 'Waste City',
+      postcode: 'ZZ12 8HQ',
+      country: 'Republic of Waste',
+    },
+    modeOfTransport: {
+      status: 'Complete',
+      value: 'Road',
     },
   },
   receiver: {

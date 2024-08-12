@@ -1,7 +1,7 @@
 import { JTDSchemaType, SchemaObject } from 'ajv/dist/jtd';
 
 import {
-  DraftCarrierDetail,
+  DraftCarrier,
   GetDraftsRequest,
   GetDraftsResult,
   Address,
@@ -12,6 +12,10 @@ import {
   CarrierDetail,
   ValidateMultipleDraftsRequest,
   CreateDraftRequest,
+  DraftContact,
+  DraftAddress,
+  DraftModeOfTransport,
+  DraftSicCodes,
 } from './draft.dto';
 
 export const wasteType: JTDSchemaType<WasteTypeDetail> = {
@@ -198,7 +202,7 @@ export const wasteCollection: SchemaObject = {
   },
 };
 
-export const draftAddress: SchemaObject = {
+export const draftAddress: JTDSchemaType<DraftAddress> = {
   discriminator: 'status',
   mapping: {
     NotStarted: {
@@ -217,7 +221,7 @@ export const draftAddress: SchemaObject = {
   },
 };
 
-export const draftContact: SchemaObject = {
+export const draftContact: JTDSchemaType<DraftContact> = {
   discriminator: 'status',
   mapping: {
     NotStarted: {
@@ -236,15 +240,23 @@ export const draftContact: SchemaObject = {
   },
 };
 
+export const draftSicCodes: JTDSchemaType<DraftSicCodes> = {
+  properties: {
+    status: { enum: ['NotStarted', 'Complete'] },
+    values: {
+      elements: { type: 'string' },
+    },
+  },
+};
+
 export const draftProducer: SchemaObject = {
   properties: {
     reference: { type: 'string' },
     address: draftAddress,
     contact: draftContact,
+    sicCodes: draftSicCodes,
   },
-  optionalProperties: {
-    sicCode: { type: 'string' },
-  },
+  optionalProperties: {},
 };
 
 export const draftWasteSource: SchemaObject = {
@@ -291,6 +303,18 @@ export const producerAndWasteCollectionDetail: SchemaObject = {
   },
 };
 
+export const draftWasteTransport: JTDSchemaType<DraftModeOfTransport> = {
+  discriminator: 'status',
+  mapping: {
+    NotStarted: { properties: {} },
+    Complete: {
+      properties: {
+        value: { enum: ['Road', 'Rail', 'Sea', 'Air', 'InlandWaterways'] },
+      },
+    },
+  },
+};
+
 export const carrier: JTDSchemaType<CarrierDetail> = {
   properties: {
     contact: contact,
@@ -298,15 +322,11 @@ export const carrier: JTDSchemaType<CarrierDetail> = {
   },
 };
 
-export const draftCarrier: JTDSchemaType<DraftCarrierDetail> = {
-  discriminator: 'status',
-  mapping: {
-    NotStarted: { properties: {} },
-    Complete: {
-      properties: {
-        value: carrier,
-      },
-    },
+export const draftCarrier: JTDSchemaType<DraftCarrier> = {
+  properties: {
+    address: draftAddress,
+    contact: draftContact,
+    modeOfTransport: draftWasteTransport,
   },
 };
 

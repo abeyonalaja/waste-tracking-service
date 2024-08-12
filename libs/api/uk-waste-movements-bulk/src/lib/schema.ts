@@ -15,7 +15,6 @@ import {
   WasteTypeDetail,
   ExpectedWasteCollectionDate,
   CarrierDetail,
-  DraftCarrierDetail,
   ProducerDetail,
   ReceiverDetail,
 } from '@wts/api/uk-waste-movements';
@@ -115,18 +114,6 @@ export const carrier: JTDSchemaType<CarrierDetail> = {
   properties: {
     contact: contact,
     address: address,
-  },
-};
-
-export const draftCarrier: JTDSchemaType<DraftCarrierDetail> = {
-  discriminator: 'status',
-  mapping: {
-    NotStarted: { properties: {} },
-    Complete: {
-      properties: {
-        value: carrier,
-      },
-    },
   },
 };
 

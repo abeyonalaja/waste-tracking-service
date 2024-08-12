@@ -67,7 +67,15 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
           status: 'NotStarted',
         },
         carrier: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
         },
         declaration: {
           status: 'NotStarted',
@@ -136,7 +144,10 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
               status: 'NotStarted',
             },
             reference: '123456',
-            sicCode: '123456',
+            sicCodes: {
+              status: 'Complete',
+              values: ['123456'],
+            },
           },
           wasteCollection: {
             address: {
@@ -148,7 +159,15 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
           },
         },
         carrier: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
         },
         declaration: {
           status: 'NotStarted',
