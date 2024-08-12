@@ -105,8 +105,7 @@ export default async function TaskListPage({
                     name: t('producerAndCollection.sicCode'),
                     href: `${params.id}/producer/sic-code`,
                     status:
-                      draft.producerAndCollection.wasteCollection.wasteSource
-                        .status,
+                      draft.producerAndCollection.producer.sicCodes.status,
                   },
                   {
                     name: t('producerAndCollection.collectionDetails'),
@@ -125,9 +124,7 @@ export default async function TaskListPage({
                   {
                     name: t('producerAndCollection.checkYourAnswers'),
                     href: `${params.id}/producer/check-your-answers`,
-                    status:
-                      draft.producerAndCollection.wasteCollection.wasteSource
-                        .status,
+                    status: 'NotStarted',
                   },
                 ],
               },
@@ -154,9 +151,7 @@ export default async function TaskListPage({
                   {
                     name: t('carrier.checkYourAnswers'),
                     href: `${params.id}/carrier/check-your-answers`,
-                    status:
-                      draft.producerAndCollection.wasteCollection.wasteSource
-                        .status,
+                    status: 'NotStarted',
                   },
                 ],
               },
