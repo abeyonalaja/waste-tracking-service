@@ -85,20 +85,27 @@ export default async function TaskListPage({
                 overallSectionStatus: producerAndCollectionOverallStatus,
                 tasks: [
                   {
-                    name: t('producerAndCollection.taskOne'),
+                    name: t('producerAndCollection.organisationAddress'),
                     href: `${params.id}/producer/address`,
                     status: draft.producerAndCollection.producer.address.status,
                   },
                   {
-                    name: t('producerAndCollection.taskTwo'),
+                    name: t('producerAndCollection.organisationContactDetails'),
                     href: `${params.id}/producer/contact`,
                     status: draft.producerAndCollection.producer.contact.status,
                   },
                   {
-                    name: t('producerAndCollection.taskThree'),
+                    name: t('producerAndCollection.collectionDetails'),
                     href: '/',
                     status:
                       draft.producerAndCollection.wasteCollection.address
+                        .status,
+                  },
+                  {
+                    name: t('producerAndCollection.sourceOfWaste'),
+                    href: `${params.id}/producer/source`,
+                    status:
+                      draft.producerAndCollection.wasteCollection.wasteSource
                         .status,
                   },
                 ],

@@ -523,9 +523,10 @@
       "producerAndCollection": {
         "heading": "Waste producer and collection details",
         "description": "Details of the waste producer and waste collection",
-        "taskOne": "Producer organisation address",
-        "taskTwo": "Producer organisation contact details",
-        "taskThree": "Waste collection details"
+        "organisationAddress": "Producer organisation address",
+        "organisationContactDetails": "Producer organisation contact details",
+        "collectionDetails": "Waste collection details",
+        "sourceOfWaste": "Source of the waste"
       }
     },
     "postcode": {
@@ -613,6 +614,19 @@
         "backLink": "Back",
         "caption": "Producer and waste collection details",
         "heading": "What are the producer’s SIC (standard industry classification) codes?"
+      },
+      "sourceOfWaste": {
+        "backLink": "Back",
+        "caption": "Producer and waste collection details",
+        "heading": "What is the source of the waste?",
+        "radioOne": "Commerical waste",
+        "radioTwo": "Industrial waste",
+        "radioThree": "Construction and demolition waste",
+        "radioFour": "Household waste",
+        "buttonOne": "Save and continue",
+        "buttonTwo": "Save and return",
+        "errorSummaryTitle": "There is a problem",
+        "errorMessage": "Select the source of the waste"
       }
     }
   }

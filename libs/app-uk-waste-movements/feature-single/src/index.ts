@@ -4,5 +4,6 @@ export {
   UniqueReferenceForm,
   TaskList,
   ProducerContactDetailsForm,
+  WasteSourceForm,
 } from './components';
 export { AddressSearch } from './components/Address';
