@@ -45,18 +45,18 @@ export default async function Index(): Promise<JSX.Element> {
         );
         showServiceChargeReminder = daysUntilExpiry < 28;
         serviceChargeExpiryDate = formatExpiryDate(paymentReference.expiryDate);
-      } else {
-        const serviceChargeGuidanceViewed = cookies().get(
-          'serviceChargeGuidanceViewed',
-        );
-
-        if (!serviceChargeGuidanceViewed) {
-          return redirect('/service-charge/guidance');
-        }
       }
     } catch (error) {
       console.error('Error fetching payments', error);
     }
+  }
+
+  const serviceChargeGuidanceViewed = cookies().get(
+    'serviceChargeGuidanceViewed',
+  );
+
+  if (!serviceChargePaid && !serviceChargeGuidanceViewed) {
+    return redirect('/service-charge/guidance');
   }
 
   return (
