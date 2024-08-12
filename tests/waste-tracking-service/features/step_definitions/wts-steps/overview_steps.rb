@@ -3,9 +3,9 @@ Given(/^I login to waste tracking portal$/) do
   TestStatus.set_test_status('Test ENV', Env.test_env)
   TestStatus.set_test_status('Start url', Env.start_page_url)
   visit(Env.start_page_url)
+  set_feature_cookies
   click_link('Start now')
   HelperMethods.wait_for_a_sec
-  set_feature_cookies
   user = "USER#{@current_process}"
   OverviewPage.new.login_to_dcid(user)
   AccountPage.new.wait_for_element('link-card-GLW')
@@ -73,9 +73,10 @@ Given(/^I navigate to service charge page after login on DCID portal$/) do
   TestStatus.set_test_status('Test ENV', Env.test_env)
   TestStatus.set_test_status('Start url', Env.start_page_url)
   visit(Env.start_page_url)
+  set_feature_cookies
+  page.driver.browser.manage.delete_cookie('serviceChargeGuidanceViewed')
   click_link('Start now')
   HelperMethods.wait_for_a_sec
-  set_feature_cookies
   delete_custom_cookie('serviceChargeGuidanceViewed')
   DescriptionPage.new.page_refresh
   user = "USER#{@current_process}"

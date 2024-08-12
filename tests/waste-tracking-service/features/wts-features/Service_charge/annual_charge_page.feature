@@ -10,7 +10,7 @@ Feature: AS A WTS Data Admin user
     When the "Annual Charge" page is displayed
     Then I should see annual charge page correctly translated
     And I click the "Cancel" link
-    Then the "Waste Tracking Landing" page is displayed
+    Then the "Account" page is displayed
     And I verify payment warning banner is displayed
 
 

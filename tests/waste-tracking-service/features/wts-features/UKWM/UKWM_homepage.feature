@@ -17,7 +17,7 @@ Feature: AS A Waste Controller
     When the "UKWM Home" page is displayed
     Then I should see UKWM home page correctly translated
     And I click HOME breadcrumb
-    Then the "Waste Tracking Landing" page is displayed
+    Then the "Account" page is displayed
 
   @govpay
   Scenario: User should see limited access
