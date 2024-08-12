@@ -136,9 +136,11 @@ steps:
           latestSemVer=$(echo $tag | grep -oE '^[0-9]+\.[0-9]+\.[0-9]+')
           chartPath="charts/${project}/Chart.yaml"
           chartVersion=$(grep '^version:' $chartPath | awk '{print $2}')
+          branch=$(echo $tag | grep -oP '(?<=-)[^.]+')
           echo "Latest Helm chart version from ACR for ${project}: ${latestSemVer}"
           echo "Chart.yaml version for ${project}: ${chartVersion}"
-          if [ "$latestSemVer" == "$chartVersion" ]; then
+          echo "Branch extracted from tag: ${branch}"
+          if [ "$latestSemVer" == "$chartVersion" ] && [ "$branch" == "main" ]; then
             echo "ERROR: Chart version $chartVersion for project $project already exists in ACR. Please update Chart.yaml file to reflect the new changes."
             echo "##vso[task.logissue type=error]Chart version $chartVersion for project $project already exists in ACR. Please update Chart.yaml file to reflect the new changes."
             exit 1
