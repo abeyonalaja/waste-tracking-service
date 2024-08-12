@@ -21,3 +21,53 @@ When(/^I update the producer country address to "([^"]*)"$/) do |country|
   EnterProducerAddressManualPage.new.choose_option country
   TestStatus.set_test_status("#{page}_country".to_sym, country)
 end
+
+And(/^I verify producer contact details page is correctly translated$/) do
+  ProducerContactDetailsPage.new.check_page_translation
+end
+
+And(/^I complete the producer contact details page$/) do
+  UkmProducerContactDetailsController.complete
+end
+
+And(/^I should see previously entered producer contact details pre\-populated$/) do
+  expect(ProducerContactDetailsPage.new.organisation_name).to eq TestStatus.test_status(:org_name)
+  expect(ProducerContactDetailsPage.new.contact_person).to eq TestStatus.test_status(:contact_person)
+  expect(ProducerContactDetailsPage.new.email_address).to eq TestStatus.test_status(:email)
+  expect(ProducerContactDetailsPage.new.phone_number).to eq TestStatus.test_status(:phone_number)
+end
+
+And(/^I complete the producer contact details page with new entries$/) do
+  ProducerContactDetailsPage.new.fill_organisation_name ''
+  ProducerContactDetailsPage.new.fill_organisation_contact_person ''
+  ProducerContactDetailsPage.new.fill_email_address ''
+  ProducerContactDetailsPage.new.fill_phone_number ''
+  UkmProducerContactDetailsController.complete
+end
+
+And(/^I complete the producer contact details page partially$/) do
+  org_name = Faker::Company.name
+  contact_person = Faker::Name.name
+  ProducerContactDetailsPage.new.fill_organisation_name org_name
+  ProducerContactDetailsPage.new.fill_organisation_contact_person contact_person
+  TestStatus.set_test_status(:org_name, org_name)
+  TestStatus.set_test_status(:contact_person, contact_person)
+end
+
+And(/^I should see previously entered partially producer contact details pre\-populated$/) do
+  expect(ProducerContactDetailsPage.new.organisation_name).to eq TestStatus.test_status(:org_name)
+  expect(ProducerContactDetailsPage.new.contact_person).to eq TestStatus.test_status(:contact_person)
+end
+
+And(/^I enter invalid fax number for producer contact details$/) do
+  ProducerContactDetailsPage.new.fill_fax_number 'fax123'
+end
+
+And(/^I enter values which exceed the allowed number of characters for the fields$/) do
+  org_name =  Faker::Lorem.characters(number: 251)
+  contact_person = Faker::Lorem.characters(number: 251)
+  email = Faker::Lorem.characters(number: 250)
+  ProducerContactDetailsPage.new.fill_organisation_name org_name
+  ProducerContactDetailsPage.new.fill_organisation_contact_person contact_person
+  ProducerContactDetailsPage.new.fill_email_address email + '@test.com'
+end

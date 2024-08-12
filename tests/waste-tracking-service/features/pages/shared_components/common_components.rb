@@ -238,6 +238,22 @@ module CommonComponents
     find('country').value
   end
 
+  def organisation_name
+    find('organisation-name').value
+  end
+
+  def contact_person
+    find('organisation-contact-person').value
+  end
+
+  def email_address
+    find('email-address').value
+  end
+
+  def phone_number
+    find('phone-number').value
+  end
+
   def fill_organisation_name(name)
     fill_in 'organisation-name', with: name
   end
