@@ -525,8 +525,18 @@
         "description": "Details of the waste producer and waste collection",
         "organisationAddress": "Producer organisation address",
         "organisationContactDetails": "Producer organisation contact details",
+        "sicCode": "Producer SIC code",
         "collectionDetails": "Waste collection details",
-        "sourceOfWaste": "Source of the waste"
+        "sourceOfWaste": "Source of the waste",
+        "checkYourAnswers": "Check your producer and waste collection answers"
+      },
+      "carrier": {
+        "heading": "Waste carrier details (optional)",
+        "description": "Details of who transports the waste. All carrier details need to be entered if you know them in advance of the waste collection.",
+        "carrierAddress": "Carrier address",
+        "carrierContactDetails": "Carrier contact details",
+        "modeOfTransport": "Carrier mode of transport",
+        "checkYourAnswers": "Check your carrier details answers"
       }
     },
     "postcode": {

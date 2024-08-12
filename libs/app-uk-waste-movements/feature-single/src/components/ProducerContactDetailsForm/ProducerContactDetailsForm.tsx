@@ -207,7 +207,7 @@ export function ProducerContactDetailsForm({
 
       if (response.ok) {
         if (submitType === 'continueToNextPage') {
-          return router.push(`/single/${id}/producer/sic-codes`);
+          return router.push(`/single/${id}/producer/sic-code`);
         } else {
           return router.push(`/single/${id}`);
         }

@@ -82,14 +82,14 @@ export function TaskList({ sections }: TaskListProps): React.ReactNode {
               <div className="govuk-task-list__status">
                 {tagText === 'Completed' ? (
                   <strong
-                    id={formatToKebabCase(`${section.description}-status`)}
+                    id={formatToKebabCase(`${section.heading}-status`)}
                     className="govuk-body  govuk-!-font-weight-regular"
                   >
                     {tagText}
                   </strong>
                 ) : (
                   <GovUK.Tag
-                    id={formatToKebabCase(`${section.description}-status`)}
+                    id={formatToKebabCase(`${section.heading}-status`)}
                     colour={tagColour as unknown as GovUK.TagColour}
                     noWrap={true}
                   >

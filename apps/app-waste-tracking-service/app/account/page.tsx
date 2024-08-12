@@ -68,7 +68,7 @@ export default async function Index(): Promise<JSX.Element> {
               {t('serviceChargeBanner.one')}
               <Link
                 className="govuk-notification-banner__link"
-                href="/service-charge"
+                href="/service-charge/guidance"
               >
                 {t('serviceChargeBanner.link')}
               </Link>

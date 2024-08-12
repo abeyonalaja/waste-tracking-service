@@ -58,6 +58,13 @@ export default async function TaskListPage({
       ? 'Completed'
       : 'Incomplete';
 
+  const carrierOverallStatus =
+    draft.carrier.address.status === 'Complete' &&
+    draft.carrier.contact.status === 'Complete' &&
+    draft.carrier.modeOfTransport.status === 'Complete'
+      ? 'Completed'
+      : 'Incomplete';
+
   return (
     <Page
       beforeChildren={
@@ -95,6 +102,13 @@ export default async function TaskListPage({
                     status: draft.producerAndCollection.producer.contact.status,
                   },
                   {
+                    name: t('producerAndCollection.sicCode'),
+                    href: `${params.id}/producer/sic-code`,
+                    status:
+                      draft.producerAndCollection.wasteCollection.wasteSource
+                        .status,
+                  },
+                  {
                     name: t('producerAndCollection.collectionDetails'),
                     href: '/',
                     status:
@@ -104,6 +118,42 @@ export default async function TaskListPage({
                   {
                     name: t('producerAndCollection.sourceOfWaste'),
                     href: `${params.id}/producer/source`,
+                    status:
+                      draft.producerAndCollection.wasteCollection.wasteSource
+                        .status,
+                  },
+                  {
+                    name: t('producerAndCollection.checkYourAnswers'),
+                    href: `${params.id}/producer/check-your-answers`,
+                    status:
+                      draft.producerAndCollection.wasteCollection.wasteSource
+                        .status,
+                  },
+                ],
+              },
+              {
+                heading: t('carrier.heading'),
+                description: t('carrier.description'),
+                overallSectionStatus: carrierOverallStatus,
+                tasks: [
+                  {
+                    name: t('carrier.carrierAddress'),
+                    href: `${params.id}/carrier/address`,
+                    status: draft.carrier.address.status,
+                  },
+                  {
+                    name: t('carrier.carrierContactDetails'),
+                    href: `${params.id}/carrier/contact`,
+                    status: draft.carrier.contact.status,
+                  },
+                  {
+                    name: t('carrier.modeOfTransport'),
+                    href: `${params.id}/carrier/transport`,
+                    status: draft.carrier.modeOfTransport.status,
+                  },
+                  {
+                    name: t('carrier.checkYourAnswers'),
+                    href: `${params.id}/carrier/check-your-answers`,
                     status:
                       draft.producerAndCollection.wasteCollection.wasteSource
                         .status,
