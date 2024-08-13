@@ -29,6 +29,7 @@ Before('@service_charge') do
 end
 
 Before('@UKMV') do
+  Log.info("Setting translation file value ")
   $translation_file = 'UKM'
 end
 

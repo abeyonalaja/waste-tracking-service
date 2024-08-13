@@ -7,7 +7,7 @@ class EnterPaymentDetailsPage < GenericPage
   TITLE = 'Enter payment details'
 
   def check_page_displayed
-    expect(self).to have_css 'h1', text: TITLE, exact_text: true
+    expect(page).to have_title(TITLE)
   end
 
   def fill_in_payment_description(description)
