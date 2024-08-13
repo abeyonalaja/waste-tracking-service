@@ -12,6 +12,7 @@ import {
   SetDraftProducerContactDetailResponse,
   SetDraftWasteSourceResponse,
   GetDraftWasteSourceResponse,
+  GetDraftWasteCollectionAddressDetailsResponse,
 } from '@wts/api/uk-waste-movements';
 import { UkwmContact } from '@wts/api/waste-tracking-gateway';
 
@@ -40,6 +41,14 @@ const mockClient = {
     jest.fn<DaprUkWasteMovementsClient['setDraftWasteSource']>(),
   getDraftWasteSource:
     jest.fn<DaprUkWasteMovementsClient['getDraftWasteSource']>(),
+  setDraftWasteCollectionAddressDetails:
+    jest.fn<
+      DaprUkWasteMovementsClient['setDraftWasteCollectionAddressDetails']
+    >(),
+  getDraftWasteCollectionAddressDetails:
+    jest.fn<
+      DaprUkWasteMovementsClient['getDraftWasteCollectionAddressDetails']
+    >(),
 };
 
 describe(ServiceUkWasteMovementsSubmissionBackend, () => {
@@ -235,7 +244,7 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
     });
   });
 
-  it('gets producer contact detail from a draft', async () => {
+  it('gets producer address detail from a draft', async () => {
     const id = faker.string.uuid();
     const accountId = faker.string.uuid();
     const mockGetDraftProducerAddressDetailsResponse: GetDraftProducerAddressDetailsResponse =
@@ -387,5 +396,88 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
       accountId,
     });
     expect(result).toEqual(mockGetDraftWasteSourceResponse.value);
+  });
+
+  it('sets waste collection address details on a draft', async () => {
+    const accountId = faker.string.uuid();
+    const id = faker.string.uuid();
+    const mockSetDraftWasteCollectionAddressDetailsResponse: Response<void> = {
+      success: true,
+      value: undefined,
+    };
+
+    mockClient.setDraftWasteCollectionAddressDetails.mockResolvedValueOnce(
+      mockSetDraftWasteCollectionAddressDetailsResponse,
+    );
+
+    const value: UkwmAddress = {
+      addressLine1: '123 Main St',
+      addressLine2: 'Building 1',
+      townCity: 'London',
+      country: 'England [EN]',
+      postcode: 'SW1A 1AA',
+    };
+
+    await subject.setDraftWasteCollectionAddressDetails(
+      { id, accountId },
+      value,
+      true,
+    );
+
+    expect(
+      mockClient.setDraftWasteCollectionAddressDetails,
+    ).toHaveBeenCalledWith({
+      id,
+      accountId,
+      value,
+      saveAsDraft: true,
+    });
+    expect(
+      mockClient.setDraftWasteCollectionAddressDetails,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockClient.setDraftWasteCollectionAddressDetails,
+    ).toHaveBeenCalledWith({
+      id,
+      accountId,
+      value,
+      saveAsDraft: true,
+    });
+  });
+
+  it('gets waste collection address detail from a draft', async () => {
+    const id = faker.string.uuid();
+    const accountId = faker.string.uuid();
+    const mockGetDraftWasteCollectionAddressDetailsResponse: GetDraftWasteCollectionAddressDetailsResponse =
+      {
+        success: true,
+        value: {
+          status: 'Started',
+          addressLine1: '123 Main St',
+          addressLine2: 'Building 1',
+          townCity: 'London',
+          country: 'England [EN]',
+          postcode: 'SW1A 1AA',
+        },
+      };
+
+    mockClient.getDraftWasteCollectionAddressDetails.mockResolvedValueOnce(
+      mockGetDraftWasteCollectionAddressDetailsResponse,
+    );
+
+    const result = await subject.getDraftWasteCollectionAddressDetails({
+      id,
+      accountId,
+    });
+
+    expect(
+      mockClient.getDraftWasteCollectionAddressDetails,
+    ).toHaveBeenCalledWith({
+      id,
+      accountId,
+    });
+    expect(result).toEqual(
+      mockGetDraftWasteCollectionAddressDetailsResponse.value,
+    );
   });
 });

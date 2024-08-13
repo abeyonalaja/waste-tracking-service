@@ -1,19 +1,19 @@
 import {
-  validateProducerBuildingNameOrNumber,
+  validateBuildingNameOrNumber,
   validateProducerReference,
-  validateProducerAddressLine1,
-  validateProducerAddressLine2,
-  validateProducerCountry,
+  validateAddressLine1,
+  validateAddressLine2,
+  validateCountry,
   validateProducerOrganisationName,
-  validateProducerPostcode,
-  validateProducerTownCity,
-  validateProducerAddressDetails,
+  validatePostcode,
+  validateTownCity,
+  validateAddressDetails,
   validateProducerContactEmail,
   validateProducerContactFax,
   validateProducerContactOrganisationName,
   validateProducerContactPerson,
   validateProducerContactPhone,
-  validatePartialProducerAddressDetails,
+  validatePartialAddressDetails,
   validateWasteSourceSection,
 } from './validation-rules';
 import { faker } from '@faker-js/faker';
@@ -52,7 +52,7 @@ describe('Producer reference validation', () => {
 describe('Producer building name or number validation', () => {
   it('should return valid true when building name or number is valid', () => {
     const buildingName = faker.datatype.string(10);
-    const result = validateProducerBuildingNameOrNumber(buildingName, {
+    const result = validateBuildingNameOrNumber(buildingName, 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -64,7 +64,7 @@ describe('Producer building name or number validation', () => {
   });
 
   it('truncates trailing spaces', () => {
-    const result = validateProducerBuildingNameOrNumber('  a   ', {
+    const result = validateBuildingNameOrNumber('  a   ', 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -76,7 +76,7 @@ describe('Producer building name or number validation', () => {
   });
 
   it('truncates and returns valid when only spaces are entered', () => {
-    const result = validateProducerBuildingNameOrNumber('   ', {
+    const result = validateBuildingNameOrNumber('   ', 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -89,7 +89,7 @@ describe('Producer building name or number validation', () => {
 
   it('should return an error when the building name is too long', () => {
     const buildingName = faker.datatype.string(251);
-    const result = validateProducerBuildingNameOrNumber(buildingName, {
+    const result = validateBuildingNameOrNumber(buildingName, 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -108,7 +108,7 @@ describe('Producer building name or number validation', () => {
 describe('Producer address line 1 validation', () => {
   it('should return valid true when address line 1 is valid', () => {
     const addressLine1 = faker.datatype.string(10);
-    const result = validateProducerAddressLine1(addressLine1, {
+    const result = validateAddressLine1(addressLine1, 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -120,7 +120,7 @@ describe('Producer address line 1 validation', () => {
   });
 
   it('truncates trailing spaces', () => {
-    const result = validateProducerAddressLine1('  a   ', {
+    const result = validateAddressLine1('  a   ', 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -133,7 +133,7 @@ describe('Producer address line 1 validation', () => {
 
   it('should return an error when the address line 1 is too long', () => {
     const addressLine1 = faker.datatype.string(251);
-    const result = validateProducerAddressLine1(addressLine1, {
+    const result = validateAddressLine1(addressLine1, 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -152,7 +152,7 @@ describe('Producer address line 1 validation', () => {
 describe('Producer address line 2 validation', () => {
   it('should return valid true when address line 2 is valid', () => {
     const addressLine2 = faker.datatype.string(10);
-    const result = validateProducerAddressLine2(addressLine2, {
+    const result = validateAddressLine2(addressLine2, 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -164,7 +164,7 @@ describe('Producer address line 2 validation', () => {
   });
 
   it('truncates trailing spaces', () => {
-    const result = validateProducerAddressLine2('  a   ', {
+    const result = validateAddressLine2('  a   ', 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -177,7 +177,7 @@ describe('Producer address line 2 validation', () => {
 
   it('should return an error when the address line 2 is too long', () => {
     const addressLine2 = faker.datatype.string(251);
-    const result = validateProducerAddressLine2(addressLine2, {
+    const result = validateAddressLine2(addressLine2, 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -196,7 +196,7 @@ describe('Producer address line 2 validation', () => {
 describe('Producer town or city validation', () => {
   it('should return valid true when town or city is valid', () => {
     const townOrCity = faker.datatype.string(10);
-    const result = validateProducerTownCity(townOrCity, {
+    const result = validateTownCity(townOrCity, 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -208,7 +208,7 @@ describe('Producer town or city validation', () => {
   });
 
   it('truncates trailing spaces', () => {
-    const result = validateProducerTownCity('  a   ', {
+    const result = validateTownCity('  a   ', 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -221,7 +221,7 @@ describe('Producer town or city validation', () => {
 
   it('should return an error when the town or city is too long', () => {
     const townOrCity = faker.datatype.string(251);
-    const result = validateProducerTownCity(townOrCity, {
+    const result = validateTownCity(townOrCity, 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -240,7 +240,7 @@ describe('Producer town or city validation', () => {
 describe('Producer country validation', () => {
   it('should return valid true when country is valid', () => {
     const country = 'England';
-    const result = validateProducerCountry(country, {
+    const result = validateCountry(country, 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -252,7 +252,7 @@ describe('Producer country validation', () => {
   });
 
   it('should return an error when the country is empty', () => {
-    const result = validateProducerCountry('', {
+    const result = validateCountry('', 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -267,7 +267,7 @@ describe('Producer country validation', () => {
     }
   });
   it('Should return an error if the country is not england, scotland, wales or NI', () => {
-    const result = validateProducerCountry('Algeria', {
+    const result = validateCountry('Algeria', 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -287,7 +287,7 @@ describe('Producer country validation', () => {
 describe('Producer postcode validation', () => {
   it('should return valid true when postcode is valid', () => {
     const postcode = 'SW1A1AA';
-    const result = validateProducerPostcode(postcode, {
+    const result = validatePostcode(postcode, 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -299,7 +299,7 @@ describe('Producer postcode validation', () => {
   });
 
   it('should return an error when the postcode is empty', () => {
-    const result = validateProducerPostcode('', {
+    const result = validatePostcode('', 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -315,7 +315,7 @@ describe('Producer postcode validation', () => {
   });
 
   it('should return an error when the postcode is invalid', () => {
-    const result = validateProducerPostcode('123', {
+    const result = validatePostcode('123', 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -386,7 +386,7 @@ describe('Producer Address Details Validation', () => {
       postcode: 'SW1A1AA',
     };
 
-    const result = validateProducerAddressDetails(addressDetails, {
+    const result = validateAddressDetails(addressDetails, 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -405,7 +405,7 @@ describe('Producer Address Details Validation', () => {
       postcode: 'SW1A1AA',
     };
 
-    const result = validateProducerAddressDetails(addressDetails, {
+    const result = validateAddressDetails(addressDetails, 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -426,7 +426,7 @@ describe('Producer Address Details Validation', () => {
       postcode: '123',
     };
 
-    const result = validateProducerAddressDetails(addressDetails, {
+    const result = validateAddressDetails(addressDetails, 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -446,7 +446,7 @@ describe('validatePartialProducerAddressDetails', () => {
       postcode: 'SW1A1AA',
     };
 
-    const result = validatePartialProducerAddressDetails(addressDetails, {
+    const result = validatePartialAddressDetails(addressDetails, 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -464,7 +464,7 @@ describe('validatePartialProducerAddressDetails', () => {
       postcode: 'SW1A1AA',
     };
 
-    const result = validatePartialProducerAddressDetails(addressDetails, {
+    const result = validatePartialAddressDetails(addressDetails, 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -485,7 +485,7 @@ describe('validatePartialProducerAddressDetails', () => {
       postcode: '123',
     };
 
-    const result = validatePartialProducerAddressDetails(addressDetails, {
+    const result = validatePartialAddressDetails(addressDetails, 'Producer', {
       locale: 'en',
       context: 'ui',
     });

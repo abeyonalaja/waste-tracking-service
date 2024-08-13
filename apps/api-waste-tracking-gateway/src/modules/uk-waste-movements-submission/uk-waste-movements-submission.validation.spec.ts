@@ -4,6 +4,7 @@ import {
   validateSetDraftProducerAddressDetailsRequest,
   validateSetDraftProducerContactRequest,
   validateSetDraftWasteSource,
+  validateSetDraftWasteCollectionAddressDetailsRequest,
 } from './uk-waste-movements-submission.validation';
 
 describe('validateCreateDraftRequest', () => {
@@ -134,6 +135,55 @@ describe('validateSetDraftWasteSourceRequest', () => {
     expect(
       validate({
         wasteSource: 'Industrial',
+      }),
+    ).toBe(true);
+  });
+});
+
+describe('validateSetDraftWasteCollectionAddressRequest', () => {
+  const validate = validateSetDraftWasteCollectionAddressDetailsRequest;
+
+  it('Rejects invalid values', () => {
+    expect(validate(undefined)).toBe(false);
+    expect(validate({})).toBe(false);
+
+    expect(
+      validate({
+        buildingNameOrNumber: faker.number.int(),
+        addressLine1: faker.number.int(),
+        addressLine2: faker.number.int(),
+        townCity: faker.number.int(),
+        postcode: faker.number.int(),
+        country: faker.number.int(),
+      }),
+    ).toBe(false);
+    expect(
+      validate({
+        buildingNameOrNumber: faker.string.sample(),
+        addressLine2: faker.string.sample(),
+        townCity: faker.string.sample(),
+        postcode: faker.string.sample(),
+        country: faker.string.sample(),
+      }),
+    ).toBe(false);
+  });
+
+  it('Accepts valid values', () => {
+    expect(
+      validate({
+        buildingNameOrNumber: faker.string.sample(),
+        addressLine1: faker.string.sample(),
+        addressLine2: faker.string.sample(),
+        townCity: faker.string.sample(),
+        postcode: faker.string.sample(),
+        country: faker.string.sample(),
+      }),
+    ).toBe(true);
+    expect(
+      validate({
+        addressLine1: faker.string.sample(),
+        townCity: faker.string.sample(),
+        country: faker.string.sample(),
       }),
     ).toBe(true);
   });

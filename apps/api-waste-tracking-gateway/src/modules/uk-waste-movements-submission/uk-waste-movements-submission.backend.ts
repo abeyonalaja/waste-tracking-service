@@ -22,6 +22,7 @@ import {
   SetDraftProducerContactDetailResponse,
   SetDraftWasteSourceResponse,
   GetDraftWasteSourceResponse,
+  GetDraftWasteCollectionAddressDetailsResponse,
 } from '@wts/api/uk-waste-movements';
 import { DaprUkWasteMovementsClient } from '@wts/client/uk-waste-movements';
 import { Response } from '@wts/util/invocation';
@@ -57,6 +58,14 @@ export interface UkWasteMovementsSubmissionBackend {
     saveAsDraft: boolean,
   ): Promise<void>;
   getDraftProducerAddressDetails({
+    id,
+  }: SubmissionRef): Promise<UkwmDraftAddress | undefined>;
+  setDraftWasteCollectionAddressDetails(
+    ref: SubmissionRef,
+    value: UkwmAddress,
+    saveAsDraft: boolean,
+  ): Promise<void>;
+  getDraftWasteCollectionAddressDetails({
     id,
   }: SubmissionRef): Promise<UkwmDraftAddress | undefined>;
   setDraftProducerContactDetail(
@@ -287,6 +296,58 @@ export class ServiceUkWasteMovementsSubmissionBackend
         statusCode: response.error.statusCode,
         data: response.error.data,
       });
+    }
+  }
+
+  async setDraftWasteCollectionAddressDetails(
+    { id, accountId }: SubmissionRef,
+    value: UkwmAddress,
+    saveAsDraft: boolean,
+  ): Promise<void> {
+    let response: Response<void>;
+    try {
+      response = await this.client.setDraftWasteCollectionAddressDetails({
+        id,
+        accountId,
+        value,
+        saveAsDraft,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+        data: response.error.data,
+      });
+    }
+  }
+
+  async getDraftWasteCollectionAddressDetails({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<UkwmDraftAddress | undefined> {
+    let response: GetDraftWasteCollectionAddressDetailsResponse;
+    try {
+      response = await this.client.getDraftWasteCollectionAddressDetails({
+        id,
+        accountId,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+    if (response) {
+      if (!response.success) {
+        throw new Boom.Boom(response.error.message, {
+          statusCode: response.error.statusCode,
+        });
+      }
+      return response.value;
+    } else {
+      return response;
     }
   }
 }

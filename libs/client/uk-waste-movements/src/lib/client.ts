@@ -32,6 +32,12 @@ import {
   GetDraftWasteSourceRequest,
   GetDraftWasteSourceResponse,
   getDraftWasteSource,
+  GetDraftWasteCollectionAddressDetailsRequest,
+  GetDraftWasteCollectionAddressDetailsResponse,
+  SetDraftWasteCollectionAddressDetailsRequest,
+  SetDraftWasteCollectionAddressDetailsResponse,
+  getDraftWasteCollectionAddressDetails,
+  setDraftWasteCollectionAddressDetails,
 } from '@wts/api/uk-waste-movements';
 
 export class DaprUkWasteMovementsClient {
@@ -153,5 +159,27 @@ export class DaprUkWasteMovementsClient {
       HttpMethod.POST,
       req,
     )) as SetDraftWasteSourceResponse;
+  }
+
+  async getDraftWasteCollectionAddressDetails(
+    req: GetDraftWasteCollectionAddressDetailsRequest,
+  ): Promise<GetDraftWasteCollectionAddressDetailsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.ukWasteMovementsAppId,
+      getDraftWasteCollectionAddressDetails.name,
+      HttpMethod.POST,
+      req,
+    )) as GetDraftWasteCollectionAddressDetailsResponse;
+  }
+
+  async setDraftWasteCollectionAddressDetails(
+    req: SetDraftWasteCollectionAddressDetailsRequest,
+  ): Promise<SetDraftWasteCollectionAddressDetailsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.ukWasteMovementsAppId,
+      setDraftWasteCollectionAddressDetails.name,
+      HttpMethod.POST,
+      req,
+    )) as SetDraftWasteCollectionAddressDetailsResponse;
   }
 }

@@ -1,9 +1,15 @@
 import * as regex from './regex';
 import * as constraints from './constraints';
 import * as errorCodes from './error-codes';
-import { getErrorMessage } from './util';
-import type { ErrorMessage, ValidationResult, FieldFormatError } from './dto';
-import { Contact, ProducerDetail } from './model';
+import { getErrorMessage, getSharedErrorCode } from './util';
+import type {
+  ErrorMessage,
+  ValidationResult,
+  FieldFormatError,
+  Section,
+  Field,
+} from './dto';
+import { Contact, ProducerDetail, Address } from './model';
 
 export * from './validation-rules';
 
@@ -155,60 +161,6 @@ export function validateProducerReference(
   };
 }
 
-export function validatePostcode(
-  value: string,
-  message?: ErrorMessage,
-): ValidationResult<string> {
-  const errors: FieldFormatError[] = [];
-
-  if (!value) {
-    return {
-      valid: false,
-      errors: [
-        {
-          field: 'Producer postcode',
-          code: errorCodes.postcodeEmpty,
-          message: message
-            ? getErrorMessage(
-                errorCodes.postcodeEmpty,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
-    };
-  }
-
-  const postcodeRegex = new RegExp(constraints.PostcodeRegex.pattern);
-
-  if (!postcodeRegex.test(value)) {
-    errors.push({
-      field: 'Producer postcode',
-      code: errorCodes.postcodeInvalid,
-      message: message
-        ? getErrorMessage(
-            errorCodes.postcodeInvalid,
-            message.locale,
-            message.context,
-          )
-        : undefined,
-    });
-  }
-
-  if (errors.length > 0) {
-    return {
-      valid: false,
-      errors: errors,
-    };
-  }
-
-  return {
-    valid: true,
-    value: value,
-  };
-}
-
 export function validateAddressSelection(
   value: string | undefined,
   message?: ErrorMessage,
@@ -237,8 +189,9 @@ export function validateAddressSelection(
   };
 }
 
-export function validateProducerBuildingNameOrNumber(
+export function validateBuildingNameOrNumber(
   buildingNameOrNumber: string,
+  section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
   const errors: FieldFormatError[] = [];
@@ -250,11 +203,17 @@ export function validateProducerBuildingNameOrNumber(
     trimmedBuildingNameOrNumber.length > constraints.FreeTextChar.max
   ) {
     errors.push({
-      field: 'Producer building name or number',
-      code: errorCodes.producerCharTooManyBuildingNameOrNumber,
+      field: (section + ' building name or number') as Field,
+      code: getSharedErrorCode(
+        errorCodes.charTooManyBuildingNameOrNumberBase,
+        section,
+      ),
       message: message
         ? getErrorMessage(
-            errorCodes.producerCharTooManyBuildingNameOrNumber,
+            getSharedErrorCode(
+              errorCodes.charTooManyBuildingNameOrNumberBase,
+              section,
+            ),
             message.locale,
             message.context,
           )
@@ -275,8 +234,9 @@ export function validateProducerBuildingNameOrNumber(
   };
 }
 
-export function validateProducerAddressLine1(
-  addressLine1?: string,
+export function validateAddressLine1(
+  addressLine1: string,
+  section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
   const errors: FieldFormatError[] = [];
@@ -288,11 +248,11 @@ export function validateProducerAddressLine1(
       valid: false,
       errors: [
         {
-          field: 'Producer address line 1',
-          code: errorCodes.producerEmptyAddressLine1,
+          field: (section + ' address line 1') as Field,
+          code: getSharedErrorCode(errorCodes.emptyAddressLine1Base, section),
           message: message
             ? getErrorMessage(
-                errorCodes.producerEmptyAddressLine1,
+                getSharedErrorCode(errorCodes.emptyAddressLine1Base, section),
                 message.locale,
                 message.context,
               )
@@ -304,11 +264,11 @@ export function validateProducerAddressLine1(
 
   if (trimmedAddressLine1.length > constraints.FreeTextChar.max) {
     errors.push({
-      field: 'Producer address line 1',
-      code: errorCodes.producerCharTooManyAddressLine1,
+      field: (section + ' address line 1') as Field,
+      code: getSharedErrorCode(errorCodes.charTooManyAddressLine1Base, section),
       message: message
         ? getErrorMessage(
-            errorCodes.producerCharTooManyAddressLine1,
+            getSharedErrorCode(errorCodes.charTooManyAddressLine1Base, section),
             message.locale,
             message.context,
           )
@@ -329,8 +289,9 @@ export function validateProducerAddressLine1(
   };
 }
 
-export function validateProducerAddressLine2(
+export function validateAddressLine2(
   addressLine2: string,
+  section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
   const errors: FieldFormatError[] = [];
@@ -342,11 +303,11 @@ export function validateProducerAddressLine2(
     trimmedAddressLine2.length > constraints.FreeTextChar.max
   ) {
     errors.push({
-      field: 'Producer address line 2',
-      code: errorCodes.producerCharTooManyAddressLine2,
+      field: (section + ' address line 2') as Field,
+      code: getSharedErrorCode(errorCodes.charTooManyAddressLine2Base, section),
       message: message
         ? getErrorMessage(
-            errorCodes.producerCharTooManyAddressLine2,
+            getSharedErrorCode(errorCodes.charTooManyAddressLine2Base, section),
             message.locale,
             message.context,
           )
@@ -367,8 +328,9 @@ export function validateProducerAddressLine2(
   };
 }
 
-export function validateProducerPostcode(
+export function validatePostcode(
   postcode: string,
+  section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
   const errors: FieldFormatError[] = [];
@@ -377,11 +339,11 @@ export function validateProducerPostcode(
 
   if (trimmedPostcode.length > constraints.PostcodeChar.max) {
     errors.push({
-      field: 'Producer postcode',
-      code: errorCodes.producerInvalidPostcode,
+      field: (section + ' postcode') as Field,
+      code: getSharedErrorCode(errorCodes.invalidPostcodeBase, section),
       message: message
         ? getErrorMessage(
-            errorCodes.producerInvalidPostcode,
+            getSharedErrorCode(errorCodes.invalidPostcodeBase, section),
             message.locale,
             message.context,
           )
@@ -391,11 +353,11 @@ export function validateProducerPostcode(
 
   if (!regex.postcodeRegex.test(trimmedPostcode)) {
     errors.push({
-      field: 'Producer postcode',
-      code: errorCodes.producerInvalidPostcode,
+      field: (section + ' postcode') as Field,
+      code: getSharedErrorCode(errorCodes.invalidPostcodeBase, section),
       message: message
         ? getErrorMessage(
-            errorCodes.producerInvalidPostcode,
+            getSharedErrorCode(errorCodes.invalidPostcodeBase, section),
             message.locale,
             message.context,
           )
@@ -416,8 +378,9 @@ export function validateProducerPostcode(
   };
 }
 
-export function validateProducerTownCity(
+export function validateTownCity(
   townCity: string,
+  section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
   const errors: FieldFormatError[] = [];
@@ -429,11 +392,11 @@ export function validateProducerTownCity(
       valid: false,
       errors: [
         {
-          field: 'Producer town or city',
-          code: errorCodes.producerEmptyTownOrCity,
+          field: (section + ' town or city') as Field,
+          code: getSharedErrorCode(errorCodes.emptyTownOrCityBase, section),
           message: message
             ? getErrorMessage(
-                errorCodes.producerEmptyTownOrCity,
+                getSharedErrorCode(errorCodes.emptyTownOrCityBase, section),
                 message.locale,
                 message.context,
               )
@@ -445,11 +408,11 @@ export function validateProducerTownCity(
 
   if (trimmedTownCity.length > constraints.FreeTextChar.max) {
     errors.push({
-      field: 'Producer town or city',
-      code: errorCodes.producerCharTooManyTownOrCity,
+      field: (section + ' town or city') as Field,
+      code: getSharedErrorCode(errorCodes.charTooManyTownOrCityBase, section),
       message: message
         ? getErrorMessage(
-            errorCodes.producerCharTooManyTownOrCity,
+            getSharedErrorCode(errorCodes.charTooManyTownOrCityBase, section),
             message.locale,
             message.context,
           )
@@ -470,8 +433,9 @@ export function validateProducerTownCity(
   };
 }
 
-export function validateProducerCountry(
+export function validateCountry(
   country: string,
+  section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
   const errors: FieldFormatError[] = [];
@@ -483,11 +447,11 @@ export function validateProducerCountry(
       valid: false,
       errors: [
         {
-          field: 'Producer country',
-          code: errorCodes.producerEmptyCountry,
+          field: (section + ' country') as Field,
+          code: getSharedErrorCode(errorCodes.emptyCountryBase, section),
           message: message
             ? getErrorMessage(
-                errorCodes.producerEmptyCountry,
+                getSharedErrorCode(errorCodes.emptyCountryBase, section),
                 message.locale,
                 message.context,
               )
@@ -499,11 +463,11 @@ export function validateProducerCountry(
 
   if (!fourNationsCountries.includes(trimmedCountry)) {
     errors.push({
-      field: 'Producer country',
-      code: errorCodes.producerInvalidCountry,
+      field: (section + ' country') as Field,
+      code: getSharedErrorCode(errorCodes.invalidCountryBase, section),
       message: message
         ? getErrorMessage(
-            errorCodes.producerInvalidCountry,
+            getSharedErrorCode(errorCodes.invalidCountryBase, section),
             message.locale,
             message.context,
           )
@@ -524,84 +488,87 @@ export function validateProducerCountry(
   };
 }
 
-export function validateProducerAddressDetails(
-  value: ProducerDetail['address'],
+export function validateAddressDetails(
+  value: Address,
+  section: Section,
   message?: ErrorMessage,
-): ValidationResult<ProducerDetail['address']> {
+): ValidationResult<Address> {
   const errors: FieldFormatError[] = [];
-  const addressToReturn: ProducerDetail['address'] = {
+  const addressToReturn: Address = {
     addressLine1: '',
     townCity: '',
     postcode: '',
     country: '',
   };
 
-  if (value.buildingNameOrNumber && value.buildingNameOrNumber.trim() !== '') {
-    const producerBuildingNameOrNumber: ValidationResult<
-      ProducerDetail['address']['buildingNameOrNumber']
-    > = validateProducerBuildingNameOrNumber(
+  if (value.buildingNameOrNumber?.trim()) {
+    const buildingNameOrNumber: ValidationResult<
+      Address['buildingNameOrNumber']
+    > = validateBuildingNameOrNumber(
       value.buildingNameOrNumber.trim() as string,
+      section as Section,
       message,
     );
 
-    if (producerBuildingNameOrNumber.valid) {
-      addressToReturn.buildingNameOrNumber = producerBuildingNameOrNumber.value;
+    if (buildingNameOrNumber.valid) {
+      addressToReturn.buildingNameOrNumber = buildingNameOrNumber.value;
     } else {
-      producerBuildingNameOrNumber.errors?.forEach((error) =>
-        errors.push(error),
-      );
+      buildingNameOrNumber.errors?.forEach((error) => errors.push(error));
     }
   }
 
-  const producerAddressLine1 = validateProducerAddressLine1(
+  const addressLine1 = validateAddressLine1(
     value.addressLine1,
+    section,
     message,
   );
-  if (producerAddressLine1.valid) {
-    addressToReturn.addressLine1 = producerAddressLine1.value;
+  if (addressLine1.valid) {
+    addressToReturn.addressLine1 = addressLine1.value;
   } else {
-    producerAddressLine1.errors?.forEach((error) => errors.push(error));
+    addressLine1.errors?.forEach((error) => errors.push(error));
   }
 
-  if (value.addressLine2 && value.addressLine2?.trim() !== '') {
-    const producerAddressLine2: ValidationResult<
-      ProducerDetail['address']['addressLine2']
-    > = validateProducerAddressLine2(
-      value.addressLine2.trim() as string,
+  if (value.addressLine2?.trim()) {
+    const addressLine2: ValidationResult<Address['addressLine2']> =
+      validateAddressLine2(
+        value.addressLine2.trim() as string,
+        section,
+        message,
+      );
+
+    if (addressLine2.valid) {
+      addressToReturn.addressLine2 = addressLine2.value;
+    } else {
+      addressLine2.errors?.forEach((error) => errors.push(error));
+    }
+  }
+
+  const townCity = validateTownCity(value.townCity, section, message);
+  if (townCity.valid) {
+    addressToReturn.townCity = townCity.value;
+  } else {
+    townCity.errors?.forEach((error) => errors.push(error));
+  }
+
+  if (value.postcode?.trim()) {
+    const postcode: ValidationResult<Address['postcode']> = validatePostcode(
+      value.postcode.trim() as string,
+      section,
       message,
     );
 
-    if (producerAddressLine2.valid) {
-      addressToReturn.addressLine2 = producerAddressLine2.value;
+    if (postcode.valid) {
+      addressToReturn.postcode = postcode.value;
     } else {
-      producerAddressLine2.errors?.forEach((error) => errors.push(error));
+      postcode.errors?.forEach((error) => errors.push(error));
     }
   }
 
-  const producerTownCity = validateProducerTownCity(value.townCity, message);
-  if (producerTownCity.valid) {
-    addressToReturn.townCity = producerTownCity.value;
+  const country = validateCountry(value.country, section, message);
+  if (country.valid) {
+    addressToReturn.country = country.value;
   } else {
-    producerTownCity.errors?.forEach((error) => errors.push(error));
-  }
-
-  if (value.postcode && value.postcode?.trim() !== '') {
-    const producerPostcode: ValidationResult<
-      ProducerDetail['address']['postcode']
-    > = validateProducerPostcode(value.postcode.trim() as string, message);
-
-    if (producerPostcode.valid) {
-      addressToReturn.postcode = producerPostcode.value;
-    } else {
-      producerPostcode.errors?.forEach((error) => errors.push(error));
-    }
-  }
-
-  const producerCountry = validateProducerCountry(value.country, message);
-  if (producerCountry.valid) {
-    addressToReturn.country = producerCountry.value;
-  } else {
-    producerCountry.errors?.forEach((error) => errors.push(error));
+    country.errors?.forEach((error) => errors.push(error));
   }
 
   if (errors.length > 0) {
@@ -617,8 +584,9 @@ export function validateProducerAddressDetails(
   };
 }
 
-export function validatePartialProducerAddressDetails(
+export function validatePartialAddressDetails(
   value: Partial<ProducerDetail['address']>,
+  section: Section,
   message?: ErrorMessage,
 ): ValidationResult<Partial<ProducerDetail['address']>> {
   const errors: FieldFormatError[] = [];
@@ -627,8 +595,9 @@ export function validatePartialProducerAddressDetails(
   if (value.buildingNameOrNumber?.trim()) {
     const producerBuildingNameOrNumber: ValidationResult<
       ProducerDetail['address']['buildingNameOrNumber']
-    > = validateProducerBuildingNameOrNumber(
+    > = validateBuildingNameOrNumber(
       value.buildingNameOrNumber,
+      section,
       message,
     );
 
@@ -644,7 +613,7 @@ export function validatePartialProducerAddressDetails(
   if (value.addressLine1?.trim()) {
     const producerAddressLine1: ValidationResult<
       ProducerDetail['address']['addressLine1']
-    > = validateProducerAddressLine1(value.addressLine1, message);
+    > = validateAddressLine1(value.addressLine1, section, message);
     if (producerAddressLine1.valid) {
       fieldsToReturn.addressLine1 = producerAddressLine1.value;
     } else {
@@ -655,7 +624,7 @@ export function validatePartialProducerAddressDetails(
   if (value.addressLine2?.trim()) {
     const producerAddressLine2: ValidationResult<
       ProducerDetail['address']['addressLine2']
-    > = validateProducerAddressLine2(value.addressLine2, message);
+    > = validateAddressLine2(value.addressLine2, section, message);
     if (producerAddressLine2.valid) {
       fieldsToReturn.addressLine2 = producerAddressLine2.value;
     } else {
@@ -666,7 +635,7 @@ export function validatePartialProducerAddressDetails(
   if (value.townCity?.trim()) {
     const producerTownCity: ValidationResult<
       ProducerDetail['address']['townCity']
-    > = validateProducerTownCity(value.townCity, message);
+    > = validateTownCity(value.townCity, section, message);
     if (producerTownCity.valid) {
       fieldsToReturn.townCity = producerTownCity.value;
     } else {
@@ -677,7 +646,7 @@ export function validatePartialProducerAddressDetails(
   if (value.country?.trim()) {
     const producerCountry: ValidationResult<
       ProducerDetail['address']['country']
-    > = validateProducerCountry(value.country, message);
+    > = validateCountry(value.country, section, message);
     if (producerCountry.valid) {
       fieldsToReturn.country = producerCountry.value;
     } else {
@@ -688,7 +657,7 @@ export function validatePartialProducerAddressDetails(
   if (value.postcode?.trim()) {
     const producerPostcode: ValidationResult<
       ProducerDetail['address']['postcode']
-    > = validateProducerPostcode(value.postcode, message);
+    > = validatePostcode(value.postcode, section, message);
     if (producerPostcode.valid) {
       fieldsToReturn.postcode = producerPostcode.value;
     } else {
@@ -752,14 +721,12 @@ export function validateProducerDetailSection(
     producerReference.errors?.forEach((error) => errors.push(error));
   }
 
-  if (
-    value.address.buildingNameOrNumber !== undefined &&
-    value.address.buildingNameOrNumber?.trim() !== ''
-  ) {
+  if (value.address.buildingNameOrNumber?.trim()) {
     const producerBuildingNameOrNumber: ValidationResult<
       ProducerDetail['address']['buildingNameOrNumber']
-    > = validateProducerBuildingNameOrNumber(
+    > = validateBuildingNameOrNumber(
       value.address.buildingNameOrNumber as string,
+      'Producer',
       message,
     );
 
@@ -773,8 +740,9 @@ export function validateProducerDetailSection(
     }
   }
 
-  const producerAddressLine1 = validateProducerAddressLine1(
+  const producerAddressLine1 = validateAddressLine1(
     value.address.addressLine1,
+    'Producer',
     message,
   );
   if (producerAddressLine1.valid) {
@@ -783,14 +751,12 @@ export function validateProducerDetailSection(
     producerAddressLine1.errors?.forEach((error) => errors.push(error));
   }
 
-  if (
-    value.address.addressLine2 !== null &&
-    value.address.addressLine2?.trim() !== ''
-  ) {
+  if (value.address.addressLine2?.trim()) {
     const producerAddressLine2: ValidationResult<
       ProducerDetail['address']['addressLine2']
-    > = validateProducerAddressLine2(
+    > = validateAddressLine2(
       value.address.addressLine2 as string,
+      'Producer',
       message,
     );
 
@@ -801,8 +767,9 @@ export function validateProducerDetailSection(
     }
   }
 
-  const producerTownCity = validateProducerTownCity(
+  const producerTownCity = validateTownCity(
     value.address.townCity,
+    'Producer',
     message,
   );
   if (producerTownCity.valid) {
@@ -811,13 +778,10 @@ export function validateProducerDetailSection(
     producerTownCity.errors?.forEach((error) => errors.push(error));
   }
 
-  if (
-    value.address.townCity !== null &&
-    value.address.townCity?.trim() !== ''
-  ) {
+  if (value.address.townCity?.trim()) {
     const producerPostcode: ValidationResult<
       ProducerDetail['address']['postcode']
-    > = validateProducerPostcode(value.address.postcode as string, message);
+    > = validatePostcode(value.address.postcode as string, 'Producer', message);
 
     if (producerPostcode.valid) {
       detailsToReturn.address.postcode = producerPostcode.value;
@@ -826,8 +790,9 @@ export function validateProducerDetailSection(
     }
   }
 
-  const producerCountry = validateProducerCountry(
+  const producerCountry = validateCountry(
     value.address.country,
+    'Producer',
     message,
   );
   if (producerCountry.valid) {
@@ -867,7 +832,7 @@ export function validateProducerDetailSection(
     producerContactPhone.errors?.forEach((error) => errors.push(error));
   }
 
-  if (value.contact.fax !== null && value.contact.fax?.trim() !== '') {
+  if (value.contact.fax?.trim()) {
     const producerContactFax: ValidationResult<
       ProducerDetail['contact']['fax']
     > = validateProducerContactFax(value.contact.fax as string, message);

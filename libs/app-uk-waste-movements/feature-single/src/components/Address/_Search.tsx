@@ -46,10 +46,11 @@ export function Search({
   const handleSubmit = async (event: React.FormEvent): Promise<void> => {
     event.preventDefault();
     const errors: FormErrors = {};
-    const postcodeValidationResult = ukwmValidation.uiValidation(
+    const postcodeValidationResult = ukwmValidation.uiSharedValidation(
       formValues.postcode,
       ukwmValidation.validationRules.validatePostcode,
       '#postcode',
+      'Producer',
       locale,
     );
     if (!postcodeValidationResult.valid) {

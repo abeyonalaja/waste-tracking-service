@@ -580,3 +580,24 @@ export type SetDraftWasteSourceResponse = Response<void>;
 export const setDraftWasteSource: Method = {
   name: 'setDraftWasteSource',
 };
+
+export type GetDraftWasteCollectionAddressDetailsRequest = IdRequest &
+  AccountIdRequest;
+export type GetDraftWasteCollectionAddressDetailsResponse =
+  | Response<DraftAddress>
+  | undefined;
+export const getDraftWasteCollectionAddressDetails: Method = {
+  name: 'getDraftWasteCollectionAddressDetails',
+};
+
+export type SetDraftWasteCollectionAddressDetailsRequest =
+  | (IdRequest &
+      AccountIdRequest & { value: Partial<Address> } & { saveAsDraft: true })
+  | (IdRequest &
+      AccountIdRequest & { value: Address } & { saveAsDraft: false });
+
+export type SetDraftWasteCollectionAddressDetailsResponse = Response<void>;
+
+export const setDraftWasteCollectionAddressDetails: Method = {
+  name: 'setDraftWasteCollectionAddressDetails',
+};

@@ -953,3 +953,44 @@ export const setDraftWasteSourceRequest: SchemaObject = {
     wasteSource: { type: 'string' },
   },
 };
+
+export const getDraftWasteCollectionAddressDetailsRequest: SchemaObject = {
+  properties: {
+    accountId: { type: 'string' },
+    id: { type: 'string' },
+  },
+};
+
+export const setDraftWasteCollectionAddressDetailsRequest: SchemaObject = {
+  properties: {
+    accountId: { type: 'string' },
+    id: { type: 'string' },
+    value: address,
+    saveAsDraft: { type: 'boolean' },
+  },
+};
+
+export const setPartialDraftWasteCollectionAddressDetailsRequest: SchemaObject =
+  {
+    properties: {
+      accountId: { type: 'string' },
+      id: { type: 'string' },
+      value: partialAddress,
+      saveAsDraft: { type: 'boolean' },
+    },
+  };
+
+export const getDraftWasteCollectionAddressDetailsResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: draftAddress,
+  },
+};
+
+export const setDraftWasteCollectionAddressDetailsResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+  },
+};

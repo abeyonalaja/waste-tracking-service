@@ -11,6 +11,8 @@ import {
   validateSetDraftProducerContactRequest,
   validateSetPartialDraftProducerContactRequest,
   validateSetDraftWasteSource,
+  validateSetDraftWasteCollectionAddressDetailsRequest,
+  validateSetPartialDraftWasteCollectionAddressDetailsRequest,
 } from './uk-waste-movements-submission.validation';
 
 export interface PluginOptions {
@@ -295,6 +297,74 @@ const plugin: Plugin<PluginOptions> = {
             accountId: h.request.auth.credentials.accountId as string,
             wasteSource: request.wasteSource,
           });
+          return request;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            err.output.payload.data = err?.data;
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/drafts/{id}/waste-collection-address',
+      handler: async function ({ params }, h) {
+        try {
+          const value = await backend.getDraftWasteCollectionAddressDetails({
+            id: params.id,
+            accountId: h.request.auth.credentials.accountId as string,
+          });
+          return value as dto.UkwmGetDraftWasteCollectionAddressDetailsResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'PUT',
+      path: '/drafts/{id}/waste-collection-address',
+      handler: async function ({ params, payload, query }, h) {
+        const saveAsDraftStr = query['saveAsDraft'] as string | undefined;
+
+        if (
+          !saveAsDraftStr ||
+          !['true', 'false'].includes(saveAsDraftStr.toLowerCase())
+        ) {
+          return Boom.badRequest();
+        }
+
+        const saveAsDraft: boolean = saveAsDraftStr.toLowerCase() === 'true';
+        if (!saveAsDraft) {
+          if (!validateSetDraftWasteCollectionAddressDetailsRequest(payload)) {
+            return Boom.badRequest();
+          }
+        } else if (
+          !validateSetPartialDraftWasteCollectionAddressDetailsRequest(payload)
+        ) {
+          return Boom.badRequest();
+        }
+        const request =
+          payload as dto.UkwmSetDraftWasteCollectionAddressDetailsRequest;
+        try {
+          await backend.setDraftWasteCollectionAddressDetails(
+            {
+              id: params.id,
+              accountId: h.request.auth.credentials.accountId as string,
+            },
+            request,
+            saveAsDraft,
+          );
           return request;
         } catch (err) {
           if (err instanceof Boom.Boom) {

@@ -274,27 +274,65 @@ try {
   );
 
   await server.invoker.listen(
-    api.getDraftProducerAddressDetails.name,
+    api.getDraftWasteCollectionAddressDetails.name,
     async ({ body }) => {
       if (body === undefined) {
         return fromBoom(Boom.badRequest('Missing body'));
       }
       const request = JSON.parse(
         body,
-      ) as api.GetDraftProducerAddressDetailsRequest;
+      ) as api.GetDraftWasteCollectionAddressDetailsRequest;
       if (request == undefined) {
         return fromBoom(Boom.badRequest());
       }
 
       if (
-        !validateSubmission.validateGetDraftProducerAddressDetailsRequest(
+        !validateSubmission.validateGetDraftWasteCollectionAddressDetailsRequest(
           request,
         )
       ) {
         return fromBoom(Boom.badRequest());
       }
 
-      return await submissionController.getDraftProducerAddressDetails(request);
+      return await submissionController.getDraftWasteCollectionAddressDetails(
+        request,
+      );
+    },
+    { method: HttpMethod.POST },
+  );
+
+  await server.invoker.listen(
+    api.setDraftWasteCollectionAddressDetails.name,
+    async ({ body }) => {
+      if (body === undefined) {
+        return fromBoom(Boom.badRequest('Missing body'));
+      }
+
+      const request = JSON.parse(
+        body,
+      ) as api.SetDraftWasteCollectionAddressDetailsRequest;
+
+      if (!request.saveAsDraft) {
+        if (
+          !validateSubmission.validateSetDraftWasteCollectionAddressDetailsRequest(
+            request,
+          )
+        ) {
+          return fromBoom(Boom.badRequest());
+        }
+      } else {
+        if (
+          !validateSubmission.validateSetPartialDraftWasteCollectionAddressDetailsRequest(
+            request,
+          )
+        ) {
+          return fromBoom(Boom.badRequest());
+        }
+      }
+
+      return await submissionController.setDraftWasteCollectionAddressDetails(
+        request,
+      );
     },
     { method: HttpMethod.POST },
   );

@@ -707,8 +707,9 @@ export default class SubmissionController {
       ) {
         if (saveAsDraft) {
           const partialProducerAddressDetailsValidation =
-            ukwmValidation.validationRules.validatePartialProducerAddressDetails(
+            ukwmValidation.validationRules.validatePartialAddressDetails(
               value,
+              'Producer',
             );
 
           if (!partialProducerAddressDetailsValidation.valid) {
@@ -726,8 +727,9 @@ export default class SubmissionController {
           };
         } else {
           const producerAddressDetailsValidation =
-            ukwmValidation.validationRules.validateProducerAddressDetails(
+            ukwmValidation.validationRules.validateAddressDetails(
               value,
+              'Producer',
             );
 
           if (!producerAddressDetailsValidation.valid) {
@@ -976,6 +978,115 @@ export default class SubmissionController {
         accountId,
       );
       return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  setDraftWasteCollectionAddressDetails: Handler<
+    api.SetDraftWasteCollectionAddressDetailsRequest,
+    api.SetDraftWasteCollectionAddressDetailsResponse
+  > = async ({ id, accountId, value, saveAsDraft }) => {
+    try {
+      const draft = (await this.repository.getDraft(
+        draftsContainerName,
+        id,
+        accountId,
+      )) as api.Draft;
+
+      if (draft === undefined) {
+        return fromBoom(Boom.notFound());
+      }
+
+      if (
+        draft.producerAndCollection.status !== 'NotStarted' &&
+        draft.producerAndCollection.wasteCollection
+      ) {
+        if (saveAsDraft) {
+          const partialWasteCollectionAddressDetailsValidation =
+            ukwmValidation.validationRules.validatePartialAddressDetails(
+              value,
+              'Waste Collection',
+            );
+
+          if (!partialWasteCollectionAddressDetailsValidation.valid) {
+            return fromBoom(
+              Boom.badRequest(
+                'Validation failed',
+                partialWasteCollectionAddressDetailsValidation.errors,
+              ),
+            );
+          }
+
+          draft.producerAndCollection.wasteCollection.address = {
+            status: 'Started',
+            ...value,
+          };
+        } else {
+          const wasteCollectionAddressDetailsValidation =
+            ukwmValidation.validationRules.validateAddressDetails(
+              value,
+              'Waste Collection',
+            );
+
+          if (!wasteCollectionAddressDetailsValidation.valid) {
+            return fromBoom(
+              Boom.badRequest(
+                'Validation failed',
+                wasteCollectionAddressDetailsValidation.errors,
+              ),
+            );
+          }
+
+          draft.producerAndCollection.wasteCollection.address = {
+            status: 'Complete',
+            ...wasteCollectionAddressDetailsValidation.value,
+          };
+        }
+      }
+
+      await this.repository.saveRecord(
+        draftsContainerName,
+        { ...draft },
+        accountId,
+      );
+      return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  getDraftWasteCollectionAddressDetails: Handler<
+    api.GetDraftWasteCollectionAddressDetailsRequest,
+    api.GetDraftWasteCollectionAddressDetailsResponse
+  > = async ({ id, accountId }) => {
+    try {
+      const draft = (await this.repository.getDraft(
+        draftsContainerName,
+        id,
+        accountId,
+      )) as api.Draft;
+
+      if (draft === undefined) {
+        return fromBoom(Boom.notFound());
+      }
+
+      if (
+        draft.producerAndCollection.status !== 'NotStarted' &&
+        draft.producerAndCollection.wasteCollection
+      ) {
+        return success(draft.producerAndCollection.wasteCollection.address);
+      }
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);

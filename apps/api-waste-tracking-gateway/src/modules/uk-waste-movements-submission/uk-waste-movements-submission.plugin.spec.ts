@@ -60,6 +60,16 @@ const mockBackend = {
     >(),
   getDraftWasteSource:
     jest.fn<({ id, accountId }: SubmissionRef) => Promise<void>>(),
+  setDraftWasteCollectionAddressDetails:
+    jest.fn<
+      (
+        ref: SubmissionRef,
+        value: UkwmDraftAddress,
+        saveAsDraft?: boolean,
+      ) => Promise<void>
+    >(),
+  getDraftWasteCollectionAddressDetails:
+    jest.fn<({ id }: SubmissionRef) => Promise<void>>(),
 };
 
 const app = server({
@@ -221,6 +231,36 @@ describe('UkWasteMovementsSubmissionPlugin', () => {
       };
 
       mockBackend.setDraftWasteSource.mockRejectedValue(Boom.badRequest());
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe('GET /drafts/{id}/waste-collection-address', () => {
+    it('Responds with 400 if invalid request is received in the payload', async () => {
+      const options = {
+        method: 'GET',
+        url: `/ukwm/drafts/{id}/waste-collection-address`,
+      };
+
+      mockBackend.getDraftWasteCollectionAddressDetails.mockRejectedValue(
+        Boom.badRequest(),
+      );
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe('PUT /drafts/{id}/waste-collection-address', () => {
+    it('Responds with 400 if invalid request is received in the payload', async () => {
+      const options = {
+        method: 'PUT',
+        url: `/ukwm/drafts/{id}/waste-collection-address`,
+      };
+
+      mockBackend.setDraftWasteCollectionAddressDetails.mockRejectedValue(
+        Boom.badRequest(),
+      );
       const response = await app.inject(options);
       expect(response.statusCode).toBe(400);
     });

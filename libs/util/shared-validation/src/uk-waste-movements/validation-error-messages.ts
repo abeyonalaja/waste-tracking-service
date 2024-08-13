@@ -3,6 +3,18 @@ import * as constraints from './constraints';
 import { ValidationErrorMessages } from './dto';
 
 export const validationErrorMessages: ValidationErrorMessages = {
+  [codes.defaultErrorCode]: {
+    en: {
+      csv: 'Error',
+      api: 'Error',
+      ui: 'Error',
+    },
+    cy: {
+      csv: 'Gwall',
+      api: 'Gwall',
+      ui: 'Gwall',
+    },
+  },
   [codes.producerEmptyReference]: {
     en: {
       csv: 'Enter a unique reference',

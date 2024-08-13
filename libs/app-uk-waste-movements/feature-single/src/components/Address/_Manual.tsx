@@ -48,40 +48,47 @@ export function Manual({
   ): Promise<void> => {
     event.preventDefault();
     const errors: FormErrors = {};
-    const buildingNameValidationResult = ukwmValidation.uiValidation(
+    const buildingNameValidationResult = ukwmValidation.uiSharedValidation(
       formValues.buildingNameOrNumber,
-      ukwmValidation.validationRules.validateProducerBuildingNameOrNumber,
+      ukwmValidation.validationRules.validateBuildingNameOrNumber,
       '#buildingNameOrNumber',
+      'Producer',
       locale,
+      'ui',
     );
-    const addressLine1ValidationResult = ukwmValidation.uiValidation(
+    const addressLine1ValidationResult = ukwmValidation.uiSharedValidation(
       formValues.addressLine1,
-      ukwmValidation.validationRules.validateProducerAddressLine1,
+      ukwmValidation.validationRules.validateAddressLine1,
       '#addressLine1',
+      'Producer',
       locale,
     );
-    const addressLine2ValidationResult = ukwmValidation.uiValidation(
+    const addressLine2ValidationResult = ukwmValidation.uiSharedValidation(
       formValues.addressLine2,
-      ukwmValidation.validationRules.validateProducerAddressLine2,
+      ukwmValidation.validationRules.validateAddressLine2,
       '#addressLine2',
+      'Producer',
       locale,
     );
-    const townCityValidationResult = ukwmValidation.uiValidation(
+    const townCityValidationResult = ukwmValidation.uiSharedValidation(
       formValues.townCity,
-      ukwmValidation.validationRules.validateProducerTownCity,
+      ukwmValidation.validationRules.validateTownCity,
       '#townCity',
+      'Producer',
       locale,
     );
-    const postcodeValidationResult = ukwmValidation.uiValidation(
+    const postcodeValidationResult = ukwmValidation.uiSharedValidation(
       formValues.postcode,
       ukwmValidation.validationRules.validatePostcode,
       '#postcode',
+      'Producer',
       locale,
     );
-    const countryValidationResult = ukwmValidation.uiValidation(
+    const countryValidationResult = ukwmValidation.uiSharedValidation(
       formValues.country,
-      ukwmValidation.validationRules.validateProducerCountry,
+      ukwmValidation.validationRules.validateCountry,
       '#country',
+      'Producer',
       locale,
     );
 

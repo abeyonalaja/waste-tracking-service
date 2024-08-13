@@ -22,6 +22,9 @@ import {
   GetDraftProducerAddressDetailsResponse,
   SetDraftWasteSourceRequest,
   GetDraftWasteSourceResponse,
+  GetDraftWasteCollectionAddressDetailsRequest,
+  GetDraftWasteCollectionAddressDetailsResponse,
+  SetDraftWasteCollectionAddressDetailsRequest,
 } from './draft.dto';
 import {
   carrier,
@@ -47,6 +50,10 @@ import {
   getDraftProducerContactDetailResponse,
   setDraftWasteSourceRequest,
   getDraftWasteSourceResponse,
+  getDraftWasteCollectionAddressDetailsRequest,
+  getDraftWasteCollectionAddressDetailsResponse,
+  setDraftWasteCollectionAddressDetailsRequest,
+  setPartialDraftWasteCollectionAddressDetailsRequest,
 } from './draft.schema';
 
 const ajv = new Ajv();
@@ -998,6 +1005,87 @@ describe('getDraftWasteSourceResponse', () => {
         value: 'Industrial',
       },
     };
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('getDraftWasteCollectionAddressDetailsRequest', () => {
+  const validate = ajv.compile<GetDraftWasteCollectionAddressDetailsRequest>(
+    getDraftWasteCollectionAddressDetailsRequest,
+  );
+
+  it('is compatible with dto value', () => {
+    const value: GetDraftWasteCollectionAddressDetailsRequest = {
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('setDraftWasteCollectionAddressDetailsRequest', () => {
+  const validate = ajv.compile<SetDraftWasteCollectionAddressDetailsRequest>(
+    setDraftWasteCollectionAddressDetailsRequest,
+  );
+
+  it('is compatible with dto value', () => {
+    const value: SetDraftWasteCollectionAddressDetailsRequest = {
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+      value: {
+        buildingNameOrNumber: '123',
+        addressLine1: '123 Oxford Street',
+        addressLine2: 'Westminster',
+        townCity: 'London',
+        postcode: 'W1A 1AA',
+        country: 'England',
+      },
+      saveAsDraft: false,
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('setPartialDraftWasteCollectionrAddressDetailsRequest', () => {
+  const validate = ajv.compile<SetDraftWasteCollectionAddressDetailsRequest>(
+    setPartialDraftWasteCollectionAddressDetailsRequest,
+  );
+
+  it('is compatible with dto value', () => {
+    const value: SetDraftWasteCollectionAddressDetailsRequest = {
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+      value: {
+        buildingNameOrNumber: '123',
+      },
+      saveAsDraft: true,
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('getDraftWasteCollectionAddressDetailsResponse', () => {
+  const validate = ajv.compile<GetDraftWasteCollectionAddressDetailsResponse>(
+    getDraftWasteCollectionAddressDetailsResponse,
+  );
+
+  it('is compatible with dto value', () => {
+    const value: GetDraftWasteCollectionAddressDetailsResponse = {
+      success: true,
+      value: {
+        status: 'Complete',
+        buildingNameOrNumber: '123',
+        addressLine1: '123 Oxford Street',
+        addressLine2: 'Westminster',
+        townCity: 'London',
+        postcode: 'W1A 1AA',
+        country: 'England',
+      },
+    };
+
     expect(validate(value)).toBe(true);
   });
 });

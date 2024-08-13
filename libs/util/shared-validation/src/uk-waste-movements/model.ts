@@ -6,3 +6,5 @@ export type ProducerDetail = api.ProducerDetail;
 export type ProducerDetailFlattened = bulkApi.ProducerDetailFlattened;
 
 export type Contact = api.Contact;
+
+export type Address = api.Address;

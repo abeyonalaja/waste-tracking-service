@@ -281,3 +281,8 @@ export type UkwmGetDraftWasteSourceResponse = UkwmDraftWasteSource;
 export interface UkwmSetDraftWasteSourceRequest {
   wasteSource: string;
 }
+
+export type UkwmGetDraftWasteCollectionAddressDetailsResponse =
+  UkwmDraftAddress;
+
+export type UkwmSetDraftWasteCollectionAddressDetailsRequest = UkwmAddress;

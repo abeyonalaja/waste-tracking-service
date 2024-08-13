@@ -330,8 +330,9 @@ export function setDraftProducerAddressDetails(
   ) {
     if (saveAsDraft) {
       const partialAddressDetailsValidationResult =
-        ukwmValidation.validationRules.validatePartialProducerAddressDetails(
+        ukwmValidation.validationRules.validatePartialAddressDetails(
           value as Partial<UkwmAddress>,
+          'Producer',
         );
 
       if (!partialAddressDetailsValidationResult.valid) {
@@ -350,8 +351,9 @@ export function setDraftProducerAddressDetails(
       value = value as UkwmAddress;
 
       const addressDetailsValidationResult =
-        ukwmValidation.validationRules.validateProducerAddressDetails(
+        ukwmValidation.validationRules.validateAddressDetails(
           value as UkwmAddress,
+          'Producer',
         );
 
       if (!addressDetailsValidationResult.valid) {
@@ -501,6 +503,92 @@ export function setDraftWasteSource(ref: UkwmSetWasteSourceRef): Promise<void> {
       draft.producerAndCollection.wasteCollection.wasteSource = {
         status: 'Complete',
         value: wasteSource,
+      };
+    }
+  }
+  return Promise.resolve();
+}
+
+export function getDraftWasteCollectionAddressDetails({
+  id,
+  accountId,
+}: UkwmSubmissionRef): Promise<UkwmDraftAddress | undefined> {
+  let draft = db.ukwmDrafts.find((d) => d.id == id && d.accountId == accountId);
+
+  if (!draft && id === '123') {
+    draft = db.ukwmDrafts.find((d) => d.id === id);
+  }
+
+  if (draft === undefined) {
+    return Promise.reject(new NotFoundError('Draft not found.'));
+  }
+  if (
+    draft.producerAndCollection.status !== 'NotStarted' &&
+    draft.producerAndCollection.wasteCollection
+  ) {
+    return Promise.resolve(draft.producerAndCollection.wasteCollection.address);
+  } else {
+    return Promise.resolve(undefined);
+  }
+}
+export function setDraftWasteCollectionAddressDetails(
+  ref: UkwmSubmissionRef,
+  value: Partial<UkwmAddress> | UkwmAddress,
+  saveAsDraft: boolean,
+): Promise<void> {
+  const { id, accountId } = ref;
+  let draft = db.ukwmDrafts.find((d) => d.id == id && d.accountId == accountId);
+
+  if (!draft && id === '123') {
+    draft = db.ukwmDrafts.find((d) => d.id === id);
+  }
+
+  if (draft === undefined) {
+    return Promise.reject(new NotFoundError('Draft not found.'));
+  }
+  if (
+    draft.producerAndCollection.status !== 'NotStarted' &&
+    draft.producerAndCollection.wasteCollection
+  ) {
+    if (saveAsDraft) {
+      const partialAddressDetailsValidationResult =
+        ukwmValidation.validationRules.validatePartialAddressDetails(
+          value as Partial<UkwmAddress>,
+          'Producer',
+        );
+
+      if (!partialAddressDetailsValidationResult.valid) {
+        return Promise.reject(
+          new BadRequestError(
+            'Validation error',
+            partialAddressDetailsValidationResult.errors,
+          ),
+        );
+      }
+      draft.producerAndCollection.wasteCollection.address = {
+        status: 'Started',
+        ...(partialAddressDetailsValidationResult.value as Partial<UkwmAddress>),
+      };
+    } else {
+      value = value as UkwmAddress;
+
+      const addressDetailsValidationResult =
+        ukwmValidation.validationRules.validateAddressDetails(
+          value as UkwmAddress,
+          'Producer',
+        );
+
+      if (!addressDetailsValidationResult.valid) {
+        return Promise.reject(
+          new BadRequestError(
+            'Validation error',
+            addressDetailsValidationResult.errors,
+          ),
+        );
+      }
+      draft.producerAndCollection.wasteCollection.address = {
+        status: 'Complete',
+        ...(addressDetailsValidationResult.value as UkwmAddress),
       };
     }
   }

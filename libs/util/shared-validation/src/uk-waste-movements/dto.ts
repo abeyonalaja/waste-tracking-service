@@ -2,6 +2,8 @@ export type Locale = 'en' | 'cy';
 
 export type Context = 'csv' | 'api' | 'ui';
 
+export type Section = 'Producer' | 'Waste Collection' | 'Receiver';
+
 export type Field =
   | 'Reference'
   | 'Postcode'
@@ -18,7 +20,13 @@ export type Field =
   | 'Producer contact phone number'
   | 'Producer fax number'
   | 'Producer Standard Industrial Classification (SIC) code'
-  | 'Waste Collection Details Waste Source';
+  | 'Waste Collection Details Waste Source'
+  | 'Waste Collection building name or number'
+  | 'Waste Collection address line 1'
+  | 'Waste Collection address line 2'
+  | 'Waste Collection town or city'
+  | 'Waste Collection country'
+  | 'Waste Collection postcode';
 
 export interface ErrorMessage {
   locale: Locale;
