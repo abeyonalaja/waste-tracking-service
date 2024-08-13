@@ -5,7 +5,7 @@ require 'json'
 # this file is to read from the json files
 class Translations
   def self.key(value_to_find)
-    if $translation_file == 'UKM'
+    if @translation_file == 'UKM'
       ukmv_key(value_to_find)
     else
       glw_key value_to_find
@@ -13,7 +13,7 @@ class Translations
   end
 
   def self.value(key_to_find)
-    if $translation_file == 'UKM'
+    if @translation_file == 'UKM'
       ukmv_value(key_to_find)
     else
       glw_value key_to_find
