@@ -15,6 +15,7 @@ Feature: AS A WTS user
 
   Scenario: User navigates to GLW app without paying and verify payment banner is present
     Given I navigate to service charge page after login on DCID portal
+    And I click Continue without payment button
     Then the "Account" page is displayed
     And I verify payment warning banner is displayed
     And I click Green list waste app card
@@ -22,6 +23,7 @@ Feature: AS A WTS user
 
   Scenario: User navigates to UKWM app without paying and verify payment banner is present
     Given I navigate to service charge page after login on DCID portal
+    And I click Continue without payment button
     Then the "Account" page is displayed
     And I verify payment warning banner is displayed
     And I click UKWM app card

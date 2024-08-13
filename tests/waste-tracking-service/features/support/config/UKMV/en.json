@@ -516,7 +516,7 @@
         "itemFive": "underscores",
         "itemSix": "spaces"
       },
-      "example": "For example, ABC_ 01/02/2025.",
+      "example": "For example, 'ABC_ 01/02/2025'",
       "form": {
         "errorSummaryHeading": "There is a problem",
         "inputLabel": "Enter a reference",

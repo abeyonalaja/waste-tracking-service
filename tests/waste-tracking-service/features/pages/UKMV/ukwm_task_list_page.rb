@@ -41,6 +41,6 @@ class UkwmTaskListPage < GenericPage
   end
 
   def waste_producer_collection_details_status
-    find('details-of-the-waste-producer-and-waste-collection-status')
+    find('waste-producer-and-collection-details-status')
   end
 end

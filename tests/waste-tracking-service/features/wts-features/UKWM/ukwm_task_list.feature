@@ -10,4 +10,8 @@ Feature: UKM Task List feature
     Then I should see waste producer and waste collection status should be "Incomplete"
     And the UKWM task "Producer organisation address" should be "Not started yet"
     And the UKWM task "Producer organisation contact details" should be "Not started yet"
-#    And the UKWM task "Waste collection details" should be "invalid status"
+    And the UKWM task "Producer SIC code" should be "Not started yet"
+    And the UKWM task "Waste collection details" should be "Not started yet"
+    And the UKWM task "Source of the waste" should be "Not started yet"
+    And the UKWM task "Check your producer and waste collection answers" should be "Not started yet"
+    
