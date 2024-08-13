@@ -1,3 +1,4 @@
+@UKMV
 Feature: UKM Task List feature
   I NEED to submit waste export
   SO THAT my waste can be processed
@@ -14,4 +15,11 @@ Feature: UKM Task List feature
     And the UKWM task "Waste collection details" should be "Not started yet"
     And the UKWM task "Source of the waste" should be "Not started yet"
     And the UKWM task "Check your producer and waste collection answers" should be "Not started yet"
-    
+    Then I should see Waste carrier details status should be "Incomplete"
+    And the UKWM task "Carrier address" should be "Not started yet"
+    And the UKWM task "Carrier contact details" should be "Not started yet"
+    And the UKWM task "Carrier mode of transport" should be "Not started yet"
+    And the UKWM task "Check your carrier details answers" should be "Not started yet"
+
+
+

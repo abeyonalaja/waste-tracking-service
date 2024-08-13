@@ -129,7 +129,6 @@
     "cardLink": "Create a new multiple waste movement",
     "cardOneTitle": "Start a new waste movement",
     "cardOneContent": "Create multiple new waste movements",
-
     "newWasteMovements": {
       "title": "New waste movements",
       "description": "Create a single waste movement, upload a CSV file of multiple movements, or continue a draft waste movement.",
@@ -544,6 +543,14 @@
         "taskOne": "Producer organisation address",
         "taskTwo": "Producer organisation contact details",
         "taskThree": "Waste collection details"
+      },
+      "carrier": {
+        "heading": "Waste carrier details (optional)",
+        "description": "Details of who transports the waste. All carrier details need to be entered if you know them in advance of the waste collection.",
+        "carrierAddress": "Carrier address",
+        "carrierContactDetails": "Carrier contact details",
+        "modeOfTransport": "Carrier mode of transport",
+        "checkYourAnswers": "Check your carrier details answers"
       }
     },
     "postcode": {

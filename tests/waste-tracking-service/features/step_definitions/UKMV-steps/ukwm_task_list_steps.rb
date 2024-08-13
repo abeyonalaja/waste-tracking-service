@@ -20,3 +20,8 @@ end
 And(/^I should see UKWM waste reference on task list page$/) do
   expect(UkwmTaskListPage.new).to have_text TestStatus.test_status(:ukm_reference_number)
 end
+
+Then(/^I should see Waste carrier details status should be "([^"]*)"$/) do |status|
+  expect(UkwmTaskListPage.new.waste_carrier_details_status.text).to eq status
+end
+

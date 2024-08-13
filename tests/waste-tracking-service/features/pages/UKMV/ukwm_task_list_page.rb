@@ -7,6 +7,7 @@ class UkwmTaskListPage < GenericPage
   UNIQUE_REFER = 'Unique reference'
   TITLE1 = 'Waste producer and collection details'
   SUB_TITLE1 = 'Details of the waste producer and waste collection'
+  WC_SUB_TEXT = Translations.ukmv_value 'single.taskList.carrier.description'
 
   def check_page_displayed
     expect(self).to have_css 'h1', text: TITLE, exact_text: true
@@ -16,6 +17,7 @@ class UkwmTaskListPage < GenericPage
     expect(self).to have_text UNIQUE_REFER
     expect(self).to have_text TITLE1
     expect(self).to have_text SUB_TITLE1
+    expect(self).to have_text WC_SUB_TEXT
   end
 
   def has_completed_badge_for_task?(task_name, status)
@@ -42,5 +44,9 @@ class UkwmTaskListPage < GenericPage
 
   def waste_producer_collection_details_status
     find('waste-producer-and-collection-details-status')
+  end
+
+  def waste_carrier_details_status
+    find('waste-carrier-details-(optional)-status')
   end
 end
