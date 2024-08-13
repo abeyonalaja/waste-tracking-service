@@ -13,13 +13,13 @@ Given(/^I login into UKWM app$/) do
   TestStatus.set_test_status('Test ENV', Env.test_env)
   TestStatus.set_test_status('Start url', Env.start_page_url)
   visit(Env.start_page_url)
+  set_feature_cookies
   click_link('Start now')
   HelperMethods.wait_for_a_sec
   user = "USER#{@current_process}"
   OverviewPage.new.login_to_dcid(user)
   AccountPage.new.check_page_displayed
   AccountPage.new.move_waste_in_uk_card
-  set_feature_cookies
 end
 
 Given(/^I navigate to waste tracking accounts page$/) do
@@ -27,10 +27,10 @@ Given(/^I navigate to waste tracking accounts page$/) do
   TestStatus.set_test_status('Test ENV', Env.test_env)
   TestStatus.set_test_status('Start url', Env.start_page_url)
   visit(Env.start_page_url)
+  set_feature_cookies
   click_link('Start now')
   HelperMethods.wait_for_a_sec
   user = "USER#{@current_process}"
   OverviewPage.new.login_to_dcid(user)
   AccountPage.new.check_page_displayed
-  set_feature_cookies
 end

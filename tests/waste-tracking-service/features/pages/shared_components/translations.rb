@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 require 'json'
+require_relative '../../helpers/test_status'
 
 # this file is to read from the json files
 class Translations
+
   def self.key(value_to_find)
-    if @translation_file == 'UKM'
+    value = TestStatus.test_status(:trans_file)
+    if value == 'UKM'
       ukmv_key(value_to_find)
     else
       glw_key value_to_find
@@ -13,7 +16,8 @@ class Translations
   end
 
   def self.value(key_to_find)
-    if @translation_file == 'UKM'
+    value = TestStatus.test_status(:trans_file)
+    if value == 'UKM'
       ukmv_value(key_to_find)
     else
       glw_value key_to_find
