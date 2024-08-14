@@ -210,10 +210,7 @@ export function validateBuildingNameOrNumber(
       ),
       message: message
         ? getErrorMessage(
-            getSharedErrorCode(
-              errorCodes.charTooManyBuildingNameOrNumberBase,
-              section,
-            ),
+            errorCodes.charTooManyBuildingNameOrNumberBase,
             message.locale,
             message.context,
           )
@@ -252,7 +249,7 @@ export function validateAddressLine1(
           code: getSharedErrorCode(errorCodes.emptyAddressLine1Base, section),
           message: message
             ? getErrorMessage(
-                getSharedErrorCode(errorCodes.emptyAddressLine1Base, section),
+                errorCodes.emptyAddressLine1Base,
                 message.locale,
                 message.context,
               )
@@ -268,7 +265,7 @@ export function validateAddressLine1(
       code: getSharedErrorCode(errorCodes.charTooManyAddressLine1Base, section),
       message: message
         ? getErrorMessage(
-            getSharedErrorCode(errorCodes.charTooManyAddressLine1Base, section),
+            errorCodes.charTooManyAddressLine1Base,
             message.locale,
             message.context,
           )
@@ -307,7 +304,7 @@ export function validateAddressLine2(
       code: getSharedErrorCode(errorCodes.charTooManyAddressLine2Base, section),
       message: message
         ? getErrorMessage(
-            getSharedErrorCode(errorCodes.charTooManyAddressLine2Base, section),
+            errorCodes.charTooManyAddressLine2Base,
             message.locale,
             message.context,
           )
@@ -343,7 +340,7 @@ export function validatePostcode(
       code: getSharedErrorCode(errorCodes.invalidPostcodeBase, section),
       message: message
         ? getErrorMessage(
-            getSharedErrorCode(errorCodes.invalidPostcodeBase, section),
+            errorCodes.invalidPostcodeBase,
             message.locale,
             message.context,
           )
@@ -357,7 +354,7 @@ export function validatePostcode(
       code: getSharedErrorCode(errorCodes.invalidPostcodeBase, section),
       message: message
         ? getErrorMessage(
-            getSharedErrorCode(errorCodes.invalidPostcodeBase, section),
+            errorCodes.invalidPostcodeBase,
             message.locale,
             message.context,
           )
@@ -396,7 +393,7 @@ export function validateTownCity(
           code: getSharedErrorCode(errorCodes.emptyTownOrCityBase, section),
           message: message
             ? getErrorMessage(
-                getSharedErrorCode(errorCodes.emptyTownOrCityBase, section),
+                errorCodes.emptyTownOrCityBase,
                 message.locale,
                 message.context,
               )
@@ -412,7 +409,7 @@ export function validateTownCity(
       code: getSharedErrorCode(errorCodes.charTooManyTownOrCityBase, section),
       message: message
         ? getErrorMessage(
-            getSharedErrorCode(errorCodes.charTooManyTownOrCityBase, section),
+            errorCodes.charTooManyTownOrCityBase,
             message.locale,
             message.context,
           )
@@ -451,7 +448,7 @@ export function validateCountry(
           code: getSharedErrorCode(errorCodes.emptyCountryBase, section),
           message: message
             ? getErrorMessage(
-                getSharedErrorCode(errorCodes.emptyCountryBase, section),
+                errorCodes.emptyCountryBase,
                 message.locale,
                 message.context,
               )
@@ -467,7 +464,7 @@ export function validateCountry(
       code: getSharedErrorCode(errorCodes.invalidCountryBase, section),
       message: message
         ? getErrorMessage(
-            getSharedErrorCode(errorCodes.invalidCountryBase, section),
+            errorCodes.invalidCountryBase,
             message.locale,
             message.context,
           )

@@ -51,7 +51,7 @@ describe('Producer reference validation', () => {
   });
 });
 
-describe('Producer building name or number validation', () => {
+describe('Building name or number validation', () => {
   it('should return valid true when building name or number is valid', () => {
     const buildingName = faker.datatype.string(10);
     const result = validateBuildingNameOrNumber(buildingName, 'Producer', {
@@ -89,7 +89,7 @@ describe('Producer building name or number validation', () => {
     }
   });
 
-  it('should return an error when the building name is too long', () => {
+  it('should return an error when the building name is too long - producer', () => {
     const buildingName = faker.datatype.string(251);
     const result = validateBuildingNameOrNumber(buildingName, 'Producer', {
       locale: 'en',
@@ -105,9 +105,47 @@ describe('Producer building name or number validation', () => {
       });
     }
   });
+
+  it('should return an error when the building name is too long - waste collection', () => {
+    const buildingName = faker.datatype.string(251);
+    const result = validateBuildingNameOrNumber(
+      buildingName,
+      'Waste Collection',
+      {
+        locale: 'en',
+        context: 'ui',
+      },
+    );
+
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 12000,
+        field: 'Waste Collection building name or number',
+        message: 'Building name or number must be less than 250 characters',
+      });
+    }
+  });
+
+  it('should return an error when the building name is too long - carrier', () => {
+    const buildingName = faker.datatype.string(251);
+    const result = validateBuildingNameOrNumber(buildingName, 'Carrier', {
+      locale: 'en',
+      context: 'ui',
+    });
+
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 15000,
+        field: 'Carrier building name or number',
+        message: 'Building name or number must be less than 250 characters',
+      });
+    }
+  });
 });
 
-describe('Producer address line 1 validation', () => {
+describe('Address line 1 validation', () => {
   it('should return valid true when address line 1 is valid', () => {
     const addressLine1 = faker.datatype.string(10);
     const result = validateAddressLine1(addressLine1, 'Producer', {
@@ -133,7 +171,7 @@ describe('Producer address line 1 validation', () => {
     }
   });
 
-  it('should return an error when the address line 1 is too long', () => {
+  it('should return an error when the address line 1 is too long - producer', () => {
     const addressLine1 = faker.datatype.string(251);
     const result = validateAddressLine1(addressLine1, 'Producer', {
       locale: 'en',
@@ -149,9 +187,43 @@ describe('Producer address line 1 validation', () => {
       });
     }
   });
+
+  it('should return an error when the address line 1 is too long - waste collection', () => {
+    const addressLine1 = faker.datatype.string(251);
+    const result = validateAddressLine1(addressLine1, 'Waste Collection', {
+      locale: 'en',
+      context: 'ui',
+    });
+
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 12004,
+        field: 'Waste Collection address line 1',
+        message: 'Address line 1 must be less than 250 characters',
+      });
+    }
+  });
+
+  it('should return an error when the address line 1 is too long - Carrier', () => {
+    const addressLine1 = faker.datatype.string(251);
+    const result = validateAddressLine1(addressLine1, 'Carrier', {
+      locale: 'en',
+      context: 'ui',
+    });
+
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 15004,
+        field: 'Carrier address line 1',
+        message: 'Address line 1 must be less than 250 characters',
+      });
+    }
+  });
 });
 
-describe('Producer address line 2 validation', () => {
+describe('Address line 2 validation', () => {
   it('should return valid true when address line 2 is valid', () => {
     const addressLine2 = faker.datatype.string(10);
     const result = validateAddressLine2(addressLine2, 'Producer', {
@@ -177,7 +249,7 @@ describe('Producer address line 2 validation', () => {
     }
   });
 
-  it('should return an error when the address line 2 is too long', () => {
+  it('should return an error when the address line 2 is too long - producer', () => {
     const addressLine2 = faker.datatype.string(251);
     const result = validateAddressLine2(addressLine2, 'Producer', {
       locale: 'en',
@@ -193,9 +265,43 @@ describe('Producer address line 2 validation', () => {
       });
     }
   });
+
+  it('should return an error when the address line 2 is too long - Waste Collection', () => {
+    const addressLine2 = faker.datatype.string(251);
+    const result = validateAddressLine2(addressLine2, 'Waste Collection', {
+      locale: 'en',
+      context: 'ui',
+    });
+
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 12005,
+        field: 'Waste Collection address line 2',
+        message: 'Address line 2 must be less than 250 characters',
+      });
+    }
+  });
+
+  it('should return an error when the address line 2 is too long - Carrier', () => {
+    const addressLine2 = faker.datatype.string(251);
+    const result = validateAddressLine2(addressLine2, 'Carrier', {
+      locale: 'en',
+      context: 'ui',
+    });
+
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 15005,
+        field: 'Carrier address line 2',
+        message: 'Address line 2 must be less than 250 characters',
+      });
+    }
+  });
 });
 
-describe('Producer town or city validation', () => {
+describe('Town or city validation', () => {
   it('should return valid true when town or city is valid', () => {
     const townOrCity = faker.datatype.string(10);
     const result = validateTownCity(townOrCity, 'Producer', {
@@ -237,9 +343,26 @@ describe('Producer town or city validation', () => {
       });
     }
   });
+
+  it('should return an error when the town or city is too long', () => {
+    const townOrCity = faker.datatype.string(251);
+    const result = validateTownCity(townOrCity, 'Waste Collection', {
+      locale: 'en',
+      context: 'ui',
+    });
+
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 12007,
+        field: 'Waste Collection town or city',
+        message: 'Town or city must be less than 250 characters',
+      });
+    }
+  });
 });
 
-describe('Producer country validation', () => {
+describe('Country validation', () => {
   it('should return valid true when country is valid', () => {
     const country = 'England';
     const result = validateCountry(country, 'Producer', {
@@ -253,7 +376,7 @@ describe('Producer country validation', () => {
     }
   });
 
-  it('should return an error when the country is empty', () => {
+  it('should return an error when the country is empty - producer', () => {
     const result = validateCountry('', 'Producer', {
       locale: 'en',
       context: 'ui',
@@ -268,7 +391,40 @@ describe('Producer country validation', () => {
       });
     }
   });
-  it('Should return an error if the country is not england, scotland, wales or NI', () => {
+
+  it('should return an error when the country is empty - waste collection', () => {
+    const result = validateCountry('', 'Waste Collection', {
+      locale: 'en',
+      context: 'ui',
+    });
+
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 12008,
+        field: 'Waste Collection country',
+        message: 'Select a country',
+      });
+    }
+  });
+
+  it('should return an error when the country is empty - Carrier', () => {
+    const result = validateCountry('', 'Carrier', {
+      locale: 'en',
+      context: 'ui',
+    });
+
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 15008,
+        field: 'Carrier country',
+        message: 'Select a country',
+      });
+    }
+  });
+
+  it('Should return an error if the country is not england, scotland, wales or NI - producer', () => {
     const result = validateCountry('Algeria', 'Producer', {
       locale: 'en',
       context: 'ui',
@@ -284,9 +440,43 @@ describe('Producer country validation', () => {
       });
     }
   });
+
+  it('Should return an error if the country is not england, scotland, wales or NI - Waste Collection', () => {
+    const result = validateCountry('Algeria', 'Waste Collection', {
+      locale: 'en',
+      context: 'ui',
+    });
+
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 12009,
+        field: 'Waste Collection country',
+        message:
+          'Country must only be England, Wales, Scotland, or Northern Ireland',
+      });
+    }
+  });
+
+  it('Should return an error if the country is not england, scotland, wales or NI - Carrier', () => {
+    const result = validateCountry('Algeria', 'Carrier', {
+      locale: 'en',
+      context: 'ui',
+    });
+
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 15009,
+        field: 'Carrier country',
+        message:
+          'Country must only be England, Wales, Scotland, or Northern Ireland',
+      });
+    }
+  });
 });
 
-describe('Producer postcode validation', () => {
+describe('Postcode validation', () => {
   it('should return valid true when postcode is valid', () => {
     const postcode = 'SW1A1AA';
     const result = validatePostcode(postcode, 'Producer', {
@@ -300,7 +490,7 @@ describe('Producer postcode validation', () => {
     }
   });
 
-  it('should return an error when the postcode is empty', () => {
+  it('should return an error when the postcode is empty - producer', () => {
     const result = validatePostcode('', 'Producer', {
       locale: 'en',
       context: 'ui',
@@ -316,7 +506,39 @@ describe('Producer postcode validation', () => {
     }
   });
 
-  it('should return an error when the postcode is invalid', () => {
+  it('should return an error when the postcode is empty - waste collection', () => {
+    const result = validatePostcode('', 'Waste Collection', {
+      locale: 'en',
+      context: 'ui',
+    });
+
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 12010,
+        field: 'Waste Collection postcode',
+        message: 'Enter a real postcode',
+      });
+    }
+  });
+
+  it('should return an error when the postcode is empty - carrier', () => {
+    const result = validatePostcode('', 'Carrier', {
+      locale: 'en',
+      context: 'ui',
+    });
+
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 15010,
+        field: 'Carrier postcode',
+        message: 'Enter a real postcode',
+      });
+    }
+  });
+
+  it('should return an error when the postcode is invalid - producer', () => {
     const result = validatePostcode('123', 'Producer', {
       locale: 'en',
       context: 'ui',
@@ -327,6 +549,38 @@ describe('Producer postcode validation', () => {
       expect(result.errors[0]).toEqual({
         code: 11010,
         field: 'Producer postcode',
+        message: 'Enter a real postcode',
+      });
+    }
+  });
+
+  it('should return an error when the postcode is invalid - waste collection', () => {
+    const result = validatePostcode('123', 'Waste Collection', {
+      locale: 'en',
+      context: 'ui',
+    });
+
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 12010,
+        field: 'Waste Collection postcode',
+        message: 'Enter a real postcode',
+      });
+    }
+  });
+
+  it('should return an error when the postcode is invalid - carrier', () => {
+    const result = validatePostcode('123', 'Carrier', {
+      locale: 'en',
+      context: 'ui',
+    });
+
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 15010,
+        field: 'Carrier postcode',
         message: 'Enter a real postcode',
       });
     }
@@ -377,7 +631,7 @@ describe('Producer organisation name validation', () => {
   });
 });
 
-describe('Producer Address Details Validation', () => {
+describe('Address Details Validation', () => {
   it('should return valid true when all address details are valid', () => {
     const addressDetails = {
       buildingNameOrNumber: faker.datatype.string(10),

@@ -74,22 +74,17 @@ export function uiValidation<T>(
 
 export function getSharedErrorCode(
   errorCode: number,
-  context: Section,
+  context?: Section,
 ): number {
-  if (
-    context == 'Producer' &&
-    validationErrorMessages[errorCode + errorCodes.producerBase]
-  ) {
+  if (!context) {
+    return errorCode;
+  } else if (context == 'Producer') {
     return errorCode + errorCodes.producerBase;
-  } else if (
-    context == 'Waste Collection' &&
-    validationErrorMessages[errorCode + errorCodes.wasteCollectionBase]
-  ) {
+  } else if (context == 'Waste Collection') {
     return errorCode + errorCodes.wasteCollectionBase;
-  } else if (
-    context == 'Receiver' &&
-    validationErrorMessages[errorCode + errorCodes.receiverBase]
-  ) {
+  } else if (context == 'Carrier') {
+    return errorCode + errorCodes.carrierBase;
+  } else if (context == 'Receiver') {
     return errorCode + errorCodes.receiverBase;
   } else {
     return errorCodes.defaultErrorCode;

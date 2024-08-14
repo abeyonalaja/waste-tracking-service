@@ -5,14 +5,14 @@ import { ValidationErrorMessages } from './dto';
 export const validationErrorMessages: ValidationErrorMessages = {
   [codes.defaultErrorCode]: {
     en: {
-      csv: 'Error',
-      api: 'Error',
-      ui: 'Error',
+      csv: 'Unknown Error',
+      api: 'Unknown Error',
+      ui: 'Unknown Error',
     },
     cy: {
-      csv: 'Gwall',
-      api: 'Gwall',
-      ui: 'Gwall',
+      csv: 'Gwall Anhysbys',
+      api: 'Gwall Anhysbys',
+      ui: 'Gwall Anhysbys',
     },
   },
   [codes.producerEmptyReference]: {
@@ -207,7 +207,7 @@ export const validationErrorMessages: ValidationErrorMessages = {
       ui: 'Dewiswch gyfeiriad',
     },
   },
-  [codes.producerEmptyAddressLine1]: {
+  [codes.emptyAddressLine1Base]: {
     en: {
       csv: `Enter address line 1`,
       api: `Enter address line 1`,
@@ -219,7 +219,7 @@ export const validationErrorMessages: ValidationErrorMessages = {
       ui: `Rhowch llinell gyfeiriad 1`,
     },
   },
-  [codes.producerCharTooManyAddressLine1]: {
+  [codes.charTooManyAddressLine1Base]: {
     en: {
       csv: `Address line 1 must be less than ${constraints.FreeTextChar.max} characters`,
       api: `Address line 1 must be less than ${constraints.FreeTextChar.max} characters`,
@@ -231,7 +231,7 @@ export const validationErrorMessages: ValidationErrorMessages = {
       ui: `Rhaid i’r llinell gyfeiriad 1 fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
     },
   },
-  [codes.producerCharTooManyAddressLine2]: {
+  [codes.charTooManyAddressLine2Base]: {
     en: {
       csv: `Address line 2 must be less than ${constraints.FreeTextChar.max} characters`,
       api: `Address line 2 must be less than ${constraints.FreeTextChar.max} characters`,
@@ -243,7 +243,7 @@ export const validationErrorMessages: ValidationErrorMessages = {
       ui: `Rhaid i’r llinell gyfeiriad 2 fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
     },
   },
-  [codes.producerEmptyTownOrCity]: {
+  [codes.emptyTownOrCityBase]: {
     en: {
       csv: `Enter a town or city`,
       api: `Enter a town or city`,
@@ -255,7 +255,7 @@ export const validationErrorMessages: ValidationErrorMessages = {
       ui: `Rhowch dref neu ddinas`,
     },
   },
-  [codes.producerCharTooManyTownOrCity]: {
+  [codes.charTooManyTownOrCityBase]: {
     en: {
       csv: `Town or city must be less than ${constraints.FreeTextChar.max} characters`,
       api: `Town or city must be less than ${constraints.FreeTextChar.max} characters`,
@@ -267,7 +267,7 @@ export const validationErrorMessages: ValidationErrorMessages = {
       ui: `Rhaid i dref neu ddinas y fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
     },
   },
-  [codes.producerEmptyCountry]: {
+  [codes.emptyCountryBase]: {
     en: {
       csv: `Enter a country`,
       api: `Enter a country`,
@@ -279,7 +279,7 @@ export const validationErrorMessages: ValidationErrorMessages = {
       ui: `Rhowch wlad`,
     },
   },
-  [codes.producerInvalidPostcode]: {
+  [codes.invalidPostcodeBase]: {
     en: {
       csv: `Enter a real postcode`,
       api: `Enter a real postcode`,
@@ -291,7 +291,7 @@ export const validationErrorMessages: ValidationErrorMessages = {
       ui: `Rhowch god post go iawn`,
     },
   },
-  [codes.producerCharTooManyBuildingNameOrNumber]: {
+  [codes.charTooManyBuildingNameOrNumberBase]: {
     en: {
       csv: `Building name or number must be less than ${constraints.FreeTextChar.max} characters`,
       api: `Building name or number must be less than ${constraints.FreeTextChar.max} characters`,
@@ -303,8 +303,7 @@ export const validationErrorMessages: ValidationErrorMessages = {
       ui: `Rhaid i enw’r adeilad neu rif fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
     },
   },
-
-  [codes.producerInvalidCountry]: {
+  [codes.invalidCountryBase]: {
     en: {
       csv: `Country must only be England, Wales, Scotland, or Northern Ireland`,
       api: `Country must only be England, Wales, Scotland, or Northern Ireland`,

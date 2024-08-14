@@ -1,6 +1,7 @@
 export const producerBase = 11000;
 export const wasteCollectionBase = 12000;
 export const receiverBase = 13000;
+export const carrierBase = 15000;
 
 export const charTooManyBuildingNameOrNumberBase = 0;
 export const emptyAddressLine1Base = 3;
@@ -51,6 +52,8 @@ export const postcodeEmpty = 13001;
 export const postcodeInvalid = 13002;
 export const addressSelectionEmpty = 13003;
 
+export const wasteCollectionCharTooManyBuildingNameOrNumber =
+  wasteCollectionBase + charTooManyBuildingNameOrNumberBase;
 export const wasteCollectionEmptyAddressLine1 =
   wasteCollectionBase + emptyAddressLine1Base;
 export const wasteCollectionCharTooManyAddressLine1 =
@@ -79,5 +82,19 @@ export const receiverCharTooManyTownOrCity =
 export const receiverEmptyCountry = receiverBase + emptyCountryBase;
 export const receiverInvalidCountry = receiverBase + invalidCountryBase;
 export const receiverInvalidPostcode = receiverBase + invalidPostcodeBase;
+
+export const carrierCharTooManyBuildingNameOrNumber =
+  carrierBase + charTooManyBuildingNameOrNumberBase;
+export const carrierEmptyAddressLine1 = carrierBase + emptyAddressLine1Base;
+export const carrierCharTooManyAddressLine1 =
+  carrierBase + charTooManyAddressLine1Base;
+export const carrierCharTooManyAddressLine2 =
+  carrierBase + charTooManyAddressLine2Base;
+export const carrierEmptyTownOrCity = carrierBase + emptyTownOrCityBase;
+export const carrierCharTooManyTownOrCity =
+  carrierBase + charTooManyTownOrCityBase;
+export const carrierEmptyCountry = carrierBase + emptyCountryBase;
+export const carrierInvalidCountry = carrierBase + invalidCountryBase;
+export const carrierInvalidPostcode = carrierBase + invalidPostcodeBase;
 
 export const defaultErrorCode = 99999;

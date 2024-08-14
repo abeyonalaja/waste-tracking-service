@@ -2,7 +2,7 @@ export type Locale = 'en' | 'cy';
 
 export type Context = 'csv' | 'api' | 'ui';
 
-export type Section = 'Producer' | 'Waste Collection' | 'Receiver';
+export type Section = 'Producer' | 'Waste Collection' | 'Carrier' | 'Receiver';
 
 export type Field =
   | 'Reference'
@@ -26,7 +26,13 @@ export type Field =
   | 'Waste Collection address line 2'
   | 'Waste Collection town or city'
   | 'Waste Collection country'
-  | 'Waste Collection postcode';
+  | 'Waste Collection postcode'
+  | 'Carrier building name or number'
+  | 'Carrier address line 1'
+  | 'Carrier address line 2'
+  | 'Carrier town or city'
+  | 'Carrier country'
+  | 'Carrier postcode';
 
 export interface ErrorMessage {
   locale: Locale;
