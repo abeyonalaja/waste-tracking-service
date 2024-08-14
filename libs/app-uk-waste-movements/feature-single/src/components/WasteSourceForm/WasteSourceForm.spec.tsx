@@ -4,7 +4,7 @@ import { WasteSourceForm } from './WasteSourceForm';
 import userEvent from '@testing-library/user-event';
 
 const formStrings = {
-  radioOne: 'Commerical waste',
+  radioOne: 'Commercial waste',
   radioTwo: 'Industrial waste',
   radioThree: 'Construction and demolition waste',
   radioFour: 'Household waste',
@@ -49,7 +49,7 @@ describe('Waste source form', () => {
       </WasteSourceForm>,
     );
 
-    const radioOne = screen.getByLabelText('Commerical waste');
+    const radioOne = screen.getByLabelText('Commercial waste');
     const radioTwo = screen.getByLabelText('Industrial waste');
     const radioThree = screen.getByLabelText(
       'Construction and demolition waste',

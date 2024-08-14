@@ -3,6 +3,8 @@
 export {
   UniqueReferenceForm,
   TaskList,
+  ReuseProducerAddressConfirm,
+  ReuseProducerAddressPrompt,
   ProducerContactDetailsForm,
   WasteSourceForm,
 } from './components';

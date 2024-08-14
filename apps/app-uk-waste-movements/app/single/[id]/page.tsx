@@ -109,7 +109,13 @@ export default async function TaskListPage({
                   },
                   {
                     name: t('producerAndCollection.collectionDetails'),
-                    href: `${params.id}/producer/collection-details`,
+                    href:
+                      draft.producerAndCollection.producer.address.status ===
+                        'Complete' &&
+                      draft.producerAndCollection.wasteCollection.address
+                        .status === 'NotStarted'
+                        ? `${params.id}/producer/collection-details/reuse`
+                        : `${params.id}/producer/collection-details`,
                     status:
                       draft.producerAndCollection.wasteCollection.address
                         .status,
