@@ -24,6 +24,8 @@ interface AddressSearchProps {
   content: ContentStrings;
   id: string;
   savedFormValues: FormValues | undefined;
+  destination: string;
+  apiPartial: string;
 }
 
 const defaultFormValues: FormValues = {
@@ -48,6 +50,8 @@ export function AddressSearch({
   content,
   id,
   savedFormValues,
+  destination,
+  apiPartial,
 }: AddressSearchProps): JSX.Element {
   const [formValues, setFormValues] = useState(
     savedFormValues ? savedFormValues : defaultFormValues,
@@ -80,6 +84,7 @@ export function AddressSearch({
             updateFormValues={setFormValues}
             updateView={setView}
             content={content}
+            apiPartial={apiPartial}
           />
         );
       case 'noResults':
@@ -103,6 +108,8 @@ export function AddressSearch({
             updateFormValues={setFormValues}
             updateView={setView}
             content={content}
+            destination={destination}
+            apiPartial={apiPartial}
           />
         );
       case 'manual':
@@ -115,6 +122,7 @@ export function AddressSearch({
             updateFormValues={setFormValues}
             updateView={setView}
             content={content}
+            apiPartial={apiPartial}
           />
         );
       case 'edit':
@@ -128,6 +136,7 @@ export function AddressSearch({
             updateView={setView}
             content={content}
             mode={'edit'}
+            apiPartial={apiPartial}
           />
         );
       default:

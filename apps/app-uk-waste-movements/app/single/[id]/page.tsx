@@ -109,7 +109,7 @@ export default async function TaskListPage({
                   },
                   {
                     name: t('producerAndCollection.collectionDetails'),
-                    href: '/',
+                    href: `${params.id}/producer/collection-details`,
                     status:
                       draft.producerAndCollection.wasteCollection.address
                         .status,

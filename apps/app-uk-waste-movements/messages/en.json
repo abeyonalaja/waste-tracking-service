@@ -629,7 +629,7 @@
         "backLink": "Back",
         "caption": "Producer and waste collection details",
         "heading": "What is the source of the waste?",
-        "radioOne": "Commerical waste",
+        "radioOne": "Commercial waste",
         "radioTwo": "Industrial waste",
         "radioThree": "Construction and demolition waste",
         "radioFour": "Household waste",
@@ -637,6 +637,30 @@
         "buttonTwo": "Save and return",
         "errorSummaryTitle": "There is a problem",
         "errorMessage": "Select the source of the waste"
+      },
+      "collection": {
+        "postcode": {
+          "search": {
+            "heading": "What is the waste collection address?",
+            "intro": "This is where the waste needs to be collected from."
+          },
+          "results": {
+            "heading": "Select the waste collection address",
+            "intro": "{count} addresses were found for {postcode}"
+          },
+          "noResults": {
+            "heading": "No address found"
+          },
+          "confirmation": {
+            "heading": "Confirm the waste collection address"
+          },
+          "manual": {
+            "heading": "What is the waste collection address?"
+          },
+          "edit": {
+            "heading": "Edit the waste collection address"
+          }
+        }
       }
     }
   }

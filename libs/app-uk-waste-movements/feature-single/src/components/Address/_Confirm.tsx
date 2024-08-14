@@ -20,6 +20,8 @@ interface ConfirmProps {
   updateFormValues: (formValues: FormValues) => void;
   updateView: (view: ViewType) => void;
   content: ContentStrings;
+  destination: string;
+  apiPartial: string;
 }
 
 const defaultFormValues: FormValues = {
@@ -41,6 +43,8 @@ export function Confirm({
   updateFormValues,
   updateView,
   content,
+  destination,
+  apiPartial,
 }: ConfirmProps): JSX.Element {
   const router = useRouter();
   const handleSearchAgain = (e: React.MouseEvent) => {
@@ -60,23 +64,21 @@ export function Confirm({
     event.preventDefault();
 
     let response: Response;
+    const endpoint = `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/ukwm/drafts/${id}${apiPartial}?saveAsDraft=false`;
     try {
-      response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/ukwm/drafts/${id}/producer-address?saveAsDraft=false`,
-        {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: formValues.addressSelection,
+      response = await fetch(endpoint, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
-      );
+        body: formValues.addressSelection,
+      });
       if (response.ok) {
         if (returnToDraft) {
           router.push(`/single/${id}`);
         } else {
-          router.push(`/single/${id}/producer/contact`);
+          router.push(`/single/${id}${destination}`);
         }
       }
     } catch (error) {
@@ -102,7 +104,6 @@ export function Confirm({
       <GovUK.GridRow>
         <GovUK.GridCol size="two-thirds">
           {confirmationContent}
-
           <form onSubmit={handleSubmit}>
             {addressData && (
               <GovUK.Paragraph>

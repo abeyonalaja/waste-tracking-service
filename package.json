@@ -141,7 +141,7 @@
     "express-jwt": "^8.4.1",
     "fuzzy-search": "^3.2.1",
     "govuk-colours": "^1.1.0",
-    "govuk-frontend": "^5.4.1",
+    "govuk-frontend": "^5.5.0",
     "govuk-react": "^0.10.7",
     "hapi-auth-jwt2": "^10.5.1",
     "i18next": "^23.11.5",

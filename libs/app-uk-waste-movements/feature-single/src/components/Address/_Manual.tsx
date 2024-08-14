@@ -17,6 +17,7 @@ interface ManualProps {
   updateView: (view: ViewType) => void;
   content: ContentStrings;
   mode?: 'edit' | 'create';
+  apiPartial: string;
 }
 
 export function Manual({
@@ -28,6 +29,7 @@ export function Manual({
   updateView,
   content,
   mode,
+  apiPartial,
 }: ManualProps): JSX.Element {
   const locale = useLocale() as ukwmValidation.Locale;
   const router = useRouter();
@@ -143,7 +145,7 @@ export function Manual({
     let response: Response;
     try {
       response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/ukwm/drafts/${id}/producer-address?saveAsDraft=true`,
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/ukwm/drafts/${id}${apiPartial}?saveAsDraft=true`,
         {
           method: 'PUT',
           headers: {

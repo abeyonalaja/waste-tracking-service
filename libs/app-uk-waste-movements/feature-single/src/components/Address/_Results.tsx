@@ -23,6 +23,7 @@ interface ResultsProps {
   updateView: (view: ViewType) => void;
   updateFormValues: (formValues: FormValues) => void;
   content: ContentStrings;
+  apiPartial: string;
 }
 
 export function Results({
@@ -34,6 +35,7 @@ export function Results({
   updateView,
   updateFormValues,
   content,
+  apiPartial,
 }: ResultsProps): JSX.Element {
   const locale = useLocale() as ukwmValidation.Locale;
   const router = useRouter();
@@ -92,7 +94,7 @@ export function Results({
     let response: Response;
     try {
       response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/ukwm/drafts/${id}/producer-address?saveAsDraft=true`,
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/ukwm/drafts/${id}${apiPartial}?saveAsDraft=true`,
         {
           method: 'PUT',
           headers: {

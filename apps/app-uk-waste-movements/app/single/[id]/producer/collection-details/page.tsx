@@ -8,7 +8,7 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
-  title: 'Producer address details',
+  title: 'Collection address details',
 };
 
 interface PageProps {
@@ -47,12 +47,13 @@ export default async function ProducerAddressPage({
   }
 
   const draft = await response.json();
-  const status = draft.producerAndCollection.producer.address.status;
+  const status = draft.producerAndCollection.wasteCollection.address.status;
+
   const defaultView = status !== 'NotStarted' ? 'edit' : 'search';
   let savedFormValues;
 
   if (status !== 'NotStarted') {
-    const address = draft.producerAndCollection.producer.address;
+    const address = draft.producerAndCollection.wasteCollection.address;
     savedFormValues = {
       postcode: address.postcode,
       buildingNameOrNumber: address.buildingNameOrNumber,
@@ -96,10 +97,12 @@ export default async function ProducerAddressPage({
       <>
         <GovUK.Caption>{t('caption')}</GovUK.Caption>
         <GovUK.Heading size="l" level={1}>
-          {t(`postcode.${key}.heading`)}
+          {t(`collection.postcode.${key}.heading`)}
         </GovUK.Heading>
         {key === 'search' && (
-          <GovUK.Paragraph>{t('postcode.search.intro')}</GovUK.Paragraph>
+          <GovUK.Paragraph>
+            {t('collection.postcode.search.intro')}
+          </GovUK.Paragraph>
         )}
       </>
     );
@@ -118,8 +121,8 @@ export default async function ProducerAddressPage({
       content={content}
       id={params.id}
       savedFormValues={savedFormValues}
-      destination="/producer/contact"
-      apiPartial="/producer-address"
+      apiPartial={'/waste-collection-address'}
+      destination={'/producer/source'}
     />
   );
 }
