@@ -129,6 +129,7 @@
     "cardLink": "Create a new multiple waste movement",
     "cardOneTitle": "Start a new waste movement",
     "cardOneContent": "Create multiple new waste movements",
+
     "newWasteMovements": {
       "title": "New waste movements",
       "description": "Create a single waste movement, upload a CSV file of multiple movements, or continue a draft waste movement.",
@@ -515,7 +516,7 @@
         "itemFive": "underscores",
         "itemSix": "spaces"
       },
-      "example": "For example, 'ABC_ 01/02/2025'",
+      "example": "For example, ABC_ 01/02/2025.",
       "form": {
         "errorSummaryHeading": "There is a problem",
         "inputLabel": "Enter a reference",
@@ -542,15 +543,8 @@
         "description": "Details of the waste producer and waste collection",
         "taskOne": "Producer organisation address",
         "taskTwo": "Producer organisation contact details",
-        "taskThree": "Waste collection details"
-      },
-      "carrier": {
-        "heading": "Waste carrier details (optional)",
-        "description": "Details of who transports the waste. All carrier details need to be entered if you know them in advance of the waste collection.",
-        "carrierAddress": "Carrier address",
-        "carrierContactDetails": "Carrier contact details",
-        "modeOfTransport": "Carrier mode of transport",
-        "checkYourAnswers": "Check your carrier details answers"
+        "taskThree": "Waste collection details",
+        "taskFive": "Source of the waste"
       }
     },
     "postcode": {
@@ -638,6 +632,19 @@
         "backLink": "Back",
         "caption": "Producer and waste collection details",
         "heading": "What are the producer’s SIC (standard industry classification) codes?"
+      },
+      "sourceOfWaste": {
+        "backLink": "Back",
+        "caption": "Producer and waste collection details",
+        "heading": "What is the source of the waste?",
+        "radioOne": "Commercial waste",
+        "radioTwo": "Industrial waste",
+        "radioThree": "Construction and demolition waste",
+        "radioFour": "Household waste",
+        "buttonOne": "Save and continue",
+        "buttonTwo": "Save and return",
+        "errorSummaryTitle": "There is a problem",
+        "errorMessage": "Select the source of the waste"
       }
     }
   }
