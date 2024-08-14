@@ -13,6 +13,8 @@ import {
   SetDraftWasteSourceResponse,
   GetDraftWasteSourceResponse,
   GetDraftWasteCollectionAddressDetailsResponse,
+  CreateDraftSicCodeResponse,
+  GetDraftSicCodesResponse,
 } from '@wts/api/uk-waste-movements';
 import { UkwmContact } from '@wts/api/waste-tracking-gateway';
 
@@ -49,6 +51,9 @@ const mockClient = {
     jest.fn<
       DaprUkWasteMovementsClient['getDraftWasteCollectionAddressDetails']
     >(),
+  createDraftSicCode:
+    jest.fn<DaprUkWasteMovementsClient['createDraftSicCode']>(),
+  getDraftSicCodes: jest.fn<DaprUkWasteMovementsClient['getDraftSicCodes']>(),
 };
 
 describe(ServiceUkWasteMovementsSubmissionBackend, () => {
@@ -479,5 +484,55 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
     expect(result).toEqual(
       mockGetDraftWasteCollectionAddressDetailsResponse.value,
     );
+  });
+
+  it('creates sic code on a draft', async () => {
+    const id = faker.string.uuid();
+    const accountId = faker.string.uuid();
+    const mockCreateDraftSicCodeResponse: CreateDraftSicCodeResponse = {
+      success: true,
+      value: '01110',
+    };
+
+    mockClient.createDraftSicCode.mockResolvedValueOnce(
+      mockCreateDraftSicCodeResponse,
+    );
+    const sicCode = '01110';
+
+    await subject.createDraftSicCode({ id, accountId, sicCode });
+
+    expect(mockClient.createDraftSicCode).toHaveBeenCalledWith({
+      id,
+      accountId,
+      sicCode,
+    });
+    expect(mockClient.createDraftSicCode).toHaveBeenCalledTimes(1);
+  });
+
+  it('gets sic code from a draft', async () => {
+    const id = faker.string.uuid();
+    const accountId = faker.string.uuid();
+    const mockGetDraftSicCodesResponse: GetDraftSicCodesResponse = {
+      success: true,
+      value: {
+        status: 'Complete',
+        values: ['01110,01120'],
+      },
+    };
+
+    mockClient.getDraftSicCodes.mockResolvedValueOnce(
+      mockGetDraftSicCodesResponse,
+    );
+
+    const result = await subject.getDraftSicCodes({
+      id,
+      accountId,
+    });
+
+    expect(mockClient.getDraftSicCodes).toHaveBeenCalledWith({
+      id,
+      accountId,
+    });
+    expect(result).toEqual(mockGetDraftSicCodesResponse.value);
   });
 });

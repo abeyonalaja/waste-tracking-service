@@ -10,6 +10,9 @@ import {
   UkwmContact,
   UkwmDraftWasteSource,
   UkwmGetDraftWasteSourceResponse,
+  UkwmCreateDraftSicCodeResponse,
+  UkwmDraftSicCodes,
+  UkwmGetDraftSicCodesResponse,
 } from '@wts/api/waste-tracking-gateway';
 import { Logger } from 'winston';
 import Boom from '@hapi/boom';
@@ -23,6 +26,8 @@ import {
   SetDraftWasteSourceResponse,
   GetDraftWasteSourceResponse,
   GetDraftWasteCollectionAddressDetailsResponse,
+  CreateDraftSicCodeResponse,
+  GetDraftSicCodesResponse,
 } from '@wts/api/uk-waste-movements';
 import { DaprUkWasteMovementsClient } from '@wts/client/uk-waste-movements';
 import { Response } from '@wts/util/invocation';
@@ -46,6 +51,12 @@ export interface SetWasteSourceRef {
   id: string;
   accountId: string;
   wasteSource: string;
+}
+
+export interface CreateSicCodeRef {
+  id: string;
+  accountId: string;
+  sicCode: string;
 }
 
 export interface UkWasteMovementsSubmissionBackend {
@@ -81,6 +92,11 @@ export interface UkWasteMovementsSubmissionBackend {
     accountId,
   }: SubmissionRef): Promise<UkwmDraftWasteSource>;
   setDraftWasteSource(ref: SetWasteSourceRef): Promise<void>;
+  createDraftSicCode(ref: CreateSicCodeRef): Promise<string>;
+  getDraftSicCodes({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<UkwmDraftSicCodes>;
 }
 
 export class ServiceUkWasteMovementsSubmissionBackend
@@ -349,5 +365,55 @@ export class ServiceUkWasteMovementsSubmissionBackend
     } else {
       return response;
     }
+  }
+
+  async createDraftSicCode({
+    id,
+    accountId,
+    sicCode,
+  }: CreateSicCodeRef): Promise<string> {
+    let response: CreateDraftSicCodeResponse;
+    try {
+      response = await this.client.createDraftSicCode({
+        id,
+        accountId,
+        sicCode,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+        data: response.error.data,
+      });
+    }
+
+    return response.value as UkwmCreateDraftSicCodeResponse;
+  }
+
+  async getDraftSicCodes({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<UkwmDraftSicCodes> {
+    let response: GetDraftSicCodesResponse;
+    try {
+      response = await this.client.getDraftSicCodes({
+        id,
+        accountId,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value as UkwmGetDraftSicCodesResponse;
   }
 }

@@ -38,6 +38,12 @@ import {
   SetDraftWasteCollectionAddressDetailsResponse,
   getDraftWasteCollectionAddressDetails,
   setDraftWasteCollectionAddressDetails,
+  CreateDraftSicCodeRequest,
+  CreateDraftSicCodeResponse,
+  createDraftSicCode,
+  GetDraftSicCodesRequest,
+  GetDraftSicCodesResponse,
+  getDraftSicCodes,
 } from '@wts/api/uk-waste-movements';
 
 export class DaprUkWasteMovementsClient {
@@ -181,5 +187,27 @@ export class DaprUkWasteMovementsClient {
       HttpMethod.POST,
       req,
     )) as SetDraftWasteCollectionAddressDetailsResponse;
+  }
+
+  async createDraftSicCode(
+    req: CreateDraftSicCodeRequest,
+  ): Promise<CreateDraftSicCodeResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.ukWasteMovementsAppId,
+      createDraftSicCode.name,
+      HttpMethod.POST,
+      req,
+    )) as CreateDraftSicCodeResponse;
+  }
+
+  async getDraftSicCodes(
+    req: GetDraftSicCodesRequest,
+  ): Promise<GetDraftSicCodesResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.ukWasteMovementsAppId,
+      getDraftSicCodes.name,
+      HttpMethod.POST,
+      req,
+    )) as GetDraftSicCodesResponse;
   }
 }

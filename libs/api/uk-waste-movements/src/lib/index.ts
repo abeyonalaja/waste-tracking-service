@@ -55,6 +55,10 @@ export type {
   GetDraftWasteCollectionAddressDetailsResponse,
   SetDraftWasteCollectionAddressDetailsRequest,
   SetDraftWasteCollectionAddressDetailsResponse,
+  CreateDraftSicCodeRequest,
+  CreateDraftSicCodeResponse,
+  GetDraftSicCodesRequest,
+  GetDraftSicCodesResponse,
 } from './draft.dto';
 
 export type { Field, ErrorCodeData } from './validation';
@@ -73,6 +77,8 @@ export {
   setDraftWasteSource,
   getDraftWasteCollectionAddressDetails,
   setDraftWasteCollectionAddressDetails,
+  createDraftSicCode,
+  getDraftSicCodes,
 } from './draft.dto';
 
 export * as validation from './validation';

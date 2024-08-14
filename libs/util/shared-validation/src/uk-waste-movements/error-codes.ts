@@ -40,6 +40,9 @@ export const producerCharTooFewReference = 11020;
 export const producerCharTooManyReference = 11021;
 export const producerInvalidReference = 11022;
 export const producerInvalidFax = 11023;
+export const producerDuplicateSicCode = 11024;
+export const producerTooManySicCodes = 11025;
+export const producerEmptySicCode = 11026;
 
 export const wasteCollectionMissingWasteSource = 12011;
 export const wasteCollectionInvalidWasteSource = 12012;

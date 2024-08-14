@@ -3,6 +3,7 @@ import {
   UkwmAddress,
   UkwmContact,
   UkwmSetDraftWasteSourceRequest,
+  UkwmCreateDraftSicCodeRequest,
 } from '@wts/api/waste-tracking-gateway';
 import Ajv from 'ajv/dist/jtd';
 
@@ -67,7 +68,7 @@ export const validateSetPartialDraftProducerContactRequest = ajv.compile<
   },
 });
 
-export const validateSetDraftWasteSource =
+export const validateSetDraftWasteSourceRequest =
   ajv.compile<UkwmSetDraftWasteSourceRequest>({
     properties: { wasteSource: { type: 'string' } },
   });
@@ -97,4 +98,9 @@ export const validateSetPartialDraftWasteCollectionAddressDetailsRequest =
       country: { type: 'string' },
       postcode: { type: 'string' },
     },
+  });
+
+export const validateCreateDraftSicCodeRequest =
+  ajv.compile<UkwmCreateDraftSicCodeRequest>({
+    properties: { sicCode: { type: 'string' } },
   });

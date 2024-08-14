@@ -1,4 +1,9 @@
-import { LocalAuthority, Pop, WasteCode } from '@wts/api/reference-data';
+import {
+  LocalAuthority,
+  Pop,
+  WasteCode,
+  SICCode,
+} from '@wts/api/reference-data';
 import * as api from '@wts/api/uk-waste-movements';
 import * as bulkApi from '@wts/api/uk-waste-movements-bulk';
 
@@ -43,4 +48,5 @@ export interface SubmissionValidationReferenceData {
   pops: Pop[];
   ewcCodes: WasteCode[];
   localAuthorities: LocalAuthority[];
+  sicCodes: SICCode[];
 }

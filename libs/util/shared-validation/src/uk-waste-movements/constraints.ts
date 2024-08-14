@@ -14,3 +14,8 @@ export const PostcodeRegex = {
 export const PostcodeChar = {
   max: 9,
 };
+
+export const SICCodesLength = {
+  min: 1,
+  max: 4,
+};

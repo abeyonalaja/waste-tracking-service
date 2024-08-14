@@ -25,6 +25,10 @@ import {
   GetDraftWasteCollectionAddressDetailsRequest,
   GetDraftWasteCollectionAddressDetailsResponse,
   SetDraftWasteCollectionAddressDetailsRequest,
+  CreateDraftSicCodeRequest,
+  GetDraftSicCodesRequest,
+  GetDraftSicCodesResponse,
+  CreateDraftSicCodeResponse,
 } from './draft.dto';
 import {
   carrier,
@@ -54,6 +58,10 @@ import {
   getDraftWasteCollectionAddressDetailsResponse,
   setDraftWasteCollectionAddressDetailsRequest,
   setPartialDraftWasteCollectionAddressDetailsRequest,
+  createDraftSicCodeRequest,
+  getDraftSicCodesRequest,
+  getDraftSicCodesResponse,
+  createDraftSicCodesResponse,
 } from './draft.schema';
 
 const ajv = new Ajv();
@@ -1086,6 +1094,63 @@ describe('getDraftWasteCollectionAddressDetailsResponse', () => {
       },
     };
 
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('createDraftSicCodeRequest', () => {
+  const validate = ajv.compile<CreateDraftSicCodeRequest>(
+    createDraftSicCodeRequest,
+  );
+  it('is compatible with dto value', () => {
+    const value: CreateDraftSicCodeRequest = {
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+      sicCode: '01110',
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('createDraftSicCodesResponse', () => {
+  const validate = ajv.compile<CreateDraftSicCodeResponse>(
+    createDraftSicCodesResponse,
+  );
+  it('is compatible with dto value', () => {
+    const value: CreateDraftSicCodeResponse = {
+      success: true,
+      value: '01110',
+    };
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('getDraftSicCodesRequest', () => {
+  const validate = ajv.compile<GetDraftSicCodesRequest>(
+    getDraftSicCodesRequest,
+  );
+  it('is compatible with dto value', () => {
+    const value: GetDraftSicCodesRequest = {
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+    };
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('getDraftSicCodesResponse', () => {
+  const validate = ajv.compile<GetDraftSicCodesResponse>(
+    getDraftSicCodesResponse,
+  );
+  it('is compatible with dto value', () => {
+    const value: GetDraftSicCodesResponse = {
+      success: true,
+      value: {
+        status: 'Complete',
+        values: ['01110,01120'],
+      },
+    };
     expect(validate(value)).toBe(true);
   });
 });

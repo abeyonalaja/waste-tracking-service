@@ -316,6 +316,59 @@ export const validationErrorMessages: ValidationErrorMessages = {
       ui: `Rhaid i’r wlad fod yn un o Loegr, Cymru, yr Alban, neu Gogledd Iwerddon`,
     },
   },
+
+  [codes.producerInvalidSicCode]: {
+    en: {
+      csv: `Enter producer SIC code in the correct format`,
+      api: `Enter producer SIC code in the correct format`,
+      ui: `Enter producer SIC code in the correct format`,
+    },
+    cy: {
+      csv: `Rhowch god SIC y cynhyrchydd yn y fformat cywir`,
+      api: `Rhowch god SIC y cynhyrchydd yn y fformat cywir`,
+      ui: `Rhowch god SIC y cynhyrchydd yn y fformat cywir`,
+    },
+  },
+
+  [codes.producerTooManySicCodes]: {
+    en: {
+      csv: `You can only enter a maximum of ${constraints.SICCodesLength.max} SIC codes`,
+      api: `You can only enter a maximum of ${constraints.SICCodesLength.max} SIC codes`,
+      ui: `You can only enter a maximum of ${constraints.SICCodesLength.max} SIC codes`,
+    },
+    cy: {
+      csv: `Dim ond uchafswm o ${constraints.SICCodesLength.max} cod SIC y gallwch eu nodi`,
+      api: `Dim ond uchafswm o ${constraints.SICCodesLength.max} cod SIC y gallwch eu nodi`,
+      ui: `Dim ond uchafswm o ${constraints.SICCodesLength.max} cod SIC y gallwch eu nodi`,
+    },
+  },
+
+  [codes.producerDuplicateSicCode]: {
+    en: {
+      csv: `You have already entered this code`,
+      api: `You have already entered this code`,
+      ui: `You have already entered this code`,
+    },
+    cy: {
+      csv: `Rydych eisoes wedi nodi’r cod hwn`,
+      api: `Rydych eisoes wedi nodi’r cod hwn`,
+      ui: `Rydych eisoes wedi nodi’r cod hwn`,
+    },
+  },
+
+  [codes.producerEmptySicCode]: {
+    en: {
+      csv: `Enter a code`,
+      api: `Enter a code`,
+      ui: `Enter a code`,
+    },
+    cy: {
+      csv: `Rhowch god i mewn`,
+      api: `Rhowch god i mewn`,
+      ui: `Rhowch god i mewn`,
+    },
+  },
+
   [codes.wasteCollectionMissingWasteSource]: {
     en: {
       csv: `Enter a waste source`,

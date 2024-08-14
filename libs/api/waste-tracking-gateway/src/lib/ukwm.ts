@@ -286,3 +286,11 @@ export type UkwmGetDraftWasteCollectionAddressDetailsResponse =
   UkwmDraftAddress;
 
 export type UkwmSetDraftWasteCollectionAddressDetailsRequest = UkwmAddress;
+
+export interface UkwmCreateDraftSicCodeRequest {
+  sicCode: string;
+}
+
+export type UkwmCreateDraftSicCodeResponse = string;
+
+export type UkwmGetDraftSicCodesResponse = UkwmDraftSicCodes;

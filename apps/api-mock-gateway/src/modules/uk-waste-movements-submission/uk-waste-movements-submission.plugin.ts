@@ -12,6 +12,8 @@ import {
   getDraftWasteSource,
   getDraftWasteCollectionAddressDetails,
   setDraftWasteCollectionAddressDetails,
+  createDraftSicCode,
+  getDraftSicCodes,
 } from './uk-waste-movements-submission.backend';
 import {
   BadRequestError,
@@ -30,6 +32,7 @@ import {
   validateSetDraftWasteSource,
   validateSetDraftWasteCollectionAddressRequest,
   validateSetPartialDraftWasteCollectionAddressRequest,
+  validateCreateDraftSicCodeRequest,
 } from './uk-waste-movements-submission.validation';
 
 export default class UkwmSubmissionPlugin {
@@ -417,5 +420,48 @@ export default class UkwmSubmissionPlugin {
         }
       },
     );
+
+    this.server.get(`${this.prefix}/drafts/:id/sic-code`, async (req, res) => {
+      const user = req.user as User;
+      try {
+        const value = await getDraftSicCodes({
+          id: req.params.id,
+          accountId: user.credentials.accountId,
+        });
+        return res.json(value as dto.UkwmGetDraftSicCodesResponse);
+      } catch (err) {
+        if (err instanceof CustomError) {
+          return res.status(err.statusCode).json({ message: err.message });
+        }
+        console.log('Unknown error', { error: err });
+        return res
+          .status(500)
+          .jsonp(new InternalServerError('An internal server error occurred'));
+      }
+    });
+
+    this.server.post(`${this.prefix}/drafts/:id/sic-code`, async (req, res) => {
+      try {
+        if (!validateCreateDraftSicCodeRequest(req.body)) {
+          return res.status(400).jsonp(new BadRequestError('Bad Request'));
+        }
+        const request = req.body as dto.UkwmCreateDraftSicCodeRequest;
+        const user = req.user as User;
+        const result = await createDraftSicCode({
+          id: req.params.id,
+          accountId: user.credentials.accountId,
+          sicCode: request.sicCode,
+        });
+        return res.status(201).json(result);
+      } catch (err) {
+        if (err instanceof CustomError) {
+          return res.status(err.statusCode).json(err);
+        }
+        console.log('Unknown error', { error: err });
+        return res
+          .status(500)
+          .jsonp(new InternalServerError('An internal server error occurred'));
+      }
+    });
   }
 }

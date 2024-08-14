@@ -6,6 +6,7 @@ import { Draft, GetDraftsResult, validation } from '../../model';
 import { CosmosRepository } from '../../data';
 import { v4 as uuidv4 } from 'uuid';
 import {
+  CreateDraftSicCodeRequest,
   SetDraftProducerAddressDetailsRequest,
   SetDraftProducerContactDetailRequest,
   SetDraftWasteCollectionAddressDetailsRequest,
@@ -141,6 +142,58 @@ const localAuthorities = [
   },
 ];
 
+const sicCodes = [
+  {
+    code: '01110',
+    description: {
+      en: 'Growing of cereals (except rice), leguminous crops and oil seeds',
+      cy: 'Tyfu grawn (heblaw rîs), cnydau llygadlys a hadau olew',
+    },
+  },
+  {
+    code: '01120',
+    description: {
+      en: 'Growing of rice',
+      cy: 'Tyfu rîs',
+    },
+  },
+  {
+    code: '01130',
+    description: {
+      en: 'Growing of vegetables and melons, roots and tubers',
+      cy: 'Tyfu llysiau a melynnau, gwreiddiau a thwberau',
+    },
+  },
+  {
+    code: '01140',
+    description: {
+      en: 'Growing of sugar cane',
+      cy: 'Tyfu siwgr',
+    },
+  },
+  {
+    code: '01150',
+    description: {
+      en: 'Growing of tobacco',
+      cy: 'Tyfu tybaco',
+    },
+  },
+  {
+    code: '01160',
+    description: {
+      en: 'Growing of fibre crops',
+      cy: 'Tyfu cnydau ffibr',
+    },
+  },
+  {
+    code: '01190',
+    description: {
+      en: 'Growing of other non-perennial crops',
+      cy: 'Tyfu cnydau anhynodol eraill',
+    },
+  },
+];
+
 describe(SubmissionController, () => {
   const subject = new SubmissionController(
     mockRepository as unknown as CosmosRepository,
@@ -150,6 +203,7 @@ describe(SubmissionController, () => {
       hazardousCodes,
       pops,
       localAuthorities,
+      sicCodes,
     },
   );
 
@@ -2371,6 +2425,294 @@ describe(SubmissionController, () => {
       if (response.success) {
         expect(response.value).toBeUndefined();
       }
+    });
+  });
+
+  describe('createSicCode', () => {
+    it('successfully creates sic code', async () => {
+      const accountId = faker.string.uuid();
+      const id = faker.string.uuid();
+      const initialDraft: Draft = {
+        id: id,
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          status: 'NotStarted',
+        },
+        producerAndCollection: {
+          status: 'Complete',
+          producer: {
+            reference: 'producerRef123',
+            sicCodes: {
+              status: 'Complete',
+              values: ['12345'],
+            },
+            contact: {
+              status: 'Started',
+              organisationName: 'Producer Org',
+              name: 'Jane Doe',
+              email: 'jane.doe@example.com',
+            },
+            address: {
+              status: 'Complete',
+              addressLine1: '123 Main St',
+              addressLine2: 'Suite 100',
+              townCity: 'Anytown',
+              postcode: '12345',
+              country: 'CountryName',
+            },
+          },
+          wasteCollection: {
+            address: {
+              status: 'NotStarted',
+            },
+            wasteSource: {
+              status: 'NotStarted',
+            },
+          },
+        },
+        carrier: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      };
+      mockRepository.getDraft.mockResolvedValue(initialDraft);
+      const request: CreateDraftSicCodeRequest = {
+        id: id,
+        accountId: accountId,
+        sicCode: '01110',
+      };
+      const response = await subject.createDraftSicCode(request);
+      const expectedDraft: Draft = {
+        id: id,
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          status: 'NotStarted',
+        },
+        producerAndCollection: {
+          status: 'Complete',
+          producer: {
+            reference: 'producerRef123',
+            sicCodes: {
+              status: 'Complete',
+              values: ['12345', '01110'],
+            },
+            contact: {
+              status: 'Started',
+              organisationName: 'Producer Org',
+              name: 'Jane Doe',
+              email: 'jane.doe@example.com',
+            },
+            address: {
+              status: 'Complete',
+              addressLine1: '123 Main St',
+              addressLine2: 'Suite 100',
+              townCity: 'Anytown',
+              postcode: '12345',
+              country: 'CountryName',
+            },
+          },
+          wasteCollection: {
+            address: {
+              status: 'NotStarted',
+            },
+            wasteSource: {
+              status: 'NotStarted',
+            },
+          },
+        },
+        carrier: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      };
+
+      expect(response.success).toBe(true);
+      expect(mockRepository.getDraft).toHaveBeenCalledWith(
+        'drafts',
+        id,
+        accountId,
+      );
+      expect(mockRepository.saveRecord).toHaveBeenCalledWith(
+        'drafts',
+        expectedDraft,
+        accountId,
+      );
+      if (response.success) {
+        expect(response.value).toEqual('01110');
+      }
+    });
+  });
+
+  describe('getDraftSicCodes', () => {
+    it('successfully gets sic codes from a draft', async () => {
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
+      const draft: Draft = {
+        id: id,
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          status: 'NotStarted',
+        },
+        producerAndCollection: {
+          status: 'Complete',
+          producer: {
+            reference: 'producerRef123',
+            sicCodes: {
+              status: 'Complete',
+              values: ['12345', '01110', '01120'],
+            },
+            contact: {
+              status: 'Started',
+              organisationName: 'Producer Org',
+              name: 'Jane Doe',
+              email: 'jane.doe@example.com',
+              phone: '987-654-3210',
+              fax: '123-456-7890',
+            },
+            address: {
+              status: 'Complete',
+              addressLine1: '123 Main St',
+              addressLine2: 'Suite 100',
+              townCity: 'Anytown',
+              postcode: '12345',
+              country: 'CountryName',
+            },
+          },
+          wasteCollection: {
+            wasteSource: {
+              status: 'Complete',
+              value: 'Commercial',
+            },
+            brokerRegistrationNumber: 'BRN123456',
+            carrierRegistrationNumber: 'CRN654321',
+            localAuthority: 'Local Authority Name',
+            expectedWasteCollectionDate: {
+              day: '01',
+              month: '01',
+              year: '2025',
+            },
+            address: {
+              status: 'Complete',
+              addressLine1: '456 Secondary St',
+              addressLine2: 'Building 2',
+              townCity: 'Othertown',
+              postcode: '67890',
+              country: 'CountryName',
+            },
+          },
+        },
+        carrier: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      };
+      mockRepository.getDraft.mockResolvedValue(draft);
+      const response = await subject.getDraftSicCodes({
+        id,
+        accountId,
+      });
+      expect(response).toEqual({
+        success: true,
+        value: {
+          status: 'Complete',
+          values: ['12345', '01110', '01120'],
+        },
+      });
+    });
+
+    it('returns status not started with an empty values if producer and collection status is neither complete or started', async () => {
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
+      const draft: Draft = {
+        id: id,
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          status: 'NotStarted',
+        },
+        producerAndCollection: {
+          status: 'NotStarted',
+        },
+        carrier: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      };
+      mockRepository.getDraft.mockResolvedValue(draft);
+      const response = await subject.getDraftSicCodes({
+        id,
+        accountId,
+      });
+      expect(response).toEqual({
+        success: true,
+        value: {
+          status: 'NotStarted',
+          values: [],
+        },
+      });
     });
   });
 });

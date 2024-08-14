@@ -11,6 +11,7 @@ import {
   GetHazardousCodesResponse,
   GetLocalAuthoritiesResponse,
   GetPopsResponse,
+  GetSICCodesResponse,
 } from '@wts/api/reference-data';
 import { CosmosClient } from '@azure/cosmos';
 import { CosmosRepository } from './data';
@@ -56,6 +57,7 @@ try {
   let popsResponse: GetPopsResponse;
   let ewcCodesResponse: GetEWCCodesResponse;
   let localAuthoritiesResponse: GetLocalAuthoritiesResponse;
+  let sicCodesResponse: GetSICCodesResponse;
 
   try {
     hazardousCodesResponse = await referenceDataClient.getHazardousCodes();
@@ -64,6 +66,7 @@ try {
       includeHazardous: true,
     });
     localAuthoritiesResponse = await referenceDataClient.getLocalAuthorities();
+    sicCodesResponse = await referenceDataClient.getSICCodes();
   } catch (error) {
     logger.error(error);
     throw new Error('Failed to get reference datasets');
@@ -73,7 +76,8 @@ try {
     !hazardousCodesResponse.success ||
     !popsResponse.success ||
     !ewcCodesResponse.success ||
-    !localAuthoritiesResponse.success
+    !localAuthoritiesResponse.success ||
+    !sicCodesResponse.success
   ) {
     throw new Error('Failed to get reference datasets');
   }
@@ -82,6 +86,7 @@ try {
   const pops = popsResponse.value;
   const ewcCodes = ewcCodesResponse.value;
   const localAuthorities = localAuthoritiesResponse.value;
+  const sicCodes = sicCodesResponse.value;
 
   const aadCredentials = new ChainedTokenCredential(
     new AzureCliCredential(),
@@ -109,6 +114,7 @@ try {
     pops,
     ewcCodes,
     localAuthorities,
+    sicCodes,
   });
 
   await server.invoker.listen(
@@ -419,6 +425,44 @@ try {
         return fromBoom(Boom.badRequest());
       }
       return await submissionController.setDraftWasteSource(request);
+    },
+    { method: HttpMethod.POST },
+  );
+
+  await server.invoker.listen(
+    api.createDraftSicCode.name,
+    async ({ body }) => {
+      if (body === undefined) {
+        return fromBoom(Boom.badRequest('Missing body'));
+      }
+      const request = JSON.parse(body) as api.CreateDraftSicCodeRequest;
+
+      if (!validateSubmission.validateCreateDraftSicCodeRequest(request)) {
+        return fromBoom(Boom.badRequest());
+      }
+
+      return await submissionController.createDraftSicCode(request);
+    },
+    { method: HttpMethod.POST },
+  );
+
+  await server.invoker.listen(
+    api.getDraftSicCodes.name,
+    async ({ body }) => {
+      if (body === undefined) {
+        return fromBoom(Boom.badRequest('Missing body'));
+      }
+
+      const request = JSON.parse(body) as api.GetDraftSicCodesRequest;
+      if (request === undefined) {
+        return fromBoom(Boom.badRequest());
+      }
+
+      if (!validateSubmission.validateGetDraftSicCodesRequest(request)) {
+        return fromBoom(Boom.badRequest());
+      }
+
+      return await submissionController.getDraftSicCodes(request);
     },
     { method: HttpMethod.POST },
   );

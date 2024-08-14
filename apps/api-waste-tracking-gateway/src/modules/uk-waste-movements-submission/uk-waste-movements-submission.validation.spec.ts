@@ -1,10 +1,11 @@
 import { faker } from '@faker-js/faker';
 import {
   validateCreateDraftRequest,
+  validateCreateDraftSicCodeRequest,
   validateSetDraftProducerAddressDetailsRequest,
   validateSetDraftProducerContactRequest,
-  validateSetDraftWasteSource,
   validateSetDraftWasteCollectionAddressDetailsRequest,
+  validateSetDraftWasteSourceRequest,
 } from './uk-waste-movements-submission.validation';
 
 describe('validateCreateDraftRequest', () => {
@@ -123,7 +124,7 @@ describe('validateSetDraftProducerContactRequest', () => {
 });
 
 describe('validateSetDraftWasteSourceRequest', () => {
-  const validate = validateSetDraftWasteSource;
+  const validate = validateSetDraftWasteSourceRequest;
 
   it('Rejects invalid values', () => {
     expect(validate(undefined)).toBe(false);
@@ -184,6 +185,24 @@ describe('validateSetDraftWasteCollectionAddressRequest', () => {
         addressLine1: faker.string.sample(),
         townCity: faker.string.sample(),
         country: faker.string.sample(),
+      }),
+    ).toBe(true);
+  });
+});
+
+describe('validateCreateDraftSicCodeRequest', () => {
+  const validate = validateCreateDraftSicCodeRequest;
+
+  it('Rejects invalid values', () => {
+    expect(validate(undefined)).toBe(false);
+    expect(validate({})).toBe(false);
+    expect(validate(faker.lorem.word())).toBe(false);
+  });
+
+  it('Accepts valid values', () => {
+    expect(
+      validate({
+        sicCode: '01110',
       }),
     ).toBe(true);
   });

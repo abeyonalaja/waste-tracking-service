@@ -1096,4 +1096,93 @@ export default class SubmissionController {
       return fromBoom(Boom.internal());
     }
   };
+
+  createDraftSicCode: Handler<
+    api.CreateDraftSicCodeRequest,
+    api.CreateDraftSicCodeResponse
+  > = async ({ id, accountId, sicCode }) => {
+    try {
+      const draft = (await this.repository.getDraft(
+        draftsContainerName,
+        id,
+        accountId,
+      )) as api.Draft;
+
+      if (!draft) {
+        return fromBoom(Boom.notFound());
+      }
+
+      if (
+        (draft.producerAndCollection.status === 'Complete' ||
+          draft.producerAndCollection.status === 'Started') &&
+        draft.producerAndCollection.producer
+      ) {
+        const draftSicCodesList =
+          draft.producerAndCollection.producer.sicCodes.values;
+        const sicCodesValidationResult =
+          ukwmValidation.validationRules.validateSicCodesSection(
+            sicCode,
+            draftSicCodesList,
+            this.referenceData.sicCodes,
+          );
+        if (!sicCodesValidationResult.valid) {
+          const boom = Boom.badRequest(
+            'Validation failed',
+            sicCodesValidationResult.errors,
+          );
+          return fromBoom(boom);
+        }
+        draft.producerAndCollection.producer.sicCodes.values.push(sicCode);
+        draft.producerAndCollection.producer.sicCodes.status = 'Complete';
+      }
+
+      await this.repository.saveRecord(
+        draftsContainerName,
+        { ...draft },
+        accountId,
+      );
+      return success(sicCode);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  getDraftSicCodes: Handler<
+    api.GetDraftSicCodesRequest,
+    api.GetDraftSicCodesResponse
+  > = async ({ id, accountId }) => {
+    try {
+      const draft = (await this.repository.getDraft(
+        draftsContainerName,
+        id,
+        accountId,
+      )) as api.Draft;
+
+      if (!draft) {
+        return fromBoom(Boom.notFound());
+      }
+
+      if (
+        (draft.producerAndCollection.status === 'Started' ||
+          draft.producerAndCollection.status === 'Complete') &&
+        draft.producerAndCollection.producer
+      ) {
+        return success(draft.producerAndCollection.producer.sicCodes);
+      } else {
+        return success({ status: 'NotStarted', values: [] });
+      }
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
 }

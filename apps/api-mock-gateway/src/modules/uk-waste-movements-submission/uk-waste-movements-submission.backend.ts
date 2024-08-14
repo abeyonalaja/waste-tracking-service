@@ -7,6 +7,7 @@ import {
   UkwmDraftContact,
   UkwmContact,
   UkwmDraftWasteSource,
+  UkwmDraftSicCodes,
 } from '@wts/api/waste-tracking-gateway';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../../db';
@@ -28,6 +29,12 @@ export interface UkwmSetWasteSourceRef {
   id: string;
   accountId: string;
   wasteSource: string;
+}
+
+export interface UkwmCreateSicCodeRef {
+  id: string;
+  accountId: string;
+  sicCode: string;
 }
 
 const submissions: UkwmSubmission[] = [...Array(155).keys()].map((i) => ({
@@ -593,4 +600,60 @@ export function setDraftWasteCollectionAddressDetails(
     }
   }
   return Promise.resolve();
+}
+
+export function getDraftSicCodes({
+  id,
+  accountId,
+}: UkwmDraftRef): Promise<UkwmDraftSicCodes> {
+  const draft = db.ukwmDrafts.find(
+    (d) => d.id == id && d.accountId == accountId,
+  );
+  if (draft === undefined) {
+    return Promise.reject(new NotFoundError('Submission not found.'));
+  }
+  if (
+    (draft.producerAndCollection.status === 'Started' ||
+      draft.producerAndCollection.status === 'Complete') &&
+    draft.producerAndCollection.producer
+  ) {
+    return Promise.resolve(draft.producerAndCollection.producer.sicCodes);
+  }
+  return Promise.resolve({ status: 'NotStarted', values: [] });
+}
+
+export function createDraftSicCode(ref: UkwmCreateSicCodeRef): Promise<string> {
+  const { id, accountId, sicCode } = ref;
+  const draft = db.ukwmDrafts.find(
+    (d) => d.id == id && d.accountId == accountId,
+  );
+  if (draft === undefined) {
+    return Promise.reject(new NotFoundError('Submission not found.'));
+  }
+
+  if (
+    (draft.producerAndCollection.status === 'Complete' ||
+      draft.producerAndCollection.status === 'Started') &&
+    draft.producerAndCollection.producer
+  ) {
+    const draftSicCodesList =
+      draft.producerAndCollection.producer.sicCodes.values;
+    const sicCodesValidationResult =
+      ukwmValidation.validationRules.validateSicCodesSection(
+        sicCode,
+        draftSicCodesList,
+        db.sicCodes,
+      );
+    if (!sicCodesValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation error',
+          sicCodesValidationResult.errors,
+        ),
+      );
+    }
+    draft.producerAndCollection.producer.sicCodes.values.push(sicCode);
+    draft.producerAndCollection.producer.sicCodes.status = 'Complete';
+  }
+  return Promise.resolve(sicCode);
 }

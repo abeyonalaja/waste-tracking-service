@@ -1,6 +1,7 @@
 import { jest } from '@jest/globals';
 import {
   CreateDraftRef,
+  CreateSicCodeRef,
   SetWasteSourceRef,
   SubmissionRef,
   UkWasteMovementsSubmissionBackend,
@@ -70,6 +71,10 @@ const mockBackend = {
     >(),
   getDraftWasteCollectionAddressDetails:
     jest.fn<({ id }: SubmissionRef) => Promise<void>>(),
+  createDraftSicCode:
+    jest.fn<
+      ({ id, accountId, sicCode }: CreateSicCodeRef) => Promise<string>
+    >(),
 };
 
 const app = server({
@@ -261,6 +266,19 @@ describe('UkWasteMovementsSubmissionPlugin', () => {
       mockBackend.setDraftWasteCollectionAddressDetails.mockRejectedValue(
         Boom.badRequest(),
       );
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe('POST /drafts/{id}/sic-code', () => {
+    it('Responds with 400 if invalid request is received in the payload', async () => {
+      const options = {
+        method: 'POST',
+        url: `/ukwm/drafts/{id}/sic-code`,
+      };
+
+      mockBackend.createDraftSicCode.mockRejectedValue(Boom.badRequest());
       const response = await app.inject(options);
       expect(response.statusCode).toBe(400);
     });

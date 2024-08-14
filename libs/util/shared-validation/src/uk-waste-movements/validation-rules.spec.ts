@@ -1,3 +1,4 @@
+import { SICCode } from '@wts/api/reference-data';
 import {
   validateBuildingNameOrNumber,
   validateProducerReference,
@@ -15,6 +16,7 @@ import {
   validateProducerContactPhone,
   validatePartialAddressDetails,
   validateWasteSourceSection,
+  validateSicCodesSection,
 } from './validation-rules';
 import { faker } from '@faker-js/faker';
 
@@ -600,6 +602,253 @@ describe(`Waste source`, () => {
 
   it('should return valid false when waste source is invalid', () => {
     const result = validateWasteSourceSection('Public');
+    expect(result.valid).toBe(false);
+  });
+});
+
+describe(`Producer Standard Industrial Classification (SIC) code`, () => {
+  it('should return valid true when SIC code is valid', () => {
+    const value = '01140';
+    const draftSicCodesList: string[] = ['01110', '01120', '01130'];
+    const sicCodesList: SICCode[] = [
+      {
+        code: '01110',
+        description: {
+          en: 'Growing of cereals (except rice), leguminous crops and oil seeds',
+          cy: 'Tyfu grawn (heblaw rîs), cnydau llygadlys a hadau olew',
+        },
+      },
+      {
+        code: '01120',
+        description: {
+          en: 'Growing of rice',
+          cy: 'Tyfu rîs',
+        },
+      },
+      {
+        code: '01130',
+        description: {
+          en: 'Growing of vegetables and melons, roots and tubers',
+          cy: 'Tyfu llysiau a melynnau, gwreiddiau a thwberau',
+        },
+      },
+      {
+        code: '01140',
+        description: {
+          en: 'Growing of sugar cane',
+          cy: 'Tyfu siwgr',
+        },
+      },
+      {
+        code: '01150',
+        description: {
+          en: 'Growing of tobacco',
+          cy: 'Tyfu tybaco',
+        },
+      },
+      {
+        code: '01160',
+        description: {
+          en: 'Growing of fibre crops',
+          cy: 'Tyfu cnydau ffibr',
+        },
+      },
+      {
+        code: '01190',
+        description: {
+          en: 'Growing of other non-perennial crops',
+          cy: 'Tyfu cnydau anhynodol eraill',
+        },
+      },
+    ];
+
+    const result = validateSicCodesSection(
+      value,
+      draftSicCodesList,
+      sicCodesList,
+    );
+    expect(result.valid).toBe(true);
+  });
+
+  it('should return valid false when SIC code is not found in the reference data set', () => {
+    const value = '01140';
+    const draftSicCodesList: string[] = ['01110', '01120', '01130'];
+    const sicCodesList: SICCode[] = [
+      {
+        code: '01110',
+        description: {
+          en: 'Growing of cereals (except rice), leguminous crops and oil seeds',
+          cy: 'Tyfu grawn (heblaw rîs), cnydau llygadlys a hadau olew',
+        },
+      },
+      {
+        code: '01120',
+        description: {
+          en: 'Growing of rice',
+          cy: 'Tyfu rîs',
+        },
+      },
+      {
+        code: '01130',
+        description: {
+          en: 'Growing of vegetables and melons, roots and tubers',
+          cy: 'Tyfu llysiau a melynnau, gwreiddiau a thwberau',
+        },
+      },
+      {
+        code: '01150',
+        description: {
+          en: 'Growing of tobacco',
+          cy: 'Tyfu tybaco',
+        },
+      },
+      {
+        code: '01160',
+        description: {
+          en: 'Growing of fibre crops',
+          cy: 'Tyfu cnydau ffibr',
+        },
+      },
+      {
+        code: '01190',
+        description: {
+          en: 'Growing of other non-perennial crops',
+          cy: 'Tyfu cnydau anhynodol eraill',
+        },
+      },
+    ];
+
+    const result = validateSicCodesSection(
+      value,
+      draftSicCodesList,
+      sicCodesList,
+    );
+    expect(result.valid).toBe(false);
+  });
+
+  it('should return valid false when SIC code in the draft record already exists in the current sic code collection of the draft', () => {
+    const value = '01140';
+    const draftSicCodesList: string[] = ['01110', '01120', '01140'];
+    const sicCodesList: SICCode[] = [
+      {
+        code: '01110',
+        description: {
+          en: 'Growing of cereals (except rice), leguminous crops and oil seeds',
+          cy: 'Tyfu grawn (heblaw rîs), cnydau llygadlys a hadau olew',
+        },
+      },
+      {
+        code: '01120',
+        description: {
+          en: 'Growing of rice',
+          cy: 'Tyfu rîs',
+        },
+      },
+      {
+        code: '01130',
+        description: {
+          en: 'Growing of vegetables and melons, roots and tubers',
+          cy: 'Tyfu llysiau a melynnau, gwreiddiau a thwberau',
+        },
+      },
+      {
+        code: '01140',
+        description: {
+          en: 'Growing of sugar cane',
+          cy: 'Tyfu siwgr',
+        },
+      },
+      {
+        code: '01150',
+        description: {
+          en: 'Growing of tobacco',
+          cy: 'Tyfu tybaco',
+        },
+      },
+      {
+        code: '01160',
+        description: {
+          en: 'Growing of fibre crops',
+          cy: 'Tyfu cnydau ffibr',
+        },
+      },
+      {
+        code: '01190',
+        description: {
+          en: 'Growing of other non-perennial crops',
+          cy: 'Tyfu cnydau anhynodol eraill',
+        },
+      },
+    ];
+
+    const result = validateSicCodesSection(
+      value,
+      draftSicCodesList,
+      sicCodesList,
+    );
+    expect(result.valid).toBe(false);
+  });
+
+  it('should return valid false when SIC code is empty', () => {
+    const value = '';
+    const draftSicCodesList: string[] = ['01110', '01120', '01140'];
+    const sicCodesList: SICCode[] = [
+      {
+        code: '01110',
+        description: {
+          en: 'Growing of cereals (except rice), leguminous crops and oil seeds',
+          cy: 'Tyfu grawn (heblaw rîs), cnydau llygadlys a hadau olew',
+        },
+      },
+      {
+        code: '01120',
+        description: {
+          en: 'Growing of rice',
+          cy: 'Tyfu rîs',
+        },
+      },
+      {
+        code: '01130',
+        description: {
+          en: 'Growing of vegetables and melons, roots and tubers',
+          cy: 'Tyfu llysiau a melynnau, gwreiddiau a thwberau',
+        },
+      },
+      {
+        code: '01140',
+        description: {
+          en: 'Growing of sugar cane',
+          cy: 'Tyfu siwgr',
+        },
+      },
+      {
+        code: '01150',
+        description: {
+          en: 'Growing of tobacco',
+          cy: 'Tyfu tybaco',
+        },
+      },
+      {
+        code: '01160',
+        description: {
+          en: 'Growing of fibre crops',
+          cy: 'Tyfu cnydau ffibr',
+        },
+      },
+      {
+        code: '01190',
+        description: {
+          en: 'Growing of other non-perennial crops',
+          cy: 'Tyfu cnydau anhynodol eraill',
+        },
+      },
+    ];
+
+    const result = validateSicCodesSection(
+      value,
+      draftSicCodesList,
+      sicCodesList,
+    );
     expect(result.valid).toBe(false);
   });
 });

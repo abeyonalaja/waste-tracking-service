@@ -10,9 +10,10 @@ import {
   validateSetPartialDraftProducerAddressDetailsRequest,
   validateSetDraftProducerContactRequest,
   validateSetPartialDraftProducerContactRequest,
-  validateSetDraftWasteSource,
   validateSetDraftWasteCollectionAddressDetailsRequest,
   validateSetPartialDraftWasteCollectionAddressDetailsRequest,
+  validateSetDraftWasteSourceRequest,
+  validateCreateDraftSicCodeRequest,
 } from './uk-waste-movements-submission.validation';
 
 export interface PluginOptions {
@@ -287,7 +288,7 @@ const plugin: Plugin<PluginOptions> = {
       method: 'PUT',
       path: '/drafts/{id}/waste-source',
       handler: async function ({ params, payload }, h) {
-        if (!validateSetDraftWasteSource(payload)) {
+        if (!validateSetDraftWasteSourceRequest(payload)) {
           return Boom.badRequest();
         }
         const request = payload as dto.UkwmSetDraftWasteSourceRequest;
@@ -366,6 +367,57 @@ const plugin: Plugin<PluginOptions> = {
             saveAsDraft,
           );
           return request;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            err.output.payload.data = err?.data;
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/drafts/{id}/sic-code',
+      handler: async function ({ params }, h) {
+        try {
+          const value = await backend.getDraftSicCodes({
+            id: params.id,
+            accountId: h.request.auth.credentials.accountId as string,
+          });
+          return value as dto.UkwmGetDraftSicCodesResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'POST',
+      path: '/drafts/{id}/sic-code',
+      handler: async function ({ params, payload }, h) {
+        if (!validateCreateDraftSicCodeRequest(payload)) {
+          return Boom.badRequest();
+        }
+        const request = payload as dto.UkwmCreateDraftSicCodeRequest;
+        try {
+          return h
+            .response(
+              await backend.createDraftSicCode({
+                id: params.id,
+                accountId: h.request.auth.credentials.accountId as string,
+                sicCode: request.sicCode,
+              }),
+            )
+            .code(201);
         } catch (err) {
           if (err instanceof Boom.Boom) {
             err.output.payload.data = err?.data;

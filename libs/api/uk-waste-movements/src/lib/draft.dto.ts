@@ -601,3 +601,16 @@ export type SetDraftWasteCollectionAddressDetailsResponse = Response<void>;
 export const setDraftWasteCollectionAddressDetails: Method = {
   name: 'setDraftWasteCollectionAddressDetails',
 };
+
+export type CreateDraftSicCodeRequest = IdRequest &
+  AccountIdRequest & { sicCode: string };
+export type CreateDraftSicCodeResponse = Response<string>;
+export const createDraftSicCode: Method = {
+  name: 'createDraftSicCode',
+};
+
+export type GetDraftSicCodesRequest = IdRequest & AccountIdRequest;
+export type GetDraftSicCodesResponse = Response<DraftSicCodes>;
+export const getDraftSicCodes: Method = {
+  name: 'getDraftSicCode',
+};

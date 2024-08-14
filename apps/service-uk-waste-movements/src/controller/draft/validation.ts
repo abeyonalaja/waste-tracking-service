@@ -12,6 +12,8 @@ import {
   GetDraftWasteSourceRequest,
   GetDraftWasteCollectionAddressDetailsRequest,
   SetDraftWasteCollectionAddressDetailsRequest,
+  CreateDraftSicCodeRequest,
+  GetDraftSicCodesRequest,
 } from '@wts/api/uk-waste-movements';
 import Ajv from 'ajv/dist/jtd';
 
@@ -89,3 +91,9 @@ export const validateGetDraftWasteCollectionAddressDetailsRequest =
   ajv.compile<GetDraftWasteCollectionAddressDetailsRequest>(
     draftSchema.getDraftWasteCollectionAddressDetailsRequest,
   );
+
+export const validateCreateDraftSicCodeRequest =
+  ajv.compile<CreateDraftSicCodeRequest>(draftSchema.createDraftSicCodeRequest);
+
+export const validateGetDraftSicCodesRequest =
+  ajv.compile<GetDraftSicCodesRequest>(draftSchema.getDraftSicCodesRequest);

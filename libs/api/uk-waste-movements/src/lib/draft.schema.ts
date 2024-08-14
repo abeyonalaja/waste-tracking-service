@@ -994,3 +994,34 @@ export const setDraftWasteCollectionAddressDetailsResponse: SchemaObject = {
     error: errorResponseValue,
   },
 };
+
+export const createDraftSicCodeRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+    sicCode: { type: 'string' },
+  },
+};
+
+export const createDraftSicCodesResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: { type: 'string' },
+  },
+};
+
+export const getDraftSicCodesRequest: SchemaObject = {
+  properties: {
+    accountId: { type: 'string' },
+    id: { type: 'string' },
+  },
+};
+
+export const getDraftSicCodesResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: draftSicCodes,
+  },
+};

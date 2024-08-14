@@ -9,7 +9,7 @@ import type {
   Section,
   Field,
 } from './dto';
-import { Contact, ProducerDetail, Address } from './model';
+import { Contact, ProducerDetail, Address, SICCode } from './model';
 
 export * from './validation-rules';
 
@@ -1310,5 +1310,95 @@ export function validateWasteSourceSection(
   return {
     valid: true,
     value: trimmedWasteSource,
+  };
+}
+
+export function validateSicCodesSection(
+  value: string,
+  draftSicCodesList: string[],
+  sicCodesList: SICCode[],
+  message?: ErrorMessage,
+): ValidationResult<string> {
+  const trimmedSicCode = value.trim();
+
+  if (!trimmedSicCode) {
+    return {
+      valid: false,
+      errors: [
+        {
+          field: 'Producer Standard Industrial Classification (SIC) code',
+          code: errorCodes.producerEmptySicCode,
+          message: message
+            ? getErrorMessage(
+                errorCodes.producerEmptySicCode,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
+    };
+  }
+
+  if (draftSicCodesList.length >= constraints.SICCodesLength.max) {
+    return {
+      valid: false,
+      errors: [
+        {
+          field: 'Producer Standard Industrial Classification (SIC) code',
+          code: errorCodes.producerTooManySicCodes,
+          message: message
+            ? getErrorMessage(
+                errorCodes.producerTooManySicCodes,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
+    };
+  }
+
+  if (!sicCodesList.some((sicCode) => sicCode.code === trimmedSicCode)) {
+    return {
+      valid: false,
+      errors: [
+        {
+          field: 'Producer Standard Industrial Classification (SIC) code',
+          code: errorCodes.producerInvalidSicCode,
+          message: message
+            ? getErrorMessage(
+                errorCodes.producerInvalidSicCode,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
+    };
+  }
+
+  if (draftSicCodesList.includes(trimmedSicCode)) {
+    return {
+      valid: false,
+      errors: [
+        {
+          field: 'Producer Standard Industrial Classification (SIC) code',
+          code: errorCodes.producerDuplicateSicCode,
+          message: message
+            ? getErrorMessage(
+                errorCodes.producerDuplicateSicCode,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
+    };
+  }
+
+  return {
+    valid: true,
+    value: trimmedSicCode,
   };
 }
