@@ -645,6 +645,52 @@
         "buttonTwo": "Save and return",
         "errorSummaryTitle": "There is a problem",
         "errorMessage": "Select the source of the waste"
+      },
+      "wasteCollectionDetails": {
+        "sameAsProducer": {
+          "prompt": {
+            "backLink": "Back",
+            "caption": "Producer and waste collection details",
+            "heading": "Do you want to use the producer's address as the waste collection address?",
+            "paragraphOne": "The waste collection address is where the waste carrier will pick up the waste from.",
+            "radioOne": "Yes, I want to use this address for the waste collection",
+            "radioTwo": "No, I want to enter a different address for the waste collection",
+            "buttonOne": "Save and continue",
+            "buttonTwo": "Save and return",
+            "errorSummaryTitle": "There is a problem",
+            "validationError": "Select yes if the waste collection address is the same as the producer address"
+          },
+          "confirm": {
+            "backLink": "Back",
+            "caption": "Producer and waste collection details",
+            "heading": "Confirm the waste collection address",
+            "buttonOne": "Use this address and continue",
+            "buttonTwo": "Save and return",
+            "useDifferentAddressLink": "Use a different address"
+          }
+        },
+        "postcode": {
+          "search": {
+            "heading": "What is the waste collection address?",
+            "intro": "This is where the waste needs to be collected from."
+          },
+          "results": {
+            "heading": "Select the waste collection address",
+            "intro": "{count} addresses were found for {postcode}"
+          },
+          "noResults": {
+            "heading": "No address found"
+          },
+          "confirmation": {
+            "heading": "Confirm the waste collection address"
+          },
+          "manual": {
+            "heading": "What is the waste collection address?"
+          },
+          "edit": {
+            "heading": "Edit the waste collection address"
+          }
+        }
       }
     }
   }

@@ -33,6 +33,9 @@ Feature: AS A Waste controller
     And I click the "Producer organisation address" link
     Then the "Whats producer address" page is displayed
     And I click search postcode button
+    Then I remain on the Whats producer address page with an "Enter a postcode" error message displayed
+    And I enter invalid address postcode
+    And I click the button Save and continue
     Then I remain on the Whats producer address page with an "Enter a real postcode" error message displayed
 
 

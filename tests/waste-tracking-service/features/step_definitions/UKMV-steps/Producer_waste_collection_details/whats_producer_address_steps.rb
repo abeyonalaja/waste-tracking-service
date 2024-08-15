@@ -70,3 +70,7 @@ end
 And(/^I select second producer address$/) do
   SelectProducerAddressPage.new.select_second_address
 end
+
+And(/^I enter invalid address postcode$/) do
+  WhatsProducerAddressPage.new.enter_postcode 'AL3 '
+end
