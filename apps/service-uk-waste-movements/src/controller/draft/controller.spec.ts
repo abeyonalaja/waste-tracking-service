@@ -7,6 +7,7 @@ import { CosmosRepository } from '../../data';
 import { v4 as uuidv4 } from 'uuid';
 import {
   CreateDraftSicCodeRequest,
+  DeleteDraftSicCodeRequest,
   SetDraftProducerAddressDetailsRequest,
   SetDraftProducerContactDetailRequest,
   SetDraftWasteCollectionAddressDetailsRequest,
@@ -3009,6 +3010,204 @@ describe(SubmissionController, () => {
 
       if (response.success) {
         expect(response.value).toBeUndefined();
+      }
+    });
+  });
+
+  describe('deleteDraftSicCode', () => {
+    it('successfully deletes sic code', async () => {
+      const accountId = faker.string.uuid();
+      const id = faker.string.uuid();
+      const initialDraft: Draft = {
+        id: id,
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          status: 'NotStarted',
+        },
+        producerAndCollection: {
+          status: 'Complete',
+          producer: {
+            reference: 'producerRef123',
+            sicCodes: {
+              status: 'Complete',
+              values: ['12345', '01110', '01120'],
+            },
+            contact: {
+              status: 'Started',
+              organisationName: 'Producer Org',
+              name: 'Jane Doe',
+              email: 'jane.doe@example.com',
+            },
+            address: {
+              status: 'Complete',
+              addressLine1: '123 Main St',
+              addressLine2: 'Suite 100',
+              townCity: 'Anytown',
+              postcode: '12345',
+              country: 'CountryName',
+            },
+          },
+          wasteCollection: {
+            address: {
+              status: 'NotStarted',
+            },
+            wasteSource: {
+              status: 'NotStarted',
+            },
+          },
+        },
+        carrier: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      };
+      mockRepository.getDraft.mockResolvedValue(initialDraft);
+      const request: DeleteDraftSicCodeRequest = {
+        id: id,
+        accountId: accountId,
+        code: '01110',
+      };
+      const response = await subject.deleteDraftSicCode(request);
+      const expectedDraft: Draft = {
+        id: id,
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          status: 'NotStarted',
+        },
+        producerAndCollection: {
+          status: 'Complete',
+          producer: {
+            reference: 'producerRef123',
+            sicCodes: {
+              status: 'Complete',
+              values: ['12345', '01120'],
+            },
+            contact: {
+              status: 'Started',
+              organisationName: 'Producer Org',
+              name: 'Jane Doe',
+              email: 'jane.doe@example.com',
+            },
+            address: {
+              status: 'Complete',
+              addressLine1: '123 Main St',
+              addressLine2: 'Suite 100',
+              townCity: 'Anytown',
+              postcode: '12345',
+              country: 'CountryName',
+            },
+          },
+          wasteCollection: {
+            address: {
+              status: 'NotStarted',
+            },
+            wasteSource: {
+              status: 'NotStarted',
+            },
+          },
+        },
+        carrier: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      };
+
+      expect(response.success).toBe(true);
+      expect(mockRepository.getDraft).toHaveBeenCalledWith(
+        'drafts',
+        id,
+        accountId,
+      );
+      expect(mockRepository.saveRecord).toHaveBeenCalledWith(
+        'drafts',
+        expectedDraft,
+        accountId,
+      );
+      if (response.success) {
+        expect(response.value).toEqual(['12345', '01120']);
+      }
+    });
+
+    it('it returns an empty array if  producer and collection status is neither complete or started', async () => {
+      const accountId = faker.string.uuid();
+      const id = faker.string.uuid();
+      const initialDraft: Draft = {
+        id: id,
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          status: 'NotStarted',
+        },
+        producerAndCollection: {
+          status: 'NotStarted',
+        },
+        carrier: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      };
+      mockRepository.getDraft.mockResolvedValue(initialDraft);
+      const request: DeleteDraftSicCodeRequest = {
+        id: id,
+        accountId: accountId,
+        code: '01110',
+      };
+      const response = await subject.deleteDraftSicCode(request);
+      expect(response.success).toBe(false);
+      expect(mockRepository.getDraft).toHaveBeenCalledWith(
+        'drafts',
+        id,
+        accountId,
+      );
+      if (response.success) {
+        expect(response.value).toEqual([]);
       }
     });
   });

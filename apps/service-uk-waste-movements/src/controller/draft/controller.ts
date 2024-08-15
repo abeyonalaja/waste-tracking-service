@@ -1284,4 +1284,65 @@ export default class SubmissionController {
       return fromBoom(Boom.internal());
     }
   };
+
+  deleteDraftSicCode: Handler<
+    api.DeleteDraftSicCodeRequest,
+    api.DeleteDraftSicCodeResponse
+  > = async ({ id, accountId, code }) => {
+    try {
+      const draft = (await this.repository.getDraft(
+        draftsContainerName,
+        id,
+        accountId,
+      )) as api.Draft;
+
+      if (!draft) {
+        return fromBoom(Boom.notFound());
+      }
+
+      if (draft.producerAndCollection.status === 'NotStarted') {
+        return fromBoom(Boom.notFound());
+      }
+
+      if (
+        (draft.producerAndCollection.status === 'Complete' ||
+          draft.producerAndCollection.status === 'Started') &&
+        draft.producerAndCollection.producer
+      ) {
+        const index =
+          draft.producerAndCollection.producer.sicCodes.values.findIndex(
+            (c) => c === code,
+          );
+
+        if (index === -1) {
+          return fromBoom(Boom.notFound());
+        }
+
+        draft.producerAndCollection.producer.sicCodes.values.splice(index, 1);
+
+        if (draft.producerAndCollection.producer.sicCodes.values.length === 0) {
+          draft.producerAndCollection.producer.sicCodes = {
+            status: 'NotStarted',
+            values: [],
+          };
+        }
+
+        await this.repository.saveRecord(
+          draftsContainerName,
+          { ...draft },
+          accountId,
+        );
+
+        return success(draft.producerAndCollection.producer.sicCodes.values);
+      }
+      return fromBoom(Boom.notFound());
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
 }

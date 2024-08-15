@@ -8,6 +8,7 @@ import {
   UkwmContact,
   UkwmDraftWasteSource,
   UkwmDraftSicCodes,
+  UkwmDeleteDraftSicCodeResponse,
 } from '@wts/api/waste-tracking-gateway';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../../db';
@@ -35,6 +36,12 @@ export interface UkwmCreateSicCodeRef {
   id: string;
   accountId: string;
   sicCode: string;
+}
+
+export interface UkwmDeleteSicCodeRef {
+  id: string;
+  accountId: string;
+  code: string;
 }
 
 const submissions: UkwmSubmission[] = [...Array(155).keys()].map((i) => ({
@@ -733,4 +740,49 @@ export function setDraftCarrierAddressDetails(
     };
   }
   return Promise.resolve();
+}
+
+export async function deleteDraftSicCode({
+  id,
+  accountId,
+  code,
+}: UkwmDeleteSicCodeRef): Promise<UkwmDeleteDraftSicCodeResponse> {
+  const draft = db.ukwmDrafts.find(
+    (d) => d.id == id && d.accountId == accountId,
+  );
+  if (draft === undefined) {
+    return Promise.reject(new NotFoundError('Submission not found.'));
+  }
+
+  if (draft.producerAndCollection.status === 'NotStarted') {
+    return Promise.reject(new NotFoundError('Submission not found.'));
+  }
+
+  if (
+    (draft.producerAndCollection.status === 'Complete' ||
+      draft.producerAndCollection.status === 'Started') &&
+    draft.producerAndCollection.producer
+  ) {
+    const index =
+      draft.producerAndCollection.producer.sicCodes.values.findIndex(
+        (c) => c === code,
+      );
+
+    if (index === -1) {
+      return Promise.reject(new NotFoundError('SIC Code not found.'));
+    }
+
+    draft.producerAndCollection.producer.sicCodes.values.splice(index, 1);
+
+    if (draft.producerAndCollection.producer.sicCodes.values.length === 0) {
+      draft.producerAndCollection.producer.sicCodes = {
+        status: 'NotStarted',
+        values: [],
+      };
+    }
+    return Promise.resolve(
+      draft.producerAndCollection.producer.sicCodes.values,
+    );
+  }
+  return Promise.reject(new NotFoundError('SIC Code not found.'));
 }

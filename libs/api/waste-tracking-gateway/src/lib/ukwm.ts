@@ -298,3 +298,4 @@ export type UkwmGetDraftSicCodesResponse = UkwmDraftSicCodes;
 export type UkwmGetDraftCarrierAddressDetailsResponse = UkwmDraftAddress;
 
 export type UkwmSetDraftCarrierAddressDetailsRequest = UkwmAddress;
+export type UkwmDeleteDraftSicCodeResponse = string[];

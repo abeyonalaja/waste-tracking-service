@@ -498,6 +498,31 @@ const plugin: Plugin<PluginOptions> = {
         }
       },
     });
+
+    server.route({
+      method: 'DELETE',
+      path: '/drafts/{id}/sic-code/{code}',
+      handler: async function ({ params }, h) {
+        try {
+          return h
+            .response(
+              await backend.deleteDraftSicCode({
+                id: params.id,
+                accountId: h.request.auth.credentials.accountId as string,
+                code: params.code,
+              }),
+            )
+            .code(201);
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
   },
 };
 

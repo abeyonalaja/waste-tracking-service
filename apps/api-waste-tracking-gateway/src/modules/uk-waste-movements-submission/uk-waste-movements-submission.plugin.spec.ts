@@ -2,6 +2,7 @@ import { jest } from '@jest/globals';
 import {
   CreateDraftRef,
   CreateSicCodeRef,
+  DeleteSicCodeRef,
   SetWasteSourceRef,
   SubmissionRef,
   UkWasteMovementsSubmissionBackend,
@@ -17,6 +18,8 @@ import {
   UkwmGetDraftsResult,
   UkwmSubmission,
   UkwmDraftAddress,
+  UkwmDraftSicCodes,
+  UkwmDeleteDraftSicCodeResponse,
 } from '@wts/api/waste-tracking-gateway';
 import { faker } from '@faker-js/faker';
 import Boom from '@hapi/boom';
@@ -85,6 +88,16 @@ const mockBackend = {
     >(),
   getDraftCarrierAddressDetails:
     jest.fn<({ id }: SubmissionRef) => Promise<void>>(),
+  getDraftSicCodes:
+    jest.fn<({ id, accountId }: SubmissionRef) => Promise<UkwmDraftSicCodes>>(),
+  deleteDraftSicCode:
+    jest.fn<
+      ({
+        id,
+        accountId,
+        code,
+      }: DeleteSicCodeRef) => Promise<UkwmDeleteDraftSicCodeResponse>
+    >(),
 };
 
 const app = server({
@@ -319,6 +332,32 @@ describe('UkWasteMovementsSubmissionPlugin', () => {
       mockBackend.setDraftCarrierAddressDetails.mockRejectedValue(
         Boom.badRequest(),
       );
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe('GET /drafts/{id}/sic-code', () => {
+    it('Responds with 400 if invalid request is received in the payload', async () => {
+      const options = {
+        method: 'GET',
+        url: `/ukwm/drafts/{id}/sic-code`,
+      };
+
+      mockBackend.getDraftSicCodes.mockRejectedValue(Boom.badRequest());
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe('DELETE /drafts/{id}/sic-code', () => {
+    it('Responds with 400 if invalid request is received in the payload', async () => {
+      const options = {
+        method: 'DELETE',
+        url: `/ukwm/drafts/{id}/sic-code/{code}`,
+      };
+
+      mockBackend.deleteDraftSicCode.mockRejectedValue(Boom.badRequest());
       const response = await app.inject(options);
       expect(response.statusCode).toBe(400);
     });

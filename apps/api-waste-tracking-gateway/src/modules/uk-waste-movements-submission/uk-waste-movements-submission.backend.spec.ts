@@ -16,6 +16,7 @@ import {
   CreateDraftSicCodeResponse,
   GetDraftSicCodesResponse,
   GetDraftCarrierAddressDetailsResponse,
+  DeleteDraftSicCodeResponse,
 } from '@wts/api/uk-waste-movements';
 import { UkwmContact } from '@wts/api/waste-tracking-gateway';
 
@@ -59,6 +60,8 @@ const mockClient = {
     jest.fn<DaprUkWasteMovementsClient['setDraftCarrierAddressDetails']>(),
   getDraftCarrierAddressDetails:
     jest.fn<DaprUkWasteMovementsClient['getDraftCarrierAddressDetails']>(),
+  deleteDraftSicCode:
+    jest.fn<DaprUkWasteMovementsClient['deleteDraftSicCode']>(),
 };
 
 describe(ServiceUkWasteMovementsSubmissionBackend, () => {
@@ -608,5 +611,32 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
       accountId,
     });
     expect(result).toEqual(mockGetDraftCarrierAddressDetailsResponse.value);
+  });
+
+  it('deletes sic code from a draft', async () => {
+    const id = faker.string.uuid();
+    const accountId = faker.string.uuid();
+    const code = '01110';
+    const mockDeleteDraftSicCodesResponse: DeleteDraftSicCodeResponse = {
+      success: true,
+      value: ['01110', '01120', '01130'],
+    };
+
+    mockClient.deleteDraftSicCode.mockResolvedValueOnce(
+      mockDeleteDraftSicCodesResponse,
+    );
+
+    const result = await subject.deleteDraftSicCode({
+      id,
+      accountId,
+      code,
+    });
+
+    expect(mockClient.deleteDraftSicCode).toHaveBeenCalledWith({
+      id,
+      accountId,
+      code,
+    });
+    expect(result).toEqual(['01110', '01120', '01130']);
   });
 });

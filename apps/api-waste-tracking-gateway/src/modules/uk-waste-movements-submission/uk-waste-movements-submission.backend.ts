@@ -13,6 +13,7 @@ import {
   UkwmCreateDraftSicCodeResponse,
   UkwmDraftSicCodes,
   UkwmGetDraftSicCodesResponse,
+  UkwmDeleteDraftSicCodeResponse,
 } from '@wts/api/waste-tracking-gateway';
 import { Logger } from 'winston';
 import Boom from '@hapi/boom';
@@ -29,6 +30,7 @@ import {
   CreateDraftSicCodeResponse,
   GetDraftSicCodesResponse,
   GetDraftCarrierAddressDetailsResponse,
+  DeleteDraftSicCodeResponse,
 } from '@wts/api/uk-waste-movements';
 import { DaprUkWasteMovementsClient } from '@wts/client/uk-waste-movements';
 import { Response } from '@wts/util/invocation';
@@ -58,6 +60,12 @@ export interface CreateSicCodeRef {
   id: string;
   accountId: string;
   sicCode: string;
+}
+
+export interface DeleteSicCodeRef {
+  id: string;
+  accountId: string;
+  code: string;
 }
 
 export interface UkWasteMovementsSubmissionBackend {
@@ -106,6 +114,11 @@ export interface UkWasteMovementsSubmissionBackend {
   getDraftCarrierAddressDetails({
     id,
   }: SubmissionRef): Promise<UkwmDraftAddress | undefined>;
+  deleteDraftSicCode({
+    id,
+    accountId,
+    code,
+  }: DeleteSicCodeRef): Promise<UkwmDeleteDraftSicCodeResponse>;
 }
 
 export class ServiceUkWasteMovementsSubmissionBackend
@@ -476,5 +489,31 @@ export class ServiceUkWasteMovementsSubmissionBackend
     } else {
       return response;
     }
+  }
+
+  async deleteDraftSicCode({
+    id,
+    accountId,
+    code,
+  }: DeleteSicCodeRef): Promise<UkwmDeleteDraftSicCodeResponse> {
+    let response: DeleteDraftSicCodeResponse;
+    try {
+      response = await this.client.deleteDraftSicCode({
+        id,
+        accountId,
+        code,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+      });
+    }
+
+    return response.value as UkwmDeleteDraftSicCodeResponse;
   }
 }

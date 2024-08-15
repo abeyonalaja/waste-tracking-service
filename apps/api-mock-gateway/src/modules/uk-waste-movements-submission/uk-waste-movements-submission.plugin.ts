@@ -16,6 +16,7 @@ import {
   getDraftSicCodes,
   getDraftCarrierAddressDetails,
   setDraftCarrierAddressDetails,
+  deleteDraftSicCode,
 } from './uk-waste-movements-submission.backend';
 import {
   BadRequestError,
@@ -535,6 +536,32 @@ export default class UkwmSubmissionPlugin {
         } catch (err) {
           if (err instanceof CustomError) {
             return res.status(err.statusCode).json(err);
+          }
+          console.log('Unknown error', { error: err });
+          return res
+            .status(500)
+            .jsonp(
+              new InternalServerError('An internal server error occurred'),
+            );
+        }
+      },
+    );
+
+    this.server.delete(
+      `${this.prefix}/drafts/:id/sic-code/:code`,
+      async (req, res) => {
+        const user = req.user as User;
+        try {
+          return res.status(201).json(
+            await deleteDraftSicCode({
+              id: req.params.id,
+              accountId: user.credentials.accountId,
+              code: req.params.code,
+            }),
+          );
+        } catch (err) {
+          if (err instanceof CustomError) {
+            return res.status(err.statusCode).json({ message: err.message });
           }
           console.log('Unknown error', { error: err });
           return res

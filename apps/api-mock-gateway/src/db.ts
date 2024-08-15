@@ -1749,7 +1749,7 @@ export const db: DB = {
           reference: 'REF123',
           sicCodes: {
             status: 'Complete',
-            values: ['SIC5678'],
+            values: ['SIC5678', '01110'],
           },
           contact: {
             status: 'Complete',

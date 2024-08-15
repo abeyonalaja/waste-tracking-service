@@ -1065,3 +1065,19 @@ export const setDraftCarrierAddressDetailsResponse: SchemaObject = {
     error: errorResponseValue,
   },
 };
+
+export const deleteDraftSicCodeRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+    code: { type: 'string' },
+  },
+};
+
+export const deleteDraftSicCodeResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: { elements: { type: 'string' } },
+  },
+};

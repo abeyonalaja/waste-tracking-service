@@ -32,6 +32,8 @@ import {
   GetDraftCarrierAddressDetailsRequest,
   GetDraftCarrierAddressDetailsResponse,
   SetDraftCarrierAddressDetailsRequest,
+  DeleteDraftSicCodeResponse,
+  DeleteDraftSicCodeRequest,
 } from './draft.dto';
 import {
   carrier,
@@ -69,6 +71,8 @@ import {
   getDraftCarrierAddressDetailsResponse,
   setDraftCarrierAddressDetailsRequest,
   setPartialDraftCarrierAddressDetailsRequest,
+  deleteDraftSicCodeResponse,
+  deleteDraftSicCodeRequest,
 } from './draft.schema';
 
 const ajv = new Ajv();
@@ -1239,6 +1243,46 @@ describe('getDraftCarrierAddressDetailsResponse', () => {
       },
     };
 
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('deleteDraftSicCodesResponse', () => {
+  const validate = ajv.compile<DeleteDraftSicCodeResponse>(
+    deleteDraftSicCodeResponse,
+  );
+  it('is compatible with dto value', () => {
+    const value: DeleteDraftSicCodeResponse = {
+      success: true,
+      value: ['01110', '01120', '01130'],
+    };
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('deleteDraftSicCodesRequest', () => {
+  const validate = ajv.compile<DeleteDraftSicCodeRequest>(
+    deleteDraftSicCodeRequest,
+  );
+  it('is compatible with dto value', () => {
+    const value: DeleteDraftSicCodeRequest = {
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+      code: '01110',
+    };
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('deleteDraftSicCodesResponse', () => {
+  const validate = ajv.compile<DeleteDraftSicCodeResponse>(
+    deleteDraftSicCodeResponse,
+  );
+  it('is compatible with dto value', () => {
+    const value: DeleteDraftSicCodeResponse = {
+      success: true,
+      value: ['01110', '01120', '01130'],
+    };
     expect(validate(value)).toBe(true);
   });
 });

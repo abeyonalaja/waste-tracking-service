@@ -2220,7 +2220,7 @@ paths:
           required: true
           schema:
             type: string
-  /api/ukwm/{id}/producer-contact:
+  /api/ukwm/drafts/{id}/producer-contact:
     get:
       tags:
         - ukwm
@@ -3638,6 +3638,274 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SetDraftWasteSourceRequest'
+  /api/ukwm/drafts/{id}/waste-collection-address:
+    get:
+      tags:
+        - ukwm
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/UkwmGetDraftWasteCollectionAddressDetailsResponse
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+    put:
+      tags:
+        - ukwm
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UkwmAddress'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/UkwmSetDraftWasteCollectionAddressDetailsRequest
+  /api/ukwm/drafts/{id}/sic-code:
+    get:
+      tags:
+        - ukwm
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UkwmGetDraftSicCodesResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+    post:
+      tags:
+        - ukwm
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UkwmCreateDraftSicCodeResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UkwmCreateDraftSicCodeRequest'
+  /api/ukwm/drafts/{id}/sic-code/{code}:
+    delete:
+      tags:
+        - ukwm
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UkwmDeleteDraftSicCodeResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+  /api/ukwm/drafts/{id}/carrier-address:
+    get:
+      tags:
+        - ukwm
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UkwmGetDraftCarrierAddressDetailsResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+    put:
+      tags:
+        - ukwm
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UkwmSetDraftCarrierAddressDetailsRequest'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/UkwmSetDraftCarrierAddressDetailsRequestCombined
 components:
   schemas:
     ListSICCodesResponse:
@@ -6393,6 +6661,76 @@ components:
             status:
               type: string
           title: Complete
+    UkwmGetDraftWasteCollectionAddressDetailsResponse:
+      $ref: '#/components/schemas/UkwmDraftAddress'
+    UkwmDraftAddress:
+      discriminator:
+        propertyName: status
+      oneOf:
+        - properties:
+            status:
+              type: string
+          title: NotStarted
+        - properties:
+            buildingNameOrNumber:
+              type: string
+            addressLine1:
+              type: string
+            addressLine2:
+              type: string
+            townCity:
+              type: string
+            postcode:
+              type: string
+            country:
+              type: string
+            status:
+              type: string
+          title: Started
+        - properties:
+            buildingNameOrNumber:
+              type: string
+            addressLine1:
+              type: string
+            addressLine2:
+              type: string
+            townCity:
+              type: string
+            postcode:
+              type: string
+            country:
+              type: string
+            status:
+              type: string
+          title: Complete
+    UkwmGetDraftSicCodesResponse:
+      $ref: '#/components/schemas/UkwmDraftSicCodes'
+    UkwmDraftSicCodes:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - NotStarted
+            - Complete
+        values:
+          type: array
+          items:
+            type: string
+      required:
+        - status
+        - values
+      additionalProperties: false
+    UkwmCreateDraftSicCodeResponse:
+      type: string
+    UkwmDeleteDraftSicCodeResponse:
+      type: array
+      items:
+        type: string
+    UkwmGetDraftCarrierAddressDetailsResponse:
+      $ref: '#/components/schemas/UkwmDraftAddress'
+    UkwmSetDraftCarrierAddressDetailsRequest:
+      $ref: '#/components/schemas/UkwmAddress'
     UkwmSetDraftWasteSourceRequest:
       type: object
       properties:
@@ -8375,3 +8713,77 @@ components:
           type: string
       required:
         - wasteSource
+    UkwmSetDraftWasteCollectionAddressDetailsRequest:
+      properties:
+        addressLine1:
+          type: string
+        townCity:
+          type: string
+        country:
+          type: string
+        buildingNameOrNumber:
+          type: string
+        addressLine2:
+          type: string
+        postcode:
+          type: string
+      required:
+        - addressLine1
+        - townCity
+        - country
+    UkwmSetPartialDraftWasteCollectionAddressDetailsRequest:
+      properties:
+        buildingNameOrNumber:
+          type: string
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+        townCity:
+          type: string
+        country:
+          type: string
+        postcode:
+          type: string
+    UkwmCreateDraftSicCodeRequest:
+      properties:
+        sicCode:
+          type: string
+      required:
+        - sicCode
+    SetDraftCarrierAddressDetailsRequest:
+      properties:
+        addressLine1:
+          type: string
+        townCity:
+          type: string
+        country:
+          type: string
+        buildingNameOrNumber:
+          type: string
+        addressLine2:
+          type: string
+        postcode:
+          type: string
+      required:
+        - addressLine1
+        - townCity
+        - country
+    SetPartialDraftCarrierAddressDetailsRequest:
+      properties:
+        buildingNameOrNumber:
+          type: string
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+        townCity:
+          type: string
+        country:
+          type: string
+        postcode:
+          type: string
+    UkwmSetDraftCarrierAddressDetailsRequestCombined:
+      oneOf:
+        - $ref: '#/components/schemas/SetDraftCarrierAddressDetailsRequest'
+        - $ref: '#/components/schemas/SetPartialDraftCarrierAddressDetailsRequest'

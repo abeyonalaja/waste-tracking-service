@@ -527,6 +527,28 @@ try {
     { method: HttpMethod.POST },
   );
 
+  await server.invoker.listen(
+    api.deleteDraftSicCode.name,
+    async ({ body }) => {
+      if (body === undefined) {
+        return fromBoom(Boom.badRequest('Missing body'));
+      }
+
+      const request = JSON.parse(body) as api.DeleteDraftSicCodeRequest;
+
+      if (request === undefined) {
+        return fromBoom(Boom.badRequest());
+      }
+
+      if (!validateSubmission.validateDeleteDraftSicCodeRequest(request)) {
+        return fromBoom(Boom.badRequest());
+      }
+
+      return await submissionController.deleteDraftSicCode(request);
+    },
+    { method: HttpMethod.POST },
+  );
+
   await server.start();
 } catch (error) {
   console.log('Error occurred while starting the service.');

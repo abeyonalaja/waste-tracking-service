@@ -634,3 +634,10 @@ export type SetDraftCarrierAddressDetailsResponse = Response<void>;
 export const setDraftCarrierAddressDetails: Method = {
   name: 'setDraftCarrierAddressDetails',
 };
+
+export type DeleteDraftSicCodeRequest = IdRequest &
+  AccountIdRequest & { code: string };
+export type DeleteDraftSicCodeResponse = Response<string[]>;
+export const deleteDraftSicCode: Method = {
+  name: 'deleteDraftSicCode',
+};
