@@ -59,6 +59,10 @@ export type {
   CreateDraftSicCodeResponse,
   GetDraftSicCodesRequest,
   GetDraftSicCodesResponse,
+  GetDraftCarrierAddressDetailsRequest,
+  GetDraftCarrierAddressDetailsResponse,
+  SetDraftCarrierAddressDetailsRequest,
+  SetDraftCarrierAddressDetailsResponse,
 } from './draft.dto';
 
 export type { Field, ErrorCodeData } from './validation';
@@ -79,6 +83,8 @@ export {
   setDraftWasteCollectionAddressDetails,
   createDraftSicCode,
   getDraftSicCodes,
+  getDraftCarrierAddressDetails,
+  setDraftCarrierAddressDetails,
 } from './draft.dto';
 
 export * as validation from './validation';

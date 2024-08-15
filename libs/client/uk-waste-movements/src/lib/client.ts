@@ -44,6 +44,12 @@ import {
   GetDraftSicCodesRequest,
   GetDraftSicCodesResponse,
   getDraftSicCodes,
+  GetDraftCarrierAddressDetailsRequest,
+  GetDraftCarrierAddressDetailsResponse,
+  SetDraftCarrierAddressDetailsRequest,
+  SetDraftCarrierAddressDetailsResponse,
+  getDraftCarrierAddressDetails,
+  setDraftCarrierAddressDetails,
 } from '@wts/api/uk-waste-movements';
 
 export class DaprUkWasteMovementsClient {
@@ -209,5 +215,27 @@ export class DaprUkWasteMovementsClient {
       HttpMethod.POST,
       req,
     )) as GetDraftSicCodesResponse;
+  }
+
+  async getDraftCarrierAddressDetails(
+    req: GetDraftCarrierAddressDetailsRequest,
+  ): Promise<GetDraftCarrierAddressDetailsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.ukWasteMovementsAppId,
+      getDraftCarrierAddressDetails.name,
+      HttpMethod.POST,
+      req,
+    )) as GetDraftCarrierAddressDetailsResponse;
+  }
+
+  async setDraftCarrierAddressDetails(
+    req: SetDraftCarrierAddressDetailsRequest,
+  ): Promise<SetDraftCarrierAddressDetailsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.ukWasteMovementsAppId,
+      setDraftCarrierAddressDetails.name,
+      HttpMethod.POST,
+      req,
+    )) as SetDraftCarrierAddressDetailsResponse;
   }
 }

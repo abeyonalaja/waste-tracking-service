@@ -75,6 +75,16 @@ const mockBackend = {
     jest.fn<
       ({ id, accountId, sicCode }: CreateSicCodeRef) => Promise<string>
     >(),
+  setDraftCarrierAddressDetails:
+    jest.fn<
+      (
+        ref: SubmissionRef,
+        value: UkwmDraftAddress,
+        saveAsDraft?: boolean,
+      ) => Promise<void>
+    >(),
+  getDraftCarrierAddressDetails:
+    jest.fn<({ id }: SubmissionRef) => Promise<void>>(),
 };
 
 const app = server({
@@ -279,6 +289,36 @@ describe('UkWasteMovementsSubmissionPlugin', () => {
       };
 
       mockBackend.createDraftSicCode.mockRejectedValue(Boom.badRequest());
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe('GET /drafts/{id}/carrier-address', () => {
+    it('Responds with 400 if invalid request is received in the payload', async () => {
+      const options = {
+        method: 'GET',
+        url: `/ukwm/drafts/{id}/carrier-address`,
+      };
+
+      mockBackend.getDraftCarrierAddressDetails.mockRejectedValue(
+        Boom.badRequest(),
+      );
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe('PUT /drafts/{id}/carrier-address', () => {
+    it('Responds with 400 if invalid request is received in the payload', async () => {
+      const options = {
+        method: 'PUT',
+        url: `/ukwm/drafts/{id}/carrier-address`,
+      };
+
+      mockBackend.setDraftCarrierAddressDetails.mockRejectedValue(
+        Boom.badRequest(),
+      );
       const response = await app.inject(options);
       expect(response.statusCode).toBe(400);
     });

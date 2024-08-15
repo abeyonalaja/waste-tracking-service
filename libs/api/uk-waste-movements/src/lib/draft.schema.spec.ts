@@ -29,6 +29,9 @@ import {
   GetDraftSicCodesRequest,
   GetDraftSicCodesResponse,
   CreateDraftSicCodeResponse,
+  GetDraftCarrierAddressDetailsRequest,
+  GetDraftCarrierAddressDetailsResponse,
+  SetDraftCarrierAddressDetailsRequest,
 } from './draft.dto';
 import {
   carrier,
@@ -62,6 +65,10 @@ import {
   getDraftSicCodesRequest,
   getDraftSicCodesResponse,
   createDraftSicCodesResponse,
+  getDraftCarrierAddressDetailsRequest,
+  getDraftCarrierAddressDetailsResponse,
+  setDraftCarrierAddressDetailsRequest,
+  setPartialDraftCarrierAddressDetailsRequest,
 } from './draft.schema';
 
 const ajv = new Ajv();
@@ -1056,7 +1063,7 @@ describe('setDraftWasteCollectionAddressDetailsRequest', () => {
   });
 });
 
-describe('setPartialDraftWasteCollectionrAddressDetailsRequest', () => {
+describe('setPartialDraftWasteCollectionAddressDetailsRequest', () => {
   const validate = ajv.compile<SetDraftWasteCollectionAddressDetailsRequest>(
     setPartialDraftWasteCollectionAddressDetailsRequest,
   );
@@ -1151,6 +1158,87 @@ describe('getDraftSicCodesResponse', () => {
         values: ['01110,01120'],
       },
     };
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('getDraftCarrierAddressDetailsRequest', () => {
+  const validate = ajv.compile<GetDraftCarrierAddressDetailsRequest>(
+    getDraftCarrierAddressDetailsRequest,
+  );
+
+  it('is compatible with dto value', () => {
+    const value: GetDraftCarrierAddressDetailsRequest = {
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('setDraftCarrierAddressDetailsRequest', () => {
+  const validate = ajv.compile<SetDraftCarrierAddressDetailsRequest>(
+    setDraftCarrierAddressDetailsRequest,
+  );
+
+  it('is compatible with dto value', () => {
+    const value: SetDraftCarrierAddressDetailsRequest = {
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+      value: {
+        buildingNameOrNumber: '123',
+        addressLine1: '123 Oxford Street',
+        addressLine2: 'Westminster',
+        townCity: 'London',
+        postcode: 'W1A 1AA',
+        country: 'England',
+      },
+      saveAsDraft: false,
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('setPartialDraftCarrierAddressDetailsRequest', () => {
+  const validate = ajv.compile<SetDraftCarrierAddressDetailsRequest>(
+    setPartialDraftCarrierAddressDetailsRequest,
+  );
+
+  it('is compatible with dto value', () => {
+    const value: SetDraftCarrierAddressDetailsRequest = {
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+      value: {
+        buildingNameOrNumber: '123',
+      },
+      saveAsDraft: true,
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('getDraftCarrierAddressDetailsResponse', () => {
+  const validate = ajv.compile<GetDraftCarrierAddressDetailsResponse>(
+    getDraftCarrierAddressDetailsResponse,
+  );
+
+  it('is compatible with dto value', () => {
+    const value: GetDraftCarrierAddressDetailsResponse = {
+      success: true,
+      value: {
+        status: 'Complete',
+        buildingNameOrNumber: '123',
+        addressLine1: '123 Oxford Street',
+        addressLine2: 'Westminster',
+        townCity: 'London',
+        postcode: 'W1A 1AA',
+        country: 'England',
+      },
+    };
+
     expect(validate(value)).toBe(true);
   });
 });

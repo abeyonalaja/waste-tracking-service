@@ -294,3 +294,7 @@ export interface UkwmCreateDraftSicCodeRequest {
 export type UkwmCreateDraftSicCodeResponse = string;
 
 export type UkwmGetDraftSicCodesResponse = UkwmDraftSicCodes;
+
+export type UkwmGetDraftCarrierAddressDetailsResponse = UkwmDraftAddress;
+
+export type UkwmSetDraftCarrierAddressDetailsRequest = UkwmAddress;

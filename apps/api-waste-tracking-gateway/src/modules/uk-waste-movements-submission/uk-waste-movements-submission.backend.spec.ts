@@ -15,6 +15,7 @@ import {
   GetDraftWasteCollectionAddressDetailsResponse,
   CreateDraftSicCodeResponse,
   GetDraftSicCodesResponse,
+  GetDraftCarrierAddressDetailsResponse,
 } from '@wts/api/uk-waste-movements';
 import { UkwmContact } from '@wts/api/waste-tracking-gateway';
 
@@ -54,6 +55,10 @@ const mockClient = {
   createDraftSicCode:
     jest.fn<DaprUkWasteMovementsClient['createDraftSicCode']>(),
   getDraftSicCodes: jest.fn<DaprUkWasteMovementsClient['getDraftSicCodes']>(),
+  setDraftCarrierAddressDetails:
+    jest.fn<DaprUkWasteMovementsClient['setDraftCarrierAddressDetails']>(),
+  getDraftCarrierAddressDetails:
+    jest.fn<DaprUkWasteMovementsClient['getDraftCarrierAddressDetails']>(),
 };
 
 describe(ServiceUkWasteMovementsSubmissionBackend, () => {
@@ -534,5 +539,74 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
       accountId,
     });
     expect(result).toEqual(mockGetDraftSicCodesResponse.value);
+  });
+
+  it('sets carrier address details on a draft', async () => {
+    const accountId = faker.string.uuid();
+    const id = faker.string.uuid();
+    const mockSetDraftCarrierAddressDetailsResponse: Response<void> = {
+      success: true,
+      value: undefined,
+    };
+
+    mockClient.setDraftCarrierAddressDetails.mockResolvedValueOnce(
+      mockSetDraftCarrierAddressDetailsResponse,
+    );
+
+    const value: UkwmAddress = {
+      addressLine1: '123 Main St',
+      addressLine2: 'Building 1',
+      townCity: 'London',
+      country: 'England [EN]',
+      postcode: 'SW1A 1AA',
+    };
+
+    await subject.setDraftCarrierAddressDetails({ id, accountId }, value, true);
+
+    expect(mockClient.setDraftCarrierAddressDetails).toHaveBeenCalledWith({
+      id,
+      accountId,
+      value,
+      saveAsDraft: true,
+    });
+    expect(mockClient.setDraftCarrierAddressDetails).toHaveBeenCalledTimes(1);
+    expect(mockClient.setDraftCarrierAddressDetails).toHaveBeenCalledWith({
+      id,
+      accountId,
+      value,
+      saveAsDraft: true,
+    });
+  });
+
+  it('gets carrier address detail from a draft', async () => {
+    const id = faker.string.uuid();
+    const accountId = faker.string.uuid();
+    const mockGetDraftCarrierAddressDetailsResponse: GetDraftCarrierAddressDetailsResponse =
+      {
+        success: true,
+        value: {
+          status: 'Started',
+          addressLine1: '123 Main St',
+          addressLine2: 'Building 1',
+          townCity: 'London',
+          country: 'England [EN]',
+          postcode: 'SW1A 1AA',
+        },
+      };
+
+    mockClient.getDraftCarrierAddressDetails.mockResolvedValueOnce(
+      mockGetDraftCarrierAddressDetailsResponse,
+    );
+
+    const result = await subject.getDraftCarrierAddressDetails({
+      id,
+      accountId,
+    });
+
+    expect(mockClient.getDraftCarrierAddressDetails).toHaveBeenCalledWith({
+      id,
+      accountId,
+    });
+    expect(result).toEqual(mockGetDraftCarrierAddressDetailsResponse.value);
   });
 });

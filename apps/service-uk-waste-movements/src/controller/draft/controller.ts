@@ -1185,4 +1185,103 @@ export default class SubmissionController {
       return fromBoom(Boom.internal());
     }
   };
+
+  setDraftCarrierAddressDetails: Handler<
+    api.SetDraftCarrierAddressDetailsRequest,
+    api.SetDraftCarrierAddressDetailsResponse
+  > = async ({ id, accountId, value, saveAsDraft }) => {
+    try {
+      const draft = (await this.repository.getDraft(
+        draftsContainerName,
+        id,
+        accountId,
+      )) as api.Draft;
+
+      if (draft === undefined) {
+        return fromBoom(Boom.notFound());
+      }
+
+      if (saveAsDraft) {
+        const partialCarrierAddressDetailsValidation =
+          ukwmValidation.validationRules.validatePartialAddressDetails(
+            value,
+            'Carrier',
+          );
+
+        if (!partialCarrierAddressDetailsValidation.valid) {
+          return fromBoom(
+            Boom.badRequest(
+              'Validation failed',
+              partialCarrierAddressDetailsValidation.errors,
+            ),
+          );
+        }
+
+        draft.carrier.address = {
+          status: 'Started',
+          ...value,
+        };
+      } else {
+        const carrierAddressDetailsValidation =
+          ukwmValidation.validationRules.validateAddressDetails(
+            value,
+            'Carrier',
+          );
+
+        if (!carrierAddressDetailsValidation.valid) {
+          return fromBoom(
+            Boom.badRequest(
+              'Validation failed',
+              carrierAddressDetailsValidation.errors,
+            ),
+          );
+        }
+
+        draft.carrier.address = {
+          status: 'Complete',
+          ...carrierAddressDetailsValidation.value,
+        };
+      }
+
+      await this.repository.saveRecord(
+        draftsContainerName,
+        { ...draft },
+        accountId,
+      );
+      return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  getDraftCarrierAddressDetails: Handler<
+    api.GetDraftCarrierAddressDetailsRequest,
+    api.GetDraftCarrierAddressDetailsResponse
+  > = async ({ id, accountId }) => {
+    try {
+      const draft = (await this.repository.getDraft(
+        draftsContainerName,
+        id,
+        accountId,
+      )) as api.Draft;
+
+      if (draft === undefined) {
+        return fromBoom(Boom.notFound());
+      }
+
+      return success(draft.carrier.address);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
 }

@@ -1025,3 +1025,43 @@ export const getDraftSicCodesResponse: SchemaObject = {
     value: draftSicCodes,
   },
 };
+
+export const getDraftCarrierAddressDetailsRequest: SchemaObject = {
+  properties: {
+    accountId: { type: 'string' },
+    id: { type: 'string' },
+  },
+};
+
+export const setDraftCarrierAddressDetailsRequest: SchemaObject = {
+  properties: {
+    accountId: { type: 'string' },
+    id: { type: 'string' },
+    value: address,
+    saveAsDraft: { type: 'boolean' },
+  },
+};
+
+export const setPartialDraftCarrierAddressDetailsRequest: SchemaObject = {
+  properties: {
+    accountId: { type: 'string' },
+    id: { type: 'string' },
+    value: partialAddress,
+    saveAsDraft: { type: 'boolean' },
+  },
+};
+
+export const getDraftCarrierAddressDetailsResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: draftAddress,
+  },
+};
+
+export const setDraftCarrierAddressDetailsResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+  },
+};

@@ -614,3 +614,23 @@ export type GetDraftSicCodesResponse = Response<DraftSicCodes>;
 export const getDraftSicCodes: Method = {
   name: 'getDraftSicCode',
 };
+
+export type GetDraftCarrierAddressDetailsRequest = IdRequest & AccountIdRequest;
+export type GetDraftCarrierAddressDetailsResponse =
+  | Response<DraftAddress>
+  | undefined;
+export const getDraftCarrierAddressDetails: Method = {
+  name: 'getDraftCarrierAddressDetails',
+};
+
+export type SetDraftCarrierAddressDetailsRequest =
+  | (IdRequest &
+      AccountIdRequest & { value: Partial<Address> } & { saveAsDraft: true })
+  | (IdRequest &
+      AccountIdRequest & { value: Address } & { saveAsDraft: false });
+
+export type SetDraftCarrierAddressDetailsResponse = Response<void>;
+
+export const setDraftCarrierAddressDetails: Method = {
+  name: 'setDraftCarrierAddressDetails',
+};

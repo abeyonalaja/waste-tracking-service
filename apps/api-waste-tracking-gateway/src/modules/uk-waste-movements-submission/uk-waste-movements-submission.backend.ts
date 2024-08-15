@@ -28,6 +28,7 @@ import {
   GetDraftWasteCollectionAddressDetailsResponse,
   CreateDraftSicCodeResponse,
   GetDraftSicCodesResponse,
+  GetDraftCarrierAddressDetailsResponse,
 } from '@wts/api/uk-waste-movements';
 import { DaprUkWasteMovementsClient } from '@wts/client/uk-waste-movements';
 import { Response } from '@wts/util/invocation';
@@ -97,6 +98,14 @@ export interface UkWasteMovementsSubmissionBackend {
     id,
     accountId,
   }: SubmissionRef): Promise<UkwmDraftSicCodes>;
+  setDraftCarrierAddressDetails(
+    ref: SubmissionRef,
+    value: UkwmAddress,
+    saveAsDraft: boolean,
+  ): Promise<void>;
+  getDraftCarrierAddressDetails({
+    id,
+  }: SubmissionRef): Promise<UkwmDraftAddress | undefined>;
 }
 
 export class ServiceUkWasteMovementsSubmissionBackend
@@ -415,5 +424,57 @@ export class ServiceUkWasteMovementsSubmissionBackend
     }
 
     return response.value as UkwmGetDraftSicCodesResponse;
+  }
+
+  async setDraftCarrierAddressDetails(
+    { id, accountId }: SubmissionRef,
+    value: UkwmAddress,
+    saveAsDraft: boolean,
+  ): Promise<void> {
+    let response: Response<void>;
+    try {
+      response = await this.client.setDraftCarrierAddressDetails({
+        id,
+        accountId,
+        value,
+        saveAsDraft,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+        data: response.error.data,
+      });
+    }
+  }
+
+  async getDraftCarrierAddressDetails({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<UkwmDraftAddress | undefined> {
+    let response: GetDraftCarrierAddressDetailsResponse;
+    try {
+      response = await this.client.getDraftCarrierAddressDetails({
+        id,
+        accountId,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+    if (response) {
+      if (!response.success) {
+        throw new Boom.Boom(response.error.message, {
+          statusCode: response.error.statusCode,
+        });
+      }
+      return response.value;
+    } else {
+      return response;
+    }
   }
 }

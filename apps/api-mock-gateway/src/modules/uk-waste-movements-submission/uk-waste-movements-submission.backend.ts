@@ -561,7 +561,7 @@ export function setDraftWasteCollectionAddressDetails(
       const partialAddressDetailsValidationResult =
         ukwmValidation.validationRules.validatePartialAddressDetails(
           value as Partial<UkwmAddress>,
-          'Producer',
+          'Waste Collection',
         );
 
       if (!partialAddressDetailsValidationResult.valid) {
@@ -582,7 +582,7 @@ export function setDraftWasteCollectionAddressDetails(
       const addressDetailsValidationResult =
         ukwmValidation.validationRules.validateAddressDetails(
           value as UkwmAddress,
-          'Producer',
+          'Waste Collection',
         );
 
       if (!addressDetailsValidationResult.valid) {
@@ -656,4 +656,81 @@ export function createDraftSicCode(ref: UkwmCreateSicCodeRef): Promise<string> {
     draft.producerAndCollection.producer.sicCodes.status = 'Complete';
   }
   return Promise.resolve(sicCode);
+}
+
+export function getDraftCarrierAddressDetails({
+  id,
+  accountId,
+}: UkwmSubmissionRef): Promise<UkwmDraftAddress | undefined> {
+  let draft = db.ukwmDrafts.find((d) => d.id == id && d.accountId == accountId);
+
+  if (!draft && id === '123') {
+    draft = db.ukwmDrafts.find((d) => d.id === id);
+  }
+
+  if (draft === undefined) {
+    return Promise.reject(new NotFoundError('Draft not found.'));
+  }
+
+  return Promise.resolve(draft.carrier.address);
+}
+
+export function setDraftCarrierAddressDetails(
+  ref: UkwmSubmissionRef,
+  value: Partial<UkwmAddress> | UkwmAddress,
+  saveAsDraft: boolean,
+): Promise<void> {
+  const { id, accountId } = ref;
+  let draft = db.ukwmDrafts.find((d) => d.id == id && d.accountId == accountId);
+
+  if (!draft && id === '123') {
+    draft = db.ukwmDrafts.find((d) => d.id === id);
+  }
+
+  if (draft === undefined) {
+    return Promise.reject(new NotFoundError('Draft not found.'));
+  }
+
+  if (saveAsDraft) {
+    const partialAddressDetailsValidationResult =
+      ukwmValidation.validationRules.validatePartialAddressDetails(
+        value as Partial<UkwmAddress>,
+        'Carrier',
+      );
+
+    if (!partialAddressDetailsValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation error',
+          partialAddressDetailsValidationResult.errors,
+        ),
+      );
+    }
+    draft.carrier.address = {
+      status: 'Started',
+      ...(partialAddressDetailsValidationResult.value as Partial<UkwmAddress>),
+    };
+  } else {
+    value = value as UkwmAddress;
+
+    const addressDetailsValidationResult =
+      ukwmValidation.validationRules.validateAddressDetails(
+        value as UkwmAddress,
+        'Carrier',
+      );
+
+    if (!addressDetailsValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation error',
+          addressDetailsValidationResult.errors,
+        ),
+      );
+    }
+    draft.carrier.address = {
+      status: 'Complete',
+      ...(addressDetailsValidationResult.value as UkwmAddress),
+    };
+  }
+  return Promise.resolve();
 }

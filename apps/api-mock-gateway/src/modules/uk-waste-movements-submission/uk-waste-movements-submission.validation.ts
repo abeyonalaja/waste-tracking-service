@@ -104,3 +104,30 @@ export const validateCreateDraftSicCodeRequest =
   ajv.compile<UkwmCreateDraftSicCodeRequest>({
     properties: { sicCode: { type: 'string' } },
   });
+
+export const validateSetDraftCarrierAddressRequest = ajv.compile<UkwmAddress>({
+  properties: {
+    addressLine1: { type: 'string' },
+    townCity: { type: 'string' },
+    country: { type: 'string' },
+  },
+  optionalProperties: {
+    buildingNameOrNumber: { type: 'string' },
+    addressLine2: { type: 'string' },
+    postcode: { type: 'string' },
+  },
+});
+
+export const validateSetPartialDraftCarrierAddressRequest = ajv.compile<
+  Partial<UkwmAddress>
+>({
+  properties: {},
+  optionalProperties: {
+    buildingNameOrNumber: { type: 'string' },
+    addressLine1: { type: 'string' },
+    addressLine2: { type: 'string' },
+    townCity: { type: 'string' },
+    country: { type: 'string' },
+    postcode: { type: 'string' },
+  },
+});
