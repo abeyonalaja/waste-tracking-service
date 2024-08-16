@@ -122,3 +122,108 @@ Feature: Automation to check accessibility tool
     Then the page should be axe clean according to: wcag2aa; checking: color-contrast
     Then the page should be axe clean within "main, header" but excluding "footer"
     Then the page should be axe clean checking only: document-title, label
+
+  Scenario: Check UKW Accessibility - Add reference page page
+    Given I login into UKWM app
+    When the "UKWM Home" page is displayed
+    And I click the "Create a new waste movement" link
+    Then the "Ukwm Add Reference" page is displayed
+    Then the page should be axe clean within "main"; excluding "aside"
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+
+  Scenario: Check UKW Accessibility - What's producer address page
+    Given I navigate to waste tracking accounts page
+    When I navigate to the UKM task list page with reference
+    And I click the "Producer organisation address" link
+    Then the "Whats producer address" page is displayed
+    Then the page should be axe clean within "main"; excluding "aside"
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+
+  Scenario: Check UKW Accessibility - No address found page
+    Given I navigate to waste tracking accounts page
+    When I navigate to the UKM task list page with reference
+    And I click the "Producer organisation address" link
+    Then the "Whats producer address" page is displayed
+    And I enter postcode with 0 addresses
+    And I click search postcode button
+    Then the "No address found" page is displayed
+    Then the page should be axe clean within "main"; excluding "aside"
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+
+
+  Scenario: Check UKW Accessibility - Select producer address page
+    Given I navigate to waste tracking accounts page
+    When I navigate to the UKM task list page with reference
+    And I click the "Producer organisation address" link
+    Then the "Whats producer address" page is displayed
+    And I enter valid producer postcode
+    And I click search postcode button
+    Then the "Select producer address" page is displayed
+    Then the page should be axe clean within "main"; excluding "aside"
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+
+  Scenario: Check UKW Accessibility - Confirm producer address page
+    Given I navigate to waste tracking accounts page
+    When I navigate to the UKM task list page with reference
+    And I click the "Producer organisation address" link
+    Then the "Whats producer address" page is displayed
+    And I enter valid producer postcode
+    And I click search postcode button
+    Then the "Select producer address" page is displayed
+    And I select first producer address
+    Then the "Confirm producer address" page is displayed
+    Then the page should be axe clean within "main"; excluding "aside"
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+
+  Scenario: Check UKW Accessibility - Producer contact details page
+    Given I navigate to waste tracking accounts page
+    When I navigate to the UKM task list page with reference
+    And I click the "Producer organisation contact details" link
+    Then the "Producer contact details" page is displayed
+    Then the page should be axe clean within "main"; excluding "aside"
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+
+  Scenario: Check UKW Accessibility - Source of waste page
+    Given I navigate to waste tracking accounts page
+    When I navigate to the UKM task list page with reference
+    And I click the "Source of the waste" link
+    Then the "Source of the waste" page is displayed
+    Then the page should be axe clean within "main"; excluding "aside"
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+
+  Scenario: Check UKW Accessibility - Whats Waste Collection Address page
+    Given I navigate to waste tracking accounts page
+    When I navigate to the UKM task list page with reference
+    And I click the "Waste collection details" link
+    Then the "Whats Waste Collection Address" page is displayed
+    Then the page should be axe clean within "main"; excluding "aside"
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+
+  Scenario: Check UKW Accessibility - Select Waste Collection Address page
+    Given I navigate to waste tracking accounts page
+    When I navigate to the UKM task list page with reference
+    And I click the "Waste collection details" link
+    Then the "Whats Waste Collection Address" page is displayed
+    And I enter valid waste collection address postcode
+    And I click search postcode button
+    Then the "Select Waste Collection Address" page is displayed
+    Then the page should be axe clean within "main"; excluding "aside"
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
