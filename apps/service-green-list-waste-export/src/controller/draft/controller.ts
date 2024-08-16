@@ -157,6 +157,7 @@ export default class DraftController {
         )) as DraftSubmission;
         if (draft.submissionState.status === 'InProgress') {
           draft.submissionState = { status: 'Deleted', timestamp: new Date() };
+
           await this.repository.saveRecord(
             draftContainerName,
             { ...draft },
@@ -217,6 +218,7 @@ export default class DraftController {
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
+      draft.submissionState.timestamp = new Date();
 
       await this.repository.saveRecord(
         draftContainerName,
@@ -320,6 +322,7 @@ export default class DraftController {
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
+      draft.submissionState.timestamp = new Date();
 
       await this.repository.saveRecord(
         draftContainerName,
@@ -445,6 +448,7 @@ export default class DraftController {
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
+      draft.submissionState.timestamp = new Date();
 
       return success(
         await this.repository.saveRecord(
@@ -498,6 +502,7 @@ export default class DraftController {
       draft.exporterDetail = value;
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
+      draft.submissionState.timestamp = new Date();
 
       await this.repository.saveRecord(
         draftContainerName,
@@ -551,6 +556,7 @@ export default class DraftController {
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
+      draft.submissionState.timestamp = new Date();
 
       await this.repository.saveRecord(
         draftContainerName,
@@ -638,6 +644,7 @@ export default class DraftController {
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
+      draft.submissionState.timestamp = new Date();
 
       return success(
         await this.repository.saveRecord(
@@ -785,6 +792,7 @@ export default class DraftController {
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
+      draft.submissionState.timestamp = new Date();
 
       await this.repository.saveRecord(
         draftContainerName,
@@ -850,6 +858,7 @@ export default class DraftController {
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
+      draft.submissionState.timestamp = new Date();
 
       await this.repository.saveRecord(
         draftContainerName,
@@ -910,6 +919,7 @@ export default class DraftController {
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
+      draft.submissionState.timestamp = new Date();
 
       await this.repository.saveRecord(
         draftContainerName,
@@ -962,6 +972,7 @@ export default class DraftController {
       draft.collectionDetail = value;
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
+      draft.submissionState.timestamp = new Date();
 
       await this.repository.saveRecord(
         draftContainerName,
@@ -1014,6 +1025,7 @@ export default class DraftController {
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
+      draft.submissionState.timestamp = new Date();
 
       await this.repository.saveRecord(
         draftContainerName,
@@ -1066,6 +1078,7 @@ export default class DraftController {
       draft.transitCountries = value;
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
+      draft.submissionState.timestamp = new Date();
 
       await this.repository.saveRecord(
         draftContainerName,
@@ -1212,6 +1225,7 @@ export default class DraftController {
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
+      draft.submissionState.timestamp = new Date();
 
       await this.repository.saveRecord(
         draftContainerName,
@@ -1276,6 +1290,7 @@ export default class DraftController {
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
+      draft.submissionState.timestamp = new Date();
 
       await this.repository.saveRecord(
         draftContainerName,
@@ -1328,6 +1343,7 @@ export default class DraftController {
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
+      draft.submissionState.timestamp = new Date();
 
       await this.repository.saveRecord(
         draftContainerName,
@@ -1363,6 +1379,8 @@ export default class DraftController {
       if (!isCollectionDateValid(draft.collectionDate)) {
         draft.collectionDate = { status: 'NotStarted' };
         draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
+        draft.submissionState.timestamp = new Date();
+
         await this.repository.saveRecord(
           draftContainerName,
           { ...draft },
@@ -1372,6 +1390,8 @@ export default class DraftController {
       }
       draft.submissionConfirmation = value;
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
+      draft.submissionState.timestamp = new Date();
+
       await this.repository.saveRecord(
         draftContainerName,
         { ...draft },
@@ -1429,6 +1449,7 @@ export default class DraftController {
 
         draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
         draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
+        draft.submissionState.timestamp = new Date();
 
         await this.repository.saveRecord(
           draftContainerName,
@@ -1468,7 +1489,6 @@ export default class DraftController {
         draft.wasteQuantity.value.type === 'ActualData'
           ? { status: 'SubmittedWithActuals', timestamp: timestamp }
           : { status: 'SubmittedWithEstimates', timestamp: timestamp };
-      let submission: Submission = null as unknown as Submission;
 
       if (
         draft.wasteDescription.status === 'Complete' &&
@@ -1487,7 +1507,7 @@ export default class DraftController {
           submissionState.status === 'SubmittedWithEstimates' ||
           submissionState.status === 'UpdatedWithActuals')
       ) {
-        submission = {
+        const submission: Submission = {
           id: draft.id,
           reference: draft.reference,
           wasteDescription: {
@@ -1534,18 +1554,18 @@ export default class DraftController {
             timestamp: submissionState.timestamp,
           },
         };
-      }
 
-      await this.repository.saveRecord(
-        submissionContainerName,
-        submission,
-        accountId,
-      );
-      await this.repository.deleteRecord(
-        draftContainerName,
-        draft.id,
-        accountId,
-      );
+        await this.repository.saveRecord(
+          submissionContainerName,
+          submission,
+          accountId,
+        );
+        await this.repository.deleteRecord(
+          draftContainerName,
+          draft.id,
+          accountId,
+        );
+      }
 
       return success(undefined);
     } catch (err) {

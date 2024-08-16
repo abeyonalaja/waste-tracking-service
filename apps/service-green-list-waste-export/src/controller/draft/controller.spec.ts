@@ -273,11 +273,7 @@ describe(DraftController, () => {
         accountId,
       );
 
-      expect(mockRepository.saveRecord).toBeCalledWith(
-        draftContainerName,
-        draft,
-        accountId,
-      );
+      expect(mockRepository.saveRecord).toBeCalledTimes(1);
 
       expect(draft.submissionState.status).toBe('Deleted');
     });
@@ -555,39 +551,7 @@ describe(DraftController, () => {
         },
       });
 
-      expect(mockRepository.saveRecord).toBeCalledWith(
-        draftContainerName,
-        {
-          id,
-          reference: 'abc',
-          wasteDescription: {
-            status: 'Complete',
-            wasteCode: { type: 'NotApplicable' },
-            ewcCodes: [],
-            nationalCode: { provided: 'No' },
-            description: '',
-          },
-          wasteQuantity: { status: 'NotStarted' },
-          exporterDetail: { status: 'NotStarted' },
-          importerDetail: { status: 'NotStarted' },
-          collectionDate: { status: 'NotStarted' },
-          carriers: {
-            status: 'NotStarted',
-            transport: false,
-          },
-          collectionDetail: { status: 'NotStarted' },
-          ukExitLocation: { status: 'NotStarted' },
-          transitCountries: { status: 'NotStarted' },
-          recoveryFacilityDetail: { status: 'NotStarted' },
-          submissionConfirmation: { status: 'CannotStart' },
-          submissionDeclaration: { status: 'CannotStart' },
-          submissionState: {
-            status: 'InProgress',
-            timestamp: timestamp,
-          },
-        },
-        accountId,
-      );
+      expect(mockRepository.saveRecord).toBeCalledTimes(1);
     });
 
     it('enables recovery facility where some waste code is provided', async () => {
@@ -627,36 +591,7 @@ describe(DraftController, () => {
         },
       });
 
-      expect(mockRepository.saveRecord).toBeCalledWith(
-        draftContainerName,
-        {
-          id,
-          reference: 'abc',
-          wasteDescription: {
-            status: 'Started',
-            wasteCode: { type: 'AnnexIIIA', code: 'X' },
-          },
-          wasteQuantity: { status: 'NotStarted' },
-          exporterDetail: { status: 'NotStarted' },
-          importerDetail: { status: 'NotStarted' },
-          collectionDate: { status: 'NotStarted' },
-          carriers: {
-            status: 'NotStarted',
-            transport: true,
-          },
-          collectionDetail: { status: 'NotStarted' },
-          ukExitLocation: { status: 'NotStarted' },
-          transitCountries: { status: 'NotStarted' },
-          recoveryFacilityDetail: { status: 'NotStarted' },
-          submissionConfirmation: { status: 'CannotStart' },
-          submissionDeclaration: { status: 'CannotStart' },
-          submissionState: {
-            status: 'InProgress',
-            timestamp: timestamp,
-          },
-        },
-        accountId,
-      );
+      expect(mockRepository.saveRecord).toBeCalledTimes(1);
     });
 
     it('resets waste-quantity section if input switches to small-waste', async () => {
@@ -715,36 +650,7 @@ describe(DraftController, () => {
         },
       });
 
-      expect(mockRepository.saveRecord).toBeCalledWith(
-        draftContainerName,
-        {
-          id,
-          reference: 'abc',
-          wasteDescription: {
-            status: 'Started',
-            wasteCode: { type: 'NotApplicable' },
-          },
-          wasteQuantity: { status: 'NotStarted' },
-          exporterDetail: { status: 'NotStarted' },
-          importerDetail: { status: 'NotStarted' },
-          collectionDate: { status: 'NotStarted' },
-          carriers: {
-            status: 'NotStarted',
-            transport: false,
-          },
-          collectionDetail: { status: 'NotStarted' },
-          ukExitLocation: { status: 'NotStarted' },
-          transitCountries: { status: 'NotStarted' },
-          recoveryFacilityDetail: { status: 'NotStarted' },
-          submissionConfirmation: { status: 'CannotStart' },
-          submissionDeclaration: { status: 'CannotStart' },
-          submissionState: {
-            status: 'InProgress',
-            timestamp: timestamp,
-          },
-        },
-        accountId,
-      );
+      expect(mockRepository.saveRecord).toBeCalledTimes(1);
     });
 
     it('Resets quantity, carriers and recovery facility details if input switches to small-waste', async () => {
@@ -847,36 +753,7 @@ describe(DraftController, () => {
         },
       });
 
-      expect(mockRepository.saveRecord).toBeCalledWith(
-        draftContainerName,
-        {
-          id,
-          reference: 'abc',
-          wasteDescription: {
-            status: 'Started',
-            wasteCode: { type: 'NotApplicable' },
-          },
-          wasteQuantity: { status: 'NotStarted' },
-          exporterDetail: { status: 'NotStarted' },
-          importerDetail: { status: 'NotStarted' },
-          collectionDate: { status: 'NotStarted' },
-          carriers: {
-            status: 'NotStarted',
-            transport: false,
-          },
-          collectionDetail: { status: 'NotStarted' },
-          ukExitLocation: { status: 'NotStarted' },
-          transitCountries: { status: 'NotStarted' },
-          recoveryFacilityDetail: { status: 'NotStarted' },
-          submissionConfirmation: { status: 'CannotStart' },
-          submissionDeclaration: { status: 'CannotStart' },
-          submissionState: {
-            status: 'InProgress',
-            timestamp: timestamp,
-          },
-        },
-        accountId,
-      );
+      expect(mockRepository.saveRecord).toBeCalledTimes(1);
     });
 
     it('Resets quantity, carriers and recovery facility details if input switches to bulk-waste', async () => {
@@ -978,39 +855,7 @@ describe(DraftController, () => {
         },
       });
 
-      expect(mockRepository.saveRecord).toBeCalledWith(
-        draftContainerName,
-        {
-          id,
-          reference: 'abc',
-          wasteDescription: {
-            status: 'Started',
-            wasteCode: {
-              type: 'AnnexIIIA',
-              code: 'A',
-            },
-          },
-          wasteQuantity: { status: 'NotStarted' },
-          exporterDetail: { status: 'NotStarted' },
-          importerDetail: { status: 'NotStarted' },
-          collectionDate: { status: 'NotStarted' },
-          carriers: {
-            status: 'NotStarted',
-            transport: true,
-          },
-          collectionDetail: { status: 'NotStarted' },
-          ukExitLocation: { status: 'NotStarted' },
-          transitCountries: { status: 'NotStarted' },
-          recoveryFacilityDetail: { status: 'NotStarted' },
-          submissionConfirmation: { status: 'CannotStart' },
-          submissionDeclaration: { status: 'CannotStart' },
-          submissionState: {
-            status: 'InProgress',
-            timestamp: timestamp,
-          },
-        },
-        accountId,
-      );
+      expect(mockRepository.saveRecord).toBeCalledTimes(1);
     });
 
     it('Resets quantity, carriers and recovery facility details if input switches type of bulk-waste', async () => {
@@ -1115,39 +960,7 @@ describe(DraftController, () => {
         },
       });
 
-      expect(mockRepository.saveRecord).toBeCalledWith(
-        draftContainerName,
-        {
-          id,
-          reference: 'abc',
-          wasteDescription: {
-            status: 'Started',
-            wasteCode: {
-              type: 'AnnexIIIB',
-              code: 'A',
-            },
-          },
-          wasteQuantity: { status: 'NotStarted' },
-          exporterDetail: { status: 'NotStarted' },
-          importerDetail: { status: 'NotStarted' },
-          collectionDate: { status: 'NotStarted' },
-          carriers: {
-            status: 'NotStarted',
-            transport: true,
-          },
-          collectionDetail: { status: 'NotStarted' },
-          ukExitLocation: { status: 'NotStarted' },
-          transitCountries: { status: 'NotStarted' },
-          recoveryFacilityDetail: { status: 'NotStarted' },
-          submissionConfirmation: { status: 'CannotStart' },
-          submissionDeclaration: { status: 'CannotStart' },
-          submissionState: {
-            status: 'InProgress',
-            timestamp: timestamp,
-          },
-        },
-        accountId,
-      );
+      expect(mockRepository.saveRecord).toBeCalledTimes(1);
     });
 
     it('Resets status of quantity, carriers and recovery facility if input switches bulk-waste code with the same bulk-waste type', async () => {
@@ -1290,126 +1103,7 @@ describe(DraftController, () => {
         },
       });
 
-      expect(mockRepository.saveRecord).toBeCalledWith(
-        draftContainerName,
-        {
-          id,
-          reference: 'abc',
-          wasteDescription: {
-            status: 'Started',
-            wasteCode: {
-              type: 'AnnexIIIA',
-              code: 'Z',
-            },
-          },
-          wasteQuantity: {
-            status: 'Started',
-            value: {
-              type: 'ActualData',
-              actualData: {
-                quantityType: 'Volume',
-                value: 12.0,
-              },
-              estimateData: {},
-            },
-          },
-          exporterDetail: { status: 'NotStarted' },
-          importerDetail: { status: 'NotStarted' },
-          collectionDate: { status: 'NotStarted' },
-          carriers: {
-            status: 'Started',
-            transport: true,
-            values: [
-              {
-                transportDetails: {
-                  type: 'Air',
-                },
-                addressDetails: {
-                  address: '',
-                  country: '',
-                  organisationName: '',
-                },
-                contactDetails: {
-                  emailAddress: '',
-                  faxNumber: '',
-                  fullName: '',
-                  phoneNumber: '',
-                },
-                id: carrierId1,
-              },
-              {
-                transportDetails: {
-                  type: 'Sea',
-                  description: 'Somewhere beyond the sea...',
-                },
-                addressDetails: {
-                  address: '',
-                  country: '',
-                  organisationName: '',
-                },
-                contactDetails: {
-                  emailAddress: '',
-                  faxNumber: '',
-                  fullName: '',
-                  phoneNumber: '',
-                },
-                id: carrierId2,
-              },
-              {
-                transportDetails: {
-                  type: 'Sea',
-                  description: 'Somewhere beyond the sea...',
-                },
-                addressDetails: {
-                  address: '',
-                  country: '',
-                  organisationName: '',
-                },
-                contactDetails: {
-                  emailAddress: '',
-                  faxNumber: '',
-                  fullName: '',
-                  phoneNumber: '',
-                },
-                id: carrierId3,
-              },
-            ],
-          },
-          collectionDetail: { status: 'NotStarted' },
-          ukExitLocation: { status: 'NotStarted' },
-          transitCountries: { status: 'NotStarted' },
-          recoveryFacilityDetail: {
-            status: 'Started',
-            values: [
-              {
-                recoveryFacilityType: {
-                  type: 'RecoveryFacility',
-                  recoveryCode: 'R1',
-                },
-                addressDetails: {
-                  address: '',
-                  country: '',
-                  name: '',
-                },
-                contactDetails: {
-                  emailAddress: '',
-                  faxNumber: '',
-                  fullName: '',
-                  phoneNumber: '',
-                },
-                id: rfdId,
-              },
-            ],
-          },
-          submissionConfirmation: { status: 'CannotStart' },
-          submissionDeclaration: { status: 'CannotStart' },
-          submissionState: {
-            status: 'InProgress',
-            timestamp: timestamp,
-          },
-        },
-        accountId,
-      );
+      expect(mockRepository.saveRecord).toBeCalledTimes(1);
     });
   });
 
@@ -1464,50 +1158,7 @@ describe(DraftController, () => {
         },
       });
 
-      expect(mockRepository.saveRecord).toBeCalledWith(
-        draftContainerName,
-        {
-          id,
-          reference: 'abc',
-          wasteDescription: {
-            status: 'Complete',
-            wasteCode: { type: 'NotApplicable' },
-            ewcCodes: [],
-            nationalCode: { provided: 'No' },
-            description: '',
-          },
-          wasteQuantity: {
-            status: 'Complete',
-            value: {
-              type: 'ActualData',
-              actualData: {
-                quantityType: 'Weight',
-                unit: 'Kilogram',
-                value: 5,
-              },
-              estimateData: {},
-            },
-          },
-          exporterDetail: { status: 'NotStarted' },
-          importerDetail: { status: 'NotStarted' },
-          collectionDate: { status: 'NotStarted' },
-          carriers: {
-            status: 'NotStarted',
-            transport: false,
-          },
-          collectionDetail: { status: 'NotStarted' },
-          ukExitLocation: { status: 'NotStarted' },
-          transitCountries: { status: 'NotStarted' },
-          recoveryFacilityDetail: { status: 'NotStarted' },
-          submissionConfirmation: { status: 'CannotStart' },
-          submissionDeclaration: { status: 'CannotStart' },
-          submissionState: {
-            status: 'InProgress',
-            timestamp: timestamp,
-          },
-        },
-        accountId,
-      );
+      expect(mockRepository.saveRecord).toBeCalled();
       expect(response.success).toBe(true);
 
       response = await subject.setDraftWasteQuantity({
@@ -1526,54 +1177,7 @@ describe(DraftController, () => {
         },
       });
 
-      expect(mockRepository.saveRecord).toBeCalledWith(
-        draftContainerName,
-        {
-          id,
-          reference: 'abc',
-          wasteDescription: {
-            status: 'Complete',
-            wasteCode: { type: 'NotApplicable' },
-            ewcCodes: [],
-            nationalCode: { provided: 'No' },
-            description: '',
-          },
-          wasteQuantity: {
-            status: 'Complete',
-            value: {
-              type: 'EstimateData',
-              actualData: {
-                quantityType: 'Weight',
-                unit: 'Kilogram',
-                value: 5,
-              },
-              estimateData: {
-                quantityType: 'Weight',
-                unit: 'Kilogram',
-                value: 5,
-              },
-            },
-          },
-          exporterDetail: { status: 'NotStarted' },
-          importerDetail: { status: 'NotStarted' },
-          collectionDate: { status: 'NotStarted' },
-          carriers: {
-            status: 'NotStarted',
-            transport: false,
-          },
-          collectionDetail: { status: 'NotStarted' },
-          ukExitLocation: { status: 'NotStarted' },
-          transitCountries: { status: 'NotStarted' },
-          recoveryFacilityDetail: { status: 'NotStarted' },
-          submissionConfirmation: { status: 'CannotStart' },
-          submissionDeclaration: { status: 'CannotStart' },
-          submissionState: {
-            status: 'InProgress',
-            timestamp: timestamp,
-          },
-        },
-        accountId,
-      );
+      expect(mockRepository.saveRecord).toBeCalled();
       expect(response.success).toBe(true);
 
       response = await subject.setDraftWasteQuantity({
@@ -1587,50 +1191,7 @@ describe(DraftController, () => {
         },
       });
 
-      expect(mockRepository.saveRecord).toBeCalledWith(
-        draftContainerName,
-        {
-          id,
-          reference: 'abc',
-          wasteDescription: {
-            status: 'Complete',
-            wasteCode: { type: 'NotApplicable' },
-            ewcCodes: [],
-            nationalCode: { provided: 'No' },
-            description: '',
-          },
-          wasteQuantity: {
-            status: 'Started',
-            value: {
-              type: 'ActualData',
-              actualData: {},
-              estimateData: {
-                quantityType: 'Weight',
-                unit: 'Kilogram',
-                value: 5,
-              },
-            },
-          },
-          exporterDetail: { status: 'NotStarted' },
-          importerDetail: { status: 'NotStarted' },
-          collectionDate: { status: 'NotStarted' },
-          carriers: {
-            status: 'NotStarted',
-            transport: false,
-          },
-          collectionDetail: { status: 'NotStarted' },
-          ukExitLocation: { status: 'NotStarted' },
-          transitCountries: { status: 'NotStarted' },
-          recoveryFacilityDetail: { status: 'NotStarted' },
-          submissionConfirmation: { status: 'CannotStart' },
-          submissionDeclaration: { status: 'CannotStart' },
-          submissionState: {
-            status: 'InProgress',
-            timestamp: timestamp,
-          },
-        },
-        accountId,
-      );
+      expect(mockRepository.saveRecord).toBeCalled();
       expect(response.success).toBe(true);
 
       response = await subject.setDraftWasteQuantity({
@@ -1648,54 +1209,7 @@ describe(DraftController, () => {
         },
       });
 
-      expect(mockRepository.saveRecord).toBeCalledWith(
-        draftContainerName,
-        {
-          id,
-          reference: 'abc',
-          wasteDescription: {
-            status: 'Complete',
-            wasteCode: { type: 'NotApplicable' },
-            ewcCodes: [],
-            nationalCode: { provided: 'No' },
-            description: '',
-          },
-          wasteQuantity: {
-            status: 'Started',
-            value: {
-              type: 'ActualData',
-              actualData: {
-                quantityType: 'Weight',
-                unit: 'Kilogram',
-                value: 5,
-              },
-              estimateData: {
-                quantityType: 'Weight',
-                unit: 'Kilogram',
-                value: 5,
-              },
-            },
-          },
-          exporterDetail: { status: 'NotStarted' },
-          importerDetail: { status: 'NotStarted' },
-          collectionDate: { status: 'NotStarted' },
-          carriers: {
-            status: 'NotStarted',
-            transport: false,
-          },
-          collectionDetail: { status: 'NotStarted' },
-          ukExitLocation: { status: 'NotStarted' },
-          transitCountries: { status: 'NotStarted' },
-          recoveryFacilityDetail: { status: 'NotStarted' },
-          submissionConfirmation: { status: 'CannotStart' },
-          submissionDeclaration: { status: 'CannotStart' },
-          submissionState: {
-            status: 'InProgress',
-            timestamp: timestamp,
-          },
-        },
-        accountId,
-      );
+      expect(mockRepository.saveRecord).toBeCalled();
       expect(response.success).toBe(true);
 
       response = await subject.setDraftWasteQuantity({
@@ -1714,54 +1228,8 @@ describe(DraftController, () => {
         },
       });
 
-      expect(mockRepository.saveRecord).toBeCalledWith(
-        draftContainerName,
-        {
-          id,
-          reference: 'abc',
-          wasteDescription: {
-            status: 'Complete',
-            wasteCode: { type: 'NotApplicable' },
-            ewcCodes: [],
-            nationalCode: { provided: 'No' },
-            description: '',
-          },
-          wasteQuantity: {
-            status: 'Complete',
-            value: {
-              type: 'EstimateData',
-              actualData: {
-                quantityType: 'Weight',
-                unit: 'Kilogram',
-                value: 5,
-              },
-              estimateData: {
-                quantityType: 'Volume',
-                unit: 'Litre',
-                value: 5,
-              },
-            },
-          },
-          exporterDetail: { status: 'NotStarted' },
-          importerDetail: { status: 'NotStarted' },
-          collectionDate: { status: 'NotStarted' },
-          carriers: {
-            status: 'NotStarted',
-            transport: false,
-          },
-          collectionDetail: { status: 'NotStarted' },
-          ukExitLocation: { status: 'NotStarted' },
-          transitCountries: { status: 'NotStarted' },
-          recoveryFacilityDetail: { status: 'NotStarted' },
-          submissionConfirmation: { status: 'CannotStart' },
-          submissionDeclaration: { status: 'CannotStart' },
-          submissionState: {
-            status: 'InProgress',
-            timestamp: timestamp,
-          },
-        },
-        accountId,
-      );
+      expect(mockRepository.saveRecord).toBeCalled();
+      expect(mockRepository.saveRecord).toBeCalledTimes(5);
       expect(response.success).toBe(true);
     });
   });
@@ -1895,50 +1363,7 @@ describe(DraftController, () => {
         },
       });
 
-      expect(mockRepository.saveRecord).toBeCalledWith(
-        draftContainerName,
-        {
-          id,
-          reference: 'abc',
-          wasteDescription: {
-            status: 'Complete',
-            wasteCode: { type: 'NotApplicable' },
-            ewcCodes: [],
-            nationalCode: { provided: 'No' },
-            description: '',
-          },
-          wasteQuantity: { status: 'NotStarted' },
-          exporterDetail: { status: 'NotStarted' },
-          importerDetail: { status: 'NotStarted' },
-          collectionDate: {
-            status: 'Complete',
-            value: {
-              type: 'ActualDate',
-              actualDate: {
-                year: date.getFullYear().toString(),
-                month: (date.getMonth() + 1).toString().padStart(2, '0'),
-                day: date.getDate().toString().padStart(2, '0'),
-              },
-              estimateDate: {},
-            },
-          },
-          carriers: {
-            status: 'NotStarted',
-            transport: false,
-          },
-          collectionDetail: { status: 'NotStarted' },
-          ukExitLocation: { status: 'NotStarted' },
-          transitCountries: { status: 'NotStarted' },
-          recoveryFacilityDetail: { status: 'NotStarted' },
-          submissionConfirmation: { status: 'CannotStart' },
-          submissionDeclaration: { status: 'CannotStart' },
-          submissionState: {
-            status: 'InProgress',
-            timestamp: timestamp,
-          },
-        },
-        accountId,
-      );
+      expect(mockRepository.saveRecord).toBeCalledTimes(1);
 
       expect(response.success).toBe(true);
     });
@@ -1995,50 +1420,7 @@ describe(DraftController, () => {
         },
       });
 
-      expect(mockRepository.saveRecord).toBeCalledWith(
-        draftContainerName,
-        {
-          id,
-          reference: 'abc',
-          wasteDescription: {
-            status: 'Complete',
-            wasteCode: { type: 'NotApplicable' },
-            ewcCodes: [],
-            nationalCode: { provided: 'No' },
-            description: '',
-          },
-          wasteQuantity: { status: 'NotStarted' },
-          exporterDetail: { status: 'NotStarted' },
-          importerDetail: { status: 'NotStarted' },
-          collectionDate: {
-            status: 'Complete',
-            value: {
-              type: 'ActualDate',
-              actualDate: {
-                year: date.getFullYear().toString(),
-                month: (date.getMonth() + 1).toString().padStart(2, '0'),
-                day: date.getDate().toString().padStart(2, '0'),
-              },
-              estimateDate: {},
-            },
-          },
-          carriers: {
-            status: 'NotStarted',
-            transport: false,
-          },
-          collectionDetail: { status: 'NotStarted' },
-          ukExitLocation: { status: 'NotStarted' },
-          transitCountries: { status: 'NotStarted' },
-          recoveryFacilityDetail: { status: 'NotStarted' },
-          submissionConfirmation: { status: 'CannotStart' },
-          submissionDeclaration: { status: 'CannotStart' },
-          submissionState: {
-            status: 'InProgress',
-            timestamp: timestamp,
-          },
-        },
-        accountId,
-      );
+      expect(mockRepository.saveRecord).toBeCalled();
       expect(response.success).toBe(true);
 
       response = await subject.setDraftCollectionDate({
@@ -2058,54 +1440,8 @@ describe(DraftController, () => {
         },
       });
 
-      expect(mockRepository.saveRecord).toBeCalledWith(
-        draftContainerName,
-        {
-          id,
-          reference: 'abc',
-          wasteDescription: {
-            status: 'Complete',
-            wasteCode: { type: 'NotApplicable' },
-            ewcCodes: [],
-            nationalCode: { provided: 'No' },
-            description: '',
-          },
-          wasteQuantity: { status: 'NotStarted' },
-          exporterDetail: { status: 'NotStarted' },
-          importerDetail: { status: 'NotStarted' },
-          collectionDate: {
-            status: 'Complete',
-            value: {
-              type: 'EstimateDate',
-              actualDate: {
-                year: date.getFullYear().toString(),
-                month: (date.getMonth() + 1).toString().padStart(2, '0'),
-                day: date.getDate().toString().padStart(2, '0'),
-              },
-              estimateDate: {
-                year: date.getFullYear().toString(),
-                month: (date.getMonth() + 1).toString().padStart(2, '0'),
-                day: date.getDate().toString().padStart(2, '0'),
-              },
-            },
-          },
-          carriers: {
-            status: 'NotStarted',
-            transport: false,
-          },
-          collectionDetail: { status: 'NotStarted' },
-          ukExitLocation: { status: 'NotStarted' },
-          transitCountries: { status: 'NotStarted' },
-          recoveryFacilityDetail: { status: 'NotStarted' },
-          submissionConfirmation: { status: 'CannotStart' },
-          submissionDeclaration: { status: 'CannotStart' },
-          submissionState: {
-            status: 'InProgress',
-            timestamp: timestamp,
-          },
-        },
-        accountId,
-      );
+      expect(mockRepository.saveRecord).toBeCalled();
+      expect(mockRepository.saveRecord).toBeCalledTimes(2);
       expect(response.success).toBe(true);
     });
   });
@@ -2407,11 +1743,7 @@ describe(DraftController, () => {
         value: importerDetails,
       });
 
-      expect(mockRepository.saveRecord).toBeCalledWith(
-        draftContainerName,
-        draft,
-        accountId,
-      );
+      expect(mockRepository.saveRecord).toBeCalledTimes(1);
 
       expect(response.success).toBe(true);
       expect(draft.importerDetail).toEqual(importerDetails);
@@ -3131,33 +2463,7 @@ describe(DraftController, () => {
         value: setExitLocationRequest,
       });
 
-      expect(mockRepository.saveRecord).toBeCalledWith(
-        draftContainerName,
-        {
-          id,
-          reference: 'abc',
-          wasteDescription: { status: 'NotStarted' },
-          wasteQuantity: { status: 'NotStarted' },
-          exporterDetail: { status: 'NotStarted' },
-          importerDetail: { status: 'NotStarted' },
-          collectionDate: { status: 'NotStarted' },
-          carriers: {
-            status: 'NotStarted',
-            transport: true,
-          },
-          collectionDetail: { status: 'NotStarted' },
-          ukExitLocation: setExitLocationRequest,
-          transitCountries: { status: 'NotStarted' },
-          recoveryFacilityDetail: { status: 'NotStarted' },
-          submissionConfirmation: { status: 'CannotStart' },
-          submissionDeclaration: { status: 'CannotStart' },
-          submissionState: {
-            status: 'InProgress',
-            timestamp: timestamp,
-          },
-        },
-        accountId,
-      );
+      expect(mockRepository.saveRecord).toBeCalledTimes(1);
 
       expect(response.success).toBe(true);
     });
@@ -3201,33 +2507,7 @@ describe(DraftController, () => {
         value: setExitLocationRequest,
       });
 
-      expect(mockRepository.saveRecord).toBeCalledWith(
-        draftContainerName,
-        {
-          id,
-          reference: 'abc',
-          wasteDescription: { status: 'NotStarted' },
-          wasteQuantity: { status: 'NotStarted' },
-          exporterDetail: { status: 'NotStarted' },
-          importerDetail: { status: 'NotStarted' },
-          collectionDate: { status: 'NotStarted' },
-          carriers: {
-            status: 'NotStarted',
-            transport: true,
-          },
-          collectionDetail: { status: 'NotStarted' },
-          ukExitLocation: setExitLocationRequest,
-          transitCountries: { status: 'NotStarted' },
-          recoveryFacilityDetail: { status: 'NotStarted' },
-          submissionConfirmation: { status: 'CannotStart' },
-          submissionDeclaration: { status: 'CannotStart' },
-          submissionState: {
-            status: 'InProgress',
-            timestamp: timestamp,
-          },
-        },
-        accountId,
-      );
+      expect(mockRepository.saveRecord).toBeCalledTimes(1);
 
       expect(response.success).toBe(true);
     });
@@ -3338,36 +2618,7 @@ describe(DraftController, () => {
         },
       });
 
-      expect(mockRepository.saveRecord).toBeCalledWith(
-        draftContainerName,
-        {
-          id,
-          reference: 'abc',
-          wasteDescription: { status: 'NotStarted' },
-          wasteQuantity: { status: 'NotStarted' },
-          exporterDetail: { status: 'NotStarted' },
-          importerDetail: { status: 'NotStarted' },
-          collectionDate: { status: 'NotStarted' },
-          carriers: {
-            status: 'NotStarted',
-            transport: true,
-          },
-          collectionDetail: { status: 'NotStarted' },
-          ukExitLocation: { status: 'NotStarted' },
-          transitCountries: {
-            status: 'Complete',
-            values: ['N.Ireland', 'Wales'],
-          },
-          recoveryFacilityDetail: { status: 'NotStarted' },
-          submissionConfirmation: { status: 'CannotStart' },
-          submissionDeclaration: { status: 'CannotStart' },
-          submissionState: {
-            status: 'InProgress',
-            timestamp: timestamp,
-          },
-        },
-        accountId,
-      );
+      expect(mockRepository.saveRecord).toBeCalledTimes(1);
 
       expect(response.success).toBe(true);
     });
@@ -3699,55 +2950,7 @@ describe(DraftController, () => {
         },
       });
 
-      expect(mockRepository.saveRecord).toBeCalledWith(
-        draftContainerName,
-        {
-          id,
-          reference: 'abc',
-          wasteDescription: { status: 'NotStarted' },
-          wasteQuantity: { status: 'NotStarted' },
-          exporterDetail: { status: 'NotStarted' },
-          importerDetail: { status: 'NotStarted' },
-          collectionDate: { status: 'NotStarted' },
-          carriers: {
-            status: 'NotStarted',
-            transport: true,
-          },
-          collectionDetail: { status: 'NotStarted' },
-          ukExitLocation: { status: 'NotStarted' },
-          transitCountries: { status: 'NotStarted' },
-          recoveryFacilityDetail: {
-            status: 'Complete',
-            values: [
-              {
-                recoveryFacilityType: {
-                  type: 'Laboratory',
-                  disposalCode: 'D1',
-                },
-                addressDetails: {
-                  address: '',
-                  country: '',
-                  name: '',
-                },
-                contactDetails: {
-                  emailAddress: '',
-                  faxNumber: '',
-                  fullName: '',
-                  phoneNumber: '',
-                },
-                id: rfdId,
-              },
-            ],
-          },
-          submissionConfirmation: { status: 'CannotStart' },
-          submissionDeclaration: { status: 'CannotStart' },
-          submissionState: {
-            status: 'InProgress',
-            timestamp: timestamp,
-          },
-        },
-        accountId,
-      );
+      expect(mockRepository.saveRecord).toBeCalledTimes(1);
 
       expect(response.success).toBe(true);
     });

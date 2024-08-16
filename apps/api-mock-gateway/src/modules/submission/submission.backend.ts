@@ -472,6 +472,7 @@ export async function setWasteDescription(
   submission.wasteQuantity = wasteQuantity;
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionState.timestamp = new Date();
   return Promise.resolve();
 }
 
@@ -578,6 +579,7 @@ export async function setWasteQuantity(
 
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
+    submission.submissionState.timestamp = new Date();
   } else {
     const submission = db.submissions.find(
       (s) => s.id == id && s.accountId == accountId,
@@ -655,6 +657,7 @@ export async function setCustomerReference(
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionState.timestamp = new Date();
 
   return Promise.resolve();
 }
@@ -687,6 +690,7 @@ export async function setExporterDetail(
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionState.timestamp = new Date();
 
   return Promise.resolve();
 }
@@ -721,6 +725,7 @@ export async function setImporterDetail(
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionState.timestamp = new Date();
 
   return Promise.resolve();
 }
@@ -783,6 +788,7 @@ export async function setCollectionDate(
 
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
+    submission.submissionState.timestamp = new Date();
   } else {
     const submission = db.submissions.find(
       (s) => s.id == id && s.accountId == accountId,
@@ -900,6 +906,7 @@ export async function createCarriers(
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionState.timestamp = new Date();
 
   return Promise.resolve({
     status: value.status,
@@ -987,6 +994,7 @@ export async function setCarriers(
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionState.timestamp = new Date();
 
   return Promise.resolve();
 }
@@ -1031,6 +1039,7 @@ export async function deleteCarriers(
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionState.timestamp = new Date();
 
   return Promise.resolve();
 }
@@ -1064,6 +1073,7 @@ export async function setCollectionDetail(
   submission.collectionDetail = value;
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionState.timestamp = new Date();
 
   return Promise.resolve();
 }
@@ -1096,6 +1106,7 @@ export async function setExitLocation(
   submission.ukExitLocation = value;
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionState.timestamp = new Date();
 
   return Promise.resolve();
 }
@@ -1128,6 +1139,7 @@ export async function setTransitCountries(
   submission.transitCountries = value;
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionState.timestamp = new Date();
 
   return Promise.resolve();
 }
@@ -1299,6 +1311,7 @@ export async function setRecoveryFacilityDetail(
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionState.timestamp = new Date();
 
   return Promise.resolve();
 }
@@ -1336,6 +1349,7 @@ export async function deleteRecoveryFacilityDetail(
 
   submission.submissionConfirmation = setSubmissionConfirmation(submission);
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionState.timestamp = new Date();
 
   return Promise.resolve();
 }
@@ -1381,6 +1395,7 @@ export async function updateSubmissionConfirmation(
 
   submission.submissionConfirmation = value;
   submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionState.timestamp = new Date();
 
   return Promise.resolve();
 }
@@ -1421,6 +1436,7 @@ export async function updateSubmissionDeclaration(
 
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
+    submission.submissionState.timestamp = new Date();
 
     db.drafts.push(submission);
     return Promise.reject(new BadRequestError('Invalid collection date'));
