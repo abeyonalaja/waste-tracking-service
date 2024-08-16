@@ -501,7 +501,7 @@ describe('Postcode validation', () => {
       expect(result.errors[0]).toEqual({
         code: 11010,
         field: 'Producer postcode',
-        message: 'Enter a real postcode',
+        message: 'Enter a postcode',
       });
     }
   });
@@ -517,7 +517,7 @@ describe('Postcode validation', () => {
       expect(result.errors[0]).toEqual({
         code: 12010,
         field: 'Waste Collection postcode',
-        message: 'Enter a real postcode',
+        message: 'Enter a postcode',
       });
     }
   });
@@ -533,7 +533,7 @@ describe('Postcode validation', () => {
       expect(result.errors[0]).toEqual({
         code: 15010,
         field: 'Carrier postcode',
-        message: 'Enter a real postcode',
+        message: 'Enter a postcode',
       });
     }
   });
@@ -549,7 +549,7 @@ describe('Postcode validation', () => {
       expect(result.errors[0]).toEqual({
         code: 11010,
         field: 'Producer postcode',
-        message: 'Enter a real postcode',
+        message: 'Enter a postcode',
       });
     }
   });
@@ -565,7 +565,7 @@ describe('Postcode validation', () => {
       expect(result.errors[0]).toEqual({
         code: 12010,
         field: 'Waste Collection postcode',
-        message: 'Enter a real postcode',
+        message: 'Enter a postcode',
       });
     }
   });
@@ -581,7 +581,7 @@ describe('Postcode validation', () => {
       expect(result.errors[0]).toEqual({
         code: 15010,
         field: 'Carrier postcode',
-        message: 'Enter a real postcode',
+        message: 'Enter a postcode',
       });
     }
   });

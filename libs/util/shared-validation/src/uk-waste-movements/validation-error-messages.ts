@@ -185,9 +185,9 @@ export const validationErrorMessages: ValidationErrorMessages = {
   },
   [codes.postcodeInvalid]: {
     en: {
-      csv: 'Enter a real postcode',
-      api: 'Enter a real postcode',
-      ui: 'Enter a real postcode',
+      csv: 'Enter a postcode',
+      api: 'Enter a postcode',
+      ui: 'Enter a postcode',
     },
     cy: {
       csv: 'Rhowch god post dilys',
@@ -281,14 +281,14 @@ export const validationErrorMessages: ValidationErrorMessages = {
   },
   [codes.invalidPostcodeBase]: {
     en: {
-      csv: `Enter a real postcode`,
-      api: `Enter a real postcode`,
-      ui: `Enter a real postcode`,
+      csv: `Enter a postcode`,
+      api: `Enter a postcode`,
+      ui: `Enter a postcode`,
     },
     cy: {
-      csv: `Rhowch god post go iawn`,
-      api: `Rhowch god post go iawn`,
-      ui: `Rhowch god post go iawn`,
+      csv: `Rhowch god post`,
+      api: `Rhowch god post`,
+      ui: `Rhowch god post`,
     },
   },
   [codes.charTooManyBuildingNameOrNumberBase]: {
