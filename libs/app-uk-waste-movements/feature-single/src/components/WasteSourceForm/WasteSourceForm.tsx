@@ -115,9 +115,11 @@ export function WasteSourceForm({
             draft.producerAndCollection.wasteSource.status === 'Complete';
 
           if (otherProducerSectionsAreComplete) {
-            return router.push(`/single/${id}/producer/check-your-answers`);
+            window.location.assign(`/single/${id}/producer/check-your-answers`);
+            return;
           } else {
-            return router.push(`/single/${id}`);
+            window.location.assign(`/single/${id}`);
+            return;
           }
         }
         return router.push(`/single/${id}`);

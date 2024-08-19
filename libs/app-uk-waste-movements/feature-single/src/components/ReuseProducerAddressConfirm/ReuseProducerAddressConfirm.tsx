@@ -57,9 +57,11 @@ export function ReuseProducerAddressConfirm({
       }
 
       if (submitType === 'continueToNextPage') {
-        return router.push(`/single/${id}/producer/source`);
+        window.location.assign(`/single/${id}/producer/source`);
+        return;
       } else {
-        return router.push(`/single/${id}`);
+        window.location.assign(`/single/${id}`);
+        return;
       }
     } catch (error) {
       console.error('Failed to PUT collection address', error);
