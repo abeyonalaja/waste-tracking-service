@@ -162,7 +162,7 @@ export function WasteSourceForm({
           />
         </GovUK.FormGroup>
         <GovUK.ButtonGroup>
-          <GovUK.Button disabled={buttonDisabled}>
+          <GovUK.Button type="submit" disabled={buttonDisabled}>
             {formStrings.buttonOne}
           </GovUK.Button>
           <button

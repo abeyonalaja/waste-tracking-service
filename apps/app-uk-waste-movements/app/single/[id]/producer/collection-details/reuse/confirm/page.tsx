@@ -106,7 +106,10 @@ export default async function ReuseProducerAddressConfirmPage({
             address={address}
             formStrings={formStrings}
           />
-          <Link href={`/single/${params.id}/producer/collection-details`}>
+          <Link
+            prefetch={false}
+            href={`/single/${params.id}/producer/collection-details`}
+          >
             {t('useDifferentAddressLink')}
           </Link>
         </GovUK.GridCol>

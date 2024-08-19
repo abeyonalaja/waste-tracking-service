@@ -50,22 +50,21 @@ export function ReuseProducerAddressConfirm({
           body: JSON.stringify(address),
         },
       );
+
+      if (!response.ok) {
+        console.error('Failed to PUT collection address', response);
+        return router.push('/error');
+      }
+
+      if (submitType === 'continueToNextPage') {
+        return router.push(`/single/${id}/producer/source`);
+      } else {
+        return router.push(`/single/${id}`);
+      }
     } catch (error) {
       console.error('Failed to PUT collection address', error);
       return router.push('/error');
     }
-
-    if (!response.ok) {
-      console.error('Failed to PUT collection address', response);
-      return router.push('/error');
-    }
-
-    router.refresh();
-
-    if (submitType === 'continueToNextPage') {
-      return router.push(`/single/${id}/producer/source`);
-    }
-    return router.push(`/single/${id}`);
   }
 
   return (
@@ -75,7 +74,7 @@ export function ReuseProducerAddressConfirm({
       }
     >
       <GovUK.ButtonGroup>
-        <GovUK.Button disabled={buttonDisabled}>
+        <GovUK.Button type="submit" disabled={buttonDisabled}>
           {formStrings.buttonOne}
         </GovUK.Button>
         <button
