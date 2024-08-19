@@ -115,10 +115,12 @@ export function WasteSourceForm({
             draft.producerAndCollection.wasteSource.status === 'Complete';
 
           if (otherProducerSectionsAreComplete) {
-            window.location.assign(`/single/${id}/producer/check-your-answers`);
+            window.location.assign(
+              `/move-waste/single/${id}/producer/check-your-answers`,
+            );
             return;
           } else {
-            window.location.assign(`/single/${id}`);
+            window.location.assign(`/move-waste/single/${id}`);
             return;
           }
         }

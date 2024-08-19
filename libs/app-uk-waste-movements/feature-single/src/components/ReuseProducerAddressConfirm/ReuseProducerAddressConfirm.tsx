@@ -57,10 +57,10 @@ export function ReuseProducerAddressConfirm({
       }
 
       if (submitType === 'continueToNextPage') {
-        window.location.assign(`/single/${id}/producer/source`);
+        window.location.assign(`/move-waste/single/${id}/producer/source`);
         return;
       } else {
-        window.location.assign(`/single/${id}`);
+        window.location.assign(`/move-waste/single/${id}`);
         return;
       }
     } catch (error) {
