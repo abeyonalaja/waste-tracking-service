@@ -150,7 +150,7 @@ describe(CosmosRepository, () => {
   describe('saveRecord', () => {
     it('successfully saves a new record', async () => {
       const accountId = faker.string.uuid();
-      const record = {
+      const record: Draft = {
         id: '1',
         wasteInformation: {
           status: 'Complete',
@@ -198,7 +198,6 @@ describe(CosmosRepository, () => {
           },
         },
         producerAndCollection: {
-          status: 'Complete',
           producer: {
             reference: 'REF123',
             address: {
@@ -213,6 +212,10 @@ describe(CosmosRepository, () => {
               name: 'Contact2',
               email: 'contact2@example.com',
               phone: '0987654321',
+            },
+            sicCodes: {
+              status: 'Complete',
+              values: ['123', '456'],
             },
           },
           wasteCollection: {
@@ -233,6 +236,9 @@ describe(CosmosRepository, () => {
               country: 'Country3',
             },
           },
+          confimation: {
+            status: 'Complete',
+          },
         },
         carrier: {
           contact: {
@@ -248,6 +254,10 @@ describe(CosmosRepository, () => {
             townCity: 'City2',
             country: 'Country2',
           },
+          modeOfTransport: {
+            status: 'Complete',
+            value: 'Road',
+          },
         },
         declaration: {
           status: 'Complete',
@@ -260,7 +270,7 @@ describe(CosmosRepository, () => {
           status: 'SubmittedWithActuals',
           timestamp: new Date(),
         },
-      } as Draft;
+      };
 
       mockRead.mockResolvedValueOnce({
         resource: undefined,
@@ -278,7 +288,7 @@ describe(CosmosRepository, () => {
 
     it('successfully updates an existing record', async () => {
       const accountId = faker.string.uuid();
-      const record = {
+      const record: Draft = {
         id: '1',
         wasteInformation: {
           status: 'Complete',
@@ -327,7 +337,6 @@ describe(CosmosRepository, () => {
           },
         },
         producerAndCollection: {
-          status: 'Complete',
           producer: {
             reference: 'REF123',
             address: {
@@ -342,6 +351,10 @@ describe(CosmosRepository, () => {
               name: 'Contact2',
               email: 'contact2@example.com',
               phone: '0987654321',
+            },
+            sicCodes: {
+              status: 'Complete',
+              values: ['123', '456'],
             },
           },
           wasteCollection: {
@@ -362,6 +375,9 @@ describe(CosmosRepository, () => {
               country: 'Country3',
             },
           },
+          confimation: {
+            status: 'Complete',
+          },
         },
         carrier: {
           contact: {
@@ -377,6 +393,10 @@ describe(CosmosRepository, () => {
             townCity: 'City2',
             country: 'Country2',
           },
+          modeOfTransport: {
+            status: 'Complete',
+            value: 'Road',
+          },
         },
         declaration: {
           status: 'Complete',
@@ -389,7 +409,7 @@ describe(CosmosRepository, () => {
           status: 'SubmittedWithActuals',
           timestamp: new Date(),
         },
-      } as Draft;
+      };
 
       mockRead.mockResolvedValueOnce({
         resource: record,

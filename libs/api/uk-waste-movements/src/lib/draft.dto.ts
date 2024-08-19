@@ -412,17 +412,11 @@ export interface DraftWasteCollection {
   address: DraftAddress;
 }
 
-export type ProducerAndWasteCollectionDetail =
-  | { status: 'NotStarted' }
-  | ({ status: 'Started' } & Partial<{
-      producer: DraftProducer;
-      wasteCollection: DraftWasteCollection;
-    }>)
-  | {
-      status: 'Complete';
-      producer: DraftProducer;
-      wasteCollection: DraftWasteCollection;
-    };
+export interface ProducerAndWasteCollectionDetail {
+  producer: DraftProducer;
+  wasteCollection: DraftWasteCollection;
+  confimation: DraftSectionConfirmation;
+}
 
 export type WasteInformation =
   | { status: 'NotStarted' }
@@ -454,6 +448,10 @@ export type DraftStateStatus =
 export interface DraftState {
   status: DraftStateStatus;
   timestamp: Date;
+}
+
+export interface DraftSectionConfirmation {
+  status: 'NotStarted' | 'InProgress' | 'Complete';
 }
 
 export interface Draft {
@@ -673,4 +671,14 @@ export type DeleteDraftSicCodeRequest = IdRequest &
 export type DeleteDraftSicCodeResponse = Response<string[]>;
 export const deleteDraftSicCode: Method = {
   name: 'deleteDraftSicCode',
+};
+
+export type SetDraftProducerConfirmationRequest = IdRequest &
+  AccountIdRequest & {
+    isConfirmed: boolean;
+  };
+
+export type SetDraftProducerConfirmationResponse = Response<void>;
+export const setDraftProducerConfirmation: Method = {
+  name: 'setDraftProducerConfirmation',
 };

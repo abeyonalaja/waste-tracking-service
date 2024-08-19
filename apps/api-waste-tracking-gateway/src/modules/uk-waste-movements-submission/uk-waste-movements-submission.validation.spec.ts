@@ -3,6 +3,7 @@ import {
   validateCreateDraftRequest,
   validateCreateDraftSicCodeRequest,
   validateSetDraftProducerAddressDetailsRequest,
+  validateSetDraftProducerConfirmationRequest,
   validateSetDraftProducerContactRequest,
   validateSetDraftWasteCollectionAddressDetailsRequest,
   validateSetDraftWasteSourceRequest,
@@ -303,6 +304,24 @@ describe('validateSetDraftReceiverAddressRequest', () => {
         addressLine1: faker.string.sample(),
         townCity: faker.string.sample(),
         country: faker.string.sample(),
+      }),
+    ).toBe(true);
+  });
+});
+
+describe('validateSetDraftProducerConfirmationRequest', () => {
+  const validate = validateSetDraftProducerConfirmationRequest;
+
+  it('Rejects invalid values', () => {
+    expect(validate(undefined)).toBe(false);
+    expect(validate({})).toBe(false);
+    expect(validate(faker.lorem.word())).toBe(false);
+  });
+
+  it('Accepts valid values', () => {
+    expect(
+      validate({
+        isConfirmed: true,
       }),
     ).toBe(true);
   });

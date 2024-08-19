@@ -4,6 +4,7 @@ import {
   UkwmContact,
   UkwmSetDraftWasteSourceRequest,
   UkwmCreateDraftSicCodeRequest,
+  UkwmSetDraftProducerConfirmationRequest,
 } from '@wts/api/waste-tracking-gateway';
 import Ajv from 'ajv/dist/jtd';
 
@@ -160,3 +161,10 @@ export const validateSetPartialDraftReceiverAddressDetailsRequest = ajv.compile<
     postcode: { type: 'string' },
   },
 });
+
+export const validateSetDraftProducerConfirmationRequest =
+  ajv.compile<UkwmSetDraftProducerConfirmationRequest>({
+    properties: {
+      isConfirmed: { type: 'boolean' },
+    },
+  });

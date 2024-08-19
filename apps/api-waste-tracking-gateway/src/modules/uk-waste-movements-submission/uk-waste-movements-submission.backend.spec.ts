@@ -67,6 +67,8 @@ const mockClient = {
     jest.fn<DaprUkWasteMovementsClient['getDraftReceiverAddressDetails']>(),
   deleteDraftSicCode:
     jest.fn<DaprUkWasteMovementsClient['deleteDraftSicCode']>(),
+  setProducerConfirmation:
+    jest.fn<DaprUkWasteMovementsClient['setProducerConfirmation']>(),
 };
 
 describe(ServiceUkWasteMovementsSubmissionBackend, () => {
@@ -99,7 +101,38 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
           },
         },
         producerAndCollection: {
-          status: 'NotStarted',
+          producer: {
+            address: {
+              status: 'NotStarted',
+            },
+            contact: {
+              status: 'NotStarted',
+            },
+            sicCodes: {
+              status: 'NotStarted',
+              values: [],
+            },
+            reference: '123456',
+          },
+          wasteCollection: {
+            address: {
+              status: 'NotStarted',
+            },
+            wasteSource: {
+              status: 'NotStarted',
+            },
+            brokerRegistrationNumber: '',
+            carrierRegistrationNumber: '',
+            expectedWasteCollectionDate: {
+              day: '',
+              month: '',
+              year: '',
+            },
+            localAuthority: '',
+          },
+          confimation: {
+            status: 'NotStarted',
+          },
         },
         carrier: {
           address: {
@@ -170,7 +203,6 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
       value: {
         id: faker.string.uuid(),
         producerAndCollection: {
-          status: 'Started',
           producer: {
             address: {
               status: 'NotStarted',
@@ -191,6 +223,9 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
             wasteSource: {
               status: 'NotStarted',
             },
+          },
+          confimation: {
+            status: 'NotStarted',
           },
         },
         carrier: {
@@ -732,5 +767,25 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
       code,
     });
     expect(result).toEqual(['01110', '01120', '01130']);
+  });
+
+  it('sets producer confirmation on a draft', async () => {
+    const accountId = faker.string.uuid();
+    const id = faker.string.uuid();
+    const mockResponse: Response<void> = {
+      success: true,
+      value: undefined,
+    };
+
+    mockClient.setProducerConfirmation.mockResolvedValueOnce(mockResponse);
+
+    await subject.setProducerConfirmation({ id, accountId, isConfirmed: true });
+
+    expect(mockClient.setProducerConfirmation).toHaveBeenCalledWith({
+      id,
+      accountId,
+      isConfirmed: true,
+    });
+    expect(mockClient.setProducerConfirmation).toHaveBeenCalledTimes(1);
   });
 });

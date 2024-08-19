@@ -609,6 +609,25 @@ try {
     { method: HttpMethod.POST },
   );
 
+  await server.invoker.listen(
+    api.setDraftProducerConfirmation.name,
+    async ({ body }) => {
+      if (body === undefined) {
+        return fromBoom(Boom.badRequest('Missing body'));
+      }
+      const request = JSON.parse(
+        body,
+      ) as api.SetDraftProducerConfirmationRequest;
+
+      if (!validateSubmission.setDraftProducerConfirmationRequest(request)) {
+        return fromBoom(Boom.badRequest());
+      }
+
+      return await submissionController.setDraftProducerConfirmation(request);
+    },
+    { method: HttpMethod.POST },
+  );
+
   await server.start();
 } catch (error) {
   console.log('Error occurred while starting the service.');

@@ -59,6 +59,9 @@ import {
   DeleteDraftSicCodeRequest,
   DeleteDraftSicCodeResponse,
   deleteDraftSicCode,
+  SetDraftProducerConfirmationRequest,
+  setDraftProducerConfirmation,
+  SetDraftProducerConfirmationResponse,
 } from '@wts/api/uk-waste-movements';
 
 export class DaprUkWasteMovementsClient {
@@ -279,5 +282,16 @@ export class DaprUkWasteMovementsClient {
       HttpMethod.POST,
       req,
     )) as DeleteDraftSicCodeResponse;
+  }
+
+  async setProducerConfirmation(
+    req: SetDraftProducerConfirmationRequest,
+  ): Promise<SetDraftProducerConfirmationResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.ukWasteMovementsAppId,
+      setDraftProducerConfirmation.name,
+      HttpMethod.POST,
+      req,
+    )) as SetDraftProducerConfirmationResponse;
   }
 }

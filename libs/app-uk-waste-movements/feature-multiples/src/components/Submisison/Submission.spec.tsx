@@ -31,7 +31,6 @@ const mockData: UkwmDraft = {
     },
   },
   producerAndCollection: {
-    status: 'Complete',
     producer: {
       reference: 'test ref',
       contact: {
@@ -72,6 +71,9 @@ const mockData: UkwmDraft = {
         value: 'Waste Source',
       },
       brokerRegistrationNumber: 'BRN12345',
+    },
+    confimation: {
+      status: 'Complete',
     },
   },
   carrier: {

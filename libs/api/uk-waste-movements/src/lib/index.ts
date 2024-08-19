@@ -70,6 +70,8 @@ export type {
   SetDraftReceiverAddressDetailsResponse,
   DeleteDraftSicCodeRequest,
   DeleteDraftSicCodeResponse,
+  SetDraftProducerConfirmationRequest,
+  SetDraftProducerConfirmationResponse,
 } from './draft.dto';
 
 export type { Field, ErrorCodeData } from './validation';
@@ -95,6 +97,7 @@ export {
   getDraftReceiverAddressDetails,
   setDraftReceiverAddressDetails,
   deleteDraftSicCode,
+  setDraftProducerConfirmation,
 } from './draft.dto';
 
 export * as validation from './validation';

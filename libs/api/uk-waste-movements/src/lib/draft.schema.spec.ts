@@ -37,6 +37,7 @@ import {
   SetDraftReceiverAddressDetailsRequest,
   DeleteDraftSicCodeResponse,
   DeleteDraftSicCodeRequest,
+  SetDraftProducerConfirmationRequest,
 } from './draft.dto';
 import {
   carrier,
@@ -80,6 +81,7 @@ import {
   setPartialDraftReceiverAddressDetailsRequest,
   deleteDraftSicCodeResponse,
   deleteDraftSicCodeRequest,
+  setDraftProducerConfirmationRequest,
 } from './draft.schema';
 
 const ajv = new Ajv();
@@ -106,7 +108,36 @@ describe('getDraftResponse', () => {
           },
         },
         producerAndCollection: {
-          status: 'NotStarted',
+          producer: {
+            address: {
+              status: 'NotStarted',
+            },
+            contact: {
+              status: 'NotStarted',
+            },
+            sicCodes: {
+              status: 'NotStarted',
+              values: [],
+            },
+            reference: 'test-ref',
+          },
+          wasteCollection: {
+            address: {
+              status: 'NotStarted',
+            },
+            wasteSource: {
+              status: 'NotStarted',
+            },
+            localAuthority: '',
+            expectedWasteCollectionDate: {
+              day: '',
+              month: '',
+              year: '',
+            },
+          },
+          confimation: {
+            status: 'NotStarted',
+          },
         },
         carrier: {
           address: {
@@ -182,7 +213,6 @@ describe('getDraftResponse', () => {
           },
         },
         producerAndCollection: {
-          status: 'Complete',
           producer: {
             reference: 'REF123',
             address: {
@@ -220,6 +250,9 @@ describe('getDraftResponse', () => {
               townCity: 'City3',
               country: 'Country3',
             },
+          },
+          confimation: {
+            status: 'Complete',
           },
         },
         carrier: {
@@ -1390,6 +1423,20 @@ describe('deleteDraftSicCodesResponse', () => {
     const value: DeleteDraftSicCodeResponse = {
       success: true,
       value: ['01110', '01120', '01130'],
+    };
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('setDraftProducerConfirmationRequest', () => {
+  const validate = ajv.compile<SetDraftProducerConfirmationRequest>(
+    setDraftProducerConfirmationRequest,
+  );
+  it('is compatible with dto value', () => {
+    const value: SetDraftProducerConfirmationRequest = {
+      accountId: faker.string.uuid(),
+      id: faker.string.uuid(),
+      isConfirmed: true,
     };
     expect(validate(value)).toBe(true);
   });

@@ -32,6 +32,7 @@ import {
   GetDraftCarrierAddressDetailsResponse,
   GetDraftReceiverAddressDetailsResponse,
   DeleteDraftSicCodeResponse,
+  SetDraftProducerConfirmationResponse,
 } from '@wts/api/uk-waste-movements';
 import { DaprUkWasteMovementsClient } from '@wts/client/uk-waste-movements';
 import { Response } from '@wts/util/invocation';
@@ -67,6 +68,12 @@ export interface DeleteSicCodeRef {
   id: string;
   accountId: string;
   code: string;
+}
+
+export interface DraftConfrimationRef {
+  id: string;
+  accountId: string;
+  isConfirmed: boolean;
 }
 
 export interface UkWasteMovementsSubmissionBackend {
@@ -128,6 +135,11 @@ export interface UkWasteMovementsSubmissionBackend {
     accountId,
     code,
   }: DeleteSicCodeRef): Promise<UkwmDeleteDraftSicCodeResponse>;
+  setProducerConfirmation({
+    id,
+    accountId,
+    isConfirmed,
+  }: DraftConfrimationRef): Promise<void>;
 }
 
 export class ServiceUkWasteMovementsSubmissionBackend
@@ -465,7 +477,6 @@ export class ServiceUkWasteMovementsSubmissionBackend
       this.logger.error(err);
       throw Boom.internal();
     }
-
     if (!response.success) {
       throw new Boom.Boom(response.error.message, {
         statusCode: response.error.statusCode,
@@ -576,5 +587,31 @@ export class ServiceUkWasteMovementsSubmissionBackend
     }
 
     return response.value as UkwmDeleteDraftSicCodeResponse;
+  }
+
+  async setProducerConfirmation({
+    id,
+    accountId,
+    isConfirmed,
+  }: DraftConfrimationRef): Promise<void> {
+    let response: SetDraftProducerConfirmationResponse;
+    try {
+      response = await this.client.setProducerConfirmation({
+        id,
+        accountId,
+        isConfirmed,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+        data: response.error.data,
+      });
+    }
+
+    return response.value;
   }
 }

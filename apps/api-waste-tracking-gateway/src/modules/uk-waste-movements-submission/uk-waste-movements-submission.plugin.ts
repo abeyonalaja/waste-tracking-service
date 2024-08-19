@@ -18,6 +18,7 @@ import {
   validateSetPartialDraftCarrierAddressDetailsRequest,
   validateSetDraftReceiverAddressDetailsRequest,
   validateSetPartialDraftReceiverAddressDetailsRequest,
+  validateSetDraftProducerConfirmationRequest,
 } from './uk-waste-movements-submission.validation';
 
 export interface PluginOptions {
@@ -585,6 +586,33 @@ const plugin: Plugin<PluginOptions> = {
             .code(201);
         } catch (err) {
           if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'PUT',
+      path: '/drafts/{id}/producer-confirmation',
+      handler: async function ({ params, payload }, h) {
+        if (!validateSetDraftProducerConfirmationRequest(payload)) {
+          return Boom.badRequest();
+        }
+        const request = payload as dto.UkwmSetDraftProducerConfirmationRequest;
+        try {
+          await backend.setProducerConfirmation({
+            id: params.id,
+            accountId: h.request.auth.credentials.accountId as string,
+            isConfirmed: request.isConfirmed,
+          });
+          return h.response().code(200);
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            err.output.payload.data = err?.data ?? undefined;
             return err;
           }
 

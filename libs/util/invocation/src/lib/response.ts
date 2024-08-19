@@ -26,7 +26,7 @@ export function fromBoom<T>(boom: Boom): Response<T> {
       statusCode: boom.output.statusCode,
       name: boom.output.payload.error,
       message: boom.message,
-      data: boom.data,
+      data: boom.data ?? undefined,
     },
   };
 }

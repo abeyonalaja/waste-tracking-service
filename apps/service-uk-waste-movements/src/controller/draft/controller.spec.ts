@@ -14,6 +14,7 @@ import {
   SetDraftWasteSourceRequest,
   SetDraftCarrierAddressDetailsRequest,
   SetDraftReceiverAddressDetailsRequest,
+  SetDraftProducerConfirmationRequest,
 } from '@wts/api/uk-waste-movements';
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -854,7 +855,38 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'NotStarted',
+          producer: {
+            address: {
+              status: 'NotStarted',
+            },
+            contact: {
+              status: 'NotStarted',
+            },
+            sicCodes: {
+              status: 'NotStarted',
+              values: [],
+            },
+            reference: '123456',
+          },
+          wasteCollection: {
+            address: {
+              status: 'NotStarted',
+            },
+            wasteSource: {
+              status: 'NotStarted',
+            },
+            brokerRegistrationNumber: '',
+            carrierRegistrationNumber: '',
+            expectedWasteCollectionDate: {
+              day: '',
+              month: '',
+              year: '',
+            },
+            localAuthority: '',
+          },
+          confimation: {
+            status: 'NotStarted',
+          },
         },
         carrier: {
           address: {
@@ -949,7 +981,6 @@ describe(SubmissionController, () => {
               values: [],
             },
           },
-          status: 'Started',
           wasteCollection: {
             address: {
               status: 'NotStarted',
@@ -957,6 +988,9 @@ describe(SubmissionController, () => {
             wasteSource: {
               status: 'NotStarted',
             },
+          },
+          confimation: {
+            status: 'NotStarted',
           },
         },
 
@@ -981,14 +1015,11 @@ describe(SubmissionController, () => {
         expectedDraft,
         accountId,
       );
+      expect(response.success).toBe(true);
       if (response.success) {
-        expect(response.value.producerAndCollection.status).toBe('Started');
-
-        if (response.value.producerAndCollection.status === 'Started') {
-          expect(response.value.producerAndCollection.producer?.reference).toBe(
-            ref,
-          );
-        }
+        expect(response.value.producerAndCollection.producer.reference).toBe(
+          ref,
+        );
       }
     });
   });
@@ -1013,7 +1044,6 @@ describe(SubmissionController, () => {
         },
       },
       producerAndCollection: {
-        status: 'Complete',
         producer: {
           reference: 'testRef',
           sicCodes: {
@@ -1058,6 +1088,9 @@ describe(SubmissionController, () => {
             postcode: 'SW1A 1AA',
             country: 'England [EN]',
           },
+        },
+        confimation: {
+          status: 'Complete',
         },
       },
       carrier: {
@@ -1125,7 +1158,6 @@ describe(SubmissionController, () => {
         },
       },
       producerAndCollection: {
-        status: 'Started',
         producer: {
           reference: 'testRef',
           sicCodes: {
@@ -1171,6 +1203,9 @@ describe(SubmissionController, () => {
             country: 'England [EN]',
           },
         },
+        confimation: {
+          status: 'Complete',
+        },
       },
       carrier: {
         address: {
@@ -1210,7 +1245,6 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'Started',
           producer: {
             reference: 'testRef',
             sicCodes: {
@@ -1255,6 +1289,9 @@ describe(SubmissionController, () => {
               postcode: 'SW1A 1AA',
               country: 'England [EN]',
             },
+          },
+          confimation: {
+            status: 'NotStarted',
           },
         },
         carrier: {
@@ -1333,7 +1370,6 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'Complete',
           producer: {
             reference: 'producerRef123',
             sicCodes: {
@@ -1378,6 +1414,9 @@ describe(SubmissionController, () => {
               postcode: '67890',
               country: 'CountryName',
             },
+          },
+          confimation: {
+            status: 'Complete',
           },
         },
         carrier: {
@@ -1437,7 +1476,38 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'NotStarted',
+          producer: {
+            address: {
+              status: 'NotStarted',
+            },
+            contact: {
+              status: 'NotStarted',
+            },
+            sicCodes: {
+              status: 'NotStarted',
+              values: [],
+            },
+            reference: '123456',
+          },
+          wasteCollection: {
+            address: {
+              status: 'NotStarted',
+            },
+            wasteSource: {
+              status: 'NotStarted',
+            },
+            brokerRegistrationNumber: '',
+            carrierRegistrationNumber: '',
+            expectedWasteCollectionDate: {
+              day: '',
+              month: '',
+              year: '',
+            },
+            localAuthority: '',
+          },
+          confimation: {
+            status: 'NotStarted',
+          },
         },
         carrier: {
           address: {
@@ -1493,7 +1563,6 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'Complete',
           producer: {
             reference: 'producerRef123',
             sicCodes: {
@@ -1522,6 +1591,9 @@ describe(SubmissionController, () => {
             wasteSource: {
               status: 'NotStarted',
             },
+          },
+          confimation: {
+            status: 'NotStarted',
           },
         },
         carrier: {
@@ -1572,7 +1644,6 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'Complete',
           producer: {
             reference: 'producerRef123',
             sicCodes: {
@@ -1601,6 +1672,9 @@ describe(SubmissionController, () => {
             wasteSource: {
               status: 'NotStarted',
             },
+          },
+          confimation: {
+            status: 'NotStarted',
           },
         },
         carrier: {
@@ -1661,7 +1735,6 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'Complete',
           producer: {
             reference: 'producerRef123',
             sicCodes: {
@@ -1706,6 +1779,9 @@ describe(SubmissionController, () => {
               postcode: '67890',
               country: 'CountryName',
             },
+          },
+          confimation: {
+            status: 'Complete',
           },
         },
         carrier: {
@@ -1761,7 +1837,38 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'NotStarted',
+          producer: {
+            address: {
+              status: 'NotStarted',
+            },
+            contact: {
+              status: 'NotStarted',
+            },
+            sicCodes: {
+              status: 'NotStarted',
+              values: [],
+            },
+            reference: '123456',
+          },
+          wasteCollection: {
+            address: {
+              status: 'NotStarted',
+            },
+            wasteSource: {
+              status: 'NotStarted',
+            },
+            brokerRegistrationNumber: '',
+            carrierRegistrationNumber: '',
+            expectedWasteCollectionDate: {
+              day: '',
+              month: '',
+              year: '',
+            },
+            localAuthority: '',
+          },
+          confimation: {
+            status: 'NotStarted',
+          },
         },
         carrier: {
           address: {
@@ -1817,7 +1924,6 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'Complete',
           producer: {
             reference: 'producerRef123',
             sicCodes: {
@@ -1846,6 +1952,9 @@ describe(SubmissionController, () => {
             wasteSource: {
               status: 'NotStarted',
             },
+          },
+          confimation: {
+            status: 'NotStarted',
           },
         },
         carrier: {
@@ -1891,7 +2000,6 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'Complete',
           producer: {
             reference: 'producerRef123',
             sicCodes: {
@@ -1921,6 +2029,9 @@ describe(SubmissionController, () => {
               status: 'Complete',
               value: 'Industrial',
             },
+          },
+          confimation: {
+            status: 'NotStarted',
           },
         },
         carrier: {
@@ -1981,7 +2092,6 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'Complete',
           producer: {
             reference: 'producerRef123',
             sicCodes: {
@@ -2026,6 +2136,9 @@ describe(SubmissionController, () => {
               postcode: '67890',
               country: 'CountryName',
             },
+          },
+          confimation: {
+            status: 'Complete',
           },
         },
         carrier: {
@@ -2081,7 +2194,38 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'NotStarted',
+          producer: {
+            address: {
+              status: 'NotStarted',
+            },
+            contact: {
+              status: 'NotStarted',
+            },
+            sicCodes: {
+              status: 'NotStarted',
+              values: [],
+            },
+            reference: '123456',
+          },
+          wasteCollection: {
+            address: {
+              status: 'NotStarted',
+            },
+            wasteSource: {
+              status: 'NotStarted',
+            },
+            brokerRegistrationNumber: '',
+            carrierRegistrationNumber: '',
+            expectedWasteCollectionDate: {
+              day: '',
+              month: '',
+              year: '',
+            },
+            localAuthority: '',
+          },
+          confimation: {
+            status: 'NotStarted',
+          },
         },
         carrier: {
           address: {
@@ -2137,7 +2281,6 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'Complete',
           producer: {
             reference: 'producerRef123',
             sicCodes: {
@@ -2166,6 +2309,9 @@ describe(SubmissionController, () => {
             wasteSource: {
               status: 'NotStarted',
             },
+          },
+          confimation: {
+            status: 'NotStarted',
           },
         },
         carrier: {
@@ -2211,7 +2357,6 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'Complete',
           producer: {
             reference: 'producerRef123',
             sicCodes: {
@@ -2241,6 +2386,9 @@ describe(SubmissionController, () => {
               status: 'Complete',
               value: 'Industrial',
             },
+          },
+          confimation: {
+            status: 'NotStarted',
           },
         },
         carrier: {
@@ -2300,7 +2448,6 @@ describe(SubmissionController, () => {
         },
       },
       producerAndCollection: {
-        status: 'Complete',
         producer: {
           reference: 'testRef',
           sicCodes: {
@@ -2345,6 +2492,9 @@ describe(SubmissionController, () => {
             postcode: 'SW1A 1AA',
             country: 'England [EN]',
           },
+        },
+        confimation: {
+          status: 'Complete',
         },
       },
       carrier: {
@@ -2411,7 +2561,6 @@ describe(SubmissionController, () => {
         },
       },
       producerAndCollection: {
-        status: 'Started',
         producer: {
           reference: 'testRef',
           sicCodes: {
@@ -2454,6 +2603,9 @@ describe(SubmissionController, () => {
             townCity: 'London',
           },
         },
+        confimation: {
+          status: 'Complete',
+        },
       },
       carrier: {
         address: {
@@ -2493,7 +2645,6 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'Started',
           producer: {
             reference: 'testRef',
             sicCodes: {
@@ -2539,6 +2690,9 @@ describe(SubmissionController, () => {
               postcode: 'SW1A 1AA',
               country: 'England',
             },
+          },
+          confimation: {
+            status: 'NotStarted',
           },
         },
         carrier: {
@@ -2618,7 +2772,6 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'Complete',
           producer: {
             reference: 'producerRef123',
             sicCodes: {
@@ -2647,6 +2800,9 @@ describe(SubmissionController, () => {
             wasteSource: {
               status: 'NotStarted',
             },
+          },
+          confimation: {
+            status: 'NotStarted',
           },
         },
         carrier: {
@@ -2692,7 +2848,6 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'Complete',
           producer: {
             reference: 'producerRef123',
             sicCodes: {
@@ -2721,6 +2876,9 @@ describe(SubmissionController, () => {
             wasteSource: {
               status: 'NotStarted',
             },
+          },
+          confimation: {
+            status: 'NotStarted',
           },
         },
         carrier: {
@@ -2781,7 +2939,6 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'Complete',
           producer: {
             reference: 'producerRef123',
             sicCodes: {
@@ -2826,6 +2983,9 @@ describe(SubmissionController, () => {
               postcode: '67890',
               country: 'CountryName',
             },
+          },
+          confimation: {
+            status: 'Complete',
           },
         },
         carrier: {
@@ -2881,7 +3041,38 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'NotStarted',
+          producer: {
+            address: {
+              status: 'NotStarted',
+            },
+            contact: {
+              status: 'NotStarted',
+            },
+            sicCodes: {
+              status: 'NotStarted',
+              values: [],
+            },
+            reference: '123456',
+          },
+          wasteCollection: {
+            address: {
+              status: 'NotStarted',
+            },
+            wasteSource: {
+              status: 'NotStarted',
+            },
+            brokerRegistrationNumber: '',
+            carrierRegistrationNumber: '',
+            expectedWasteCollectionDate: {
+              day: '',
+              month: '',
+              year: '',
+            },
+            localAuthority: '',
+          },
+          confimation: {
+            status: 'NotStarted',
+          },
         },
         carrier: {
           address: {
@@ -2937,7 +3128,6 @@ describe(SubmissionController, () => {
         },
       },
       producerAndCollection: {
-        status: 'Complete',
         producer: {
           reference: 'testRef',
           sicCodes: {
@@ -2977,6 +3167,9 @@ describe(SubmissionController, () => {
           address: {
             status: 'NotStarted',
           },
+        },
+        confimation: {
+          status: 'Complete',
         },
       },
       carrier: {
@@ -3050,7 +3243,6 @@ describe(SubmissionController, () => {
         },
       },
       producerAndCollection: {
-        status: 'Started',
         producer: {
           reference: 'testRef',
           sicCodes: {
@@ -3093,6 +3285,9 @@ describe(SubmissionController, () => {
             townCity: 'London',
           },
         },
+        confimation: {
+          status: 'NotStarted',
+        },
       },
       carrier: {
         address: {
@@ -3132,7 +3327,6 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'Started',
           producer: {
             reference: 'testRef',
             sicCodes: {
@@ -3174,6 +3368,9 @@ describe(SubmissionController, () => {
               addressLine1: '123 Main St',
               townCity: 'London',
             },
+          },
+          confimation: {
+            status: 'NotStarted',
           },
         },
         carrier: {
@@ -3258,7 +3455,6 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'Complete',
           producer: {
             reference: 'producerRef123',
             sicCodes: {
@@ -3287,6 +3483,9 @@ describe(SubmissionController, () => {
             wasteSource: {
               status: 'NotStarted',
             },
+          },
+          confimation: {
+            status: 'NotStarted',
           },
         },
         carrier: {
@@ -3332,7 +3531,6 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'Complete',
           producer: {
             reference: 'producerRef123',
             sicCodes: {
@@ -3361,6 +3559,9 @@ describe(SubmissionController, () => {
             wasteSource: {
               status: 'NotStarted',
             },
+          },
+          confimation: {
+            status: 'NotStarted',
           },
         },
         carrier: {
@@ -3419,7 +3620,36 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'NotStarted',
+          producer: {
+            address: {
+              status: 'NotStarted',
+            },
+            contact: {
+              status: 'NotStarted',
+            },
+            sicCodes: {
+              status: 'NotStarted',
+              values: [],
+            },
+            reference: '123456',
+          },
+          wasteCollection: {
+            address: {
+              status: 'NotStarted',
+            },
+            wasteSource: {
+              status: 'NotStarted',
+            },
+            expectedWasteCollectionDate: {
+              day: '01',
+              month: '01',
+              year: '2022',
+            },
+            localAuthority: '',
+          },
+          confimation: {
+            status: 'NotStarted',
+          },
         },
         carrier: {
           address: {
@@ -3485,7 +3715,6 @@ describe(SubmissionController, () => {
         },
       },
       producerAndCollection: {
-        status: 'Complete',
         producer: {
           reference: 'testRef',
           sicCodes: {
@@ -3525,6 +3754,9 @@ describe(SubmissionController, () => {
           address: {
             status: 'NotStarted',
           },
+        },
+        confimation: {
+          status: 'NotStarted',
         },
       },
       carrier: {
@@ -3598,7 +3830,6 @@ describe(SubmissionController, () => {
         },
       },
       producerAndCollection: {
-        status: 'Started',
         producer: {
           reference: 'testRef',
           sicCodes: {
@@ -3640,6 +3871,9 @@ describe(SubmissionController, () => {
             addressLine1: '123 Main St',
             townCity: 'London',
           },
+        },
+        confimation: {
+          status: 'NotStarted',
         },
       },
       carrier: {
@@ -3686,7 +3920,6 @@ describe(SubmissionController, () => {
           },
         },
         producerAndCollection: {
-          status: 'Started',
           producer: {
             reference: 'testRef',
             sicCodes: {
@@ -3728,6 +3961,9 @@ describe(SubmissionController, () => {
               addressLine1: '123 Main St',
               townCity: 'London',
             },
+          },
+          confimation: {
+            status: 'NotStarted',
           },
         },
         carrier: {
@@ -3781,6 +4017,289 @@ describe(SubmissionController, () => {
 
       if (response.success) {
         expect(response.value).toBeUndefined();
+      }
+    });
+  });
+
+  describe('setDraftProducerConfirmation', () => {
+    it('successfully sets confirmation status', async () => {
+      const accountId = faker.string.uuid();
+      const id = faker.string.uuid();
+      const initialDraft: Draft = {
+        id: id,
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
+        },
+        producerAndCollection: {
+          producer: {
+            reference: 'producerRef123',
+            sicCodes: {
+              status: 'Complete',
+              values: ['12345'],
+            },
+            contact: {
+              status: 'Complete',
+              organisationName: 'Producer Org',
+              name: 'Jane Doe',
+              email: 'jane.doe@example.com',
+              phone: '+44 1234 567890',
+            },
+            address: {
+              status: 'Complete',
+              addressLine1: '123 Main St',
+              addressLine2: 'Suite 100',
+              townCity: 'Anytown',
+              postcode: '12345',
+              country: 'CountryName',
+            },
+          },
+          wasteCollection: {
+            address: {
+              status: 'Complete',
+              addressLine1: '123 Main St',
+              addressLine2: 'Suite 100',
+              townCity: 'Anytown',
+              postcode: '12345',
+              country: 'CountryName',
+            },
+            wasteSource: {
+              status: 'Complete',
+              value: 'Industrial',
+            },
+          },
+          confimation: {
+            status: 'NotStarted',
+          },
+        },
+        carrier: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      };
+      mockRepository.getDraft.mockResolvedValue(initialDraft);
+      const request: SetDraftProducerConfirmationRequest = {
+        id: id,
+        accountId: accountId,
+        isConfirmed: true,
+      };
+      const response = await subject.setDraftProducerConfirmation(request);
+      const expectedDraft: Draft = {
+        id: id,
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
+        },
+        producerAndCollection: {
+          producer: {
+            reference: 'producerRef123',
+            sicCodes: {
+              status: 'Complete',
+              values: ['12345'],
+            },
+            contact: {
+              status: 'Complete',
+              organisationName: 'Producer Org',
+              name: 'Jane Doe',
+              email: 'jane.doe@example.com',
+              phone: '+44 1234 567890',
+            },
+            address: {
+              status: 'Complete',
+              addressLine1: '123 Main St',
+              addressLine2: 'Suite 100',
+              townCity: 'Anytown',
+              postcode: '12345',
+              country: 'CountryName',
+            },
+          },
+          wasteCollection: {
+            address: {
+              status: 'Complete',
+              addressLine1: '123 Main St',
+              addressLine2: 'Suite 100',
+              townCity: 'Anytown',
+              postcode: '12345',
+              country: 'CountryName',
+            },
+            wasteSource: {
+              status: 'Complete',
+              value: 'Industrial',
+            },
+          },
+          confimation: {
+            status: 'Complete',
+          },
+        },
+        carrier: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      };
+
+      expect(response.success).toBe(true);
+      expect(mockRepository.getDraft).toHaveBeenCalledWith(
+        'drafts',
+        id,
+        accountId,
+      );
+      expect(mockRepository.saveRecord).toHaveBeenCalledWith(
+        'drafts',
+        expectedDraft,
+        accountId,
+      );
+      if (response.success) {
+        expect(response.value).toBeUndefined();
+      }
+    });
+
+    it('returns error if section is not complete', async () => {
+      const accountId = faker.string.uuid();
+      const id = faker.string.uuid();
+      const initialDraft: Draft = {
+        id: id,
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
+        },
+        producerAndCollection: {
+          producer: {
+            reference: 'producerRef123',
+            sicCodes: {
+              status: 'Complete',
+              values: ['12345'],
+            },
+            contact: {
+              status: 'Started',
+              organisationName: 'Producer Org',
+              name: 'Jane Doe',
+              email: 'jane.doe@example.com',
+              phone: '+44 1234 567890',
+            },
+            address: {
+              status: 'Started',
+              addressLine1: '123 Main St',
+              addressLine2: 'Suite 100',
+              townCity: 'Anytown',
+              postcode: '12345',
+              country: 'CountryName',
+            },
+          },
+          wasteCollection: {
+            address: {
+              status: 'Started',
+              addressLine1: '123 Main St',
+              addressLine2: 'Suite 100',
+              townCity: 'Anytown',
+              postcode: '12345',
+              country: 'CountryName',
+            },
+            wasteSource: {
+              status: 'Complete',
+              value: 'Industrial',
+            },
+          },
+          confimation: {
+            status: 'NotStarted',
+          },
+        },
+        carrier: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      };
+      mockRepository.getDraft.mockResolvedValue(initialDraft);
+      const request: SetDraftProducerConfirmationRequest = {
+        id: id,
+        accountId: accountId,
+        isConfirmed: true,
+      };
+      const response = await subject.setDraftProducerConfirmation(request);
+
+      expect(response.success).toBe(false);
+      expect(mockRepository.getDraft).toHaveBeenCalledWith(
+        'drafts',
+        id,
+        accountId,
+      );
+      expect(mockRepository.saveRecord).toBeCalledTimes(0);
+      if (!response.success) {
+        expect(response.error.statusCode).toBe(400);
+        expect(response.error.message).toBe(
+          'Producer and waste collection section is not complete',
+        );
       }
     });
   });

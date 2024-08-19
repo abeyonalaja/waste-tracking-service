@@ -19,6 +19,7 @@ import {
   getDraftReceiverAddressDetails,
   setDraftReceiverAddressDetails,
   deleteDraftSicCode,
+  setDraftProducerConfirmation,
 } from './uk-waste-movements-submission.backend';
 import {
   BadRequestError,
@@ -42,6 +43,7 @@ import {
   validateSetPartialDraftCarrierAddressRequest,
   validateSetDraftReceiverAddressRequest,
   validateSetPartialDraftReceiverAddressRequest,
+  validateSetDraftProducerConfirmationRequest,
 } from './uk-waste-movements-submission.validation';
 
 export default class UkwmSubmissionPlugin {
@@ -644,6 +646,41 @@ export default class UkwmSubmissionPlugin {
         } catch (err) {
           if (err instanceof CustomError) {
             return res.status(err.statusCode).json({ message: err.message });
+          }
+          console.log('Unknown error', { error: err });
+          return res
+            .status(500)
+            .jsonp(
+              new InternalServerError('An internal server error occurred'),
+            );
+        }
+      },
+    );
+
+    this.server.put(
+      `${this.prefix}/drafts/:id/producer-confirmation`,
+      async (req, res) => {
+        try {
+          if (!validateSetDraftProducerConfirmationRequest(req.body)) {
+            return res.status(400).jsonp(new BadRequestError('Bad Request'));
+          }
+          const request =
+            req.body as dto.UkwmSetDraftProducerConfirmationRequest;
+          const user = req.user as User;
+          const result = await setDraftProducerConfirmation({
+            id: req.params.id,
+            accountId: user.credentials.accountId,
+            isConfirmed: request.isConfirmed,
+          });
+          return res.status(200).json(result);
+        } catch (err) {
+          if (err instanceof CustomError) {
+            console.log('CustomError', err);
+            return res.status(err.statusCode).json({
+              statusCode: err.statusCode,
+              error: err.name,
+              message: err.message,
+            });
           }
           console.log('Unknown error', { error: err });
           return res

@@ -19,6 +19,7 @@ import {
   GetDraftReceiverAddressDetailsRequest,
   SetDraftReceiverAddressDetailsRequest,
   DeleteDraftSicCodeRequest,
+  SetDraftProducerConfirmationRequest,
 } from '@wts/api/uk-waste-movements';
 import Ajv from 'ajv/dist/jtd';
 
@@ -134,3 +135,8 @@ export const validateGetDraftReceiverAddressDetailsRequest =
   );
 export const validateDeleteDraftSicCodeRequest =
   ajv.compile<DeleteDraftSicCodeRequest>(draftSchema.deleteDraftSicCodeRequest);
+
+export const setDraftProducerConfirmationRequest =
+  ajv.compile<SetDraftProducerConfirmationRequest>(
+    draftSchema.setDraftProducerConfirmationRequest,
+  );

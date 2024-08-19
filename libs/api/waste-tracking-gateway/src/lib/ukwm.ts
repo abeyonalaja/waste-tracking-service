@@ -217,17 +217,15 @@ export interface UkwmDraftWasteCollection {
   address: UkwmDraftAddress;
 }
 
-export type UkwmProducerAndWasteCollectionDetail =
-  | { status: 'NotStarted' }
-  | ({ status: 'Started' } & Partial<{
-      producer: UkwmDraftProducer;
-      wasteCollection: UkwmDraftWasteCollection;
-    }>)
-  | {
-      status: 'Complete';
-      producer: UkwmDraftProducer;
-      wasteCollection: UkwmDraftWasteCollection;
-    };
+export interface UkwmDraftSectionConfirmation {
+  status: 'NotStarted' | 'InProgress' | 'Complete';
+}
+
+export interface UkwmProducerAndWasteCollectionDetail {
+  producer: UkwmDraftProducer;
+  wasteCollection: UkwmDraftWasteCollection;
+  confimation: UkwmDraftSectionConfirmation;
+}
 
 export interface UkwmSubmissionDeclaration {
   declarationTimestamp: Date;
@@ -311,3 +309,7 @@ export type UkwmGetDraftReceiverAddressDetailsResponse = UkwmDraftAddress;
 export type UkwmSetDraftReceiverAddressDetailsRequest = UkwmAddress;
 
 export type UkwmDeleteDraftSicCodeResponse = string[];
+
+export interface UkwmSetDraftProducerConfirmationRequest {
+  isConfirmed: boolean;
+}

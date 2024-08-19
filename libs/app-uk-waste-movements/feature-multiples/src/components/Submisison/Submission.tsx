@@ -196,10 +196,21 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
           summary="The waste producer and collection of the waste details."
           sections={sections}
           toggle={toggleSection}
-          status={data.producerAndCollection.status}
-        >
-          {data.producerAndCollection.status === 'Complete' &&
+          status={
             data.producerAndCollection.producer.address.status === 'Complete' &&
+            data.producerAndCollection.producer.contact.status === 'Complete' &&
+            data.producerAndCollection.producer.sicCodes.status ===
+              'Complete' &&
+            data.producerAndCollection.wasteCollection.address.status ===
+              'Complete' &&
+            data.producerAndCollection.wasteCollection.wasteSource.status ===
+              'Complete' &&
+            data.producerAndCollection.confimation.status === 'Complete'
+              ? 'Complete'
+              : 'Incomplete'
+          }
+        >
+          {data.producerAndCollection.producer.address.status === 'Complete' &&
             data.producerAndCollection.producer.contact.status === 'Complete' &&
             data.producerAndCollection.producer.sicCodes.status ===
               'Complete' &&

@@ -44,6 +44,12 @@ export interface UkwmDeleteSicCodeRef {
   code: string;
 }
 
+export interface UkwmDraftConfrimationRef {
+  id: string;
+  accountId: string;
+  isConfirmed: boolean;
+}
+
 const submissions: UkwmSubmission[] = [...Array(155).keys()].map((i) => ({
   id: uuidv4(),
   transactionId: `WM24_${i.toString().padStart(3, '0')}9ACAD`,
@@ -246,7 +252,6 @@ export function createDraft(
   const draft: UkwmDraft = {
     id: uuidv4(),
     producerAndCollection: {
-      status: 'Started',
       producer: {
         contact: {
           status: 'NotStarted',
@@ -255,7 +260,7 @@ export function createDraft(
           status: 'NotStarted',
         },
         sicCodes: {
-          status: 'NotStarted',
+          status: 'Complete',
           values: [],
         },
         reference: reference,
@@ -267,6 +272,9 @@ export function createDraft(
         wasteSource: {
           status: 'NotStarted',
         },
+      },
+      confimation: {
+        status: 'NotStarted',
       },
     },
     carrier: {
@@ -324,15 +332,9 @@ export function getDraftProducerAddressDetails({
   if (draft === undefined) {
     return Promise.reject(new NotFoundError('Draft not found.'));
   }
-  if (
-    draft.producerAndCollection.status !== 'NotStarted' &&
-    draft.producerAndCollection.producer
-  ) {
-    return Promise.resolve(draft.producerAndCollection.producer.address);
-  } else {
-    return Promise.resolve(undefined);
-  }
+  return Promise.resolve(draft.producerAndCollection.producer.address);
 }
+
 export function setDraftProducerAddressDetails(
   ref: UkwmSubmissionRef,
   value: Partial<UkwmAddress> | UkwmAddress,
@@ -348,51 +350,47 @@ export function setDraftProducerAddressDetails(
   if (draft === undefined) {
     return Promise.reject(new NotFoundError('Draft not found.'));
   }
-  if (
-    draft.producerAndCollection.status !== 'NotStarted' &&
-    draft.producerAndCollection.producer
-  ) {
-    if (saveAsDraft) {
-      const partialAddressDetailsValidationResult =
-        ukwmValidation.validationRules.validatePartialAddressDetails(
-          value as Partial<UkwmAddress>,
-          'Producer',
-        );
 
-      if (!partialAddressDetailsValidationResult.valid) {
-        return Promise.reject(
-          new BadRequestError(
-            'Validation error',
-            partialAddressDetailsValidationResult.errors,
-          ),
-        );
-      }
-      draft.producerAndCollection.producer.address = {
-        status: 'Started',
-        ...(partialAddressDetailsValidationResult.value as Partial<UkwmAddress>),
-      };
-    } else {
-      value = value as UkwmAddress;
+  if (saveAsDraft) {
+    const partialAddressDetailsValidationResult =
+      ukwmValidation.validationRules.validatePartialAddressDetails(
+        value as Partial<UkwmAddress>,
+        'Producer',
+      );
 
-      const addressDetailsValidationResult =
-        ukwmValidation.validationRules.validateAddressDetails(
-          value as UkwmAddress,
-          'Producer',
-        );
-
-      if (!addressDetailsValidationResult.valid) {
-        return Promise.reject(
-          new BadRequestError(
-            'Validation error',
-            addressDetailsValidationResult.errors,
-          ),
-        );
-      }
-      draft.producerAndCollection.producer.address = {
-        status: 'Complete',
-        ...(addressDetailsValidationResult.value as UkwmAddress),
-      };
+    if (!partialAddressDetailsValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation error',
+          partialAddressDetailsValidationResult.errors,
+        ),
+      );
     }
+    draft.producerAndCollection.producer.address = {
+      status: 'Started',
+      ...(partialAddressDetailsValidationResult.value as Partial<UkwmAddress>),
+    };
+  } else {
+    value = value as UkwmAddress;
+
+    const addressDetailsValidationResult =
+      ukwmValidation.validationRules.validateAddressDetails(
+        value as UkwmAddress,
+        'Producer',
+      );
+
+    if (!addressDetailsValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation error',
+          addressDetailsValidationResult.errors,
+        ),
+      );
+    }
+    draft.producerAndCollection.producer.address = {
+      status: 'Complete',
+      ...(addressDetailsValidationResult.value as UkwmAddress),
+    };
   }
   return Promise.resolve();
 }
@@ -407,14 +405,8 @@ export function getDraftProducerContactDetail({
   if (draft === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
-  if (
-    (draft.producerAndCollection.status === 'Started' ||
-      draft.producerAndCollection.status === 'Complete') &&
-    draft.producerAndCollection.producer
-  ) {
-    return Promise.resolve(draft.producerAndCollection.producer.contact);
-  }
-  return Promise.resolve({ status: 'NotStarted' });
+
+  return Promise.resolve(draft.producerAndCollection.producer.contact);
 }
 
 export function setDraftProducerContactDetail(
@@ -466,13 +458,8 @@ export function setDraftProducerContactDetail(
     ...value,
   };
 
-  if (
-    draft.producerAndCollection.status === 'Started' ||
-    draft.producerAndCollection.status === 'Complete'
-  ) {
-    if (draft.producerAndCollection.producer) {
-      draft.producerAndCollection.producer.contact = draftContact;
-    }
+  if (draft.producerAndCollection.producer) {
+    draft.producerAndCollection.producer.contact = draftContact;
   }
 
   return Promise.resolve();
@@ -488,16 +475,9 @@ export function getDraftWasteSource({
   if (draft === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
-  if (
-    (draft.producerAndCollection.status === 'Started' ||
-      draft.producerAndCollection.status === 'Complete') &&
-    draft.producerAndCollection.wasteCollection
-  ) {
-    return Promise.resolve(
-      draft.producerAndCollection.wasteCollection.wasteSource,
-    );
-  }
-  return Promise.resolve({ status: 'NotStarted' });
+  return Promise.resolve(
+    draft.producerAndCollection.wasteCollection.wasteSource,
+  );
 }
 
 export function setDraftWasteSource(ref: UkwmSetWasteSourceRef): Promise<void> {
@@ -519,17 +499,14 @@ export function setDraftWasteSource(ref: UkwmSetWasteSourceRef): Promise<void> {
       ),
     );
   }
-  if (
-    draft.producerAndCollection.status === 'Started' ||
-    draft.producerAndCollection.status === 'Complete'
-  ) {
-    if (draft.producerAndCollection.wasteCollection) {
-      draft.producerAndCollection.wasteCollection.wasteSource = {
-        status: 'Complete',
-        value: wasteSource,
-      };
-    }
+
+  if (draft.producerAndCollection.wasteCollection) {
+    draft.producerAndCollection.wasteCollection.wasteSource = {
+      status: 'Complete',
+      value: wasteSource,
+    };
   }
+
   return Promise.resolve();
 }
 
@@ -546,14 +523,8 @@ export function getDraftWasteCollectionAddressDetails({
   if (draft === undefined) {
     return Promise.reject(new NotFoundError('Draft not found.'));
   }
-  if (
-    draft.producerAndCollection.status !== 'NotStarted' &&
-    draft.producerAndCollection.wasteCollection
-  ) {
-    return Promise.resolve(draft.producerAndCollection.wasteCollection.address);
-  } else {
-    return Promise.resolve(undefined);
-  }
+
+  return Promise.resolve(draft.producerAndCollection.wasteCollection.address);
 }
 export function setDraftWasteCollectionAddressDetails(
   ref: UkwmSubmissionRef,
@@ -570,52 +541,48 @@ export function setDraftWasteCollectionAddressDetails(
   if (draft === undefined) {
     return Promise.reject(new NotFoundError('Draft not found.'));
   }
-  if (
-    draft.producerAndCollection.status !== 'NotStarted' &&
-    draft.producerAndCollection.wasteCollection
-  ) {
-    if (saveAsDraft) {
-      const partialAddressDetailsValidationResult =
-        ukwmValidation.validationRules.validatePartialAddressDetails(
-          value as Partial<UkwmAddress>,
-          'Waste Collection',
-        );
+  if (saveAsDraft) {
+    const partialAddressDetailsValidationResult =
+      ukwmValidation.validationRules.validatePartialAddressDetails(
+        value as Partial<UkwmAddress>,
+        'Waste Collection',
+      );
 
-      if (!partialAddressDetailsValidationResult.valid) {
-        return Promise.reject(
-          new BadRequestError(
-            'Validation error',
-            partialAddressDetailsValidationResult.errors,
-          ),
-        );
-      }
-      draft.producerAndCollection.wasteCollection.address = {
-        status: 'Started',
-        ...(partialAddressDetailsValidationResult.value as Partial<UkwmAddress>),
-      };
-    } else {
-      value = value as UkwmAddress;
-
-      const addressDetailsValidationResult =
-        ukwmValidation.validationRules.validateAddressDetails(
-          value as UkwmAddress,
-          'Waste Collection',
-        );
-
-      if (!addressDetailsValidationResult.valid) {
-        return Promise.reject(
-          new BadRequestError(
-            'Validation error',
-            addressDetailsValidationResult.errors,
-          ),
-        );
-      }
-      draft.producerAndCollection.wasteCollection.address = {
-        status: 'Complete',
-        ...(addressDetailsValidationResult.value as UkwmAddress),
-      };
+    if (!partialAddressDetailsValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation error',
+          partialAddressDetailsValidationResult.errors,
+        ),
+      );
     }
+    draft.producerAndCollection.wasteCollection.address = {
+      status: 'Started',
+      ...(partialAddressDetailsValidationResult.value as Partial<UkwmAddress>),
+    };
+  } else {
+    value = value as UkwmAddress;
+
+    const addressDetailsValidationResult =
+      ukwmValidation.validationRules.validateAddressDetails(
+        value as UkwmAddress,
+        'Waste Collection',
+      );
+
+    if (!addressDetailsValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation error',
+          addressDetailsValidationResult.errors,
+        ),
+      );
+    }
+    draft.producerAndCollection.wasteCollection.address = {
+      status: 'Complete',
+      ...(addressDetailsValidationResult.value as UkwmAddress),
+    };
   }
+
   return Promise.resolve();
 }
 
@@ -629,14 +596,7 @@ export function getDraftSicCodes({
   if (draft === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
-  if (
-    (draft.producerAndCollection.status === 'Started' ||
-      draft.producerAndCollection.status === 'Complete') &&
-    draft.producerAndCollection.producer
-  ) {
-    return Promise.resolve(draft.producerAndCollection.producer.sicCodes);
-  }
-  return Promise.resolve({ status: 'NotStarted', values: [] });
+  return Promise.resolve(draft.producerAndCollection.producer.sicCodes);
 }
 
 export function createDraftSicCode(ref: UkwmCreateSicCodeRef): Promise<string> {
@@ -648,30 +608,22 @@ export function createDraftSicCode(ref: UkwmCreateSicCodeRef): Promise<string> {
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
 
-  if (
-    (draft.producerAndCollection.status === 'Complete' ||
-      draft.producerAndCollection.status === 'Started') &&
-    draft.producerAndCollection.producer
-  ) {
-    const draftSicCodesList =
-      draft.producerAndCollection.producer.sicCodes.values;
-    const sicCodesValidationResult =
-      ukwmValidation.validationRules.validateSicCodesSection(
-        sicCode,
-        draftSicCodesList,
-        db.sicCodes,
-      );
-    if (!sicCodesValidationResult.valid) {
-      return Promise.reject(
-        new BadRequestError(
-          'Validation error',
-          sicCodesValidationResult.errors,
-        ),
-      );
-    }
-    draft.producerAndCollection.producer.sicCodes.values.push(sicCode);
-    draft.producerAndCollection.producer.sicCodes.status = 'Complete';
+  const draftSicCodesList =
+    draft.producerAndCollection.producer.sicCodes.values;
+  const sicCodesValidationResult =
+    ukwmValidation.validationRules.validateSicCodesSection(
+      sicCode,
+      draftSicCodesList,
+      db.sicCodes,
+    );
+  if (!sicCodesValidationResult.valid) {
+    return Promise.reject(
+      new BadRequestError('Validation error', sicCodesValidationResult.errors),
+    );
   }
+  draft.producerAndCollection.producer.sicCodes.values.push(sicCode);
+  draft.producerAndCollection.producer.sicCodes.status = 'Complete';
+
   return Promise.resolve(sicCode);
 }
 
@@ -841,35 +793,55 @@ export async function deleteDraftSicCode({
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
 
-  if (draft.producerAndCollection.status === 'NotStarted') {
+  const index = draft.producerAndCollection.producer.sicCodes.values.findIndex(
+    (c) => c === code,
+  );
+
+  if (index === -1) {
+    return Promise.reject(new NotFoundError('SIC Code not found.'));
+  }
+
+  draft.producerAndCollection.producer.sicCodes.values.splice(index, 1);
+
+  if (draft.producerAndCollection.producer.sicCodes.values.length === 0) {
+    draft.producerAndCollection.producer.sicCodes = {
+      status: 'NotStarted',
+      values: [],
+    };
+  }
+  return Promise.resolve(draft.producerAndCollection.producer.sicCodes.values);
+}
+
+export function setDraftProducerConfirmation(
+  ref: UkwmDraftConfrimationRef,
+): Promise<void> {
+  const { id, accountId, isConfirmed } = ref;
+  const draft = db.ukwmDrafts.find(
+    (d) => d.id == id && d.accountId == accountId,
+  );
+  if (draft === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
 
   if (
-    (draft.producerAndCollection.status === 'Complete' ||
-      draft.producerAndCollection.status === 'Started') &&
-    draft.producerAndCollection.producer
+    !draft.producerAndCollection.producer.reference ||
+    draft.producerAndCollection.producer.contact.status !== 'Complete' ||
+    draft.producerAndCollection.producer.sicCodes.status !== 'Complete' ||
+    draft.producerAndCollection.wasteCollection.address.status !== 'Complete' ||
+    draft.producerAndCollection.wasteCollection.wasteSource.status !==
+      'Complete'
   ) {
-    const index =
-      draft.producerAndCollection.producer.sicCodes.values.findIndex(
-        (c) => c === code,
-      );
-
-    if (index === -1) {
-      return Promise.reject(new NotFoundError('SIC Code not found.'));
-    }
-
-    draft.producerAndCollection.producer.sicCodes.values.splice(index, 1);
-
-    if (draft.producerAndCollection.producer.sicCodes.values.length === 0) {
-      draft.producerAndCollection.producer.sicCodes = {
-        status: 'NotStarted',
-        values: [],
-      };
-    }
-    return Promise.resolve(
-      draft.producerAndCollection.producer.sicCodes.values,
+    console.log('here, errrrrrrrr');
+    return Promise.reject(
+      new BadRequestError(
+        'Producer and waste collection section is not complete',
+      ),
     );
   }
-  return Promise.reject(new NotFoundError('SIC Code not found.'));
+
+  draft.producerAndCollection.confimation.status = isConfirmed
+    ? 'Complete'
+    : 'InProgress';
+
+  return Promise.resolve();
 }

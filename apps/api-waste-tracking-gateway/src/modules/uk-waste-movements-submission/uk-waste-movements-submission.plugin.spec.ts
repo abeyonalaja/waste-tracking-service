@@ -3,6 +3,7 @@ import {
   CreateDraftRef,
   CreateSicCodeRef,
   DeleteSicCodeRef,
+  DraftConfrimationRef,
   SetWasteSourceRef,
   SubmissionRef,
   UkWasteMovementsSubmissionBackend,
@@ -107,6 +108,10 @@ const mockBackend = {
         accountId,
         code,
       }: DeleteSicCodeRef) => Promise<UkwmDeleteDraftSicCodeResponse>
+    >(),
+  setProducerConfirmation:
+    jest.fn<
+      ({ id, accountId, isConfirmed }: DraftConfrimationRef) => Promise<void>
     >(),
 };
 
@@ -398,6 +403,19 @@ describe('UkWasteMovementsSubmissionPlugin', () => {
       };
 
       mockBackend.deleteDraftSicCode.mockRejectedValue(Boom.badRequest());
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe('PUT /drafts/{id}/producer-confirmation', () => {
+    it('Responds with 400 if invalid request is received in the payload', async () => {
+      const options = {
+        method: 'PUT',
+        url: `/ukwm/drafts/{id}/producer-confirmation`,
+      };
+
+      mockBackend.setProducerConfirmation.mockRejectedValue(Boom.badRequest());
       const response = await app.inject(options);
       expect(response.statusCode).toBe(400);
     });

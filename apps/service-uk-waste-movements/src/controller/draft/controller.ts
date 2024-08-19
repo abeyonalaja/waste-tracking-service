@@ -466,7 +466,6 @@ export default class SubmissionController {
         };
 
         const producerAndCollection: api.ProducerAndWasteCollectionDetail = {
-          status: 'Complete',
           producer: {
             reference: s.producer.reference,
             sicCodes: s.producer.sicCode
@@ -503,6 +502,9 @@ export default class SubmissionController {
               s.wasteCollection.brokerRegistrationNumber,
             carrierRegistrationNumber:
               s.wasteCollection.carrierRegistrationNumber,
+          },
+          confimation: {
+            status: 'Complete',
           },
         };
 
@@ -630,7 +632,6 @@ export default class SubmissionController {
         const draft: Draft = {
           id: uuidv4(),
           producerAndCollection: {
-            status: 'Started',
             producer: {
               contact: {
                 status: 'NotStarted',
@@ -651,6 +652,9 @@ export default class SubmissionController {
               wasteSource: {
                 status: 'NotStarted',
               },
+            },
+            confimation: {
+              status: 'NotStarted',
             },
           },
           carrier: {
@@ -719,52 +723,49 @@ export default class SubmissionController {
         return fromBoom(Boom.notFound());
       }
 
-      if (
-        draft.producerAndCollection.status !== 'NotStarted' &&
-        draft.producerAndCollection.producer
-      ) {
-        if (saveAsDraft) {
-          const partialProducerAddressDetailsValidation =
-            ukwmValidation.validationRules.validatePartialAddressDetails(
-              value,
-              'Producer',
-            );
+      if (saveAsDraft) {
+        const partialProducerAddressDetailsValidation =
+          ukwmValidation.validationRules.validatePartialAddressDetails(
+            value,
+            'Producer',
+          );
 
-          if (!partialProducerAddressDetailsValidation.valid) {
-            return fromBoom(
-              Boom.badRequest(
-                'Validation failed',
-                partialProducerAddressDetailsValidation.errors,
-              ),
-            );
-          }
-
-          draft.producerAndCollection.producer.address = {
-            status: 'Started',
-            ...value,
-          };
-        } else {
-          const producerAddressDetailsValidation =
-            ukwmValidation.validationRules.validateAddressDetails(
-              value,
-              'Producer',
-            );
-
-          if (!producerAddressDetailsValidation.valid) {
-            return fromBoom(
-              Boom.badRequest(
-                'Validation failed',
-                producerAddressDetailsValidation.errors,
-              ),
-            );
-          }
-
-          draft.producerAndCollection.producer.address = {
-            status: 'Complete',
-            ...producerAddressDetailsValidation.value,
-          };
+        if (!partialProducerAddressDetailsValidation.valid) {
+          return fromBoom(
+            Boom.badRequest(
+              'Validation failed',
+              partialProducerAddressDetailsValidation.errors,
+            ),
+          );
         }
+
+        draft.producerAndCollection.producer.address = {
+          status: 'Started',
+          ...value,
+        };
+      } else {
+        const producerAddressDetailsValidation =
+          ukwmValidation.validationRules.validateAddressDetails(
+            value,
+            'Producer',
+          );
+
+        if (!producerAddressDetailsValidation.valid) {
+          return fromBoom(
+            Boom.badRequest(
+              'Validation failed',
+              producerAddressDetailsValidation.errors,
+            ),
+          );
+        }
+
+        draft.producerAndCollection.producer.address = {
+          status: 'Complete',
+          ...producerAddressDetailsValidation.value,
+        };
       }
+
+      draft.producerAndCollection.confimation.status = 'NotStarted';
 
       await this.repository.saveRecord(
         draftsContainerName,
@@ -797,12 +798,7 @@ export default class SubmissionController {
         return fromBoom(Boom.notFound());
       }
 
-      if (
-        draft.producerAndCollection.status !== 'NotStarted' &&
-        draft.producerAndCollection.producer
-      ) {
-        return success(draft.producerAndCollection.producer.address);
-      }
+      return success(draft.producerAndCollection.producer.address);
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
@@ -828,15 +824,7 @@ export default class SubmissionController {
         return fromBoom(Boom.notFound());
       }
 
-      if (
-        (draft.producerAndCollection.status === 'Started' ||
-          draft.producerAndCollection.status === 'Complete') &&
-        draft.producerAndCollection.producer
-      ) {
-        return success(draft.producerAndCollection.producer.contact);
-      } else {
-        return success({ status: 'NotStarted' });
-      }
+      return success(draft.producerAndCollection.producer.contact);
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
@@ -894,14 +882,12 @@ export default class SubmissionController {
       const draftContact: api.DraftContact = saveAsDraft
         ? { status: 'Started', ...(value as Promise<api.Contact>) }
         : { status: 'Complete', ...(value as api.Contact) };
-      if (
-        draft.producerAndCollection.status === 'Started' ||
-        draft.producerAndCollection.status === 'Complete'
-      ) {
-        if (draft.producerAndCollection.producer) {
-          draft.producerAndCollection.producer.contact = draftContact;
-        }
+
+      if (draft.producerAndCollection.producer) {
+        draft.producerAndCollection.producer.contact = draftContact;
       }
+
+      draft.producerAndCollection.confimation.status = 'NotStarted';
 
       await this.repository.saveRecord(
         draftsContainerName,
@@ -934,15 +920,7 @@ export default class SubmissionController {
         return fromBoom(Boom.notFound());
       }
 
-      if (
-        (draft.producerAndCollection.status === 'Started' ||
-          draft.producerAndCollection.status === 'Complete') &&
-        draft.producerAndCollection.wasteCollection
-      ) {
-        return success(draft.producerAndCollection.wasteCollection.wasteSource);
-      } else {
-        return success({ status: 'NotStarted' });
-      }
+      return success(draft.producerAndCollection.wasteCollection.wasteSource);
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
@@ -978,17 +956,14 @@ export default class SubmissionController {
         return fromBoom(boom);
       }
 
-      if (
-        draft.producerAndCollection.status === 'Started' ||
-        draft.producerAndCollection.status === 'Complete'
-      ) {
-        if (draft.producerAndCollection.wasteCollection) {
-          draft.producerAndCollection.wasteCollection.wasteSource = {
-            status: 'Complete',
-            value: wasteSource,
-          };
-        }
+      if (draft.producerAndCollection.wasteCollection) {
+        draft.producerAndCollection.wasteCollection.wasteSource = {
+          status: 'Complete',
+          value: wasteSource,
+        };
       }
+
+      draft.producerAndCollection.confimation.status = 'NotStarted';
 
       await this.repository.saveRecord(
         draftsContainerName,
@@ -1021,52 +996,49 @@ export default class SubmissionController {
         return fromBoom(Boom.notFound());
       }
 
-      if (
-        draft.producerAndCollection.status !== 'NotStarted' &&
-        draft.producerAndCollection.wasteCollection
-      ) {
-        if (saveAsDraft) {
-          const partialWasteCollectionAddressDetailsValidation =
-            ukwmValidation.validationRules.validatePartialAddressDetails(
-              value,
-              'Waste Collection',
-            );
+      if (saveAsDraft) {
+        const partialWasteCollectionAddressDetailsValidation =
+          ukwmValidation.validationRules.validatePartialAddressDetails(
+            value,
+            'Waste Collection',
+          );
 
-          if (!partialWasteCollectionAddressDetailsValidation.valid) {
-            return fromBoom(
-              Boom.badRequest(
-                'Validation failed',
-                partialWasteCollectionAddressDetailsValidation.errors,
-              ),
-            );
-          }
-
-          draft.producerAndCollection.wasteCollection.address = {
-            status: 'Started',
-            ...value,
-          };
-        } else {
-          const wasteCollectionAddressDetailsValidation =
-            ukwmValidation.validationRules.validateAddressDetails(
-              value,
-              'Waste Collection',
-            );
-
-          if (!wasteCollectionAddressDetailsValidation.valid) {
-            return fromBoom(
-              Boom.badRequest(
-                'Validation failed',
-                wasteCollectionAddressDetailsValidation.errors,
-              ),
-            );
-          }
-
-          draft.producerAndCollection.wasteCollection.address = {
-            status: 'Complete',
-            ...wasteCollectionAddressDetailsValidation.value,
-          };
+        if (!partialWasteCollectionAddressDetailsValidation.valid) {
+          return fromBoom(
+            Boom.badRequest(
+              'Validation failed',
+              partialWasteCollectionAddressDetailsValidation.errors,
+            ),
+          );
         }
+
+        draft.producerAndCollection.wasteCollection.address = {
+          status: 'Started',
+          ...value,
+        };
+      } else {
+        const wasteCollectionAddressDetailsValidation =
+          ukwmValidation.validationRules.validateAddressDetails(
+            value,
+            'Waste Collection',
+          );
+
+        if (!wasteCollectionAddressDetailsValidation.valid) {
+          return fromBoom(
+            Boom.badRequest(
+              'Validation failed',
+              wasteCollectionAddressDetailsValidation.errors,
+            ),
+          );
+        }
+
+        draft.producerAndCollection.wasteCollection.address = {
+          status: 'Complete',
+          ...wasteCollectionAddressDetailsValidation.value,
+        };
       }
+
+      draft.producerAndCollection.confimation.status = 'NotStarted';
 
       await this.repository.saveRecord(
         draftsContainerName,
@@ -1099,12 +1071,7 @@ export default class SubmissionController {
         return fromBoom(Boom.notFound());
       }
 
-      if (
-        draft.producerAndCollection.status !== 'NotStarted' &&
-        draft.producerAndCollection.wasteCollection
-      ) {
-        return success(draft.producerAndCollection.wasteCollection.address);
-      }
+      return success(draft.producerAndCollection.wasteCollection.address);
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
@@ -1130,29 +1097,25 @@ export default class SubmissionController {
         return fromBoom(Boom.notFound());
       }
 
-      if (
-        (draft.producerAndCollection.status === 'Complete' ||
-          draft.producerAndCollection.status === 'Started') &&
-        draft.producerAndCollection.producer
-      ) {
-        const draftSicCodesList =
-          draft.producerAndCollection.producer.sicCodes.values;
-        const sicCodesValidationResult =
-          ukwmValidation.validationRules.validateSicCodesSection(
-            sicCode,
-            draftSicCodesList,
-            this.referenceData.sicCodes,
-          );
-        if (!sicCodesValidationResult.valid) {
-          const boom = Boom.badRequest(
-            'Validation failed',
-            sicCodesValidationResult.errors,
-          );
-          return fromBoom(boom);
-        }
-        draft.producerAndCollection.producer.sicCodes.values.push(sicCode);
-        draft.producerAndCollection.producer.sicCodes.status = 'Complete';
+      const draftSicCodesList =
+        draft.producerAndCollection.producer.sicCodes.values;
+      const sicCodesValidationResult =
+        ukwmValidation.validationRules.validateSicCodesSection(
+          sicCode,
+          draftSicCodesList,
+          this.referenceData.sicCodes,
+        );
+      if (!sicCodesValidationResult.valid) {
+        const boom = Boom.badRequest(
+          'Validation failed',
+          sicCodesValidationResult.errors,
+        );
+        return fromBoom(boom);
       }
+      draft.producerAndCollection.producer.sicCodes.values.push(sicCode);
+      draft.producerAndCollection.producer.sicCodes.status = 'Complete';
+
+      draft.producerAndCollection.confimation.status = 'NotStarted';
 
       await this.repository.saveRecord(
         draftsContainerName,
@@ -1185,15 +1148,58 @@ export default class SubmissionController {
         return fromBoom(Boom.notFound());
       }
 
-      if (
-        (draft.producerAndCollection.status === 'Started' ||
-          draft.producerAndCollection.status === 'Complete') &&
-        draft.producerAndCollection.producer
-      ) {
-        return success(draft.producerAndCollection.producer.sicCodes);
-      } else {
-        return success({ status: 'NotStarted', values: [] });
+      return success(draft.producerAndCollection.producer.sicCodes);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
       }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  setDraftProducerConfirmation: Handler<
+    api.SetDraftProducerConfirmationRequest,
+    api.SetDraftProducerConfirmationResponse
+  > = async ({ id, accountId, isConfirmed }) => {
+    try {
+      const draft = (await this.repository.getDraft(
+        draftsContainerName,
+        id,
+        accountId,
+      )) as api.Draft;
+
+      if (!draft) {
+        return fromBoom(Boom.notFound());
+      }
+
+      if (
+        !draft.producerAndCollection.producer.reference ||
+        draft.producerAndCollection.producer.contact.status !== 'Complete' ||
+        draft.producerAndCollection.producer.sicCodes.status !== 'Complete' ||
+        draft.producerAndCollection.wasteCollection.address.status !==
+          'Complete' ||
+        draft.producerAndCollection.wasteCollection.wasteSource.status !==
+          'Complete'
+      ) {
+        return fromBoom(
+          Boom.badRequest(
+            'Producer and waste collection section is not complete',
+          ),
+        );
+      }
+
+      draft.producerAndCollection.confimation.status = isConfirmed
+        ? 'Complete'
+        : 'InProgress';
+
+      await this.repository.saveRecord(
+        draftsContainerName,
+        { ...draft },
+        accountId,
+      );
+      return success(undefined);
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);
@@ -1417,42 +1423,33 @@ export default class SubmissionController {
         return fromBoom(Boom.notFound());
       }
 
-      if (draft.producerAndCollection.status === 'NotStarted') {
+      const index =
+        draft.producerAndCollection.producer.sicCodes.values.findIndex(
+          (c) => c === code,
+        );
+
+      if (index === -1) {
         return fromBoom(Boom.notFound());
       }
 
-      if (
-        (draft.producerAndCollection.status === 'Complete' ||
-          draft.producerAndCollection.status === 'Started') &&
-        draft.producerAndCollection.producer
-      ) {
-        const index =
-          draft.producerAndCollection.producer.sicCodes.values.findIndex(
-            (c) => c === code,
-          );
+      draft.producerAndCollection.producer.sicCodes.values.splice(index, 1);
 
-        if (index === -1) {
-          return fromBoom(Boom.notFound());
-        }
-
-        draft.producerAndCollection.producer.sicCodes.values.splice(index, 1);
-
-        if (draft.producerAndCollection.producer.sicCodes.values.length === 0) {
-          draft.producerAndCollection.producer.sicCodes = {
-            status: 'NotStarted',
-            values: [],
-          };
-        }
-
-        await this.repository.saveRecord(
-          draftsContainerName,
-          { ...draft },
-          accountId,
-        );
-
-        return success(draft.producerAndCollection.producer.sicCodes.values);
+      if (draft.producerAndCollection.producer.sicCodes.values.length === 0) {
+        draft.producerAndCollection.producer.sicCodes = {
+          status: 'NotStarted',
+          values: [],
+        };
       }
-      return fromBoom(Boom.notFound());
+
+      draft.producerAndCollection.confimation.status = 'NotStarted';
+
+      await this.repository.saveRecord(
+        draftsContainerName,
+        { ...draft },
+        accountId,
+      );
+
+      return success(draft.producerAndCollection.producer.sicCodes.values);
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);

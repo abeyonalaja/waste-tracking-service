@@ -18,6 +18,12 @@ import {
   DraftSicCodes,
   PermitDetails,
   DraftPermitDetails,
+  ProducerAndWasteCollectionDetail,
+  DraftProducer,
+  DraftWasteCollection,
+  DraftWasteSource,
+  DraftSectionConfirmation,
+  SetDraftProducerConfirmationRequest,
 } from './draft.dto';
 
 export const wasteType: JTDSchemaType<WasteTypeDetail> = {
@@ -254,7 +260,7 @@ export const draftSicCodes: JTDSchemaType<DraftSicCodes> = {
   },
 };
 
-export const draftProducer: SchemaObject = {
+export const draftProducer: JTDSchemaType<DraftProducer> = {
   properties: {
     reference: { type: 'string' },
     address: draftAddress,
@@ -264,7 +270,7 @@ export const draftProducer: SchemaObject = {
   optionalProperties: {},
 };
 
-export const draftWasteSource: SchemaObject = {
+export const draftWasteSource: JTDSchemaType<DraftWasteSource> = {
   discriminator: 'status',
   mapping: {
     NotStarted: {
@@ -282,7 +288,7 @@ export const wasteSource: SchemaObject = {
   properties: { wasteSource: { type: 'string' } },
 };
 
-export const draftWasteCollection: SchemaObject = {
+export const draftWasteCollection: JTDSchemaType<DraftWasteCollection> = {
   properties: {
     address: draftAddress,
     wasteSource: draftWasteSource,
@@ -295,18 +301,21 @@ export const draftWasteCollection: SchemaObject = {
   },
 };
 
-export const producerAndWasteCollectionDetail: SchemaObject = {
-  discriminator: 'status',
-  mapping: {
-    NotStarted: { properties: {} },
-    Complete: {
-      properties: {
-        producer: draftProducer,
-        wasteCollection: draftWasteCollection,
-      },
+export const draftSectionConfirmation: JTDSchemaType<DraftSectionConfirmation> =
+  {
+    properties: {
+      status: { enum: ['NotStarted', 'InProgress', 'Complete'] },
     },
-  },
-};
+  };
+
+export const producerAndWasteCollectionDetail: JTDSchemaType<ProducerAndWasteCollectionDetail> =
+  {
+    properties: {
+      producer: draftProducer,
+      wasteCollection: draftWasteCollection,
+      confimation: draftSectionConfirmation,
+    },
+  };
 
 export const draftWasteTransport: JTDSchemaType<DraftModeOfTransport> = {
   discriminator: 'status',
@@ -1143,3 +1152,12 @@ export const deleteDraftSicCodeResponse: SchemaObject = {
     value: { elements: { type: 'string' } },
   },
 };
+
+export const setDraftProducerConfirmationRequest: JTDSchemaType<SetDraftProducerConfirmationRequest> =
+  {
+    properties: {
+      accountId: { type: 'string' },
+      id: { type: 'string' },
+      isConfirmed: { type: 'boolean' },
+    },
+  };

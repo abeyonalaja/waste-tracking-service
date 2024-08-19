@@ -1746,7 +1746,6 @@ export const db: DB = {
         },
       },
       producerAndCollection: {
-        status: 'Complete',
         producer: {
           reference: 'REF123',
           sicCodes: {
@@ -1788,6 +1787,9 @@ export const db: DB = {
             postcode: '5800',
             country: 'Bulgaria',
           },
+        },
+        confimation: {
+          status: 'Complete',
         },
       },
       declaration: {
