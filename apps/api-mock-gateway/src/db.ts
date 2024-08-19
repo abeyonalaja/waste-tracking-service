@@ -1725,22 +1725,24 @@ export const db: DB = {
         },
       },
       receiver: {
-        status: 'Complete',
-        value: {
+        permitDetails: {
+          status: 'Complete',
           authorizationType: 'Waste Management License',
           environmentalPermitNumber: 'EP1234567',
-          contact: {
-            organisationName: 'Waste Management Inc.',
-            name: 'John Doe',
-            email: 'johndoe@example.com',
-            phone: '+1234567890',
-          },
-          address: {
-            addressLine1: '123 Street',
-            townCity: 'Sofia',
-            postcode: '1700',
-            country: 'Bulgaria',
-          },
+        },
+        contact: {
+          status: 'Complete',
+          organisationName: 'Waste Management Inc.',
+          name: 'John Doe',
+          email: 'johndoe@example.com',
+          phone: '+1234567890',
+        },
+        address: {
+          status: 'Complete',
+          addressLine1: '123 Street',
+          townCity: 'Sofia',
+          postcode: '1700',
+          country: 'Bulgaria',
         },
       },
       producerAndCollection: {

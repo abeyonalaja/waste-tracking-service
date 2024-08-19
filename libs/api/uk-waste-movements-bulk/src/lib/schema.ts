@@ -11,6 +11,7 @@ import {
 import {
   Address,
   Contact,
+  PermitDetails,
   WasteTransportationDetail,
   WasteTypeDetail,
   ExpectedWasteCollectionDate,
@@ -60,6 +61,15 @@ const contact: JTDSchemaType<Contact> = {
   },
 };
 
+const permitDetails: JTDSchemaType<PermitDetails> = {
+  properties: {
+    authorizationType: { type: 'string' },
+  },
+  optionalProperties: {
+    environmentalPermitNumber: { type: 'string' },
+  },
+};
+
 export const producer: JTDSchemaType<ProducerDetail> = {
   properties: {
     reference: { type: 'string' },
@@ -101,13 +111,11 @@ export const producerAndCollection: SchemaObject = {
 
 export const receiver: JTDSchemaType<ReceiverDetail> = {
   properties: {
-    authorizationType: { type: 'string' },
+    permitDetails: permitDetails,
     contact: contact,
     address: address,
   },
-  optionalProperties: {
-    environmentalPermitNumber: { type: 'string' },
-  },
+  optionalProperties: {},
 };
 
 export const carrier: JTDSchemaType<CarrierDetail> = {

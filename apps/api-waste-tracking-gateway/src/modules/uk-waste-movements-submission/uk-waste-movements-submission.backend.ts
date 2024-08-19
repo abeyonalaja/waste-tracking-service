@@ -30,6 +30,7 @@ import {
   CreateDraftSicCodeResponse,
   GetDraftSicCodesResponse,
   GetDraftCarrierAddressDetailsResponse,
+  GetDraftReceiverAddressDetailsResponse,
   DeleteDraftSicCodeResponse,
 } from '@wts/api/uk-waste-movements';
 import { DaprUkWasteMovementsClient } from '@wts/client/uk-waste-movements';
@@ -112,6 +113,14 @@ export interface UkWasteMovementsSubmissionBackend {
     saveAsDraft: boolean,
   ): Promise<void>;
   getDraftCarrierAddressDetails({
+    id,
+  }: SubmissionRef): Promise<UkwmDraftAddress | undefined>;
+  setDraftReceiverAddressDetails(
+    ref: SubmissionRef,
+    value: UkwmAddress,
+    saveAsDraft: boolean,
+  ): Promise<void>;
+  getDraftReceiverAddressDetails({
     id,
   }: SubmissionRef): Promise<UkwmDraftAddress | undefined>;
   deleteDraftSicCode({
@@ -472,6 +481,58 @@ export class ServiceUkWasteMovementsSubmissionBackend
     let response: GetDraftCarrierAddressDetailsResponse;
     try {
       response = await this.client.getDraftCarrierAddressDetails({
+        id,
+        accountId,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+    if (response) {
+      if (!response.success) {
+        throw new Boom.Boom(response.error.message, {
+          statusCode: response.error.statusCode,
+        });
+      }
+      return response.value;
+    } else {
+      return response;
+    }
+  }
+
+  async setDraftReceiverAddressDetails(
+    { id, accountId }: SubmissionRef,
+    value: UkwmAddress,
+    saveAsDraft: boolean,
+  ): Promise<void> {
+    let response: Response<void>;
+    try {
+      response = await this.client.setDraftReceiverAddressDetails({
+        id,
+        accountId,
+        value,
+        saveAsDraft,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+        data: response.error.data,
+      });
+    }
+  }
+
+  async getDraftReceiverAddressDetails({
+    id,
+    accountId,
+  }: SubmissionRef): Promise<UkwmDraftAddress | undefined> {
+    let response: GetDraftReceiverAddressDetailsResponse;
+    try {
+      response = await this.client.getDraftReceiverAddressDetails({
         id,
         accountId,
       });

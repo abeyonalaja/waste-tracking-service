@@ -95,22 +95,24 @@ const mockData: UkwmDraft = {
     },
   },
   receiver: {
-    status: 'Complete',
-    value: {
+    permitDetails: {
+      status: 'Complete',
       authorizationType: 'Permit',
       environmentalPermitNumber: 'Permit123',
-      contact: {
-        organisationName: 'Receiver Org',
-        name: 'Receiver Name',
-        email: 'receiver@example.com',
-        phone: '0987654321',
-      },
-      address: {
-        addressLine1: '789 Boulevard',
-        townCity: 'Village',
-        postcode: 'EF56 7GH',
-        country: 'Country',
-      },
+    },
+    contact: {
+      status: 'Complete',
+      organisationName: 'Receiver Org',
+      name: 'Receiver Name',
+      email: 'receiver@example.com',
+      phone: '0987654321',
+    },
+    address: {
+      status: 'Complete',
+      addressLine1: '789 Boulevard',
+      townCity: 'Village',
+      postcode: 'EF56 7GH',
+      country: 'Country',
     },
   },
   declaration: {

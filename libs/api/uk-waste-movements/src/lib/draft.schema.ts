@@ -16,6 +16,8 @@ import {
   DraftAddress,
   DraftModeOfTransport,
   DraftSicCodes,
+  PermitDetails,
+  DraftPermitDetails,
 } from './draft.dto';
 
 export const wasteType: JTDSchemaType<WasteTypeDetail> = {
@@ -143,27 +145,30 @@ const partialContact: JTDSchemaType<Partial<Contact>> = {
   },
 };
 
-export const receiver: SchemaObject = {
+const permitDetails: JTDSchemaType<PermitDetails> = {
   properties: {
-    environmentalPermitNumber: { type: 'string' },
-    contact: contact,
-    address: address,
+    authorizationType: { type: 'string' },
   },
   optionalProperties: {
-    authorizationType: { type: 'string' },
+    environmentalPermitNumber: { type: 'string' },
   },
 };
 
-const draftReceiver: SchemaObject = {
+const draftPermitDetails: JTDSchemaType<DraftPermitDetails> = {
   discriminator: 'status',
   mapping: {
     NotStarted: {
       properties: {},
     },
-    Complete: {
-      properties: {
-        value: receiver,
+    Started: {
+      optionalProperties: {
+        ...permitDetails.properties,
+        ...permitDetails.optionalProperties,
       },
+    },
+    Complete: {
+      properties: permitDetails.properties,
+      optionalProperties: permitDetails.optionalProperties,
     },
   },
 };
@@ -328,6 +333,23 @@ export const draftCarrier: JTDSchemaType<DraftCarrier> = {
     contact: draftContact,
     modeOfTransport: draftWasteTransport,
   },
+};
+
+export const receiver: SchemaObject = {
+  properties: {
+    permitDetails: permitDetails,
+    contact: contact,
+    address: address,
+  },
+};
+
+const draftReceiver: SchemaObject = {
+  properties: {
+    permitDetails: draftPermitDetails,
+    contact: draftContact,
+    address: draftAddress,
+  },
+  optionalProperties: {},
 };
 
 export const declaration: SchemaObject = {
@@ -1060,6 +1082,46 @@ export const getDraftCarrierAddressDetailsResponse: SchemaObject = {
 };
 
 export const setDraftCarrierAddressDetailsResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+  },
+};
+
+export const getDraftReceiverAddressDetailsRequest: SchemaObject = {
+  properties: {
+    accountId: { type: 'string' },
+    id: { type: 'string' },
+  },
+};
+
+export const setDraftReceiverAddressDetailsRequest: SchemaObject = {
+  properties: {
+    accountId: { type: 'string' },
+    id: { type: 'string' },
+    value: address,
+    saveAsDraft: { type: 'boolean' },
+  },
+};
+
+export const setPartialDraftReceiverAddressDetailsRequest: SchemaObject = {
+  properties: {
+    accountId: { type: 'string' },
+    id: { type: 'string' },
+    value: partialAddress,
+    saveAsDraft: { type: 'boolean' },
+  },
+};
+
+export const getDraftReceiverAddressDetailsResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: draftAddress,
+  },
+};
+
+export const setDraftReceiverAddressDetailsResponse: SchemaObject = {
   properties: { success: { type: 'boolean' } },
   optionalProperties: {
     error: errorResponseValue,

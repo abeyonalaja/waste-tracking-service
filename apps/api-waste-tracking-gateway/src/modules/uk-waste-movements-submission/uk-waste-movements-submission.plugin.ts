@@ -16,6 +16,8 @@ import {
   validateCreateDraftSicCodeRequest,
   validateSetDraftCarrierAddressDetailsRequest,
   validateSetPartialDraftCarrierAddressDetailsRequest,
+  validateSetDraftReceiverAddressDetailsRequest,
+  validateSetPartialDraftReceiverAddressDetailsRequest,
 } from './uk-waste-movements-submission.validation';
 
 export interface PluginOptions {
@@ -479,6 +481,74 @@ const plugin: Plugin<PluginOptions> = {
         const request = payload as dto.UkwmSetDraftCarrierAddressDetailsRequest;
         try {
           await backend.setDraftCarrierAddressDetails(
+            {
+              id: params.id,
+              accountId: h.request.auth.credentials.accountId as string,
+            },
+            request,
+            saveAsDraft,
+          );
+          return request;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            err.output.payload.data = err?.data;
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/drafts/{id}/receiver-address',
+      handler: async function ({ params }, h) {
+        try {
+          const value = await backend.getDraftReceiverAddressDetails({
+            id: params.id,
+            accountId: h.request.auth.credentials.accountId as string,
+          });
+          return value as dto.UkwmGetDraftReceiverAddressDetailsResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'PUT',
+      path: '/drafts/{id}/receiver-address',
+      handler: async function ({ params, payload, query }, h) {
+        const saveAsDraftStr = query['saveAsDraft'] as string | undefined;
+
+        if (
+          !saveAsDraftStr ||
+          !['true', 'false'].includes(saveAsDraftStr.toLowerCase())
+        ) {
+          return Boom.badRequest();
+        }
+
+        const saveAsDraft: boolean = saveAsDraftStr.toLowerCase() === 'true';
+        if (!saveAsDraft) {
+          if (!validateSetDraftReceiverAddressDetailsRequest(payload)) {
+            return Boom.badRequest();
+          }
+        } else if (
+          !validateSetPartialDraftReceiverAddressDetailsRequest(payload)
+        ) {
+          return Boom.badRequest();
+        }
+        const request =
+          payload as dto.UkwmSetDraftReceiverAddressDetailsRequest;
+        try {
+          await backend.setDraftReceiverAddressDetails(
             {
               id: params.id,
               accountId: h.request.auth.credentials.accountId as string,

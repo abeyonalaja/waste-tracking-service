@@ -94,8 +94,7 @@ export interface CarrierDetail {
 }
 
 export interface ReceiverDetail {
-  authorizationType: string;
-  environmentalPermitNumber?: string;
+  permitDetails: PermitDetails;
   contact: Contact;
   address: Address;
 }
@@ -354,12 +353,25 @@ export interface WasteTypeDetailFlattened {
   tenthWasteTypePopsConcentrationUnitsString?: string;
 }
 
-export type DraftReceiverDetail =
-  | { status: 'NotStarted' }
+export interface PermitDetails {
+  authorizationType: string;
+  environmentalPermitNumber?: string;
+}
+
+export type DraftPermitDetails =
   | {
-      status: 'Complete';
-      value: ReceiverDetail;
-    };
+      status: 'NotStarted';
+    }
+  | ({
+      status: 'Started';
+    } & Partial<PermitDetails>)
+  | ({ status: 'Complete' } & PermitDetails);
+
+export interface DraftReceiver {
+  permitDetails: DraftPermitDetails;
+  contact: DraftContact;
+  address: DraftAddress;
+}
 
 export type DraftAddress =
   | { status: 'NotStarted' }
@@ -447,7 +459,7 @@ export interface DraftState {
 export interface Draft {
   id: string;
   wasteInformation: WasteInformation;
-  receiver: DraftReceiverDetail;
+  receiver: DraftReceiver;
   producerAndCollection: ProducerAndWasteCollectionDetail;
   carrier: DraftCarrier;
   declaration: DraftDeclaration;
@@ -633,6 +645,27 @@ export type SetDraftCarrierAddressDetailsResponse = Response<void>;
 
 export const setDraftCarrierAddressDetails: Method = {
   name: 'setDraftCarrierAddressDetails',
+};
+
+export type GetDraftReceiverAddressDetailsRequest = IdRequest &
+  AccountIdRequest;
+export type GetDraftReceiverAddressDetailsResponse =
+  | Response<DraftAddress>
+  | undefined;
+export const getDraftReceiverAddressDetails: Method = {
+  name: 'getDraftReceiverAddressDetails',
+};
+
+export type SetDraftReceiverAddressDetailsRequest =
+  | (IdRequest &
+      AccountIdRequest & { value: Partial<Address> } & { saveAsDraft: true })
+  | (IdRequest &
+      AccountIdRequest & { value: Address } & { saveAsDraft: false });
+
+export type SetDraftReceiverAddressDetailsResponse = Response<void>;
+
+export const setDraftReceiverAddressDetails: Method = {
+  name: 'setDraftReceiverAddressDetails',
 };
 
 export type DeleteDraftSicCodeRequest = IdRequest &

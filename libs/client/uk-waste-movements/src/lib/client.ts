@@ -50,6 +50,12 @@ import {
   SetDraftCarrierAddressDetailsResponse,
   getDraftCarrierAddressDetails,
   setDraftCarrierAddressDetails,
+  GetDraftReceiverAddressDetailsRequest,
+  GetDraftReceiverAddressDetailsResponse,
+  SetDraftReceiverAddressDetailsRequest,
+  SetDraftReceiverAddressDetailsResponse,
+  getDraftReceiverAddressDetails,
+  setDraftReceiverAddressDetails,
   DeleteDraftSicCodeRequest,
   DeleteDraftSicCodeResponse,
   deleteDraftSicCode,
@@ -240,6 +246,28 @@ export class DaprUkWasteMovementsClient {
       HttpMethod.POST,
       req,
     )) as SetDraftCarrierAddressDetailsResponse;
+  }
+
+  async getDraftReceiverAddressDetails(
+    req: GetDraftReceiverAddressDetailsRequest,
+  ): Promise<GetDraftReceiverAddressDetailsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.ukWasteMovementsAppId,
+      getDraftReceiverAddressDetails.name,
+      HttpMethod.POST,
+      req,
+    )) as GetDraftReceiverAddressDetailsResponse;
+  }
+
+  async setDraftReceiverAddressDetails(
+    req: SetDraftReceiverAddressDetailsRequest,
+  ): Promise<SetDraftReceiverAddressDetailsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.ukWasteMovementsAppId,
+      setDraftReceiverAddressDetails.name,
+      HttpMethod.POST,
+      req,
+    )) as SetDraftReceiverAddressDetailsResponse;
   }
 
   async deleteDraftSicCode(

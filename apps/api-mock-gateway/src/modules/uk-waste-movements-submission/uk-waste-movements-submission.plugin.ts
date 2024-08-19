@@ -16,6 +16,8 @@ import {
   getDraftSicCodes,
   getDraftCarrierAddressDetails,
   setDraftCarrierAddressDetails,
+  getDraftReceiverAddressDetails,
+  setDraftReceiverAddressDetails,
   deleteDraftSicCode,
 } from './uk-waste-movements-submission.backend';
 import {
@@ -38,6 +40,8 @@ import {
   validateCreateDraftSicCodeRequest,
   validateSetDraftCarrierAddressRequest,
   validateSetPartialDraftCarrierAddressRequest,
+  validateSetDraftReceiverAddressRequest,
+  validateSetPartialDraftReceiverAddressRequest,
 } from './uk-waste-movements-submission.validation';
 
 export default class UkwmSubmissionPlugin {
@@ -532,6 +536,84 @@ export default class UkwmSubmissionPlugin {
           );
           return res.json(
             request as dto.UkwmSetDraftCarrierAddressDetailsRequest,
+          );
+        } catch (err) {
+          if (err instanceof CustomError) {
+            return res.status(err.statusCode).json(err);
+          }
+          console.log('Unknown error', { error: err });
+          return res
+            .status(500)
+            .jsonp(
+              new InternalServerError('An internal server error occurred'),
+            );
+        }
+      },
+    );
+
+    this.server.get(
+      `${this.prefix}/drafts/:id/receiver-address`,
+      async (req, res) => {
+        try {
+          const user = req.user as User;
+          const value = await getDraftReceiverAddressDetails({
+            id: req.params.id,
+            accountId: user.credentials.accountId,
+          });
+          return res.json(
+            value as dto.UkwmGetDraftReceiverAddressDetailsResponse,
+          );
+        } catch (err) {
+          if (err instanceof CustomError) {
+            return res.status(err.statusCode).json({ message: err.message });
+          }
+          console.log('Unknown error', { error: err });
+          return res
+            .status(500)
+            .jsonp(
+              new InternalServerError('An internal server error occurred'),
+            );
+        }
+      },
+    );
+
+    this.server.put(
+      `${this.prefix}/drafts/:id/receiver-address`,
+      async (req, res) => {
+        const saveAsDraftStr = req.query['saveAsDraft'] as string | undefined;
+
+        if (
+          !saveAsDraftStr ||
+          !['true', 'false'].includes(saveAsDraftStr.toLowerCase())
+        ) {
+          return res.status(400).jsonp(new BadRequestError('Bad Request'));
+        }
+
+        const saveAsDraft: boolean = saveAsDraftStr === 'true';
+
+        if (!saveAsDraft) {
+          if (!validateSetDraftReceiverAddressRequest(req.body)) {
+            return res.status(400).jsonp(new BadRequestError('Bad Request'));
+          }
+        } else {
+          if (!validateSetPartialDraftReceiverAddressRequest(req.body)) {
+            return res.status(400).jsonp(new BadRequestError('Bad Request'));
+          }
+        }
+        const request =
+          req.body as dto.UkwmSetDraftReceiverAddressDetailsRequest;
+        const user = req.user as User;
+        try {
+          await setDraftReceiverAddressDetails(
+            {
+              id: req.params.id,
+              accountId: user.credentials.accountId,
+            },
+            request,
+            saveAsDraft,
+          );
+          return res.json(
+            request as dto.UkwmSetDraftReceiverAddressDetailsRequest,
           );
         } catch (err) {
           if (err instanceof CustomError) {

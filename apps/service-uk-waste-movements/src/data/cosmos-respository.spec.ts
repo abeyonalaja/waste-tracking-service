@@ -178,21 +178,23 @@ describe(CosmosRepository, () => {
           },
         },
         receiver: {
-          status: 'Complete',
-          value: {
+          permitDetails: {
+            status: 'Complete',
             authorizationType: 'Type1',
             environmentalPermitNumber: 'EPN123',
-            contact: {
-              organisationName: 'Organisation1',
-              name: 'Contact1',
-              email: 'contact1@example.com',
-              phone: '1234567890',
-            },
-            address: {
-              addressLine1: 'Address Line 1',
-              townCity: 'City1',
-              country: 'Country1',
-            },
+          },
+          contact: {
+            status: 'Complete',
+            organisationName: 'Organisation1',
+            name: 'Contact1',
+            email: 'contact1@example.com',
+            phone: '1234567890',
+          },
+          address: {
+            status: 'Complete',
+            addressLine1: 'Address Line 1',
+            townCity: 'City1',
+            country: 'Country1',
           },
         },
         producerAndCollection: {
@@ -304,21 +306,24 @@ describe(CosmosRepository, () => {
           },
         },
         receiver: {
-          status: 'Complete',
-          value: {
+          permitDetails: {
+            status: 'Complete',
             authorizationType: 'Type1',
             environmentalPermitNumber: 'EPN123',
-            contact: {
-              organisationName: 'Organisation1',
-              name: 'Contact1',
-              email: 'contact1@example.com',
-              phone: '1234567890',
-            },
-            address: {
-              addressLine1: 'Address Line 1',
-              townCity: 'City1',
-              country: 'Country1',
-            },
+          },
+
+          contact: {
+            status: 'Complete',
+            organisationName: 'Organisation1',
+            name: 'Contact1',
+            email: 'contact1@example.com',
+            phone: '1234567890',
+          },
+          address: {
+            status: 'Complete',
+            addressLine1: 'Address Line 1',
+            townCity: 'City1',
+            country: 'Country1',
           },
         },
         producerAndCollection: {

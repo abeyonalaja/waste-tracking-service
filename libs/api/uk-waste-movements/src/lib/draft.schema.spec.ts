@@ -32,6 +32,9 @@ import {
   GetDraftCarrierAddressDetailsRequest,
   GetDraftCarrierAddressDetailsResponse,
   SetDraftCarrierAddressDetailsRequest,
+  GetDraftReceiverAddressDetailsRequest,
+  GetDraftReceiverAddressDetailsResponse,
+  SetDraftReceiverAddressDetailsRequest,
   DeleteDraftSicCodeResponse,
   DeleteDraftSicCodeRequest,
 } from './draft.dto';
@@ -71,6 +74,10 @@ import {
   getDraftCarrierAddressDetailsResponse,
   setDraftCarrierAddressDetailsRequest,
   setPartialDraftCarrierAddressDetailsRequest,
+  getDraftReceiverAddressDetailsRequest,
+  getDraftReceiverAddressDetailsResponse,
+  setDraftReceiverAddressDetailsRequest,
+  setPartialDraftReceiverAddressDetailsRequest,
   deleteDraftSicCodeResponse,
   deleteDraftSicCodeRequest,
 } from './draft.schema';
@@ -88,7 +95,15 @@ describe('getDraftResponse', () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'NotStarted',
@@ -147,21 +162,23 @@ describe('getDraftResponse', () => {
           },
         },
         receiver: {
-          status: 'Complete',
-          value: {
-            authorizationType: 'Type1',
-            environmentalPermitNumber: 'EPN123',
-            contact: {
-              organisationName: 'Organisation1',
-              name: 'Contact1',
-              email: 'contact1@example.com',
-              phone: '1234567890',
-            },
-            address: {
-              addressLine1: 'Address Line 1',
-              townCity: 'City1',
-              country: 'Country1',
-            },
+          permitDetails: {
+            status: 'Complete',
+            authorizationType: 'permit',
+            environmentalPermitNumber: '123',
+          },
+          contact: {
+            status: 'Complete',
+            organisationName: 'Organisation1',
+            name: 'Contact1',
+            email: 'contact1@example.com',
+            phone: '1234567890',
+          },
+          address: {
+            status: 'Complete',
+            addressLine1: 'Address Line 1',
+            townCity: 'City1',
+            country: 'Country1',
           },
         },
         producerAndCollection: {
@@ -362,8 +379,10 @@ describe('receiver', () => {
 
   it('is compatible with dto values and phone number contains 11 caracters', () => {
     const value: ReceiverDetail = {
-      authorizationType: 'permit',
-      environmentalPermitNumber: '123',
+      permitDetails: {
+        authorizationType: 'permit',
+        environmentalPermitNumber: '123',
+      },
       contact: {
         organisationName: 'org',
         name: 'name',
@@ -384,8 +403,10 @@ describe('receiver', () => {
 
   it('is compatible with dto values and phone number contains 13 caracters', () => {
     const value: ReceiverDetail = {
-      authorizationType: 'permit',
-      environmentalPermitNumber: '123',
+      permitDetails: {
+        authorizationType: 'permit',
+        environmentalPermitNumber: '123',
+      },
       contact: {
         organisationName: 'org',
         name: 'name',
@@ -406,8 +427,10 @@ describe('receiver', () => {
 
   it('is compatible with dto values and phone number contains 13 caracters and an environmental Permit number with space and ()', () => {
     const value: ReceiverDetail = {
-      authorizationType: 'permit',
-      environmentalPermitNumber: 'E123-456-ABC (1)',
+      permitDetails: {
+        authorizationType: 'permit',
+        environmentalPermitNumber: 'E123-456-ABC (1)',
+      },
       contact: {
         organisationName: 'org',
         name: 'name',
@@ -675,8 +698,10 @@ describe('validateMultipleDraftsResponse', () => {
                 organisationName: 'Receiver Organisation Name',
                 phone: 'Receiver Phone',
               },
-              authorizationType: 'permit',
-              environmentalPermitNumber: '123456',
+              permitDetails: {
+                authorizationType: 'permit',
+                environmentalPermitNumber: '123456',
+              },
             },
             producer: {
               reference: 'ref',
@@ -799,8 +824,10 @@ describe('createMultipleDraftsRequest', () => {
               organisationName: 'Receiver Organisation Name',
               phone: 'Receiver Phone',
             },
-            authorizationType: 'permit',
-            environmentalPermitNumber: '123456',
+            permitDetails: {
+              authorizationType: 'permit',
+              environmentalPermitNumber: '123456',
+            },
           },
           producer: {
             reference: 'ref',
@@ -1231,6 +1258,87 @@ describe('getDraftCarrierAddressDetailsResponse', () => {
 
   it('is compatible with dto value', () => {
     const value: GetDraftCarrierAddressDetailsResponse = {
+      success: true,
+      value: {
+        status: 'Complete',
+        buildingNameOrNumber: '123',
+        addressLine1: '123 Oxford Street',
+        addressLine2: 'Westminster',
+        townCity: 'London',
+        postcode: 'W1A 1AA',
+        country: 'England',
+      },
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('getDraftReceiverAddressDetailsRequest', () => {
+  const validate = ajv.compile<GetDraftReceiverAddressDetailsRequest>(
+    getDraftReceiverAddressDetailsRequest,
+  );
+
+  it('is compatible with dto value', () => {
+    const value: GetDraftReceiverAddressDetailsRequest = {
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('setDraftReceiverAddressDetailsRequest', () => {
+  const validate = ajv.compile<SetDraftReceiverAddressDetailsRequest>(
+    setDraftReceiverAddressDetailsRequest,
+  );
+
+  it('is compatible with dto value', () => {
+    const value: SetDraftReceiverAddressDetailsRequest = {
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+      value: {
+        buildingNameOrNumber: '123',
+        addressLine1: '123 Oxford Street',
+        addressLine2: 'Westminster',
+        townCity: 'London',
+        postcode: 'W1A 1AA',
+        country: 'England',
+      },
+      saveAsDraft: false,
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('setPartialDraftCarrierAddressDetailsRequest', () => {
+  const validate = ajv.compile<SetDraftReceiverAddressDetailsRequest>(
+    setPartialDraftReceiverAddressDetailsRequest,
+  );
+
+  it('is compatible with dto value', () => {
+    const value: SetDraftReceiverAddressDetailsRequest = {
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+      value: {
+        buildingNameOrNumber: '123',
+      },
+      saveAsDraft: true,
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('getDraftReceiverAddressDetailsResponse', () => {
+  const validate = ajv.compile<GetDraftReceiverAddressDetailsResponse>(
+    getDraftReceiverAddressDetailsResponse,
+  );
+
+  it('is compatible with dto value', () => {
+    const value: GetDraftReceiverAddressDetailsResponse = {
       success: true,
       value: {
         status: 'Complete',

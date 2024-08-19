@@ -52,8 +52,10 @@ const submissions: UkwmSubmittedPartialSubmission[] = [
       country: `Country ${i}`,
       postcode: `Postcode ${i}`,
     },
-    authorizationType: 'permit',
-    environmentalPermitNumber: `EPN ${i}`,
+    permitDetails: {
+      authorizationType: 'permit',
+      environmentalPermitNumber: `EPN ${i}`,
+    },
   },
   wasteTransportation: {
     numberAndTypeOfContainers: `Containers ${i}`,

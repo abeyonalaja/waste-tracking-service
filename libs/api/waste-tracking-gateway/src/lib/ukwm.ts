@@ -39,6 +39,11 @@ export interface UkwmContact {
   fax?: string;
 }
 
+export interface UkwmPermitDetails {
+  authorizationType: string;
+  environmentalPermitNumber?: string;
+}
+
 export interface UkwmWasteCollectionAddress {
   addressLine1?: string;
   addressLine2?: string;
@@ -55,8 +60,7 @@ export interface UkwmProducerDetail {
 }
 
 export interface UkwmReceiverDetail {
-  authorizationType: string;
-  environmentalPermitNumber?: string;
+  permitDetails: UkwmPermitDetails;
   contact: UkwmContact;
   address: UkwmAddress;
 }
@@ -164,12 +168,15 @@ export type UkwmWasteInformation =
       wasteTransportation: UkwmWasteTransportationDetail;
     };
 
-export type UkwmDraftReceiverDetail =
+export interface UkwmDraftReceiver {
+  permitDetails: UkwmDraftPermitDetails;
+  contact: UkwmDraftContact;
+  address: UkwmDraftAddress;
+}
+export type UkwmDraftPermitDetails =
   | { status: 'NotStarted' }
-  | {
-      status: 'Complete';
-      value: UkwmReceiverDetail;
-    };
+  | ({ status: 'Started' } & Partial<UkwmPermitDetails>)
+  | ({ status: 'Complete' } & UkwmPermitDetails);
 
 export type UkwmDraftAddress =
   | { status: 'NotStarted' }
@@ -248,7 +255,7 @@ export interface UkwmSubmissionState {
 export interface UkwmDraft {
   id: string;
   wasteInformation: UkwmWasteInformation;
-  receiver: UkwmDraftReceiverDetail;
+  receiver: UkwmDraftReceiver;
   producerAndCollection: UkwmProducerAndWasteCollectionDetail;
   carrier: UkwmDraftCarrier;
   declaration: UkwmDraftSubmissionDeclaration;
@@ -298,4 +305,9 @@ export type UkwmGetDraftSicCodesResponse = UkwmDraftSicCodes;
 export type UkwmGetDraftCarrierAddressDetailsResponse = UkwmDraftAddress;
 
 export type UkwmSetDraftCarrierAddressDetailsRequest = UkwmAddress;
+
+export type UkwmGetDraftReceiverAddressDetailsResponse = UkwmDraftAddress;
+
+export type UkwmSetDraftReceiverAddressDetailsRequest = UkwmAddress;
+
 export type UkwmDeleteDraftSicCodeResponse = string[];

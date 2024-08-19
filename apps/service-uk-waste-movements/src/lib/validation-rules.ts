@@ -809,13 +809,13 @@ export function validateReceiverDetailSection(
   return {
     valid: true,
     value: {
-      authorizationType: value.receiverAuthorizationType,
-      environmentalPermitNumber: value.receiverEnvironmentalPermitNumber,
+      permitDetails: {
+        authorizationType: value.receiverAuthorizationType,
+        environmentalPermitNumber: value.receiverEnvironmentalPermitNumber,
+      },
       address: {
         addressLine1: value.receiverAddressLine1,
-        addressLine2: value.receiverAddressLine2
-          ? value.receiverAddressLine2
-          : undefined,
+        addressLine2: value.receiverAddressLine2,
         country: value.receiverCountry,
         postcode: value.receiverPostcode,
         townCity: value.receiverTownCity,

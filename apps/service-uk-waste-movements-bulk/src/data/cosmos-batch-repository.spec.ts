@@ -190,8 +190,10 @@ describe(CosmosBatchRepository, () => {
                   },
                 },
                 receiver: {
-                  authorizationType: 'Permit DEFRA',
-                  environmentalPermitNumber: 'DEFRA 1235',
+                  permitDetails: {
+                    authorizationType: 'Permit DEFRA',
+                    environmentalPermitNumber: 'DEFRA 1235',
+                  },
                   address: {
                     addressLine1: '12 Mulberry Street',
                     addressLine2: 'West coast, Northwest',

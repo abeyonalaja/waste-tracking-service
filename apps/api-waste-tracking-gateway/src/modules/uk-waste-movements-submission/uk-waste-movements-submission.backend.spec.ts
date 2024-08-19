@@ -16,6 +16,7 @@ import {
   CreateDraftSicCodeResponse,
   GetDraftSicCodesResponse,
   GetDraftCarrierAddressDetailsResponse,
+  GetDraftReceiverAddressDetailsResponse,
   DeleteDraftSicCodeResponse,
 } from '@wts/api/uk-waste-movements';
 import { UkwmContact } from '@wts/api/waste-tracking-gateway';
@@ -60,6 +61,10 @@ const mockClient = {
     jest.fn<DaprUkWasteMovementsClient['setDraftCarrierAddressDetails']>(),
   getDraftCarrierAddressDetails:
     jest.fn<DaprUkWasteMovementsClient['getDraftCarrierAddressDetails']>(),
+  setDraftReceiverAddressDetails:
+    jest.fn<DaprUkWasteMovementsClient['setDraftReceiverAddressDetails']>(),
+  getDraftReceiverAddressDetails:
+    jest.fn<DaprUkWasteMovementsClient['getDraftReceiverAddressDetails']>(),
   deleteDraftSicCode:
     jest.fn<DaprUkWasteMovementsClient['deleteDraftSicCode']>(),
 };
@@ -83,7 +88,15 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'NotStarted',
@@ -195,7 +208,15 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         state: {
           status: 'InProgress',
@@ -611,6 +632,79 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
       accountId,
     });
     expect(result).toEqual(mockGetDraftCarrierAddressDetailsResponse.value);
+  });
+
+  it('sets receiver address details on a draft', async () => {
+    const accountId = faker.string.uuid();
+    const id = faker.string.uuid();
+    const mockSetDraftReceiverAddressDetailsResponse: Response<void> = {
+      success: true,
+      value: undefined,
+    };
+
+    mockClient.setDraftReceiverAddressDetails.mockResolvedValueOnce(
+      mockSetDraftReceiverAddressDetailsResponse,
+    );
+
+    const value: UkwmAddress = {
+      addressLine1: '123 Main St',
+      addressLine2: 'Building 1',
+      townCity: 'London',
+      country: 'England [EN]',
+      postcode: 'SW1A 1AA',
+    };
+
+    await subject.setDraftReceiverAddressDetails(
+      { id, accountId },
+      value,
+      true,
+    );
+
+    expect(mockClient.setDraftReceiverAddressDetails).toHaveBeenCalledWith({
+      id,
+      accountId,
+      value,
+      saveAsDraft: true,
+    });
+    expect(mockClient.setDraftReceiverAddressDetails).toHaveBeenCalledTimes(1);
+    expect(mockClient.setDraftReceiverAddressDetails).toHaveBeenCalledWith({
+      id,
+      accountId,
+      value,
+      saveAsDraft: true,
+    });
+  });
+
+  it('gets receiver address detail from a draft', async () => {
+    const id = faker.string.uuid();
+    const accountId = faker.string.uuid();
+    const mockGetDraftReceiverAddressDetailsResponse: GetDraftReceiverAddressDetailsResponse =
+      {
+        success: true,
+        value: {
+          status: 'Started',
+          addressLine1: '123 Main St',
+          addressLine2: 'Building 1',
+          townCity: 'London',
+          country: 'England [EN]',
+          postcode: 'SW1A 1AA',
+        },
+      };
+
+    mockClient.getDraftReceiverAddressDetails.mockResolvedValueOnce(
+      mockGetDraftReceiverAddressDetailsResponse,
+    );
+
+    const result = await subject.getDraftReceiverAddressDetails({
+      id,
+      accountId,
+    });
+
+    expect(mockClient.getDraftReceiverAddressDetails).toHaveBeenCalledWith({
+      id,
+      accountId,
+    });
+    expect(result).toEqual(mockGetDraftReceiverAddressDetailsResponse.value);
   });
 
   it('deletes sic code from a draft', async () => {

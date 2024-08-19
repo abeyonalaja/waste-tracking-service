@@ -178,9 +178,10 @@ export class CosmosBatchRepository implements BatchRepository {
           carrierContactPhone: carrier?.contact?.phone
             ? `'${carrier?.contact?.phone}'`
             : '',
-          receiverAuthorizationType: receiver?.authorizationType || '',
+          receiverAuthorizationType:
+            receiver?.permitDetails?.authorizationType || '',
           receiverEnvironmentalPermitNumber:
-            receiver?.environmentalPermitNumber || '',
+            receiver?.permitDetails?.environmentalPermitNumber || '',
           receiverOrganisationName: receiver?.contact?.organisationName || '',
           receiverAddressLine1: receiver?.address?.addressLine1 || '',
           receiverAddressLine2: receiver?.address.addressLine2 || '',

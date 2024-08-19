@@ -506,9 +506,19 @@ export default class SubmissionController {
           },
         };
 
-        const draftReceiver: api.DraftReceiverDetail = {
-          status: 'Complete',
-          value: s.receiver,
+        const draftReceiver: api.DraftReceiver = {
+          address: {
+            status: 'Complete',
+            ...s.receiver.address,
+          },
+          contact: {
+            status: 'Complete',
+            ...s.receiver.contact,
+          },
+          permitDetails: {
+            status: 'Complete',
+            ...s.receiver.permitDetails,
+          },
         };
 
         const draftCarrier: api.DraftCarrier = {
@@ -655,7 +665,15 @@ export default class SubmissionController {
             },
           },
           receiver: {
-            status: 'NotStarted',
+            address: {
+              status: 'NotStarted',
+            },
+            contact: {
+              status: 'NotStarted',
+            },
+            permitDetails: {
+              status: 'NotStarted',
+            },
           },
           wasteInformation: {
             status: 'NotStarted',
@@ -1275,6 +1293,105 @@ export default class SubmissionController {
       }
 
       return success(draft.carrier.address);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  setDraftReceiverAddressDetails: Handler<
+    api.SetDraftReceiverAddressDetailsRequest,
+    api.SetDraftReceiverAddressDetailsResponse
+  > = async ({ id, accountId, value, saveAsDraft }) => {
+    try {
+      const draft = (await this.repository.getDraft(
+        draftsContainerName,
+        id,
+        accountId,
+      )) as api.Draft;
+
+      if (draft === undefined) {
+        return fromBoom(Boom.notFound());
+      }
+
+      if (saveAsDraft) {
+        const partialReceiverAddressDetailsValidation =
+          ukwmValidation.validationRules.validatePartialAddressDetails(
+            value,
+            'Receiver',
+          );
+
+        if (!partialReceiverAddressDetailsValidation.valid) {
+          return fromBoom(
+            Boom.badRequest(
+              'Validation failed',
+              partialReceiverAddressDetailsValidation.errors,
+            ),
+          );
+        }
+
+        draft.receiver.address = {
+          status: 'Started',
+          ...value,
+        };
+      } else {
+        const receiverAddressDetailsValidation =
+          ukwmValidation.validationRules.validateAddressDetails(
+            value,
+            'Receiver',
+          );
+
+        if (!receiverAddressDetailsValidation.valid) {
+          return fromBoom(
+            Boom.badRequest(
+              'Validation failed',
+              receiverAddressDetailsValidation.errors,
+            ),
+          );
+        }
+
+        draft.receiver.address = {
+          status: 'Complete',
+          ...receiverAddressDetailsValidation.value,
+        };
+      }
+
+      await this.repository.saveRecord(
+        draftsContainerName,
+        { ...draft },
+        accountId,
+      );
+      return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  getDraftReceiverAddressDetails: Handler<
+    api.GetDraftReceiverAddressDetailsRequest,
+    api.GetDraftReceiverAddressDetailsResponse
+  > = async ({ id, accountId }) => {
+    try {
+      const draft = (await this.repository.getDraft(
+        draftsContainerName,
+        id,
+        accountId,
+      )) as api.Draft;
+
+      if (draft === undefined) {
+        return fromBoom(Boom.notFound());
+      }
+
+      return success(draft.receiver.address);
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);

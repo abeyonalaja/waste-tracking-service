@@ -13,6 +13,7 @@ import {
   SetDraftWasteCollectionAddressDetailsRequest,
   SetDraftWasteSourceRequest,
   SetDraftCarrierAddressDetailsRequest,
+  SetDraftReceiverAddressDetailsRequest,
 } from '@wts/api/uk-waste-movements';
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -318,8 +319,10 @@ describe(SubmissionController, () => {
               },
             },
             receiver: {
-              authorizationType: 'permit',
-              environmentalPermitNumber: '123456',
+              permitDetails: {
+                authorizationType: 'permit',
+                environmentalPermitNumber: '123456',
+              },
               contact: {
                 organisationName: 'Test organization',
                 name: 'John Smith',
@@ -328,7 +331,7 @@ describe(SubmissionController, () => {
               },
               address: {
                 addressLine1: '123 Real Street',
-                addressLine2: undefined,
+                addressLine2: '',
                 country: 'England',
                 postcode: 'AB1 1AB',
                 townCity: 'London',
@@ -797,8 +800,10 @@ describe(SubmissionController, () => {
                 organisationName: 'Receiver Organisation Name',
                 phone: 'Receiver Phone',
               },
-              authorizationType: 'permit',
-              environmentalPermitNumber: '123456',
+              permitDetails: {
+                authorizationType: 'permit',
+                environmentalPermitNumber: '123456',
+              },
             },
             producer: {
               reference: 'ref',
@@ -838,7 +843,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'NotStarted',
@@ -947,7 +960,17 @@ describe(SubmissionController, () => {
           },
         },
 
-        receiver: { status: 'NotStarted' },
+        receiver: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
+        },
         state: { status: 'InProgress', timestamp: new Date() },
         wasteInformation: { status: 'NotStarted' },
       };
@@ -979,7 +1002,15 @@ describe(SubmissionController, () => {
         status: 'NotStarted',
       },
       receiver: {
-        status: 'NotStarted',
+        address: {
+          status: 'NotStarted',
+        },
+        contact: {
+          status: 'NotStarted',
+        },
+        permitDetails: {
+          status: 'NotStarted',
+        },
       },
       producerAndCollection: {
         status: 'Complete',
@@ -1083,7 +1114,15 @@ describe(SubmissionController, () => {
         status: 'NotStarted',
       },
       receiver: {
-        status: 'NotStarted',
+        address: {
+          status: 'NotStarted',
+        },
+        contact: {
+          status: 'NotStarted',
+        },
+        permitDetails: {
+          status: 'NotStarted',
+        },
       },
       producerAndCollection: {
         status: 'Started',
@@ -1160,7 +1199,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'Started',
@@ -1275,7 +1322,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'Complete',
@@ -1371,7 +1426,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'NotStarted',
@@ -1419,7 +1482,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'Complete',
@@ -1490,7 +1561,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'Complete',
@@ -1571,7 +1650,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'Complete',
@@ -1663,7 +1750,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'NotStarted',
@@ -1711,7 +1806,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'Complete',
@@ -1777,7 +1880,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'Complete',
@@ -1859,7 +1970,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'Complete',
@@ -1951,7 +2070,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'NotStarted',
@@ -1999,7 +2126,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'Complete',
@@ -2065,7 +2200,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'Complete',
@@ -2146,7 +2289,15 @@ describe(SubmissionController, () => {
         status: 'NotStarted',
       },
       receiver: {
-        status: 'NotStarted',
+        address: {
+          status: 'NotStarted',
+        },
+        contact: {
+          status: 'NotStarted',
+        },
+        permitDetails: {
+          status: 'NotStarted',
+        },
       },
       producerAndCollection: {
         status: 'Complete',
@@ -2249,7 +2400,15 @@ describe(SubmissionController, () => {
         status: 'NotStarted',
       },
       receiver: {
-        status: 'NotStarted',
+        address: {
+          status: 'NotStarted',
+        },
+        contact: {
+          status: 'NotStarted',
+        },
+        permitDetails: {
+          status: 'NotStarted',
+        },
       },
       producerAndCollection: {
         status: 'Started',
@@ -2323,7 +2482,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'Started',
@@ -2440,7 +2607,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'Complete',
@@ -2506,7 +2681,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'Complete',
@@ -2587,7 +2770,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'Complete',
@@ -2679,7 +2870,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'NotStarted',
@@ -2727,7 +2926,15 @@ describe(SubmissionController, () => {
         status: 'NotStarted',
       },
       receiver: {
-        status: 'NotStarted',
+        address: {
+          status: 'NotStarted',
+        },
+        contact: {
+          status: 'NotStarted',
+        },
+        permitDetails: {
+          status: 'NotStarted',
+        },
       },
       producerAndCollection: {
         status: 'Complete',
@@ -2832,7 +3039,15 @@ describe(SubmissionController, () => {
         status: 'NotStarted',
       },
       receiver: {
-        status: 'NotStarted',
+        address: {
+          status: 'NotStarted',
+        },
+        contact: {
+          status: 'NotStarted',
+        },
+        permitDetails: {
+          status: 'NotStarted',
+        },
       },
       producerAndCollection: {
         status: 'Started',
@@ -2906,7 +3121,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'Started',
@@ -3024,7 +3247,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'Complete',
@@ -3090,7 +3321,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'Complete',
@@ -3169,7 +3408,15 @@ describe(SubmissionController, () => {
           status: 'NotStarted',
         },
         receiver: {
-          status: 'NotStarted',
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
         },
         producerAndCollection: {
           status: 'NotStarted',
@@ -3208,6 +3455,332 @@ describe(SubmissionController, () => {
       );
       if (response.success) {
         expect(response.value).toEqual([]);
+      }
+    });
+  });
+
+  describe('getDraftReceiverAddressDetails', () => {
+    const id = faker.string.uuid();
+    const accountId = faker.string.uuid();
+    const draft: Draft = {
+      id: id,
+      wasteInformation: {
+        status: 'NotStarted',
+      },
+      receiver: {
+        address: {
+          status: 'Complete',
+          buildingNameOrNumber: '123',
+          addressLine1: '123 Main St',
+          addressLine2: 'Building 1',
+          townCity: 'London',
+          postcode: 'SW1A 1AA',
+          country: 'England',
+        },
+        contact: {
+          status: 'NotStarted',
+        },
+        permitDetails: {
+          status: 'NotStarted',
+        },
+      },
+      producerAndCollection: {
+        status: 'Complete',
+        producer: {
+          reference: 'testRef',
+          sicCodes: {
+            status: 'Complete',
+            values: ['01110'],
+          },
+          contact: {
+            status: 'Complete',
+            organisationName: 'Test Organisation',
+            name: 'Test Name',
+            email: 'test@example.com',
+            phone: '0123456789',
+          },
+          address: {
+            status: 'Complete',
+            buildingNameOrNumber: '123',
+            addressLine1: '123 Main St',
+            addressLine2: 'Building 2',
+            townCity: 'London',
+            postcode: 'SW1A 1AA',
+            country: 'England',
+          },
+        },
+        wasteCollection: {
+          wasteSource: {
+            status: 'Complete',
+            value: 'Industrial',
+          },
+          brokerRegistrationNumber: 'BRN123456',
+          carrierRegistrationNumber: 'CRN123456',
+          localAuthority: 'Local Authority 1',
+          expectedWasteCollectionDate: {
+            day: '01',
+            month: '01',
+            year: '2025',
+          },
+          address: {
+            status: 'NotStarted',
+          },
+        },
+      },
+      carrier: {
+        address: {
+          status: 'Complete',
+          buildingNameOrNumber: '123',
+          addressLine1: '123 Main St',
+          addressLine2: 'Building 3',
+          townCity: 'London',
+          postcode: 'SW1A 1AA',
+          country: 'England',
+        },
+        contact: {
+          status: 'NotStarted',
+        },
+        modeOfTransport: {
+          status: 'NotStarted',
+        },
+      },
+      declaration: {
+        status: 'NotStarted',
+      },
+      state: {
+        status: 'InProgress',
+        timestamp: new Date(),
+      },
+    };
+
+    it('successfully returns the receiver address details', async () => {
+      mockRepository.getDraft.mockResolvedValue(draft);
+
+      const response = await subject.getDraftReceiverAddressDetails({
+        id,
+        accountId,
+      });
+
+      if (response) {
+        expect(response.success).toBe(true);
+        if (response.success) {
+          expect(response.value).toEqual({
+            status: 'Complete',
+            buildingNameOrNumber: '123',
+            addressLine1: '123 Main St',
+            addressLine2: 'Building 1',
+            townCity: 'London',
+            postcode: 'SW1A 1AA',
+            country: 'England',
+          });
+        }
+      }
+    });
+  });
+
+  describe('setDraftReceiverAddressDetails', () => {
+    const id = faker.string.uuid();
+    const accountId = faker.string.uuid();
+    const draft: Draft = {
+      id: id,
+      wasteInformation: {
+        status: 'NotStarted',
+      },
+      receiver: {
+        address: {
+          status: 'NotStarted',
+        },
+        contact: {
+          status: 'NotStarted',
+        },
+        permitDetails: {
+          status: 'NotStarted',
+        },
+      },
+      producerAndCollection: {
+        status: 'Started',
+        producer: {
+          reference: 'testRef',
+          sicCodes: {
+            status: 'Complete',
+            values: ['01110'],
+          },
+          contact: {
+            status: 'Complete',
+            organisationName: 'Test Organisation',
+            name: 'Test Name',
+            email: 'test@example.com',
+            phone: '0123456789',
+          },
+          address: {
+            status: 'Started',
+            buildingNameOrNumber: '123123',
+            addressLine1: '123123 Main St',
+            addressLine2: 'Building 123',
+            townCity: 'Manchester',
+            postcode: 'SW1A 1AB',
+            country: 'Albania',
+          },
+        },
+        wasteCollection: {
+          wasteSource: {
+            status: 'Complete',
+            value: 'Industrial',
+          },
+          brokerRegistrationNumber: 'BRN123456',
+          carrierRegistrationNumber: 'CRN123456',
+          localAuthority: 'Local Authority 1',
+          expectedWasteCollectionDate: {
+            day: '01',
+            month: '01',
+            year: '2025',
+          },
+          address: {
+            status: 'Started',
+            addressLine1: '123 Main St',
+            townCity: 'London',
+          },
+        },
+      },
+      carrier: {
+        address: {
+          status: 'NotStarted',
+        },
+        contact: {
+          status: 'NotStarted',
+        },
+        modeOfTransport: {
+          status: 'NotStarted',
+        },
+      },
+      declaration: {
+        status: 'NotStarted',
+      },
+      state: {
+        status: 'InProgress',
+        timestamp: new Date(),
+      },
+    };
+
+    it('successfully sets the receiver address details', async () => {
+      const updatedDraft: Draft = {
+        id: id,
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          address: {
+            status: 'Complete',
+            buildingNameOrNumber: '123',
+            addressLine1: '123 Real Street',
+            addressLine2: 'Real Avenue',
+            townCity: 'London',
+            postcode: 'SW1A 1AA',
+            country: 'England',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
+        },
+        producerAndCollection: {
+          status: 'Started',
+          producer: {
+            reference: 'testRef',
+            sicCodes: {
+              status: 'Complete',
+              values: ['01110'],
+            },
+            contact: {
+              status: 'Complete',
+              organisationName: 'Test Organisation',
+              name: 'Test Name',
+              email: 'test@example.com',
+              phone: '0123456789',
+            },
+            address: {
+              status: 'Started',
+              buildingNameOrNumber: '123123',
+              addressLine1: '123123 Main St',
+              addressLine2: 'Building 123',
+              townCity: 'Manchester',
+              postcode: 'SW1A 1AB',
+              country: 'Albania',
+            },
+          },
+          wasteCollection: {
+            wasteSource: {
+              status: 'Complete',
+              value: 'Industrial',
+            },
+            brokerRegistrationNumber: 'BRN123456',
+            carrierRegistrationNumber: 'CRN123456',
+            localAuthority: 'Local Authority 1',
+            expectedWasteCollectionDate: {
+              day: '01',
+              month: '01',
+              year: '2025',
+            },
+            address: {
+              status: 'Started',
+              addressLine1: '123 Main St',
+              townCity: 'London',
+            },
+          },
+        },
+        carrier: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'InProgress',
+          timestamp: new Date(),
+        },
+      };
+
+      const request: SetDraftReceiverAddressDetailsRequest = {
+        id: id,
+        accountId: accountId,
+        value: {
+          buildingNameOrNumber: '123',
+          addressLine1: '123 Real Street',
+          addressLine2: 'Real Avenue',
+          townCity: 'London',
+          postcode: 'SW1A 1AA',
+          country: 'England',
+        },
+        saveAsDraft: false,
+      };
+
+      mockRepository.getDraft.mockResolvedValue(draft);
+
+      const response = await subject.setDraftReceiverAddressDetails(request);
+
+      expect(mockRepository.getDraft).toHaveBeenCalledWith(
+        'drafts',
+        id,
+        accountId,
+      );
+      expect(mockRepository.saveRecord).toHaveBeenCalledWith(
+        'drafts',
+        updatedDraft,
+        accountId,
+      );
+
+      if (response.success) {
+        expect(response.value).toBeUndefined();
       }
     });
   });

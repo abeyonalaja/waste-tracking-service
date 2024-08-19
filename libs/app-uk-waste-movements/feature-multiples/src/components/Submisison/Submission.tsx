@@ -363,56 +363,65 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
           summary="The details of where the waste will be taken"
           sections={sections}
           toggle={toggleSection}
-          status={data.receiver.status}
+          status={
+            data.receiver.address.status === 'Complete' &&
+            data.receiver.contact.status === 'Complete' &&
+            data.receiver.permitDetails.status === 'Complete'
+              ? 'Complete'
+              : 'Incomplete'
+          }
         >
-          {data.receiver.status === 'Complete' && (
-            <SummaryList
-              items={[
-                {
-                  key: 'Receiver authorisation type',
-                  value: data.receiver.value.authorizationType,
-                },
-                {
-                  key: 'Receiver permit number or waste exemption number',
-                  value: data.receiver.value.environmentalPermitNumber,
-                },
-                {
-                  key: 'Receiver organisation name',
-                  value: data.receiver.value.contact.organisationName,
-                },
-                {
-                  key: 'Receiver address',
-                  value: (
-                    <>
-                      {data.receiver.value.address.addressLine1}
-                      <br />
-                      {data.receiver.value.address.townCity}
-                      <br />
-                      {data.receiver.value.address.postcode}
-                      <br />
-                      {data.receiver.value.address.country}
-                    </>
-                  ),
-                },
-                {
-                  key: 'Receiver postcode',
-                  value: data.receiver.value.address.postcode,
-                },
-                {
-                  key: 'Receiver contact name',
-                  value: data.receiver.value.contact.name,
-                },
-                {
-                  key: 'Receiver contact email address',
-                  value: data.receiver.value.contact.email,
-                },
-                {
-                  key: 'Receiver contact phone number',
-                  value: data.receiver.value.contact.phone,
-                },
-              ]}
-            />
-          )}
+          {data.receiver.address.status === 'Complete' &&
+            data.receiver.contact.status === 'Complete' &&
+            data.receiver.permitDetails.status === 'Complete' && (
+              <SummaryList
+                items={[
+                  {
+                    key: 'Receiver authorisation type',
+                    value: data.receiver.permitDetails.authorizationType,
+                  },
+                  {
+                    key: 'Receiver permit number or waste exemption number',
+                    value:
+                      data.receiver.permitDetails.environmentalPermitNumber,
+                  },
+                  {
+                    key: 'Receiver organisation name',
+                    value: data.receiver.contact.organisationName,
+                  },
+                  {
+                    key: 'Receiver address',
+                    value: (
+                      <>
+                        {data.receiver.address.addressLine1}
+                        <br />
+                        {data.receiver.address.townCity}
+                        <br />
+                        {data.receiver.address.postcode}
+                        <br />
+                        {data.receiver.address.country}
+                      </>
+                    ),
+                  },
+                  {
+                    key: 'Receiver postcode',
+                    value: data.receiver.address.postcode,
+                  },
+                  {
+                    key: 'Receiver contact name',
+                    value: data.receiver.contact.name,
+                  },
+                  {
+                    key: 'Receiver contact email address',
+                    value: data.receiver.contact.email,
+                  },
+                  {
+                    key: 'Receiver contact phone number',
+                    value: data.receiver.contact.phone,
+                  },
+                ]}
+              />
+            )}
         </AccordionSection>
       </Accordion>
       <ButtonGroup>

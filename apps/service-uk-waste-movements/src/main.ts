@@ -528,6 +528,66 @@ try {
   );
 
   await server.invoker.listen(
+    api.getDraftReceiverAddressDetails.name,
+    async ({ body }) => {
+      if (body === undefined) {
+        return fromBoom(Boom.badRequest('Missing body'));
+      }
+      const request = JSON.parse(
+        body,
+      ) as api.GetDraftReceiverAddressDetailsRequest;
+      if (request == undefined) {
+        return fromBoom(Boom.badRequest());
+      }
+
+      if (
+        !validateSubmission.validateGetDraftReceiverAddressDetailsRequest(
+          request,
+        )
+      ) {
+        return fromBoom(Boom.badRequest());
+      }
+
+      return await submissionController.getDraftReceiverAddressDetails(request);
+    },
+    { method: HttpMethod.POST },
+  );
+
+  await server.invoker.listen(
+    api.setDraftReceiverAddressDetails.name,
+    async ({ body }) => {
+      if (body === undefined) {
+        return fromBoom(Boom.badRequest('Missing body'));
+      }
+
+      const request = JSON.parse(
+        body,
+      ) as api.SetDraftReceiverAddressDetailsRequest;
+
+      if (!request.saveAsDraft) {
+        if (
+          !validateSubmission.validateSetDraftReceiverAddressDetailsRequest(
+            request,
+          )
+        ) {
+          return fromBoom(Boom.badRequest());
+        }
+      } else {
+        if (
+          !validateSubmission.validateSetPartialDraftReceiverAddressDetailsRequest(
+            request,
+          )
+        ) {
+          return fromBoom(Boom.badRequest());
+        }
+      }
+
+      return await submissionController.setDraftReceiverAddressDetails(request);
+    },
+    { method: HttpMethod.POST },
+  );
+
+  await server.invoker.listen(
     api.deleteDraftSicCode.name,
     async ({ body }) => {
       if (body === undefined) {

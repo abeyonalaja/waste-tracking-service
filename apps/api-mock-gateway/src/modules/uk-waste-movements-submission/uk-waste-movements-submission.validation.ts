@@ -131,3 +131,30 @@ export const validateSetPartialDraftCarrierAddressRequest = ajv.compile<
     postcode: { type: 'string' },
   },
 });
+
+export const validateSetDraftReceiverAddressRequest = ajv.compile<UkwmAddress>({
+  properties: {
+    addressLine1: { type: 'string' },
+    townCity: { type: 'string' },
+    country: { type: 'string' },
+  },
+  optionalProperties: {
+    buildingNameOrNumber: { type: 'string' },
+    addressLine2: { type: 'string' },
+    postcode: { type: 'string' },
+  },
+});
+
+export const validateSetPartialDraftReceiverAddressRequest = ajv.compile<
+  Partial<UkwmAddress>
+>({
+  properties: {},
+  optionalProperties: {
+    buildingNameOrNumber: { type: 'string' },
+    addressLine1: { type: 'string' },
+    addressLine2: { type: 'string' },
+    townCity: { type: 'string' },
+    country: { type: 'string' },
+    postcode: { type: 'string' },
+  },
+});

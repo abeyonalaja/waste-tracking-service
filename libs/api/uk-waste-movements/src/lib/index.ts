@@ -2,7 +2,7 @@ export * as draftSchema from './draft.schema';
 export type {} from './submission.dto';
 
 export type {
-  DraftReceiverDetail,
+  DraftReceiver,
   Declaration,
   Draft,
   WasteInformation,
@@ -26,6 +26,7 @@ export type {
   WasteCollectionDetail,
   Address,
   Contact,
+  PermitDetails,
   DraftContact,
   WasteTransportationDetail,
   WasteTypeDetail,
@@ -63,6 +64,10 @@ export type {
   GetDraftCarrierAddressDetailsResponse,
   SetDraftCarrierAddressDetailsRequest,
   SetDraftCarrierAddressDetailsResponse,
+  GetDraftReceiverAddressDetailsRequest,
+  GetDraftReceiverAddressDetailsResponse,
+  SetDraftReceiverAddressDetailsRequest,
+  SetDraftReceiverAddressDetailsResponse,
   DeleteDraftSicCodeRequest,
   DeleteDraftSicCodeResponse,
 } from './draft.dto';
@@ -87,6 +92,8 @@ export {
   getDraftSicCodes,
   getDraftCarrierAddressDetails,
   setDraftCarrierAddressDetails,
+  getDraftReceiverAddressDetails,
+  setDraftReceiverAddressDetails,
   deleteDraftSicCode,
 } from './draft.dto';
 
