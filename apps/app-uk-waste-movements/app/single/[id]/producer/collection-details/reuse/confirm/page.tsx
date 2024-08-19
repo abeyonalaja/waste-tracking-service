@@ -7,7 +7,10 @@ import { generateApiUrl } from '../../../../../../../utils';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import Link from 'next/link';
 import { BackLink, Page } from '@wts/ui/shared-ui/server';
-import { ReuseProducerAddressConfirm } from '@wts/app-uk-waste-movements/feature-single';
+import {
+  ReuseProducerAddressConfirm,
+  formatAddress,
+} from '@wts/app-uk-waste-movements/feature-single';
 
 export const metadata: Metadata = {
   title: 'Waste collection details',
@@ -95,33 +98,7 @@ export default async function ReuseProducerAddressConfirmPage({
             {t('heading')}
           </GovUK.Heading>
           <GovUK.InsetText>
-            <div>
-              {producerAddress.buildingNameOrNumber && (
-                <>
-                  {producerAddress.buildingNameOrNumber}
-                  <br />
-                </>
-              )}
-
-              {producerAddress.addressLine1}
-              <br />
-              {producerAddress.addressLine2 && (
-                <>
-                  {producerAddress.addressLine2}
-                  <br />
-                </>
-              )}
-              {producerAddress.townCity}
-              <br />
-              {producerAddress.postcode && (
-                <>
-                  {producerAddress.postcode}
-                  <br />
-                </>
-              )}
-
-              {producerAddress.country}
-            </div>
+            {formatAddress(JSON.stringify(producerAddress))}
           </GovUK.InsetText>
           <ReuseProducerAddressConfirm
             id={params.id}

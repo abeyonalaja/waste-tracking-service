@@ -8,4 +8,4 @@ export {
   ProducerContactDetailsForm,
   WasteSourceForm,
 } from './components';
-export { AddressSearch } from './components/Address';
+export { AddressSearch, formatAddress } from './components/Address';

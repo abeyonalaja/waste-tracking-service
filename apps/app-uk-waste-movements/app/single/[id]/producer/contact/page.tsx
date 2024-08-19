@@ -89,7 +89,10 @@ export default async function ProducerContactDetailsPage({
   return (
     <Page
       beforeChildren={
-        <BackLink text={t('backLink')} href={'#'} routerBack={true} />
+        <BackLink
+          text={t('backLink')}
+          href={`/single/${params.id}/producer/address`}
+        />
       }
     >
       <GovUK.GridRow>

@@ -60,6 +60,8 @@ export function ReuseProducerAddressConfirm({
       return router.push('/error');
     }
 
+    router.refresh();
+
     if (submitType === 'continueToNextPage') {
       return router.push(`/single/${id}/producer/source`);
     }
