@@ -42,5 +42,5 @@ end
 And(/^I complete collection date with estimated details$/) do
   CollectionDatePage.new.choose_option Translations.value 'exportJourney.wasteCollectionDate.radioNo'
   CollectionDatePage.new.enter_estimate_collection_date DateTime.now.next_day(5).strftime('%d %m %Y')
-  CollectionDatePage.new.save_and_return
+  CollectionDatePage.new.save_and_return_to_draft
 end

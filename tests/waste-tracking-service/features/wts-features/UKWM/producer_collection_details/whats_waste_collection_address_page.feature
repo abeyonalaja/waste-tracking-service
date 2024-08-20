@@ -16,7 +16,6 @@ Feature: AS A Waste controller
     And I click the button Save and continue
     Then I remain on the Whats Waste Collection Address page with an "Enter a real postcode" error message displayed
 
-
   @translation
   Scenario: User navigates to Whats waste collection address page enters valid postcode
     Given I navigate to waste tracking accounts page

@@ -2,6 +2,7 @@
 
 # this page is for select producer address page
 class SelectProducerAddressPage < GenericPage
+  include CommonComponents
   include GeneralHelpers
   include ErrorBox
   include PageHelper
@@ -21,11 +22,14 @@ class SelectProducerAddressPage < GenericPage
     expect(self).to have_text MANUAL_LINK
   end
 
-  def select_first_address
-    find('addressselection-radio-1', visible: false).click
+  def select_first_address(page = 'producer')
+    address_text = find(:css,'label[for="addressselection-radio-2"]').text
+    find('addressselection-radio-2', visible: false).click
+    TestStatus.set_test_status("#{page}_full_address".to_sym, address_text)
   end
 
   def select_second_address
     find('addressselection-radio-2', visible: false).click
   end
+
 end

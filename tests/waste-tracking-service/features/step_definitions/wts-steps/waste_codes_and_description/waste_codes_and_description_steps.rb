@@ -54,7 +54,7 @@ When(/^I complete Waste codes and description with Bulk waste and Max EWC codes$
   sleep 1
   QuantityOfBulkWastePage.new.back
   HelperMethods.wait_for_a_sec
-  DescribeTheWastePage.new.save_and_return
+  DescribeTheWastePage.new.save_and_return_to_draft
 end
 
 And(/^I select first OECD code$/) do

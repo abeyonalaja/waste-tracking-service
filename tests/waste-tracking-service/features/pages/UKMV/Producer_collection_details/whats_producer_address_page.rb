@@ -2,6 +2,7 @@
 
 # this page is for whats producer address page
 class WhatsProducerAddressPage < GenericPage
+  include CommonComponents
   include GeneralHelpers
   include ErrorBox
   include PageHelper

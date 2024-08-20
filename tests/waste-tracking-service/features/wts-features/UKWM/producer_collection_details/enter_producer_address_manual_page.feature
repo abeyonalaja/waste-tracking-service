@@ -28,6 +28,10 @@ Feature: AS A Waste controller
     And I remain on the Enter Producer Address Manual page with an "Enter address line 1" error message displayed
     And I remain on the Enter Producer Address Manual page with an "Enter a town or city" error message displayed
     And I remain on the Enter Producer Address Manual page with an "Select a country" error message displayed
+    When I enter invalid postcode
+    When I click save and return button
+    And I remain on the Enter Producer Address Manual page with an "Enter a real postcode" error message displayed
+
 
   Scenario: User can save and return for Producer manual entry page without completing all the mandatory fields
     Given I navigate to waste tracking accounts page

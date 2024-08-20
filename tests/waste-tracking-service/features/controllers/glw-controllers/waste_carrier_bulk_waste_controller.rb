@@ -56,7 +56,7 @@ module WasteCarrierBulkWasteController
       end
     else
       waste_carriers_list_page.choose_option 'No'
-      waste_carriers_list_page.save_and_return
+      waste_carriers_list_page.save_and_return_to_draft
     end
   end
 end

@@ -1,6 +1,6 @@
 And(/^I should see Producer address correctly displayed on confirm producer address page$/) do
-  expect(ConfirmProducerAddressPage.new.address_line_building_name).to eq TestStatus.test_status(:producer_manual_address_page_building_name_number) + ','
   expect(ConfirmProducerAddressPage.new.address_line_one).to eq TestStatus.test_status(:producer_manual_address_page_address_line_1)
+  expect(ConfirmProducerAddressPage.new.address_line_building_name).to eq TestStatus.test_status(:producer_manual_address_page_building_name_number) + ','
   expect(ConfirmProducerAddressPage.new.address_line_two).to eq TestStatus.test_status(:producer_manual_address_page_address_line_2)
   expect(ConfirmProducerAddressPage.new.address_line_three).to eq TestStatus.test_status(:producer_manual_address_page_town_and_city)
   expect(ConfirmProducerAddressPage.new.address_line_four).to eq TestStatus.test_status(:producer_manual_address_page_postcode)
@@ -70,4 +70,8 @@ And(/^I enter values which exceed the allowed number of characters for the field
   ProducerContactDetailsPage.new.fill_organisation_name org_name
   ProducerContactDetailsPage.new.fill_organisation_contact_person contact_person
   ProducerContactDetailsPage.new.fill_email_address email + '@test.com'
+end
+
+And(/^I complete producer organisation address with postcode search$/) do
+  UkmProducerAddressController.complete
 end

@@ -33,29 +33,33 @@ module CommonComponents
   TOWN_CITY = Faker::Address.city
   UK_POSTCODE = 'SW1P 4DF'
 
-  def enter_building_name_number(page)
-    fill_in BUILDING_NAME_OR_NUMBER, with: BUILDING_NAME_NUMBER, visible: false
-    TestStatus.set_test_status("#{page}_building_name_number".to_sym, BUILDING_NAME_NUMBER)
+  def enter_building_name_number(page, input = BUILDING_NAME_NUMBER)
+    fill_in BUILDING_NAME_OR_NUMBER, with: input, visible: false
+    TestStatus.set_test_status("#{page}_building_name_number".to_sym, input)
   end
 
-  def enter_address_1(page)
-    fill_in ADDRESS_LINE_1, with: ADDRESS_1, visible: false
-    TestStatus.set_test_status("#{page}_address_line_1".to_sym, ADDRESS_1)
+  def enter_address_1(page, input = ADDRESS_1)
+    fill_in ADDRESS_LINE_1, with: input, visible: false
+    TestStatus.set_test_status("#{page}_address_line_1".to_sym, input)
   end
 
-  def enter_address_2(page)
-    fill_in ADDRESS_LINE_2, with: ADDRESS_2, visible: false
-    TestStatus.set_test_status("#{page}_address_line_2".to_sym, ADDRESS_2)
+  def enter_address_2(page, input = ADDRESS_2)
+    fill_in ADDRESS_LINE_2, with: input, visible: false
+    TestStatus.set_test_status("#{page}_address_line_2".to_sym, input)
   end
 
-  def enter_town_and_city(page)
-    fill_in ADDRESS_LINE_TOWN_CITY, with: TOWN_CITY, visible: false
-    TestStatus.set_test_status("#{page}_town_and_city".to_sym, TOWN_CITY)
+  def enter_town_and_city(page, input = TOWN_CITY)
+    fill_in ADDRESS_LINE_TOWN_CITY, with: input, visible: false
+    TestStatus.set_test_status("#{page}_town_and_city".to_sym, input)
   end
 
-  def enter_postcode(page)
-    fill_in ADDRESS_LINE_POSTCODE, with: UK_POSTCODE, visible: false
-    TestStatus.set_test_status("#{page}_postcode".to_sym, UK_POSTCODE)
+  def clear_town_and_city
+    fill_in ADDRESS_LINE_TOWN_CITY, with: '', visible: false
+  end
+
+  def enter_postcode(page, input = UK_POSTCODE)
+    fill_in ADDRESS_LINE_POSTCODE, with: input, visible: false
+    TestStatus.set_test_status("#{page}_postcode".to_sym, input)
   end
 
   def enter_address(page)
@@ -278,6 +282,16 @@ module CommonComponents
     find(countries.fetch(selected_country), visible: false).checked?
   end
 
+  def select_first_address
+    find('addressselection-radio-1', visible: false).click
+  end
+
+  def select_second_address(page)
+    address_text = find('label[for="addressselection-radio-1"]').text
+    find('addressselection-radio-2', visible: false).click
+    TestStatus.set_test_status("#{page}_full_address".to_sym, address_text)
+  end
+
   def countries
     {
       'England' => 'country-radio-1',
@@ -285,6 +299,17 @@ module CommonComponents
       'Wales' => 'country-radio-3',
       'Northern Ireland' => 'country-radio-4'
     }
+  end
+
+  def full_address
+    address_line_1 = find('address-addressLine1', visible: false).text
+    address_line_2 = find('address-addressLine2', visible: false).text
+    town_city = find('address-townCity', visible: false).text
+    postcode = find('address-postcode', visible: false).text
+    country = find('address-country', visible: false).text
+
+    full_address = "#{address_line_1}, #{address_line_2}, #{town_city}, #{postcode}, #{country}"
+    full_address.gsub(/,\s*$/, '')
   end
 
 end

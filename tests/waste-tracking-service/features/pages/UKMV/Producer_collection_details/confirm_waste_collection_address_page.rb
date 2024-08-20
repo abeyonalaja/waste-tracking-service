@@ -7,7 +7,7 @@ class ConfirmWasteCollectionAddressPage < GenericPage
   include PageHelper
   include CommonComponents
 
-  TITLE = Translations.ukmv_value 'single.producer.wasteCollectionDetails.postcode.confirmation.heading'
+  TITLE = Translations.ukmv_value 'wasteCollectionDetails.sameAsProducer.confirm.heading'
   USE_THIS_ADDRESS_BUTTON = Translations.ukmv_value 'single.postcode.useAddress'
   USE_DIFF_ADDRESS_LINK = Translations.ukmv_value 'single.postcode.useDifferentAddress'
   SAVE_AND_RETURN_BUTTON = Translations.ukmv_value 'single.postcode.buttonSecondary'

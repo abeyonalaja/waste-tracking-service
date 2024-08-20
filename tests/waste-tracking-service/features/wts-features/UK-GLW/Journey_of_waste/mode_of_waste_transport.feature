@@ -153,6 +153,6 @@ Feature: Mode of transport page
     Then I should see "how will the waste carrier transport the waste" page is displayed
     And I choose "Rail" radio button
     And I click the button Save and continue
-    And I enter more than allowed charaters on details about the transport
+    And I enter more than allowed characters on details about the transport
     And I click the button Save and continue
     Then I remain on the Rail transport details page with an "The first carrier's rail transportation details must be 200 characters or less" error message displayed

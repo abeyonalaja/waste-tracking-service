@@ -32,7 +32,7 @@ And(/^I should see inland waterways transport details page translated$/) do
   InlandWaterTransportDetailsPage.new.check_translation
 end
 
-And(/^I enter more than allowed charaters on details about the transport$/) do
+And(/^I enter more than allowed characters on details about the transport$/) do
   transport_description = 'Shipping container-ABC123, vehicle registrations-AB1234, IMO-123456,Freight numbers-AB12ER, trailer numbers-123456,Specialist containers being transported-ABC123,Call signs-XYZ1234567,Container -12345, Max charater testing'
   RoadTransportDetailsPage.new.enter_transportation_description transport_description
 end

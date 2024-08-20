@@ -51,7 +51,7 @@ And(/^I complete Waste codes and description task$/) do
   QuantityOfBulkWastePage.new.check_page_displayed
   QuantityOfBulkWastePage.new.back
   DescribeTheWastePage.new.check_page_displayed
-  DescribeTheWastePage.new.save_and_return
+  DescribeTheWastePage.new.save_and_return_to_draft
 end
 
 And(/^I have (\d+) of 5 sections completed$/) do |completed|
