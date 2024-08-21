@@ -156,7 +156,6 @@ Feature: Automation to check accessibility tool
     Then the page should be axe clean within "main, header" but excluding "footer"
     Then the page should be axe clean checking only: document-title, label
 
-
   Scenario: Check UKW Accessibility - Select producer address page
     Given I navigate to waste tracking accounts page
     When I navigate to the UKM task list page with reference
@@ -223,6 +222,18 @@ Feature: Automation to check accessibility tool
     And I enter valid waste collection address postcode
     And I click search postcode button
     Then the "Select Waste Collection Address" page is displayed
+    Then the page should be axe clean within "main"; excluding "aside"
+    Then the page should be axe clean according to: wcag2aa; checking: color-contrast
+    Then the page should be axe clean within "main, header" but excluding "footer"
+    Then the page should be axe clean checking only: document-title, label
+
+  Scenario: Check UKW Accessibility - Enter waste collection manual page
+    Given I navigate to waste tracking accounts page
+    When I navigate to the UKM task list page with reference
+    When I click the "Waste collection details" link
+    Then the "Whats Waste Collection Address" page is displayed
+    When I click the "Or enter the address manually" link
+    Then the "Enter waste collection address Manual" page is displayed
     Then the page should be axe clean within "main"; excluding "aside"
     Then the page should be axe clean according to: wcag2aa; checking: color-contrast
     Then the page should be axe clean within "main, header" but excluding "footer"
