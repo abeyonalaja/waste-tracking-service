@@ -168,3 +168,27 @@ export const validateSetDraftProducerConfirmationRequest =
       isConfirmed: { type: 'boolean' },
     },
   });
+export const validateSetDraftReceiverContactRequest = ajv.compile<UkwmContact>({
+  properties: {
+    organisationName: { type: 'string' },
+    name: { type: 'string' },
+    email: { type: 'string' },
+    phone: { type: 'string' },
+  },
+  optionalProperties: {
+    fax: { type: 'string' },
+  },
+});
+
+export const validateSetPartialDraftReceiverContactRequest = ajv.compile<
+  Partial<UkwmContact>
+>({
+  properties: {},
+  optionalProperties: {
+    organisationName: { type: 'string' },
+    name: { type: 'string' },
+    email: { type: 'string' },
+    phone: { type: 'string' },
+    fax: { type: 'string' },
+  },
+});

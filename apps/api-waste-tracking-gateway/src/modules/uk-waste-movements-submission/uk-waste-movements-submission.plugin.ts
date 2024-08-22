@@ -19,6 +19,8 @@ import {
   validateSetDraftReceiverAddressDetailsRequest,
   validateSetPartialDraftReceiverAddressDetailsRequest,
   validateSetDraftProducerConfirmationRequest,
+  validateSetDraftReceiverContactRequest,
+  validateSetPartialDraftReceiverContactRequest,
 } from './uk-waste-movements-submission.validation';
 
 export interface PluginOptions {
@@ -613,6 +615,72 @@ const plugin: Plugin<PluginOptions> = {
         } catch (err) {
           if (err instanceof Boom.Boom) {
             err.output.payload.data = err?.data ?? undefined;
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/drafts/{id}/receiver-contact',
+      handler: async function ({ params }, h) {
+        try {
+          const value = await backend.getDraftReceiverContactDetail({
+            id: params.id,
+            accountId: h.request.auth.credentials.accountId as string,
+          });
+          return value as dto.UkwmGetDraftReceiverContactDetailResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'PUT',
+      path: '/drafts/{id}/receiver-contact',
+      handler: async function ({ params, payload, query }, h) {
+        const saveAsDraftStr = query['saveAsDraft'] as string | undefined;
+        if (
+          !saveAsDraftStr ||
+          !['true', 'false'].includes(saveAsDraftStr.toLowerCase())
+        ) {
+          return Boom.badRequest();
+        }
+        const saveAsDraft: boolean = saveAsDraftStr.toLowerCase() === 'true';
+        if (!saveAsDraft) {
+          if (!validateSetDraftReceiverContactRequest(payload)) {
+            return Boom.badRequest();
+          }
+        } else {
+          if (!validateSetPartialDraftReceiverContactRequest(payload)) {
+            return Boom.badRequest();
+          }
+        }
+        const request =
+          payload as dto.UkwmSetDraftReceiverContactDetailsRequest;
+        try {
+          await backend.setDraftReceiverContactDetail(
+            {
+              id: params.id,
+              accountId: h.request.auth.credentials.accountId as string,
+            },
+            request,
+            saveAsDraft,
+          );
+          return request;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            err.output.payload.data = err?.data;
             return err;
           }
 

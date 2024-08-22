@@ -43,8 +43,6 @@ export function validateProducerOrganisationName(
   organsationName?: string,
   message?: ErrorMessage,
 ): ValidationResult<string> {
-  const errors: FieldFormatError[] = [];
-
   const trimmedOrganisationName = organsationName?.trim();
 
   if (!trimmedOrganisationName) {
@@ -67,23 +65,21 @@ export function validateProducerOrganisationName(
   }
 
   if (trimmedOrganisationName.length > constraints.FreeTextChar.max) {
-    errors.push({
-      field: 'Producer organisation name',
-      code: errorCodes.producerCharTooManyOrganisationName,
-      message: message
-        ? getErrorMessage(
-            errorCodes.producerCharTooManyOrganisationName,
-            message.locale,
-            message.context,
-          )
-        : undefined,
-    });
-  }
-
-  if (errors.length > 0) {
     return {
       valid: false,
-      errors: errors,
+      errors: [
+        {
+          field: 'Producer organisation name',
+          code: errorCodes.producerCharTooManyOrganisationName,
+          message: message
+            ? getErrorMessage(
+                errorCodes.producerCharTooManyOrganisationName,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
     };
   }
 
@@ -97,8 +93,6 @@ export function validateProducerReference(
   reference?: string,
   message?: ErrorMessage,
 ): ValidationResult<string> {
-  const errors: FieldFormatError[] = [];
-
   const trimmedReference = reference?.trim();
 
   if (!trimmedReference) {
@@ -121,37 +115,40 @@ export function validateProducerReference(
   }
 
   if (trimmedReference.length > constraints.ReferenceChar.max) {
-    errors.push({
-      field: 'Reference',
-      code: errorCodes.producerCharTooManyReference,
-      message: message
-        ? getErrorMessage(
-            errorCodes.producerCharTooManyReference,
-            message.locale,
-            message.context,
-          )
-        : undefined,
-    });
+    return {
+      valid: false,
+      errors: [
+        {
+          field: 'Reference',
+          code: errorCodes.producerCharTooManyReference,
+          message: message
+            ? getErrorMessage(
+                errorCodes.producerCharTooManyReference,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
+    };
   }
 
   if (!regex.referenceRegex.test(trimmedReference)) {
-    errors.push({
-      field: 'Reference',
-      code: errorCodes.producerInvalidReference,
-      message: message
-        ? getErrorMessage(
-            errorCodes.producerInvalidReference,
-            message.locale,
-            message.context,
-          )
-        : undefined,
-    });
-  }
-
-  if (errors.length > 0) {
     return {
       valid: false,
-      errors: errors,
+      errors: [
+        {
+          field: 'Reference',
+          code: errorCodes.producerInvalidReference,
+          message: message
+            ? getErrorMessage(
+                errorCodes.producerInvalidReference,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
     };
   }
 
@@ -194,34 +191,30 @@ export function validateBuildingNameOrNumber(
   section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
-  const errors: FieldFormatError[] = [];
-
   const trimmedBuildingNameOrNumber = buildingNameOrNumber?.trim();
 
   if (
     trimmedBuildingNameOrNumber &&
     trimmedBuildingNameOrNumber.length > constraints.FreeTextChar.max
   ) {
-    errors.push({
-      field: (section + ' building name or number') as Field,
-      code: getSharedErrorCode(
-        errorCodes.charTooManyBuildingNameOrNumberBase,
-        section,
-      ),
-      message: message
-        ? getErrorMessage(
-            errorCodes.charTooManyBuildingNameOrNumberBase,
-            message.locale,
-            message.context,
-          )
-        : undefined,
-    });
-  }
-
-  if (errors.length > 0) {
     return {
       valid: false,
-      errors: errors,
+      errors: [
+        {
+          field: (section + ' building name or number') as Field,
+          code: getSharedErrorCode(
+            errorCodes.charTooManyBuildingNameOrNumberBase,
+            section,
+          ),
+          message: message
+            ? getErrorMessage(
+                errorCodes.charTooManyBuildingNameOrNumberBase,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
     };
   }
 
@@ -236,8 +229,6 @@ export function validateAddressLine1(
   section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
-  const errors: FieldFormatError[] = [];
-
   const trimmedAddressLine1 = addressLine1?.trim();
 
   if (!trimmedAddressLine1) {
@@ -260,23 +251,24 @@ export function validateAddressLine1(
   }
 
   if (trimmedAddressLine1.length > constraints.FreeTextChar.max) {
-    errors.push({
-      field: (section + ' address line 1') as Field,
-      code: getSharedErrorCode(errorCodes.charTooManyAddressLine1Base, section),
-      message: message
-        ? getErrorMessage(
-            errorCodes.charTooManyAddressLine1Base,
-            message.locale,
-            message.context,
-          )
-        : undefined,
-    });
-  }
-
-  if (errors.length > 0) {
     return {
       valid: false,
-      errors: errors,
+      errors: [
+        {
+          field: (section + ' address line 1') as Field,
+          code: getSharedErrorCode(
+            errorCodes.charTooManyAddressLine1Base,
+            section,
+          ),
+          message: message
+            ? getErrorMessage(
+                errorCodes.charTooManyAddressLine1Base,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
     };
   }
 
@@ -291,31 +283,30 @@ export function validateAddressLine2(
   section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
-  const errors: FieldFormatError[] = [];
-
   const trimmedAddressLine2 = addressLine2?.trim();
 
   if (
     trimmedAddressLine2 &&
     trimmedAddressLine2.length > constraints.FreeTextChar.max
   ) {
-    errors.push({
-      field: (section + ' address line 2') as Field,
-      code: getSharedErrorCode(errorCodes.charTooManyAddressLine2Base, section),
-      message: message
-        ? getErrorMessage(
-            errorCodes.charTooManyAddressLine2Base,
-            message.locale,
-            message.context,
-          )
-        : undefined,
-    });
-  }
-
-  if (errors.length > 0) {
     return {
       valid: false,
-      errors: errors,
+      errors: [
+        {
+          field: (section + ' address line 2') as Field,
+          code: getSharedErrorCode(
+            errorCodes.charTooManyAddressLine2Base,
+            section,
+          ),
+          message: message
+            ? getErrorMessage(
+                errorCodes.charTooManyAddressLine2Base,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
     };
   }
 
@@ -330,42 +321,43 @@ export function validatePostcode(
   section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
-  const errors: FieldFormatError[] = [];
-
   const trimmedPostcode = postcode?.trim();
 
   if (trimmedPostcode.length > constraints.PostcodeChar.max) {
-    errors.push({
-      field: (section + ' postcode') as Field,
-      code: getSharedErrorCode(errorCodes.invalidPostcodeBase, section),
-      message: message
-        ? getErrorMessage(
-            errorCodes.invalidPostcodeBase,
-            message.locale,
-            message.context,
-          )
-        : undefined,
-    });
+    return {
+      valid: false,
+      errors: [
+        {
+          field: (section + ' postcode') as Field,
+          code: getSharedErrorCode(errorCodes.invalidPostcodeBase, section),
+          message: message
+            ? getErrorMessage(
+                errorCodes.invalidPostcodeBase,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
+    };
   }
 
   if (!regex.postcodeRegex.test(trimmedPostcode)) {
-    errors.push({
-      field: (section + ' postcode') as Field,
-      code: getSharedErrorCode(errorCodes.invalidPostcodeBase, section),
-      message: message
-        ? getErrorMessage(
-            errorCodes.invalidPostcodeBase,
-            message.locale,
-            message.context,
-          )
-        : undefined,
-    });
-  }
-
-  if (errors.length > 0) {
     return {
       valid: false,
-      errors: errors,
+      errors: [
+        {
+          field: (section + ' postcode') as Field,
+          code: getSharedErrorCode(errorCodes.invalidPostcodeBase, section),
+          message: message
+            ? getErrorMessage(
+                errorCodes.invalidPostcodeBase,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
     };
   }
 
@@ -380,8 +372,6 @@ export function validateTownCity(
   section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
-  const errors: FieldFormatError[] = [];
-
   const trimmedTownCity = townCity?.trim();
 
   if (!trimmedTownCity) {
@@ -404,23 +394,24 @@ export function validateTownCity(
   }
 
   if (trimmedTownCity.length > constraints.FreeTextChar.max) {
-    errors.push({
-      field: (section + ' town or city') as Field,
-      code: getSharedErrorCode(errorCodes.charTooManyTownOrCityBase, section),
-      message: message
-        ? getErrorMessage(
-            errorCodes.charTooManyTownOrCityBase,
-            message.locale,
-            message.context,
-          )
-        : undefined,
-    });
-  }
-
-  if (errors.length > 0) {
     return {
       valid: false,
-      errors: errors,
+      errors: [
+        {
+          field: (section + ' town or city') as Field,
+          code: getSharedErrorCode(
+            errorCodes.charTooManyTownOrCityBase,
+            section,
+          ),
+          message: message
+            ? getErrorMessage(
+                errorCodes.charTooManyTownOrCityBase,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
     };
   }
 
@@ -435,8 +426,6 @@ export function validateCountry(
   section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
-  const errors: FieldFormatError[] = [];
-
   const trimmedCountry = country?.trim();
 
   if (!trimmedCountry) {
@@ -459,23 +448,21 @@ export function validateCountry(
   }
 
   if (!fourNationsCountries.includes(trimmedCountry)) {
-    errors.push({
-      field: (section + ' country') as Field,
-      code: getSharedErrorCode(errorCodes.invalidCountryBase, section),
-      message: message
-        ? getErrorMessage(
-            errorCodes.invalidCountryBase,
-            message.locale,
-            message.context,
-          )
-        : undefined,
-    });
-  }
-
-  if (errors.length > 0) {
     return {
       valid: false,
-      errors: errors,
+      errors: [
+        {
+          field: (section + ' country') as Field,
+          code: getSharedErrorCode(errorCodes.invalidCountryBase, section),
+          message: message
+            ? getErrorMessage(
+                errorCodes.invalidCountryBase,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
     };
   }
 
@@ -510,7 +497,7 @@ export function validateAddressDetails(
     if (buildingNameOrNumber.valid) {
       addressToReturn.buildingNameOrNumber = buildingNameOrNumber.value;
     } else {
-      buildingNameOrNumber.errors?.forEach((error) => errors.push(error));
+      errors.push(...buildingNameOrNumber.errors);
     }
   }
 
@@ -522,7 +509,7 @@ export function validateAddressDetails(
   if (addressLine1.valid) {
     addressToReturn.addressLine1 = addressLine1.value;
   } else {
-    addressLine1.errors?.forEach((error) => errors.push(error));
+    errors.push(...addressLine1.errors);
   }
 
   if (value.addressLine2?.trim()) {
@@ -536,7 +523,7 @@ export function validateAddressDetails(
     if (addressLine2.valid) {
       addressToReturn.addressLine2 = addressLine2.value;
     } else {
-      addressLine2.errors?.forEach((error) => errors.push(error));
+      errors.push(...addressLine2.errors);
     }
   }
 
@@ -544,7 +531,7 @@ export function validateAddressDetails(
   if (townCity.valid) {
     addressToReturn.townCity = townCity.value;
   } else {
-    townCity.errors?.forEach((error) => errors.push(error));
+    errors.push(...townCity.errors);
   }
 
   if (value.postcode?.trim()) {
@@ -557,7 +544,7 @@ export function validateAddressDetails(
     if (postcode.valid) {
       addressToReturn.postcode = postcode.value;
     } else {
-      postcode.errors?.forEach((error) => errors.push(error));
+      errors.push(...postcode.errors);
     }
   }
 
@@ -565,7 +552,7 @@ export function validateAddressDetails(
   if (country.valid) {
     addressToReturn.country = country.value;
   } else {
-    country.errors?.forEach((error) => errors.push(error));
+    errors.push(...country.errors);
   }
 
   if (errors.length > 0) {
@@ -601,9 +588,7 @@ export function validatePartialAddressDetails(
     if (producerBuildingNameOrNumber.valid) {
       fieldsToReturn.buildingNameOrNumber = producerBuildingNameOrNumber.value;
     } else {
-      producerBuildingNameOrNumber.errors?.forEach((error) =>
-        errors.push(error),
-      );
+      errors.push(...producerBuildingNameOrNumber.errors);
     }
   }
 
@@ -614,7 +599,7 @@ export function validatePartialAddressDetails(
     if (producerAddressLine1.valid) {
       fieldsToReturn.addressLine1 = producerAddressLine1.value;
     } else {
-      producerAddressLine1.errors?.forEach((error) => errors.push(error));
+      errors.push(...producerAddressLine1.errors);
     }
   }
 
@@ -625,7 +610,7 @@ export function validatePartialAddressDetails(
     if (producerAddressLine2.valid) {
       fieldsToReturn.addressLine2 = producerAddressLine2.value;
     } else {
-      producerAddressLine2.errors?.forEach((error) => errors.push(error));
+      errors.push(...producerAddressLine2.errors);
     }
   }
 
@@ -636,7 +621,7 @@ export function validatePartialAddressDetails(
     if (producerTownCity.valid) {
       fieldsToReturn.townCity = producerTownCity.value;
     } else {
-      producerTownCity.errors?.forEach((error) => errors.push(error));
+      errors.push(...producerTownCity.errors);
     }
   }
 
@@ -647,7 +632,7 @@ export function validatePartialAddressDetails(
     if (producerCountry.valid) {
       fieldsToReturn.country = producerCountry.value;
     } else {
-      producerCountry.errors?.forEach((error) => errors.push(error));
+      errors.push(...producerCountry.errors);
     }
   }
 
@@ -658,7 +643,7 @@ export function validatePartialAddressDetails(
     if (producerPostcode.valid) {
       fieldsToReturn.postcode = producerPostcode.value;
     } else {
-      producerPostcode.errors?.forEach((error) => errors.push(error));
+      errors.push(...producerPostcode.errors);
     }
   }
 
@@ -675,202 +660,25 @@ export function validatePartialAddressDetails(
   };
 }
 
-export function validateProducerDetailSection(
-  value: ProducerDetail,
-  message?: ErrorMessage,
-):
-  | { valid: false; value: FieldFormatError[] }
-  | { valid: true; value: ProducerDetail } {
-  const errors: FieldFormatError[] = [];
-  const detailsToReturn: ProducerDetail = {
-    reference: '',
-    sicCode: '',
-    contact: {
-      organisationName: '',
-      name: '',
-      email: '',
-      phone: '',
-    },
-    address: {
-      addressLine1: '',
-      townCity: '',
-      postcode: '',
-      country: '',
-    },
-  };
-
-  const producerOrganisationName = validateProducerOrganisationName(
-    value.contact.organisationName,
-    message,
-  );
-
-  if (producerOrganisationName.valid) {
-    detailsToReturn.contact.organisationName = producerOrganisationName.value;
-  } else {
-    producerOrganisationName.errors?.forEach((error) => errors.push(error));
-  }
-
-  const producerReference = validateProducerReference(value.reference, message);
-
-  if (producerReference.valid) {
-    detailsToReturn.reference = producerReference.value;
-  } else {
-    producerReference.errors?.forEach((error) => errors.push(error));
-  }
-
-  if (value.address.buildingNameOrNumber?.trim()) {
-    const producerBuildingNameOrNumber: ValidationResult<
-      ProducerDetail['address']['buildingNameOrNumber']
-    > = validateBuildingNameOrNumber(
-      value.address.buildingNameOrNumber as string,
-      'Producer',
-      message,
-    );
-
-    if (producerBuildingNameOrNumber.valid) {
-      detailsToReturn.address.buildingNameOrNumber =
-        producerBuildingNameOrNumber.value;
-    } else {
-      producerBuildingNameOrNumber.errors?.forEach((error) =>
-        errors.push(error),
-      );
-    }
-  }
-
-  const producerAddressLine1 = validateAddressLine1(
-    value.address.addressLine1,
-    'Producer',
-    message,
-  );
-  if (producerAddressLine1.valid) {
-    detailsToReturn.address.addressLine1 = producerAddressLine1.value;
-  } else {
-    producerAddressLine1.errors?.forEach((error) => errors.push(error));
-  }
-
-  if (value.address.addressLine2?.trim()) {
-    const producerAddressLine2: ValidationResult<
-      ProducerDetail['address']['addressLine2']
-    > = validateAddressLine2(
-      value.address.addressLine2 as string,
-      'Producer',
-      message,
-    );
-
-    if (producerAddressLine2.valid) {
-      detailsToReturn.address.addressLine2 = producerAddressLine2.value;
-    } else {
-      producerAddressLine2.errors?.forEach((error) => errors.push(error));
-    }
-  }
-
-  const producerTownCity = validateTownCity(
-    value.address.townCity,
-    'Producer',
-    message,
-  );
-  if (producerTownCity.valid) {
-    detailsToReturn.address.townCity = producerTownCity.value;
-  } else {
-    producerTownCity.errors?.forEach((error) => errors.push(error));
-  }
-
-  if (value.address.townCity?.trim()) {
-    const producerPostcode: ValidationResult<
-      ProducerDetail['address']['postcode']
-    > = validatePostcode(value.address.postcode as string, 'Producer', message);
-
-    if (producerPostcode.valid) {
-      detailsToReturn.address.postcode = producerPostcode.value;
-    } else {
-      producerPostcode.errors?.forEach((error) => errors.push(error));
-    }
-  }
-
-  const producerCountry = validateCountry(
-    value.address.country,
-    'Producer',
-    message,
-  );
-  if (producerCountry.valid) {
-    detailsToReturn.address.country = producerCountry.value;
-  } else {
-    producerCountry.errors?.forEach((error) => errors.push(error));
-  }
-
-  const producerContactName = validateProducerContactPerson(
-    value.contact.name,
-    message,
-  );
-  if (producerContactName.valid) {
-    detailsToReturn.contact.name = producerContactName.value;
-  } else {
-    producerContactName.errors?.forEach((error) => errors.push(error));
-  }
-
-  const producerContactEmail = validateProducerContactEmail(
-    value.contact.email,
-    message,
-  );
-  if (producerContactEmail.valid) {
-    detailsToReturn.contact.email = producerContactEmail.value;
-  } else {
-    producerContactEmail.errors?.forEach((error) => errors.push(error));
-  }
-
-  const producerContactPhone = validateProducerContactPhone(
-    value.contact.phone,
-    message,
-  );
-
-  if (producerContactPhone.valid) {
-    detailsToReturn.contact.phone = producerContactPhone.value;
-  } else {
-    producerContactPhone.errors?.forEach((error) => errors.push(error));
-  }
-
-  if (value.contact.fax?.trim()) {
-    const producerContactFax: ValidationResult<
-      ProducerDetail['contact']['fax']
-    > = validateProducerContactFax(value.contact.fax as string, message);
-
-    if (producerContactFax.valid) {
-      detailsToReturn.contact.fax = producerContactFax.value;
-    } else {
-      producerContactFax.errors?.forEach((error) => errors.push(error));
-    }
-  }
-
-  if (errors.length > 0) {
-    return {
-      valid: false,
-      value: errors,
-    };
-  }
-
-  return {
-    valid: true,
-    value: detailsToReturn,
-  };
-}
-
-export function validateProducerContactOrganisationName(
-  contactOrganisationName?: string,
+export function validateOrganisationName(
+  contactOrganisationName: string | undefined,
+  section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
-  const errors: FieldFormatError[] = [];
-
   const trimmedContactOrganisationName = contactOrganisationName?.trim();
   if (!trimmedContactOrganisationName) {
     return {
       valid: false,
       errors: [
         {
-          field: 'Producer organisation name',
-          code: errorCodes.producerEmptyOrganisationName,
+          field: (section + ' organisation name') as Field,
+          code: getSharedErrorCode(
+            errorCodes.emptyOrganisationNameBase,
+            section,
+          ),
           message: message
             ? getErrorMessage(
-                errorCodes.producerEmptyOrganisationName,
+                errorCodes.emptyOrganisationNameBase,
                 message.locale,
                 message.context,
               )
@@ -881,23 +689,24 @@ export function validateProducerContactOrganisationName(
   }
 
   if (trimmedContactOrganisationName.length > constraints.FreeTextChar.max) {
-    errors.push({
-      field: 'Producer organisation name',
-      code: errorCodes.producerCharTooManyOrganisationName,
-      message: message
-        ? getErrorMessage(
-            errorCodes.producerCharTooManyOrganisationName,
-            message.locale,
-            message.context,
-          )
-        : undefined,
-    });
-  }
-
-  if (errors.length > 0) {
     return {
       valid: false,
-      errors: errors,
+      errors: [
+        {
+          field: (section + ' organisation name') as Field,
+          code: getSharedErrorCode(
+            errorCodes.charTooManyOrganisationNameBase,
+            section,
+          ),
+          message: message
+            ? getErrorMessage(
+                errorCodes.charTooManyOrganisationNameBase,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
     };
   }
 
@@ -907,23 +716,25 @@ export function validateProducerContactOrganisationName(
   };
 }
 
-export function validateProducerContactPerson(
-  contactPerson?: string,
+export function validateFullName(
+  contactPerson: string | undefined,
+  section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
-  const errors: FieldFormatError[] = [];
-
   const trimmedContactPerson = contactPerson?.trim();
   if (!trimmedContactPerson) {
     return {
       valid: false,
       errors: [
         {
-          field: 'Producer contact name',
-          code: errorCodes.producerEmptyContactFullName,
+          field: (section + ' contact name') as Field,
+          code: getSharedErrorCode(
+            errorCodes.emptyContactFullNameBase,
+            section,
+          ),
           message: message
             ? getErrorMessage(
-                errorCodes.producerEmptyContactFullName,
+                errorCodes.emptyContactFullNameBase,
                 message.locale,
                 message.context,
               )
@@ -934,23 +745,24 @@ export function validateProducerContactPerson(
   }
 
   if (trimmedContactPerson.length > constraints.FreeTextChar.max) {
-    errors.push({
-      field: 'Producer contact name',
-      code: errorCodes.producerCharTooManyContactFullName,
-      message: message
-        ? getErrorMessage(
-            errorCodes.producerCharTooManyContactFullName,
-            message.locale,
-            message.context,
-          )
-        : undefined,
-    });
-  }
-
-  if (errors.length > 0) {
     return {
       valid: false,
-      errors: errors,
+      errors: [
+        {
+          field: (section + ' contact name') as Field,
+          code: getSharedErrorCode(
+            errorCodes.charTooManyContactFullNameBase,
+            section,
+          ),
+          message: message
+            ? getErrorMessage(
+                errorCodes.charTooManyContactFullNameBase,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
     };
   }
 
@@ -960,12 +772,11 @@ export function validateProducerContactPerson(
   };
 }
 
-export function validateProducerContactEmail(
-  contactEmail?: string,
+export function validateEmail(
+  contactEmail: string | undefined,
+  section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
-  const errors: FieldFormatError[] = [];
-
   const trimmedContactEmail = contactEmail?.trim();
 
   if (!trimmedContactEmail) {
@@ -973,11 +784,11 @@ export function validateProducerContactEmail(
       valid: false,
       errors: [
         {
-          field: 'Producer contact email address',
-          code: errorCodes.producerEmptyEmail,
+          field: (section + ' contact email address') as Field,
+          code: getSharedErrorCode(errorCodes.emptyEmailBase, section),
           message: message
             ? getErrorMessage(
-                errorCodes.producerEmptyEmail,
+                errorCodes.emptyEmailBase,
                 message.locale,
                 message.context,
               )
@@ -988,37 +799,40 @@ export function validateProducerContactEmail(
   }
 
   if (trimmedContactEmail.length > constraints.FreeTextChar.max) {
-    errors.push({
-      field: 'Producer contact email address',
-      code: errorCodes.producerCharTooManyEmail,
-      message: message
-        ? getErrorMessage(
-            errorCodes.producerCharTooManyEmail,
-            message.locale,
-            message.context,
-          )
-        : undefined,
-    });
+    return {
+      valid: false,
+      errors: [
+        {
+          field: (section + ' contact email address') as Field,
+          code: getSharedErrorCode(errorCodes.charTooManyEmailBase, section),
+          message: message
+            ? getErrorMessage(
+                errorCodes.charTooManyEmailBase,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
+    };
   }
 
   if (!regex.emailRegex.test(trimmedContactEmail)) {
-    errors.push({
-      field: 'Producer contact email address',
-      code: errorCodes.producerInvalidEmail,
-      message: message
-        ? getErrorMessage(
-            errorCodes.producerInvalidEmail,
-            message.locale,
-            message.context,
-          )
-        : undefined,
-    });
-  }
-
-  if (errors.length > 0) {
     return {
       valid: false,
-      errors: errors,
+      errors: [
+        {
+          field: (section + ' contact email address') as Field,
+          code: getSharedErrorCode(errorCodes.invalidEmailBase, section),
+          message: message
+            ? getErrorMessage(
+                errorCodes.invalidEmailBase,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
     };
   }
 
@@ -1028,11 +842,11 @@ export function validateProducerContactEmail(
   };
 }
 
-export function validateProducerContactPhone(
-  phoneNumber?: string,
+export function validatePhone(
+  phoneNumber: string | undefined,
+  section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
-  const errors: FieldFormatError[] = [];
   const trimmedPhoneNumber = phoneNumber?.trim();
 
   if (!trimmedPhoneNumber) {
@@ -1040,11 +854,11 @@ export function validateProducerContactPhone(
       valid: false,
       errors: [
         {
-          field: 'Producer contact phone number',
-          code: errorCodes.producerEmptyPhone,
+          field: (section + ' contact phone number') as Field,
+          code: getSharedErrorCode(errorCodes.emptyPhoneBase, section),
           message: message
             ? getErrorMessage(
-                errorCodes.producerEmptyPhone,
+                errorCodes.emptyPhoneBase,
                 message.locale,
                 message.context,
               )
@@ -1055,23 +869,21 @@ export function validateProducerContactPhone(
   }
 
   if (!regex.phoneRegex.test(trimmedPhoneNumber)) {
-    errors.push({
-      field: 'Producer contact phone number',
-      code: errorCodes.producerInvalidPhone,
-      message: message
-        ? getErrorMessage(
-            errorCodes.producerInvalidPhone,
-            message.locale,
-            message.context,
-          )
-        : undefined,
-    });
-  }
-
-  if (errors.length > 0) {
     return {
       valid: false,
-      errors: errors,
+      errors: [
+        {
+          field: (section + ' contact phone number') as Field,
+          code: getSharedErrorCode(errorCodes.invalidPhoneBase, section),
+          message: message
+            ? getErrorMessage(
+                errorCodes.invalidPhoneBase,
+                message.locale,
+                message.context,
+              )
+            : undefined,
+        },
+      ],
     };
   }
 
@@ -1081,8 +893,9 @@ export function validateProducerContactPhone(
   };
 }
 
-export function validateProducerContactFax(
-  faxNumber?: string,
+export function validateFax(
+  faxNumber: string | undefined,
+  section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
   const trimmedFaxNumber = faxNumber?.trim();
@@ -1092,11 +905,11 @@ export function validateProducerContactFax(
       valid: false,
       errors: [
         {
-          field: 'Producer fax number',
-          code: errorCodes.producerInvalidFax,
+          field: (section + ' fax number') as Field,
+          code: getSharedErrorCode(errorCodes.invalidFaxBase, section),
           message: message
             ? getErrorMessage(
-                errorCodes.producerInvalidFax,
+                errorCodes.invalidFaxBase,
                 message.locale,
                 message.context,
               )
@@ -1112,150 +925,167 @@ export function validateProducerContactFax(
   };
 }
 
-export function validateProducerContactDetailSection(
+export function validateContact(
   value: Contact,
+  section: Section,
   message?: ErrorMessage,
 ): ValidationResult<Contact> {
   const errors: FieldFormatError[] = [];
+  const contactToReturn: Contact = {
+    organisationName: '',
+    name: '',
+    email: '',
+    phone: '',
+  };
 
-  const producerContactOrganisationName =
-    validateProducerContactOrganisationName(value.organisationName, message);
-
-  const producerContactPerson = validateProducerContactPerson(
-    value.name,
+  const organisationName = validateOrganisationName(
+    value.organisationName,
+    section,
     message,
   );
+  if (organisationName.valid) {
+    contactToReturn.organisationName = organisationName.value;
+  } else {
+    errors.push(...organisationName.errors);
+  }
 
-  const producerContactEmail = validateProducerContactEmail(
-    value.email,
-    message,
-  );
+  const name = validateFullName(value.name, section, message);
+  if (name.valid) {
+    contactToReturn.name = name.value;
+  } else {
+    errors.push(...name.errors);
+  }
 
-  const producerContactPhone = validateProducerContactPhone(
-    value.phone,
-    message,
-  );
+  const email = validateEmail(value.email, section, message);
+  if (email.valid) {
+    contactToReturn.email = email.value;
+  } else {
+    errors.push(...email.errors);
+  }
 
-  const producerContactFax = validateProducerContactFax(value.fax, message);
+  const phone = validatePhone(value.phone, section, message);
+  if (phone.valid) {
+    contactToReturn.phone = phone.value;
+  } else {
+    errors.push(...phone.errors);
+  }
 
-  if (
-    producerContactOrganisationName.valid &&
-    producerContactPerson.valid &&
-    producerContactEmail.valid &&
-    producerContactPhone.valid &&
-    producerContactFax.valid
-  ) {
+  if (value.fax?.trim()) {
+    const fax: ValidationResult<Contact['fax']> = validateFax(
+      value.fax.trim() as string,
+      section as Section,
+      message,
+    );
+
+    if (fax.valid) {
+      contactToReturn.fax = fax.value;
+    } else {
+      errors.push(...fax.errors);
+    }
+  }
+
+  if (errors.length > 0) {
     return {
-      valid: true,
-      value: {
-        organisationName: producerContactOrganisationName.value,
-        name: producerContactPerson.value,
-        email: producerContactEmail.value,
-        phone: producerContactPhone.value,
-        fax: producerContactFax.value,
-      },
+      valid: false,
+      errors: errors,
     };
   }
 
-  if (!producerContactOrganisationName.valid) {
-    errors.push(...(producerContactOrganisationName.errors || []));
-  }
-
-  if (!producerContactPerson.valid) {
-    errors.push(...(producerContactPerson.errors || []));
-  }
-
-  if (!producerContactEmail.valid) {
-    errors.push(...(producerContactEmail.errors || []));
-  }
-
-  if (!producerContactPhone.valid) {
-    errors.push(...(producerContactPhone.errors || []));
-  }
-
-  if (!producerContactFax.valid) {
-    errors.push(...(producerContactFax.errors || []));
-  }
-
   return {
-    valid: false,
-    errors: errors,
+    valid: true,
+    value: contactToReturn,
   };
 }
 
-export function validatePartialProducerContactDetailSection(
+export function validatePartialContact(
   value: Partial<Contact>,
+  section: Section,
   message?: ErrorMessage,
 ): ValidationResult<Partial<Contact>> {
   const errors: FieldFormatError[] = [];
+  const fieldsToReturn: Partial<Contact> = {};
 
-  const validatedFields: Partial<Contact> = {};
+  if (value.organisationName?.trim()) {
+    const organisationName: ValidationResult<Contact['organisationName']> =
+      validateOrganisationName(
+        value.organisationName.trim() as string,
+        section as Section,
+        message,
+      );
 
-  if (value.organisationName) {
-    const producerContactOrganisationName =
-      validateProducerContactOrganisationName(value.organisationName, message);
-    if (producerContactOrganisationName.valid) {
-      validatedFields.organisationName = producerContactOrganisationName.value;
+    if (organisationName.valid) {
+      fieldsToReturn.organisationName = organisationName.value;
     } else {
-      errors.push(...(producerContactOrganisationName.errors || []));
+      errors.push(...organisationName.errors);
     }
   }
 
-  if (value.name) {
-    const producerContactPerson = validateProducerContactPerson(
-      value.name,
+  if (value.name?.trim()) {
+    const name: ValidationResult<Contact['name']> = validateFullName(
+      value.name.trim() as string,
+      section as Section,
       message,
     );
-    if (producerContactPerson.valid) {
-      validatedFields.name = producerContactPerson.value;
+
+    if (name.valid) {
+      fieldsToReturn.name = name.value;
     } else {
-      errors.push(...(producerContactPerson.errors || []));
+      errors.push(...name.errors);
     }
   }
 
-  if (value.email) {
-    const producerContactEmail = validateProducerContactEmail(
-      value.email,
+  if (value.email?.trim()) {
+    const email: ValidationResult<Contact['email']> = validateEmail(
+      value.email.trim() as string,
+      section as Section,
       message,
     );
-    if (producerContactEmail.valid) {
-      validatedFields.email = producerContactEmail.value;
+
+    if (email.valid) {
+      fieldsToReturn.email = email.value;
     } else {
-      errors.push(...(producerContactEmail.errors || []));
+      errors.push(...email.errors);
     }
   }
 
-  if (value.phone) {
-    const producerContactPhone = validateProducerContactPhone(
-      value.phone,
+  if (value.phone?.trim()) {
+    const phone: ValidationResult<Contact['phone']> = validatePhone(
+      value.phone.trim() as string,
+      section as Section,
       message,
     );
-    if (producerContactPhone.valid) {
-      validatedFields.phone = producerContactPhone.value;
+
+    if (phone.valid) {
+      fieldsToReturn.phone = phone.value;
     } else {
-      errors.push(...(producerContactPhone.errors || []));
+      errors.push(...phone.errors);
     }
   }
 
-  if (value.fax) {
-    const producerContactFax = validateProducerContactFax(value.fax, message);
-    if (producerContactFax.valid) {
-      validatedFields.fax = producerContactFax.value;
+  if (value.fax?.trim()) {
+    const fax: ValidationResult<Contact['fax']> = validateFax(
+      value.fax.trim() as string,
+      section as Section,
+      message,
+    );
+
+    if (fax.valid) {
+      fieldsToReturn.fax = fax.value;
     } else {
-      errors.push(...(producerContactFax.errors || []));
+      errors.push(...fax.errors);
     }
   }
 
-  if (errors.length === 0) {
+  if (errors.length > 0) {
     return {
-      valid: true,
-      value: validatedFields,
+      valid: false,
+      errors: errors,
     };
   }
 
   return {
-    valid: false,
-    errors: errors,
+    valid: true,
+    value: fieldsToReturn,
   };
 }
 

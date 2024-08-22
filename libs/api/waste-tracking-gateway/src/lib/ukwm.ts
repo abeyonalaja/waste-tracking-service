@@ -275,9 +275,7 @@ export type UkwmGetDraftProducerAddressDetailsResponse = UkwmDraftAddress;
 
 export type UkwmSetDraftProducerAddressDetailsRequest = UkwmAddress;
 
-export type UkwmGetDraftProducerContactDetailResponse =
-  | UkwmDraftContact
-  | undefined;
+export type UkwmGetDraftProducerContactDetailResponse = UkwmDraftContact;
 
 export type UkwmSetDraftProducerContactDetailRequest = UkwmContact;
 
@@ -313,3 +311,6 @@ export type UkwmDeleteDraftSicCodeResponse = string[];
 export interface UkwmSetDraftProducerConfirmationRequest {
   isConfirmed: boolean;
 }
+export type UkwmSetDraftReceiverContactDetailsRequest = UkwmContact;
+
+export type UkwmGetDraftReceiverContactDetailResponse = UkwmDraftContact;

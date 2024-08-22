@@ -682,3 +682,21 @@ export type SetDraftProducerConfirmationResponse = Response<void>;
 export const setDraftProducerConfirmation: Method = {
   name: 'setDraftProducerConfirmation',
 };
+
+export type SetDraftReceiverContactDetailsRequest =
+  | (IdRequest &
+      AccountIdRequest & { value: Partial<Contact> } & { saveAsDraft: true })
+  | (IdRequest &
+      AccountIdRequest & { value: Contact } & { saveAsDraft: false });
+
+export type SetDraftReceiverContactDetailsResponse = Response<void>;
+export const setDraftReceiverContactDetail: Method = {
+  name: 'setDraftReceiverContactDetail',
+};
+
+export type GetDraftReceiverContactDetailsRequest = IdRequest &
+  AccountIdRequest;
+export type GetDraftReceiverContactDetailsResponse = Response<DraftContact>;
+export const getDraftReceiverContactDetail: Method = {
+  name: 'getDraftReceiverContactDetail',
+};

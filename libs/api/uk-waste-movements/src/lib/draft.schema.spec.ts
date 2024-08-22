@@ -38,6 +38,9 @@ import {
   DeleteDraftSicCodeResponse,
   DeleteDraftSicCodeRequest,
   SetDraftProducerConfirmationRequest,
+  SetDraftReceiverContactDetailsRequest,
+  GetDraftReceiverContactDetailsRequest,
+  GetDraftReceiverContactDetailsResponse,
 } from './draft.dto';
 import {
   carrier,
@@ -82,6 +85,10 @@ import {
   deleteDraftSicCodeResponse,
   deleteDraftSicCodeRequest,
   setDraftProducerConfirmationRequest,
+  setDraftReceiverContactDetailRequest,
+  setPartialDraftReceiverContactDetailRequest,
+  getDraftReceiverContactDetailRequest,
+  getDraftReceiverContactDetailResponse,
 } from './draft.schema';
 
 const ajv = new Ajv();
@@ -1438,6 +1445,82 @@ describe('setDraftProducerConfirmationRequest', () => {
       id: faker.string.uuid(),
       isConfirmed: true,
     };
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('setDraftReceiverContactDetailRequest', () => {
+  const validate = ajv.compile<SetDraftReceiverContactDetailsRequest>(
+    setDraftReceiverContactDetailRequest,
+  );
+  it('is compatible with dto value', () => {
+    const value: SetDraftReceiverContactDetailsRequest = {
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+      value: {
+        organisationName: 'Tech Innovators Inc.',
+        name: 'John Doe',
+        email: 'john.doe@techinnovators.com',
+        phone: '+1234567890',
+        fax: '+0987654321',
+      },
+      saveAsDraft: false,
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('setPartialDraftReceiverContactDetailRequest', () => {
+  const validate = ajv.compile<SetDraftReceiverContactDetailsRequest>(
+    setPartialDraftReceiverContactDetailRequest,
+  );
+  it('is compatible with dto value', () => {
+    const value: SetDraftReceiverContactDetailsRequest = {
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+      value: {
+        name: 'Jane Smith',
+        email: 'jane.smith@techinnovators.com',
+      },
+      saveAsDraft: true,
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('getDraftReceiverContactDetailRequest', () => {
+  const validate = ajv.compile<GetDraftReceiverContactDetailsRequest>(
+    getDraftReceiverContactDetailRequest,
+  );
+  it('is compatible with dto value', () => {
+    const value: GetDraftReceiverContactDetailsRequest = {
+      id: faker.string.uuid(),
+      accountId: faker.string.uuid(),
+    };
+
+    expect(validate(value)).toBe(true);
+  });
+});
+
+describe('getDraftReceiverContactDetailResponse', () => {
+  const validate = ajv.compile<GetDraftReceiverContactDetailsResponse>(
+    getDraftReceiverContactDetailResponse,
+  );
+  it('is compatible with dto value', () => {
+    const value: GetDraftReceiverContactDetailsResponse = {
+      success: true,
+      value: {
+        status: 'Complete',
+        organisationName: 'Tech Innovators Inc.',
+        name: 'John Doe',
+        email: 'john.doe@techinnovators.com',
+        phone: '01903230482',
+        fax: '01903230482',
+      },
+    };
+
     expect(validate(value)).toBe(true);
   });
 });

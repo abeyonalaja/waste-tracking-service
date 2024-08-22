@@ -1161,3 +1161,35 @@ export const setDraftProducerConfirmationRequest: JTDSchemaType<SetDraftProducer
       isConfirmed: { type: 'boolean' },
     },
   };
+export const setDraftReceiverContactDetailRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+    value: contact,
+    saveAsDraft: { type: 'boolean' },
+  },
+};
+
+export const setPartialDraftReceiverContactDetailRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+    value: partialContact,
+    saveAsDraft: { type: 'boolean' },
+  },
+};
+
+export const getDraftReceiverContactDetailRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+  },
+};
+
+export const getDraftReceiverContactDetailResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: draftContact,
+  },
+};

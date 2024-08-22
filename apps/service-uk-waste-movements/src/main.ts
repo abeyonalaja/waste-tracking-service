@@ -628,6 +628,64 @@ try {
     { method: HttpMethod.POST },
   );
 
+  await server.invoker.listen(
+    api.getDraftReceiverContactDetail.name,
+    async ({ body }) => {
+      if (body === undefined) {
+        return fromBoom(Boom.badRequest('Missing body'));
+      }
+
+      const request = JSON.parse(
+        body,
+      ) as api.GetDraftReceiverContactDetailsRequest;
+      if (request === undefined) {
+        return fromBoom(Boom.badRequest());
+      }
+
+      if (
+        !validateSubmission.validateGetDraftReceiverContactDetailRequest(
+          request,
+        )
+      ) {
+        return fromBoom(Boom.badRequest());
+      }
+
+      return await submissionController.getDraftReceiverContactDetail(request);
+    },
+    { method: HttpMethod.POST },
+  );
+
+  await server.invoker.listen(
+    api.setDraftReceiverContactDetail.name,
+    async ({ body }) => {
+      if (body === undefined) {
+        return fromBoom(Boom.badRequest('Missing body'));
+      }
+      const request = JSON.parse(
+        body,
+      ) as api.SetDraftReceiverContactDetailsRequest;
+      if (request.saveAsDraft) {
+        if (
+          !validateSubmission.validateSetPartialDraftReceiverContactDetailRequest(
+            request,
+          )
+        ) {
+          return fromBoom(Boom.badRequest());
+        }
+      } else {
+        if (
+          !validateSubmission.validateSetDraftReceiverContactDetailRequest(
+            request,
+          )
+        ) {
+          return fromBoom(Boom.badRequest());
+        }
+      }
+      return await submissionController.setDraftReceiverContactDetail(request);
+    },
+    { method: HttpMethod.POST },
+  );
+
   await server.start();
 } catch (error) {
   console.log('Error occurred while starting the service.');

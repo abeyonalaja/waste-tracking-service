@@ -90,7 +90,7 @@
             "type=ref,event=tag",
             "type=ref,event=pr",
             "type=sha,prefix=sha-",
-            "type=raw,value=3.8.1"
+            "type=raw,value=3.8.2"
           ]
         }
       }

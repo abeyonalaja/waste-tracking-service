@@ -32,7 +32,12 @@ export type Field =
   | 'Carrier address line 2'
   | 'Carrier town or city'
   | 'Carrier country'
-  | 'Carrier postcode';
+  | 'Carrier postcode'
+  | 'Receiver organisation name'
+  | 'Receiver contact name'
+  | 'Receiver contact email address'
+  | 'Receiver contact phone number'
+  | 'Receiver fax number';
 
 export interface ErrorMessage {
   locale: Locale;

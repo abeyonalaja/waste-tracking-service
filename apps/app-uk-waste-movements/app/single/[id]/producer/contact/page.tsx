@@ -27,6 +27,7 @@ export default async function ProducerContactDetailsPage({
   const session = await getServerSession(options);
   const token = session?.token;
   const apiUrl = generateApiUrl();
+  const section = 'Producer';
 
   const formStrings = {
     errorSummaryHeading: t('form.errorSummaryHeading'),
@@ -102,6 +103,7 @@ export default async function ProducerContactDetailsPage({
             token={token}
             formStrings={formStrings}
             initialFormState={initialFormState}
+            section={section}
           >
             <GovUK.Caption>{t('caption')}</GovUK.Caption>
             <GovUK.Heading size={'l'} level={1}>

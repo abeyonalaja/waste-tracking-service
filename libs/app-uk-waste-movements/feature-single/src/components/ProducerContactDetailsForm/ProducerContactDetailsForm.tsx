@@ -7,6 +7,7 @@ import { useLocale } from 'next-intl';
 import { FormErrors } from '../../types/types';
 import { createErrorSummaryErrors, formHasErrors } from '../../util';
 import * as GovUK from '@wts/ui/govuk-react-ui';
+import { ukwm } from '@wts/util/shared-validation';
 
 interface FormStrings {
   errorSummaryHeading: string;
@@ -35,6 +36,7 @@ interface ProducerContactDetailsFormProps {
   token: string;
   formStrings: FormStrings;
   children: React.ReactNode;
+  section: ukwm.Section;
 }
 
 export function ProducerContactDetailsForm({
@@ -43,6 +45,7 @@ export function ProducerContactDetailsForm({
   token,
   formStrings,
   children,
+  section,
 }: ProducerContactDetailsFormProps): React.ReactNode {
   const router = useRouter();
   const locale = useLocale() as ukwmValidation.Locale;
@@ -73,11 +76,11 @@ export function ProducerContactDetailsForm({
     setButtonDisabled(true);
 
     const errors: FormErrors = {};
-
-    const organisationNameValidationResult = ukwmValidation.uiValidation(
+    const organisationNameValidationResult = ukwmValidation.uiSharedValidation(
       formState?.organisationName,
-      ukwmValidation.validationRules.validateProducerOrganisationName,
+      ukwmValidation.validationRules.validateOrganisationName,
       '#organisation-name',
+      section,
       locale,
       'ui',
     );
@@ -93,10 +96,11 @@ export function ProducerContactDetailsForm({
     }
 
     const organisationContactPersonValidationResult =
-      ukwmValidation.uiValidation(
+      ukwmValidation.uiSharedValidation(
         formState?.organisationContactPerson,
-        ukwmValidation.validationRules.validateProducerContactPerson,
+        ukwmValidation.validationRules.validateFullName,
         '#organisation-contact-person',
+        section,
         locale,
         'ui',
       );
@@ -112,10 +116,11 @@ export function ProducerContactDetailsForm({
         organisationContactPersonValidationResult;
     }
 
-    const emailAddressValidationResult = ukwmValidation.uiValidation(
+    const emailAddressValidationResult = ukwmValidation.uiSharedValidation(
       formState?.emailAddress,
-      ukwmValidation.validationRules.validateProducerContactEmail,
+      ukwmValidation.validationRules.validateEmail,
       '#email-address',
+      section,
       locale,
       'ui',
     );
@@ -130,10 +135,11 @@ export function ProducerContactDetailsForm({
       errors.emailAddress = emailAddressValidationResult;
     }
 
-    const phoneNumberValidationResult = ukwmValidation.uiValidation(
+    const phoneNumberValidationResult = ukwmValidation.uiSharedValidation(
       formState?.phoneNumber,
-      ukwmValidation.validationRules.validateProducerContactPhone,
+      ukwmValidation.validationRules.validatePhone,
       '#phone-number',
+      section,
       locale,
       'ui',
     );
@@ -148,10 +154,11 @@ export function ProducerContactDetailsForm({
       errors.phoneNumber = phoneNumberValidationResult;
     }
 
-    const faxNumberValidationResult = ukwmValidation.uiValidation(
+    const faxNumberValidationResult = ukwmValidation.uiSharedValidation(
       formState?.faxNumber,
-      ukwmValidation.validationRules.validateProducerContactFax,
+      ukwmValidation.validationRules.validateFax,
       '#fax-number',
+      section,
       locale,
       'ui',
     );

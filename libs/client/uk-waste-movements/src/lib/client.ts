@@ -62,6 +62,12 @@ import {
   SetDraftProducerConfirmationRequest,
   setDraftProducerConfirmation,
   SetDraftProducerConfirmationResponse,
+  SetDraftReceiverContactDetailsRequest,
+  SetDraftReceiverContactDetailsResponse,
+  setDraftReceiverContactDetail,
+  GetDraftReceiverContactDetailsRequest,
+  GetDraftReceiverContactDetailsResponse,
+  getDraftReceiverContactDetail,
 } from '@wts/api/uk-waste-movements';
 
 export class DaprUkWasteMovementsClient {
@@ -293,5 +299,27 @@ export class DaprUkWasteMovementsClient {
       HttpMethod.POST,
       req,
     )) as SetDraftProducerConfirmationResponse;
+  }
+
+  async getDraftReceiverContactDetail(
+    req: GetDraftReceiverContactDetailsRequest,
+  ): Promise<GetDraftReceiverContactDetailsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.ukWasteMovementsAppId,
+      getDraftReceiverContactDetail.name,
+      HttpMethod.POST,
+      req,
+    )) as GetDraftReceiverContactDetailsResponse;
+  }
+
+  async setDraftReceiverContactDetail(
+    req: SetDraftReceiverContactDetailsRequest,
+  ): Promise<SetDraftReceiverContactDetailsResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.ukWasteMovementsAppId,
+      setDraftReceiverContactDetail.name,
+      HttpMethod.POST,
+      req,
+    )) as SetDraftReceiverContactDetailsResponse;
   }
 }

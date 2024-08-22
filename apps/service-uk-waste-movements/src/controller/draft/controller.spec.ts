@@ -15,6 +15,7 @@ import {
   SetDraftCarrierAddressDetailsRequest,
   SetDraftReceiverAddressDetailsRequest,
   SetDraftProducerConfirmationRequest,
+  SetDraftReceiverContactDetailsRequest,
 } from '@wts/api/uk-waste-movements';
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -4301,6 +4302,302 @@ describe(SubmissionController, () => {
           'Producer and waste collection section is not complete',
         );
       }
+    });
+  });
+
+  describe('setDraftReceiverContactDetails', () => {
+    it('successfully sets receiver contact detail on a draft', async () => {
+      const accountId = faker.string.uuid();
+      const id = faker.string.uuid();
+      const initialDraft: Draft = {
+        id: id,
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          address: {
+            status: 'Complete',
+            addressLine1: '123 Main St',
+            addressLine2: 'Suite 100',
+            townCity: 'Anytown',
+            postcode: '12345',
+            country: 'CountryName',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
+        },
+        producerAndCollection: {
+          producer: {
+            reference: 'producerRef123',
+            sicCodes: {
+              status: 'Complete',
+              values: ['12345'],
+            },
+            contact: {
+              status: 'Started',
+              organisationName: 'Producer Org',
+              name: 'Jane Doe',
+              email: 'jane.doe@example.com',
+            },
+            address: {
+              status: 'Complete',
+              addressLine1: '123 Main St',
+              addressLine2: 'Suite 100',
+              townCity: 'Anytown',
+              postcode: '12345',
+              country: 'CountryName',
+            },
+          },
+          wasteCollection: {
+            address: {
+              status: 'NotStarted',
+            },
+            wasteSource: {
+              status: 'NotStarted',
+            },
+          },
+          confimation: { status: 'InProgress' },
+        },
+        carrier: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      };
+      mockRepository.getDraft.mockResolvedValue(initialDraft);
+      const request: SetDraftReceiverContactDetailsRequest = {
+        id: id,
+        accountId: accountId,
+        value: {
+          organisationName: 'Producer Org',
+          name: 'Jane Doe2',
+          email: 'jane.doe@example.com',
+          phone: '01903230482',
+        },
+        saveAsDraft: false,
+      };
+      const response = await subject.setDraftReceiverContactDetail(request);
+      const expectedDraft: Draft = {
+        id: id,
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          address: {
+            status: 'Complete',
+            addressLine1: '123 Main St',
+            addressLine2: 'Suite 100',
+            townCity: 'Anytown',
+            postcode: '12345',
+            country: 'CountryName',
+          },
+          contact: {
+            status: 'Complete',
+            organisationName: 'Producer Org',
+            name: 'Jane Doe2',
+            email: 'jane.doe@example.com',
+            phone: '01903230482',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
+        },
+        producerAndCollection: {
+          producer: {
+            reference: 'producerRef123',
+            sicCodes: {
+              status: 'Complete',
+              values: ['12345'],
+            },
+            contact: {
+              status: 'Started',
+              organisationName: 'Producer Org',
+              name: 'Jane Doe',
+              email: 'jane.doe@example.com',
+            },
+            address: {
+              status: 'Complete',
+              addressLine1: '123 Main St',
+              addressLine2: 'Suite 100',
+              townCity: 'Anytown',
+              postcode: '12345',
+              country: 'CountryName',
+            },
+          },
+          wasteCollection: {
+            address: {
+              status: 'NotStarted',
+            },
+            wasteSource: {
+              status: 'NotStarted',
+            },
+          },
+          confimation: { status: 'InProgress' },
+        },
+        carrier: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      };
+
+      expect(response.success).toBe(true);
+      expect(mockRepository.getDraft).toHaveBeenCalledWith(
+        'drafts',
+        id,
+        accountId,
+      );
+      expect(mockRepository.saveRecord).toHaveBeenCalledWith(
+        'drafts',
+        expectedDraft,
+        accountId,
+      );
+      if (response.success) {
+        expect(response.value).toBeUndefined();
+      }
+    });
+  });
+
+  describe('getDraftReceiverContactDetail', () => {
+    it('successfully gets receiver contact detail from a draft', async () => {
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
+      const draft: Draft = {
+        id: id,
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'Complete',
+            organisationName: 'Org name',
+            name: 'Jane Jones',
+            email: 'jane.jones@example.com',
+            phone: '987-654-3210',
+            fax: '123-456-7890',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
+        },
+        producerAndCollection: {
+          producer: {
+            reference: 'producerRef123',
+            sicCodes: {
+              status: 'Complete',
+              values: ['12345'],
+            },
+            contact: {
+              status: 'Started',
+              organisationName: 'Producer Org',
+              name: 'Jane Doe',
+              email: 'jane.doe@example.com',
+              phone: '987-654-3210',
+              fax: '123-456-7890',
+            },
+            address: {
+              status: 'Complete',
+              addressLine1: '123 Main St',
+              addressLine2: 'Suite 100',
+              townCity: 'Anytown',
+              postcode: '12345',
+              country: 'CountryName',
+            },
+          },
+          wasteCollection: {
+            wasteSource: {
+              status: 'Complete',
+              value: 'Commercial',
+            },
+            brokerRegistrationNumber: 'BRN123456',
+            carrierRegistrationNumber: 'CRN654321',
+            localAuthority: 'Local Authority Name',
+            expectedWasteCollectionDate: {
+              day: '01',
+              month: '01',
+              year: '2025',
+            },
+            address: {
+              status: 'Complete',
+              addressLine1: '456 Secondary St',
+              addressLine2: 'Building 2',
+              townCity: 'Othertown',
+              postcode: '67890',
+              country: 'CountryName',
+            },
+          },
+          confimation: {
+            status: 'Complete',
+          },
+        },
+        carrier: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      };
+      mockRepository.getDraft.mockResolvedValue(draft);
+      const response = await subject.getDraftReceiverContactDetail({
+        id,
+        accountId,
+      });
+      expect(response).toEqual({
+        success: true,
+        value: {
+          status: 'Complete',
+          organisationName: 'Org name',
+          name: 'Jane Jones',
+          email: 'jane.jones@example.com',
+          phone: '987-654-3210',
+          fax: '123-456-7890',
+        },
+      });
     });
   });
 });

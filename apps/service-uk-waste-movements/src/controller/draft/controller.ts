@@ -856,8 +856,9 @@ export default class SubmissionController {
 
       if (saveAsDraft) {
         const partialProducerContactDetailValidationResult =
-          ukwmValidation.validationRules.validatePartialProducerContactDetailSection(
+          ukwmValidation.validationRules.validatePartialContact(
             value,
+            'Producer',
           );
         if (!partialProducerContactDetailValidationResult.valid) {
           const boom = Boom.badRequest(
@@ -868,8 +869,9 @@ export default class SubmissionController {
         }
       } else {
         const producerContactDetailValidationResult =
-          ukwmValidation.validationRules.validateProducerContactDetailSection(
+          ukwmValidation.validationRules.validateContact(
             value as api.Contact,
+            'Producer',
           );
         if (!producerContactDetailValidationResult.valid) {
           const boom = Boom.badRequest(
@@ -1450,6 +1452,102 @@ export default class SubmissionController {
       );
 
       return success(draft.producerAndCollection.producer.sicCodes.values);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  setDraftReceiverContactDetail: Handler<
+    api.SetDraftReceiverContactDetailsRequest,
+    api.SetDraftReceiverContactDetailsResponse
+  > = async ({ id, accountId, value, saveAsDraft }) => {
+    try {
+      const draft = (await this.repository.getDraft(
+        draftsContainerName,
+        id,
+        accountId,
+      )) as api.Draft;
+
+      if (!draft) {
+        return fromBoom(Boom.notFound());
+      }
+
+      if (value.organisationName && value.name && value.email && value.phone) {
+        saveAsDraft = false;
+      }
+
+      if (saveAsDraft) {
+        const partialReceiverContactDetailValidationResult =
+          ukwmValidation.validationRules.validatePartialContact(
+            value,
+            'Receiver',
+          );
+        if (!partialReceiverContactDetailValidationResult.valid) {
+          const boom = Boom.badRequest(
+            'Validation failed',
+            partialReceiverContactDetailValidationResult.errors,
+          );
+          return fromBoom(boom);
+        }
+      } else {
+        const receiverContactDetailValidationResult =
+          ukwmValidation.validationRules.validateContact(
+            value as api.Contact,
+            'Receiver',
+          );
+        if (!receiverContactDetailValidationResult.valid) {
+          const boom = Boom.badRequest(
+            'Validation failed',
+            receiverContactDetailValidationResult.errors,
+          );
+          return fromBoom(boom);
+        }
+      }
+      const draftContact: api.DraftContact = saveAsDraft
+        ? { status: 'Started', ...(value as Promise<api.Contact>) }
+        : { status: 'Complete', ...(value as api.Contact) };
+
+      if (draft.receiver) {
+        draft.receiver.contact = draftContact;
+      }
+
+      await this.repository.saveRecord(
+        draftsContainerName,
+        { ...draft },
+        accountId,
+      );
+      return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  getDraftReceiverContactDetail: Handler<
+    api.GetDraftReceiverContactDetailsRequest,
+    api.GetDraftReceiverContactDetailsResponse
+  > = async ({ id, accountId }) => {
+    try {
+      const draft = (await this.repository.getDraft(
+        draftsContainerName,
+        id,
+        accountId,
+      )) as api.Draft;
+
+      if (!draft) {
+        return fromBoom(Boom.notFound());
+      }
+
+      return success(draft.receiver.contact);
     } catch (err) {
       if (err instanceof Boom.Boom) {
         return fromBoom(err);

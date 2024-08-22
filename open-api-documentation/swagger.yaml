@@ -3796,7 +3796,7 @@ paths:
         - ukwm
       responses:
         '201':
-          description: OK
+          description:
           content:
             application/json:
               schema:
@@ -3906,6 +3906,213 @@ paths:
             schema:
               $ref: >-
                 #/components/schemas/UkwmSetDraftCarrierAddressDetailsRequestCombined
+  /api/ukwm/drafts/{id}/receiver-contact:
+    get:
+      tags:
+        - ukwm
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UkwmContact'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+    put:
+      tags:
+        - ukwm
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/GetUkwmDraftReceiverContactDetailsResponse
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: saveAsDraft
+          in: query
+          required: false
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/UkwmSetDraftReceiverContactDetailsRequestCombined
+  /api/ukwm/drafts/{id}/receiver-address:
+    get:
+      tags:
+        - ukwm
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/UkwmGetDraftReceiverAddressDetailsResponse
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+    put:
+      tags:
+        - ukwm
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UkwmAddress'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: saveAsDraft
+          in: query
+          required: false
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/UkwmSetDraftReceiverAddressDetailsRequestCombined
+  /api/ukwm/drafts/{id}/producer-confirmation:
+    put:
+      tags:
+        - ukwm
+      responses:
+        '200':
+          description: OK
+          content: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: saveAsDraft
+          in: query
+          required: false
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetDraftProducerConfirmationRequest'
 components:
   schemas:
     ListSICCodesResponse:
@@ -6729,6 +6936,101 @@ components:
         type: string
     UkwmGetDraftCarrierAddressDetailsResponse:
       $ref: '#/components/schemas/UkwmDraftAddress'
+    UkwmGetDraftReceiverAddressDetailsResponse:
+      $ref: '#/components/schemas/UkwmDraftAddress'
+    UkwmDraftContact:
+      discriminator:
+        propertyName: status
+      oneOf:
+        - properties:
+            status:
+              type: string
+          title: NotStarted
+        - properties:
+            organisationName:
+              type: string
+            name:
+              type: string
+            email:
+              type: string
+            phone:
+              type: string
+            fax:
+              type: string
+            status:
+              type: string
+          title: Started
+        - properties:
+            organisationName:
+              type: string
+            name:
+              type: string
+            email:
+              type: string
+            phone:
+              type: string
+            fax:
+              type: string
+            status:
+              type: string
+          title: Complete
+    UkwmContact:
+      type: object
+      properties:
+        organisationName:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        fax:
+          type: string
+      required:
+        - organisationName
+        - name
+        - email
+        - phone
+      additionalProperties: false
+    UkwmDraftReceiverContact:
+      discriminator:
+        propertyName: status
+      oneOf:
+        - properties:
+            status:
+              type: string
+          title: NotStarted
+        - properties:
+            organisationName:
+              type: string
+            name:
+              type: string
+            email:
+              type: string
+            phone:
+              type: string
+            fax:
+              type: string
+            status:
+              type: string
+          title: Started
+        - properties:
+            organisationName:
+              type: string
+            name:
+              type: string
+            email:
+              type: string
+            phone:
+              type: string
+            fax:
+              type: string
+            status:
+              type: string
+          title: Complete
+    GetUkwmDraftReceiverContactDetailsResponse:
+      $ref: '#/components/schemas/UkwmDraftReceiverContact'
     UkwmSetDraftCarrierAddressDetailsRequest:
       $ref: '#/components/schemas/UkwmAddress'
     UkwmSetDraftWasteSourceRequest:
@@ -7564,25 +7866,6 @@ components:
         - authorizationType
         - contact
         - address
-      additionalProperties: false
-    UkwmContact:
-      type: object
-      properties:
-        organisationName:
-          type: string
-        name:
-          type: string
-        email:
-          type: string
-        phone:
-          type: string
-        fax:
-          type: string
-      required:
-        - organisationName
-        - name
-        - email
-        - phone
       additionalProperties: false
     UkwmProducerAndWasteCollectionDetail:
       discriminator:
@@ -8787,3 +9070,78 @@ components:
       oneOf:
         - $ref: '#/components/schemas/SetDraftCarrierAddressDetailsRequest'
         - $ref: '#/components/schemas/SetPartialDraftCarrierAddressDetailsRequest'
+    SetDraftReceiverContactDetailsRequest:
+      properties:
+        organisationName:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        fax:
+          type: string
+      required:
+        - organisationName
+        - name
+        - email
+        - phone
+    SetPartialDraftReceiverContactDetailsRequest:
+      properties:
+        organisationName:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        fax:
+          type: string
+    UkwmSetDraftReceiverContactDetailsRequestCombined:
+      oneOf:
+        - $ref: '#/components/schemas/SetDraftReceiverContactDetailsRequest'
+        - $ref: '#/components/schemas/SetPartialDraftReceiverContactDetailsRequest'
+    SetDraftProducerConfirmationRequest:
+      properties:
+        isConfirmed:
+          type: boolean
+      required:
+        - isConfirmed
+    SetDraftReceiverAddressDetailsRequest:
+      properties:
+        addressLine1:
+          type: string
+        townCity:
+          type: string
+        country:
+          type: string
+        buildingNameOrNumber:
+          type: string
+        addressLine2:
+          type: string
+        postcode:
+          type: string
+      required:
+        - addressLine1
+        - townCity
+        - country
+    SetPartialDraftReceiverAddressDetailsRequest:
+      properties:
+        buildingNameOrNumber:
+          type: string
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+        townCity:
+          type: string
+        country:
+          type: string
+        postcode:
+          type: string
+    UkwmSetDraftReceiverAddressDetailsRequestCombined:
+      oneOf:
+        - $ref: '#/components/schemas/SetDraftReceiverAddressDetailsRequest'
+        - $ref: '#/components/schemas/SetPartialDraftReceiverAddressDetailsRequest'

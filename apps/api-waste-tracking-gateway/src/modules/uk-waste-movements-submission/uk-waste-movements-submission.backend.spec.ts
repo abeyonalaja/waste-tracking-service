@@ -18,6 +18,8 @@ import {
   GetDraftCarrierAddressDetailsResponse,
   GetDraftReceiverAddressDetailsResponse,
   DeleteDraftSicCodeResponse,
+  SetDraftReceiverContactDetailsResponse,
+  GetDraftReceiverContactDetailsResponse,
 } from '@wts/api/uk-waste-movements';
 import { UkwmContact } from '@wts/api/waste-tracking-gateway';
 
@@ -69,6 +71,10 @@ const mockClient = {
     jest.fn<DaprUkWasteMovementsClient['deleteDraftSicCode']>(),
   setProducerConfirmation:
     jest.fn<DaprUkWasteMovementsClient['setProducerConfirmation']>(),
+  setDraftReceiverContactDetail:
+    jest.fn<DaprUkWasteMovementsClient['setDraftReceiverContactDetail']>(),
+  getDraftReceiverContactDetail:
+    jest.fn<DaprUkWasteMovementsClient['getDraftReceiverContactDetail']>(),
 };
 
 describe(ServiceUkWasteMovementsSubmissionBackend, () => {
@@ -787,5 +793,72 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
       isConfirmed: true,
     });
     expect(mockClient.setProducerConfirmation).toHaveBeenCalledTimes(1);
+  });
+
+  it('sets receiver contact detail on a draft', async () => {
+    const accountId = faker.string.uuid();
+    const id = faker.string.uuid();
+    const mockSetDraftReceiverContactDetailResponse: SetDraftReceiverContactDetailsResponse =
+      {
+        success: true,
+        value: undefined,
+      };
+
+    mockClient.setDraftReceiverContactDetail.mockResolvedValueOnce(
+      mockSetDraftReceiverContactDetailResponse,
+    );
+    const value: UkwmContact = {
+      organisationName: 'Org name',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      phone: '123-456-7890',
+    };
+
+    await subject.setDraftReceiverContactDetail({ id, accountId }, value, true);
+
+    expect(mockClient.setDraftReceiverContactDetail).toHaveBeenCalledWith({
+      id,
+      accountId,
+      value,
+      saveAsDraft: true,
+    });
+    expect(mockClient.setDraftReceiverContactDetail).toHaveBeenCalledTimes(1);
+    expect(mockClient.setDraftReceiverContactDetail).toHaveBeenCalledWith({
+      id,
+      accountId,
+      value,
+      saveAsDraft: true,
+    });
+  });
+
+  it('gets receiver contact detail from a draft', async () => {
+    const id = faker.string.uuid();
+    const accountId = faker.string.uuid();
+    const mockGetDraftReceiverContactDetailResponse: GetDraftReceiverContactDetailsResponse =
+      {
+        success: true,
+        value: {
+          status: 'Started',
+          organisationName: 'Org name',
+          name: 'Mathew Jones',
+          email: 'john.doe@example.com',
+          phone: '123-456-7890',
+        },
+      };
+
+    mockClient.getDraftReceiverContactDetail.mockResolvedValueOnce(
+      mockGetDraftReceiverContactDetailResponse,
+    );
+
+    const result = await subject.getDraftReceiverContactDetail({
+      id,
+      accountId,
+    });
+
+    expect(mockClient.getDraftReceiverContactDetail).toHaveBeenCalledWith({
+      id,
+      accountId,
+    });
+    expect(result).toEqual(mockGetDraftReceiverContactDetailResponse.value);
   });
 });

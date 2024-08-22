@@ -9,11 +9,11 @@ import {
   validatePostcode,
   validateTownCity,
   validateAddressDetails,
-  validateProducerContactEmail,
-  validateProducerContactFax,
-  validateProducerContactOrganisationName,
-  validateProducerContactPerson,
-  validateProducerContactPhone,
+  validateEmail,
+  validateFax,
+  validateOrganisationName,
+  validateFullName,
+  validatePhone,
   validatePartialAddressDetails,
   validateWasteSourceSection,
   validateSicCodesSection,
@@ -750,91 +750,196 @@ describe('validatePartialProducerAddressDetails', () => {
   });
 });
 
-describe(`Producer's contact person validation`, () => {
+describe(`Producer's contact organisation name validation`, () => {
   it('should return valid true when organisation name is valid', () => {
-    const result = validateProducerContactOrganisationName('GroupexOOD');
+    const result = validateOrganisationName('GroupexOOD', 'Producer');
     expect(result.valid).toBe(true);
   });
 
   it('should return valid false when organisation name is empty', () => {
-    const result = validateProducerContactOrganisationName();
+    const result = validateOrganisationName('', 'Producer', {
+      locale: 'en',
+      context: 'ui',
+    });
     expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 11001,
+        field: 'Producer organisation name',
+        message: 'Enter an organisation name',
+      });
+    }
   });
 
   it('should return valid false when organisation name exceeds 250 characters', () => {
     const organisationName = faker.string.sample(251);
-    const result = validateProducerContactOrganisationName(organisationName);
+    const result = validateOrganisationName(organisationName, 'Producer', {
+      locale: 'en',
+      context: 'ui',
+    });
     expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 11002,
+        field: 'Producer organisation name',
+        message: 'The organisation name can only be 250 characters or less',
+      });
+    }
   });
 });
 
 describe(`Producer's contact person validation`, () => {
   it('should return valid true when person is valid', () => {
-    const result = validateProducerContactPerson('Ivan Ivanov');
+    const result = validateFullName('Ivan Ivanov', 'Producer');
     expect(result.valid).toBe(true);
   });
 
   it('should return valid false when person is empty', () => {
-    const result = validateProducerContactPerson();
+    const result = validateFullName('', 'Producer', {
+      locale: 'en',
+      context: 'ui',
+    });
     expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 11011,
+        field: 'Producer contact name',
+        message: 'Enter an organisation contact person',
+      });
+    }
   });
 
   it('should return valid false when person exceeds 250 characters', () => {
     const producerContactPerson = faker.string.sample(251);
-    const result = validateProducerContactPerson(producerContactPerson);
+    const result = validateFullName(producerContactPerson, 'Producer', {
+      locale: 'en',
+      context: 'ui',
+    });
     expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 11012,
+        field: 'Producer contact name',
+        message:
+          'The organisation contact person can only be 250 characters or less',
+      });
+    }
   });
 });
 
 describe(`Producer's contact email validation`, () => {
   it('should return valid true when email is valid', () => {
-    const result = validateProducerContactEmail('john@gmail.com');
+    const result = validateEmail('john@gmail.com', 'Producer');
     expect(result.valid).toBe(true);
   });
 
   it('should return valid false when email is empty', () => {
-    const result = validateProducerContactEmail();
+    const result = validateEmail('', 'Producer', {
+      locale: 'en',
+      context: 'ui',
+    });
     expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 11015,
+        field: 'Producer contact email address',
+        message: 'Enter an email address',
+      });
+    }
   });
 
   it('should return valid false when email is invalid', () => {
-    const result = validateProducerContactEmail('john123');
+    const result = validateEmail('john123', 'Producer', {
+      locale: 'en',
+      context: 'ui',
+    });
     expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 11016,
+        field: 'Producer contact email address',
+        message:
+          'Enter an email address in the correct format, like name@example.com',
+      });
+    }
   });
 
   it('should return valid false when email exceeds 250 characters', () => {
     const producerContactEmail = faker.string.sample(251);
-    const result = validateProducerContactEmail(producerContactEmail);
+    const result = validateEmail(producerContactEmail, 'Producer', {
+      locale: 'en',
+      context: 'ui',
+    });
     expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 11017,
+        field: 'Producer contact email address',
+        message:
+          'The organisation contact email can only be 250 characters or less',
+      });
+    }
   });
 });
 
 describe(`Producer's contact phone validation`, () => {
   it('should return valid true when phone is valid', () => {
-    const result = validateProducerContactPhone('01903230482');
+    const result = validatePhone('01903230482', 'Producer');
     expect(result.valid).toBe(true);
   });
 
   it('should return valid false when phone is empty', () => {
-    const result = validateProducerContactPhone();
+    const result = validatePhone('', 'Producer', {
+      locale: 'en',
+      context: 'ui',
+    });
     expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 11013,
+        field: 'Producer contact phone number',
+        message: 'Enter a phone number',
+      });
+    }
   });
 
   it('should return valid false when phone is invalid', () => {
-    const result = validateProducerContactPhone('21315');
+    const result = validatePhone('21315', 'Producer', {
+      locale: 'en',
+      context: 'ui',
+    });
     expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 11014,
+        field: 'Producer contact phone number',
+        message:
+          'Enter a phone number only using numbers, spaces, dashes, pluses and brackets',
+      });
+    }
   });
 });
 
 describe(`Producer's contact fax validation`, () => {
   it('should return valid true when fax is valid', () => {
-    const result = validateProducerContactFax('00-44 1234 567890');
+    const result = validateFax('00-44 1234 567890', 'Producer');
     expect(result.valid).toBe(true);
   });
 
   it('should return valid false when fax is invalid', () => {
-    const result = validateProducerContactFax('21315');
+    const result = validateFax('21315', 'Producer', {
+      locale: 'en',
+      context: 'ui',
+    });
     expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 11023,
+        field: 'Producer fax number',
+        message:
+          'Enter a fax number only using numbers, spaces, dashes, pluses and brackets',
+      });
+    }
   });
 });
 
@@ -1104,5 +1209,198 @@ describe(`Producer Standard Industrial Classification (SIC) code`, () => {
       sicCodesList,
     );
     expect(result.valid).toBe(false);
+  });
+});
+
+describe(`Receiver's organisation name validation`, () => {
+  it('should return valid true when organisation name is valid', () => {
+    const result = validateOrganisationName('GroupexOOD', 'Receiver');
+    expect(result.valid).toBe(true);
+  });
+
+  it('should return valid false when organisation name is empty', () => {
+    const result = validateOrganisationName('', 'Receiver', {
+      locale: 'en',
+      context: 'ui',
+    });
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 13001,
+        field: 'Receiver organisation name',
+        message: 'Enter an organisation name',
+      });
+    }
+  });
+
+  it('should return valid false when organisation name exceeds 250 characters', () => {
+    const organisationName = faker.string.sample(251);
+    const result = validateOrganisationName(organisationName, 'Receiver', {
+      locale: 'en',
+      context: 'ui',
+    });
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 13002,
+        field: 'Receiver organisation name',
+        message: 'The organisation name can only be 250 characters or less',
+      });
+    }
+  });
+});
+
+describe(`Receiver's contact person validation`, () => {
+  it('should return valid true when person is valid', () => {
+    const result = validateFullName('Ivan Ivanov', 'Receiver');
+    expect(result.valid).toBe(true);
+  });
+
+  it('should return valid false when person is empty', () => {
+    const result = validateFullName('', 'Receiver', {
+      locale: 'en',
+      context: 'ui',
+    });
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 13011,
+        field: 'Receiver contact name',
+        message: 'Enter an organisation contact person',
+      });
+    }
+  });
+
+  it('should return valid false when person exceeds 250 characters', () => {
+    const producerContactPerson = faker.string.sample(251);
+    const result = validateFullName(producerContactPerson, 'Receiver', {
+      locale: 'en',
+      context: 'ui',
+    });
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 13012,
+        field: 'Receiver contact name',
+        message:
+          'The organisation contact person can only be 250 characters or less',
+      });
+    }
+  });
+});
+
+describe(`Receiver's contact email validation`, () => {
+  it('should return valid true when email is valid', () => {
+    const result = validateEmail('john@gmail.com', 'Receiver');
+    expect(result.valid).toBe(true);
+  });
+
+  it('should return valid false when email is empty', () => {
+    const result = validateEmail('', 'Receiver', {
+      locale: 'en',
+      context: 'ui',
+    });
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 13015,
+        field: 'Receiver contact email address',
+        message: 'Enter an email address',
+      });
+    }
+  });
+
+  it('should return valid false when email is invalid', () => {
+    const result = validateEmail('john123', 'Receiver', {
+      locale: 'en',
+      context: 'ui',
+    });
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 13016,
+        field: 'Receiver contact email address',
+        message:
+          'Enter an email address in the correct format, like name@example.com',
+      });
+    }
+  });
+
+  it('should return valid false when email exceeds 250 characters', () => {
+    const producerContactEmail = faker.string.sample(251);
+    const result = validateEmail(producerContactEmail, 'Receiver', {
+      locale: 'en',
+      context: 'ui',
+    });
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 13017,
+        field: 'Receiver contact email address',
+        message:
+          'The organisation contact email can only be 250 characters or less',
+      });
+    }
+  });
+});
+
+describe(`Receiver's contact phone validation`, () => {
+  it('should return valid true when phone is valid', () => {
+    const result = validatePhone('01903230482', 'Receiver');
+    expect(result.valid).toBe(true);
+  });
+
+  it('should return valid false when phone is empty', () => {
+    const result = validatePhone('', 'Receiver', {
+      locale: 'en',
+      context: 'ui',
+    });
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 13013,
+        field: 'Receiver contact phone number',
+        message: 'Enter a phone number',
+      });
+    }
+  });
+
+  it('should return valid false when phone is invalid', () => {
+    const result = validatePhone('21315', 'Receiver', {
+      locale: 'en',
+      context: 'ui',
+    });
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 13014,
+        field: 'Receiver contact phone number',
+        message:
+          'Enter a phone number only using numbers, spaces, dashes, pluses and brackets',
+      });
+    }
+  });
+});
+
+describe(`Receiver's contact fax validation`, () => {
+  it('should return valid true when fax is valid', () => {
+    const result = validateFax('00-44 1234 567890', 'Receiver');
+    expect(result.valid).toBe(true);
+  });
+
+  it('should return valid false when fax is invalid', () => {
+    const result = validateFax('21315', 'Receiver', {
+      locale: 'en',
+      context: 'ui',
+    });
+    expect(result.valid).toBe(false);
+    if ('errors' in result) {
+      expect(result.errors[0]).toEqual({
+        code: 13023,
+        field: 'Receiver fax number',
+        message:
+          'Enter a fax number only using numbers, spaces, dashes, pluses and brackets',
+      });
+    }
   });
 });

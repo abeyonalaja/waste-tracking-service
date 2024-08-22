@@ -428,9 +428,7 @@ export function setDraftProducerContactDetail(
 
   if (saveAsDraft) {
     const partialProducerContactDetailValidationResult =
-      ukwmValidation.validationRules.validatePartialProducerContactDetailSection(
-        value,
-      );
+      ukwmValidation.validationRules.validatePartialContact(value, 'Producer');
     if (!partialProducerContactDetailValidationResult.valid) {
       return Promise.reject(
         new BadRequestError(
@@ -441,9 +439,7 @@ export function setDraftProducerContactDetail(
     }
   } else {
     const producerContactDetailValidationResult =
-      ukwmValidation.validationRules.validateProducerContactDetailSection(
-        value,
-      );
+      ukwmValidation.validationRules.validateContact(value, 'Producer');
     if (!producerContactDetailValidationResult.valid) {
       return Promise.reject(
         new BadRequestError(
@@ -831,7 +827,6 @@ export function setDraftProducerConfirmation(
     draft.producerAndCollection.wasteCollection.wasteSource.status !==
       'Complete'
   ) {
-    console.log('here, errrrrrrrr');
     return Promise.reject(
       new BadRequestError(
         'Producer and waste collection section is not complete',
@@ -844,4 +839,70 @@ export function setDraftProducerConfirmation(
     : 'InProgress';
 
   return Promise.resolve();
+}
+
+export function setDraftReceiverContactDetail(
+  ref: UkwmDraftRef,
+  value: UkwmContact,
+  saveAsDraft?: boolean,
+): Promise<void> {
+  const { id, accountId } = ref;
+  const draft = db.ukwmDrafts.find(
+    (d) => d.id == id && d.accountId == accountId,
+  );
+  if (draft === undefined) {
+    return Promise.reject(new NotFoundError('Submission not found.'));
+  }
+
+  if (value.organisationName && value.name && value.email && value.phone) {
+    saveAsDraft = false;
+  }
+
+  if (saveAsDraft) {
+    const partialReceiverContactDetailValidationResult =
+      ukwmValidation.validationRules.validatePartialContact(value, 'Producer');
+    if (!partialReceiverContactDetailValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation error',
+          partialReceiverContactDetailValidationResult.errors,
+        ),
+      );
+    }
+  } else {
+    const receiverContactDetailValidationResult =
+      ukwmValidation.validationRules.validateContact(value, 'Producer');
+    if (!receiverContactDetailValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation error',
+          receiverContactDetailValidationResult.errors,
+        ),
+      );
+    }
+  }
+  const draftContact: DraftContact = {
+    status: saveAsDraft ? 'Started' : 'Complete',
+    ...value,
+  };
+
+  if (draft.receiver) {
+    draft.receiver.contact = draftContact;
+  }
+
+  return Promise.resolve();
+}
+
+export function getDraftReceiverContactDetail({
+  id,
+  accountId,
+}: UkwmDraftRef): Promise<UkwmDraftContact | undefined> {
+  const draft = db.ukwmDrafts.find(
+    (d) => d.id == id && d.accountId == accountId,
+  );
+  if (draft === undefined) {
+    return Promise.reject(new NotFoundError('Submission not found.'));
+  }
+
+  return Promise.resolve(draft.receiver.contact);
 }

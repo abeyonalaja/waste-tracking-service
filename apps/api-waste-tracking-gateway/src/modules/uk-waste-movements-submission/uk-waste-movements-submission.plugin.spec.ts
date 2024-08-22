@@ -113,6 +113,16 @@ const mockBackend = {
     jest.fn<
       ({ id, accountId, isConfirmed }: DraftConfrimationRef) => Promise<void>
     >(),
+  setDraftReceiverContactDetail:
+    jest.fn<
+      (
+        ref: UkwmDraftRef,
+        value: UkwmDraftContact,
+        saveAsDraft?: boolean,
+      ) => Promise<void>
+    >(),
+  getDraftReceiverContactDetail:
+    jest.fn<({ id }: SubmissionRef) => Promise<void>>(),
 };
 
 const app = server({
@@ -416,6 +426,35 @@ describe('UkWasteMovementsSubmissionPlugin', () => {
       };
 
       mockBackend.setProducerConfirmation.mockRejectedValue(Boom.badRequest());
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
+    });
+  });
+
+  describe('GET /drafts/{id}/receiver-contact', () => {
+    it('Responds with 400 if invalid request is received in the payload', async () => {
+      const options = {
+        method: 'GET',
+        url: `/ukwm/drafts/{id}/receiver-contact`,
+      };
+
+      mockBackend.getDraftReceiverContactDetail.mockRejectedValue(
+        Boom.badRequest(),
+      );
+      const response = await app.inject(options);
+      expect(response.statusCode).toBe(400);
+    });
+  });
+  describe('PUT /drafts/{id}/receiver-contact', () => {
+    it('Responds with 400 if invalid request is received in the payload', async () => {
+      const options = {
+        method: 'PUT',
+        url: `/ukwm/drafts/{id}/receiver-contact`,
+      };
+
+      mockBackend.setDraftReceiverContactDetail.mockRejectedValue(
+        Boom.badRequest(),
+      );
       const response = await app.inject(options);
       expect(response.statusCode).toBe(400);
     });

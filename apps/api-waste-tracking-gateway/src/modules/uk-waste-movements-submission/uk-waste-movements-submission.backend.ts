@@ -14,6 +14,7 @@ import {
   UkwmDraftSicCodes,
   UkwmGetDraftSicCodesResponse,
   UkwmDeleteDraftSicCodeResponse,
+  UkwmGetDraftReceiverContactDetailResponse,
 } from '@wts/api/waste-tracking-gateway';
 import { Logger } from 'winston';
 import Boom from '@hapi/boom';
@@ -33,6 +34,7 @@ import {
   GetDraftReceiverAddressDetailsResponse,
   DeleteDraftSicCodeResponse,
   SetDraftProducerConfirmationResponse,
+  SetDraftReceiverContactDetailsResponse,
 } from '@wts/api/uk-waste-movements';
 import { DaprUkWasteMovementsClient } from '@wts/client/uk-waste-movements';
 import { Response } from '@wts/util/invocation';
@@ -140,6 +142,14 @@ export interface UkWasteMovementsSubmissionBackend {
     accountId,
     isConfirmed,
   }: DraftConfrimationRef): Promise<void>;
+  setDraftReceiverContactDetail(
+    ref: UkwmDraftRef,
+    value: UkwmContact,
+    saveAsDraft: boolean,
+  ): Promise<void>;
+  getDraftReceiverContactDetail({
+    id,
+  }: SubmissionRef): Promise<UkwmDraftContact | undefined>;
 }
 
 export class ServiceUkWasteMovementsSubmissionBackend
@@ -613,5 +623,54 @@ export class ServiceUkWasteMovementsSubmissionBackend
     }
 
     return response.value;
+  }
+
+  async getDraftReceiverContactDetail({
+    id,
+    accountId,
+  }: UkwmDraftRef): Promise<UkwmDraftContact | undefined> {
+    let response: GetDraftProducerContactDetailResponse;
+    try {
+      response = await this.client.getDraftReceiverContactDetail({
+        id,
+        accountId,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+    if (response) {
+      if (!response.success) {
+        throw new Boom.Boom(response.error.message, {
+          statusCode: response.error.statusCode,
+        });
+      }
+      return response.value as UkwmGetDraftReceiverContactDetailResponse;
+    }
+  }
+
+  async setDraftReceiverContactDetail(
+    { id, accountId }: UkwmDraftRef,
+    value: UkwmContact,
+    saveAsDraft: boolean,
+  ): Promise<void> {
+    let response: SetDraftReceiverContactDetailsResponse;
+    try {
+      response = await this.client.setDraftReceiverContactDetail({
+        id,
+        accountId,
+        value,
+        saveAsDraft,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+        data: response.error.data,
+      });
+    }
   }
 }

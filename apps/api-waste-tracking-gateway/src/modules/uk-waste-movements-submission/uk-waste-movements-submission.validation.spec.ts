@@ -9,6 +9,7 @@ import {
   validateSetDraftWasteSourceRequest,
   validateSetDraftCarrierAddressDetailsRequest,
   validateSetDraftReceiverAddressDetailsRequest,
+  validateSetDraftReceiverContactRequest,
 } from './uk-waste-movements-submission.validation';
 
 describe('validateCreateDraftRequest', () => {
@@ -304,6 +305,72 @@ describe('validateSetDraftReceiverAddressRequest', () => {
         addressLine1: faker.string.sample(),
         townCity: faker.string.sample(),
         country: faker.string.sample(),
+      }),
+    ).toBe(true);
+  });
+
+  describe('validateSetDraftReceiverContactRequest', () => {
+    const validate = validateSetDraftReceiverContactRequest;
+
+    it('Rejects invalid values', () => {
+      expect(validate(undefined)).toBe(false);
+      expect(validate({})).toBe(false);
+      expect(validate(faker.lorem.word())).toBe(false);
+      expect(
+        validate({
+          organisationName: faker.lorem.word(),
+          name: faker.lorem.word(),
+          email: faker.datatype.boolean(),
+          phone: {},
+        }),
+      ).toBe(false);
+      expect(
+        validate({
+          organisationName: faker.lorem.word(),
+          name: faker.lorem.word(),
+          email: faker.datatype.boolean(),
+          phone: faker.phone.number(),
+          fax: faker.phone.number(),
+        }),
+      ).toBe(false);
+      expect(
+        validate({
+          organisationName: faker.phone.number(),
+          name: faker.phone.number(),
+          email: faker.datatype.boolean(),
+          phone: faker.phone.number(),
+          fax: faker.phone.number(),
+        }),
+      ).toBe(false);
+    });
+
+    it('Accepts valid values', () => {
+      expect(
+        validate({
+          organisationName: faker.company.name(),
+          name: faker.lorem.word(),
+          email: faker.internet.email(),
+          phone: faker.phone.number(),
+          fax: faker.phone.number(),
+        }),
+      ).toBe(true);
+    });
+  });
+});
+
+describe('validateSetDraftProducerConfirmationRequest', () => {
+  const validate = validateSetDraftProducerConfirmationRequest;
+
+  it('Rejects invalid values', () => {
+    expect(validate(undefined)).toBe(false);
+    expect(validate({})).toBe(false);
+    expect(validate(faker.lorem.word())).toBe(false);
+  });
+
+  it('Accepts valid values', () => {
+    expect(
+      validate({
+        isConfirmed: true,
       }),
     ).toBe(true);
   });

@@ -392,4 +392,244 @@ export const validationErrorMessages: ValidationErrorMessages = {
       ui: `Rhaid i’r ffynhonnell gwastraff fod yn Unigol, Diwydiannol, Adeiladu a dymchwel neu Aelwydydd yn unig`,
     },
   },
+  [codes.receiverEmptyOrganisationName]: {
+    en: {
+      csv: 'Enter an organisation name',
+      api: 'Enter an organisation name',
+      ui: 'Enter an organisation name',
+    },
+    cy: {
+      csv: 'Rhowch enw’r sefydliad cynhyrchu',
+      api: 'Rhowch enw’r sefydliad cynhyrchu',
+      ui: 'Rhowch enw’r sefydliad cynhyrchu',
+    },
+  },
+  [codes.receiverCharTooManyOrganisationName]: {
+    en: {
+      csv: `The organisation name can only be ${constraints.FreeTextChar.max} characters or less`,
+      api: `The organisation name can only be ${constraints.FreeTextChar.max} characters or less`,
+      ui: `The organisation name can only be ${constraints.FreeTextChar.max} characters or less`,
+    },
+    cy: {
+      csv: `Rhaid i enw’r sefydliad cynhyrchu fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      api: `Rhaid i enw’r sefydliad cynhyrchu fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      ui: `Rhaid i enw’r sefydliad cynhyrchu fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+    },
+  },
+  [codes.receiverEmptyContactFullName]: {
+    en: {
+      csv: `Enter an organisation contact person`,
+      api: `Enter an organisation contact person`,
+      ui: `Enter an organisation contact person`,
+    },
+    cy: {
+      csv: 'Rhowch enw person cyswllt y cynhyrchydd',
+      api: 'Rhowch enw person cyswllt y cynhyrchydd',
+      ui: 'Rhowch enw person cyswllt y cynhyrchydd',
+    },
+  },
+  [codes.receiverCharTooManyContactFullName]: {
+    en: {
+      csv: `The organisation contact person can only be ${constraints.FreeTextChar.max} characters or less`,
+      api: `The organisation contact person can only be ${constraints.FreeTextChar.max} characters or less`,
+      ui: `The organisation contact person can only be ${constraints.FreeTextChar.max} characters or less`,
+    },
+    cy: {
+      csv: `Rhaid i enw person cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      api: `Rhaid i enw person cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      ui: `Rhaid i enw person cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+    },
+  },
+  [codes.receiverEmptyEmail]: {
+    en: {
+      csv: `Enter an email address`,
+      api: `Enter an email addresss`,
+      ui: `Enter an email address`,
+    },
+    cy: {
+      csv: `Rhaid i enw person cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      api: `Rhaid i enw person cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      ui: `Rhaid i enw person cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+    },
+  },
+  [codes.receiverCharTooManyEmail]: {
+    en: {
+      csv: `The organisation contact email can only be ${constraints.FreeTextChar.max} characters or less`,
+      api: `The organisation contact email can only be ${constraints.FreeTextChar.max} characters or less`,
+      ui: `The organisation contact email can only be ${constraints.FreeTextChar.max} characters or less`,
+    },
+    cy: {
+      csv: `Rhaid i gyfeiriad e-bost cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      api: `Rhaid i gyfeiriad e-bost cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      ui: `Rhaid i gyfeiriad e-bost cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+    },
+  },
+  [codes.receiverInvalidEmail]: {
+    en: {
+      csv: `Enter an email address in the correct format, like name@example.com`,
+      api: `Enter an email address in the correct format, like name@example.com`,
+      ui: `Enter an email address in the correct format, like name@example.com`,
+    },
+    cy: {
+      csv: 'Rhowch gyfeiriad e-bost go iawn ar gyfer cyswllt y cynhyrchydd',
+      api: 'Rhowch gyfeiriad e-bost go iawn ar gyfer cyswllt y cynhyrchydd',
+      ui: 'Rhowch gyfeiriad e-bost go iawn ar gyfer cyswllt y cynhyrchydd',
+    },
+  },
+  [codes.receiverEmptyPhone]: {
+    en: {
+      csv: `Enter a phone number`,
+      api: `Enter a phone number`,
+      ui: `Enter a phone number`,
+    },
+    cy: {
+      csv: 'Rhowch rif ffôn cyswllt y cynhyrchydd',
+      api: 'Rhowch rif ffôn cyswllt y cynhyrchydd',
+      ui: 'Rhowch rif ffôn cyswllt y cynhyrchydd',
+    },
+  },
+  [codes.receiverInvalidPhone]: {
+    en: {
+      csv: `Enter a phone number only using numbers, spaces, dashes, pluses and brackets`,
+      api: `Enter a phone number only using numbers, spaces, dashes, pluses and brackets`,
+      ui: `Enter a phone number only using numbers, spaces, dashes, pluses and brackets`,
+    },
+    cy: {
+      csv: 'Rhowch rif ffôn go iawn ar gyfer cyswllt y cynhyrchydd',
+      api: 'Rhowch rif ffôn go iawn ar gyfer cyswllt y cynhyrchydd',
+      ui: 'Rhowch rif ffôn go iawn ar gyfer cyswllt y cynhyrchydd',
+    },
+  },
+  [codes.receiverInvalidFax]: {
+    en: {
+      csv: `Enter a fax number only using numbers, spaces, dashes, pluses and brackets`,
+      api: `Enter a fax number only using numbers, spaces, dashes, pluses and brackets`,
+      ui: `Enter a fax number only using numbers, spaces, dashes, pluses and brackets`,
+    },
+    cy: {
+      csv: 'Rhowch rif ffacs go iawn ar gyfer cyswllt y cynhyrchydd',
+      api: 'Rhowch rif ffacs go iawn ar gyfer cyswllt y cynhyrchydd',
+      ui: 'Rhowch rif ffacs go iawn ar gyfer cyswllt y cynhyrchydd',
+    },
+  },
+  [codes.emptyOrganisationNameBase]: {
+    en: {
+      csv: 'Enter an organisation name',
+      api: 'Enter an organisation name',
+      ui: 'Enter an organisation name',
+    },
+    cy: {
+      csv: 'Rhowch enw’r sefydliad cynhyrchu',
+      api: 'Rhowch enw’r sefydliad cynhyrchu',
+      ui: 'Rhowch enw’r sefydliad cynhyrchu',
+    },
+  },
+  [codes.charTooManyOrganisationNameBase]: {
+    en: {
+      csv: `The organisation name can only be ${constraints.FreeTextChar.max} characters or less`,
+      api: `The organisation name can only be ${constraints.FreeTextChar.max} characters or less`,
+      ui: `The organisation name can only be ${constraints.FreeTextChar.max} characters or less`,
+    },
+    cy: {
+      csv: `Rhaid i enw’r sefydliad cynhyrchu fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      api: `Rhaid i enw’r sefydliad cynhyrchu fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      ui: `Rhaid i enw’r sefydliad cynhyrchu fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+    },
+  },
+  [codes.emptyContactFullNameBase]: {
+    en: {
+      csv: `Enter an organisation contact person`,
+      api: `Enter an organisation contact person`,
+      ui: `Enter an organisation contact person`,
+    },
+    cy: {
+      csv: 'Rhowch enw person cyswllt y cynhyrchydd',
+      api: 'Rhowch enw person cyswllt y cynhyrchydd',
+      ui: 'Rhowch enw person cyswllt y cynhyrchydd',
+    },
+  },
+  [codes.charTooManyContactFullNameBase]: {
+    en: {
+      csv: `The organisation contact person can only be ${constraints.FreeTextChar.max} characters or less`,
+      api: `The organisation contact person can only be ${constraints.FreeTextChar.max} characters or less`,
+      ui: `The organisation contact person can only be ${constraints.FreeTextChar.max} characters or less`,
+    },
+    cy: {
+      csv: `Rhaid i enw person cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      api: `Rhaid i enw person cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      ui: `Rhaid i enw person cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+    },
+  },
+  [codes.emptyEmailBase]: {
+    en: {
+      csv: `Enter an email address`,
+      api: `Enter an email addresss`,
+      ui: `Enter an email address`,
+    },
+    cy: {
+      csv: `Rhaid i enw person cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      api: `Rhaid i enw person cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      ui: `Rhaid i enw person cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+    },
+  },
+  [codes.charTooManyEmailBase]: {
+    en: {
+      csv: `The organisation contact email can only be ${constraints.FreeTextChar.max} characters or less`,
+      api: `The organisation contact email can only be ${constraints.FreeTextChar.max} characters or less`,
+      ui: `The organisation contact email can only be ${constraints.FreeTextChar.max} characters or less`,
+    },
+    cy: {
+      csv: `Rhaid i gyfeiriad e-bost cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      api: `Rhaid i gyfeiriad e-bost cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+      ui: `Rhaid i gyfeiriad e-bost cyswllt y cynhyrchydd fod yn llai na ${constraints.FreeTextChar.max} o gymeriadau`,
+    },
+  },
+  [codes.invalidEmailBase]: {
+    en: {
+      csv: `Enter an email address in the correct format, like name@example.com`,
+      api: `Enter an email address in the correct format, like name@example.com`,
+      ui: `Enter an email address in the correct format, like name@example.com`,
+    },
+    cy: {
+      csv: 'Rhowch gyfeiriad e-bost go iawn ar gyfer cyswllt y cynhyrchydd',
+      api: 'Rhowch gyfeiriad e-bost go iawn ar gyfer cyswllt y cynhyrchydd',
+      ui: 'Rhowch gyfeiriad e-bost go iawn ar gyfer cyswllt y cynhyrchydd',
+    },
+  },
+  [codes.emptyPhoneBase]: {
+    en: {
+      csv: `Enter a phone number`,
+      api: `Enter a phone number`,
+      ui: `Enter a phone number`,
+    },
+    cy: {
+      csv: 'Rhowch rif ffôn cyswllt y cynhyrchydd',
+      api: 'Rhowch rif ffôn cyswllt y cynhyrchydd',
+      ui: 'Rhowch rif ffôn cyswllt y cynhyrchydd',
+    },
+  },
+  [codes.invalidPhoneBase]: {
+    en: {
+      csv: `Enter a phone number only using numbers, spaces, dashes, pluses and brackets`,
+      api: `Enter a phone number only using numbers, spaces, dashes, pluses and brackets`,
+      ui: `Enter a phone number only using numbers, spaces, dashes, pluses and brackets`,
+    },
+    cy: {
+      csv: 'Rhowch rif ffôn go iawn ar gyfer cyswllt y cynhyrchydd',
+      api: 'Rhowch rif ffôn go iawn ar gyfer cyswllt y cynhyrchydd',
+      ui: 'Rhowch rif ffôn go iawn ar gyfer cyswllt y cynhyrchydd',
+    },
+  },
+  [codes.invalidFaxBase]: {
+    en: {
+      csv: `Enter a fax number only using numbers, spaces, dashes, pluses and brackets`,
+      api: `Enter a fax number only using numbers, spaces, dashes, pluses and brackets`,
+      ui: `Enter a fax number only using numbers, spaces, dashes, pluses and brackets`,
+    },
+    cy: {
+      csv: 'Rhowch rif ffacs go iawn ar gyfer cyswllt y cynhyrchydd',
+      api: 'Rhowch rif ffacs go iawn ar gyfer cyswllt y cynhyrchydd',
+      ui: 'Rhowch rif ffacs go iawn ar gyfer cyswllt y cynhyrchydd',
+    },
+  },
 };

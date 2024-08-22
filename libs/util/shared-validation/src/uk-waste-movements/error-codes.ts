@@ -13,10 +13,23 @@ export const emptyCountryBase = 8;
 export const invalidCountryBase = 9;
 export const invalidPostcodeBase = 10;
 
+export const emptyOrganisationNameBase = 1;
+export const charTooManyOrganisationNameBase = 2;
+export const emptyContactFullNameBase = 11;
+export const charTooManyContactFullNameBase = 12;
+export const emptyEmailBase = 15;
+export const charTooManyEmailBase = 17;
+export const invalidEmailBase = 16;
+export const emptyPhoneBase = 13;
+export const invalidPhoneBase = 14;
+export const invalidFaxBase = 23;
+
 export const producerCharTooManyBuildingNameOrNumber =
   producerBase + charTooManyBuildingNameOrNumberBase;
-export const producerEmptyOrganisationName = 11001;
-export const producerCharTooManyOrganisationName = 11002;
+export const producerEmptyOrganisationName =
+  producerBase + emptyOrganisationNameBase;
+export const producerCharTooManyOrganisationName =
+  producerBase + charTooManyOrganisationNameBase;
 export const producerEmptyAddressLine1 = producerBase + emptyAddressLine1Base;
 export const producerCharTooManyAddressLine1 =
   producerBase + charTooManyAddressLine1Base;
@@ -28,22 +41,24 @@ export const producerCharTooManyTownOrCity =
 export const producerEmptyCountry = producerBase + emptyCountryBase;
 export const producerInvalidCountry = producerBase + invalidCountryBase;
 export const producerInvalidPostcode = producerBase + invalidPostcodeBase;
-export const producerEmptyContactFullName = 11011;
-export const producerCharTooManyContactFullName = 11012;
-export const producerEmptyPhone = 11013;
-export const producerInvalidPhone = 11014;
-export const producerEmptyEmail = 11015;
-export const producerInvalidEmail = 11016;
-export const producerCharTooManyEmail = 11017;
-export const producerInvalidSicCode = 11018;
-export const producerEmptyReference = 11019;
-export const producerCharTooFewReference = 11020;
-export const producerCharTooManyReference = 11021;
-export const producerInvalidReference = 11022;
-export const producerInvalidFax = 11023;
-export const producerDuplicateSicCode = 11024;
-export const producerTooManySicCodes = 11025;
-export const producerEmptySicCode = 11026;
+export const producerEmptyContactFullName = producerBase;
+export const producerCharTooManyContactFullName =
+  producerBase + charTooManyContactFullNameBase;
+export const producerEmptyPhone = producerBase + emptyPhoneBase;
+export const producerInvalidPhone = producerBase + invalidPhoneBase;
+export const producerEmptyEmail = producerBase + emptyEmailBase;
+export const producerInvalidEmail = producerBase + invalidEmailBase;
+export const producerCharTooManyEmail = producerBase + charTooManyEmailBase;
+export const producerInvalidFax = producerBase + invalidFaxBase;
+
+export const producerInvalidSicCode = 11021;
+export const producerEmptyReference = 11022;
+export const producerCharTooFewReference = 11023;
+export const producerCharTooManyReference = 11024;
+export const producerInvalidReference = 11025;
+export const producerDuplicateSicCode = 11026;
+export const producerTooManySicCodes = 11027;
+export const producerEmptySicCode = 11028;
 
 export const wasteCollectionMissingWasteSource = 12011;
 export const wasteCollectionInvalidWasteSource = 12012;
@@ -82,6 +97,21 @@ export const receiverCharTooManyTownOrCity =
 export const receiverEmptyCountry = receiverBase + emptyCountryBase;
 export const receiverInvalidCountry = receiverBase + invalidCountryBase;
 export const receiverInvalidPostcode = receiverBase + invalidPostcodeBase;
+
+export const receiverEmptyOrganisationName =
+  receiverBase + emptyOrganisationNameBase;
+export const receiverCharTooManyOrganisationName =
+  receiverBase + charTooManyOrganisationNameBase;
+export const receiverEmptyContactFullName =
+  receiverBase + emptyContactFullNameBase;
+export const receiverCharTooManyContactFullName =
+  receiverBase + charTooManyContactFullNameBase;
+export const receiverEmptyEmail = receiverBase + emptyEmailBase;
+export const receiverCharTooManyEmail = receiverBase + charTooManyEmailBase;
+export const receiverInvalidEmail = receiverBase + invalidEmailBase;
+export const receiverEmptyPhone = receiverBase + emptyPhoneBase;
+export const receiverInvalidPhone = receiverBase + invalidPhoneBase;
+export const receiverInvalidFax = receiverBase + invalidFaxBase;
 
 export const carrierCharTooManyBuildingNameOrNumber =
   carrierBase + charTooManyBuildingNameOrNumberBase;
