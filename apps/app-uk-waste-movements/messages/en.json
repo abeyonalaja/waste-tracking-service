@@ -684,6 +684,35 @@
           }
         }
       }
+    },
+    "carrierAddress": {
+      "metadata": {
+        "title": "Carrier address details",
+        "description": "Create a new single waste movement"
+      },
+      "caption": "Waste carrier details",
+      "postcode": {
+        "search": {
+          "heading": "What is the carrier’s address?",
+          "intro": "The carrier is the person or business responsible for collecting and moving the waste."
+        },
+        "results": {
+          "heading": "Select the carrier’s address",
+          "intro": "{count} addresses were found for {postcode}"
+        },
+        "noResults": {
+          "heading": "No address found"
+        },
+        "confirmation": {
+          "heading": "Confirm the carrier’s address"
+        },
+        "manual": {
+          "heading": "What is the carrier’s address?"
+        },
+        "edit": {
+          "heading": "Edit the carrier’s address"
+        }
+      }
     }
   }
 }
