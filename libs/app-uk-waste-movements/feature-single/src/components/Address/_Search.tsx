@@ -23,6 +23,7 @@ interface SearchProps {
   updateView: (view: ViewType) => void;
   updateAddressData?: (data: AddressSearchResult[]) => void;
   content: ContentStrings;
+  section: ukwmValidation.Section;
 }
 
 export function Search({
@@ -33,6 +34,7 @@ export function Search({
   updateView,
   updateAddressData,
   content,
+  section,
 }: SearchProps): JSX.Element {
   const router = useRouter();
   const locale = useLocale() as ukwmValidation.Locale;
@@ -50,7 +52,7 @@ export function Search({
       formValues.postcode,
       ukwmValidation.validationRules.validatePostcode,
       '#postcode',
-      'Producer',
+      section,
       locale,
     );
     if (!postcodeValidationResult.valid) {

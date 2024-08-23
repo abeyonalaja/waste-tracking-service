@@ -1002,7 +1002,7 @@ export default class SubmissionController {
         const partialWasteCollectionAddressDetailsValidation =
           ukwmValidation.validationRules.validatePartialAddressDetails(
             value,
-            'Waste Collection',
+            'Waste collection',
           );
 
         if (!partialWasteCollectionAddressDetailsValidation.valid) {
@@ -1022,7 +1022,7 @@ export default class SubmissionController {
         const wasteCollectionAddressDetailsValidation =
           ukwmValidation.validationRules.validateAddressDetails(
             value,
-            'Waste Collection',
+            'Waste collection',
           );
 
         if (!wasteCollectionAddressDetailsValidation.valid) {

@@ -126,6 +126,7 @@ export default async function CollectionAddressPage({
       savedFormValues={savedFormValues}
       apiPartial={'/waste-collection-address'}
       destination={'/producer/source'}
+      section={'Waste collection'}
     />
   );
 }

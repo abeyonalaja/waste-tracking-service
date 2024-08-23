@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Search } from './_Search';
+import { ukwm } from '@wts/util/shared-validation';
 
 window.scrollTo = jest.fn();
 
@@ -60,7 +61,14 @@ const defaultProps = {
     manualLinkShort: 'Enter the address manually',
     searchAgain: 'Search again',
     legend: 'Select an address',
+    notFound: 'Address not found',
+    notFoundPrompt: 'Address not found',
+    addressFound: 'Select an address',
+    addressesFound: 'Select an address',
+    useAddress: 'Use this address',
+    useDifferentAddress: 'Use a different address',
   },
+  section: 'Producer' as ukwm.Section,
 };
 
 describe('Address postcode search page', () => {

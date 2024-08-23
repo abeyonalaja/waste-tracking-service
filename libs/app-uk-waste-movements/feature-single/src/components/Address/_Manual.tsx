@@ -18,6 +18,7 @@ interface ManualProps {
   content: ContentStrings;
   mode?: 'edit' | 'create';
   apiPartial: string;
+  section: ukwmValidation.Section;
 }
 
 export function Manual({
@@ -30,6 +31,7 @@ export function Manual({
   content,
   mode,
   apiPartial,
+  section,
 }: ManualProps): JSX.Element {
   const locale = useLocale() as ukwmValidation.Locale;
   const router = useRouter();
@@ -54,7 +56,7 @@ export function Manual({
       formValues.buildingNameOrNumber,
       ukwmValidation.validationRules.validateBuildingNameOrNumber,
       '#buildingNameOrNumber',
-      'Producer',
+      section,
       locale,
       'ui',
     );
@@ -62,35 +64,35 @@ export function Manual({
       formValues.addressLine1,
       ukwmValidation.validationRules.validateAddressLine1,
       '#addressLine1',
-      'Producer',
+      section,
       locale,
     );
     const addressLine2ValidationResult = ukwmValidation.uiSharedValidation(
       formValues.addressLine2,
       ukwmValidation.validationRules.validateAddressLine2,
       '#addressLine2',
-      'Producer',
+      section,
       locale,
     );
     const townCityValidationResult = ukwmValidation.uiSharedValidation(
       formValues.townCity,
       ukwmValidation.validationRules.validateTownCity,
       '#townCity',
-      'Producer',
+      section,
       locale,
     );
     const postcodeValidationResult = ukwmValidation.uiSharedValidation(
       formValues.postcode,
       ukwmValidation.validationRules.validatePostcode,
       '#postcode',
-      'Producer',
+      section,
       locale,
     );
     const countryValidationResult = ukwmValidation.uiSharedValidation(
       formValues.country,
       ukwmValidation.validationRules.validateCountry,
       '#country',
-      'Producer',
+      section,
       locale,
     );
 

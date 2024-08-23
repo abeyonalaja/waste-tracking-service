@@ -80,7 +80,7 @@ export function getSharedErrorCode(
     return errorCode;
   } else if (context == 'Producer') {
     return errorCode + errorCodes.producerBase;
-  } else if (context == 'Waste Collection') {
+  } else if (context == 'Waste collection') {
     return errorCode + errorCodes.wasteCollectionBase;
   } else if (context == 'Carrier') {
     return errorCode + errorCodes.carrierBase;

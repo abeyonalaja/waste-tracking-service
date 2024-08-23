@@ -1099,7 +1099,7 @@ export function validateWasteSourceSection(
       valid: false,
       errors: [
         {
-          field: 'Waste Collection Details Waste Source',
+          field: 'Waste collection details waste source',
           code: errorCodes.wasteCollectionMissingWasteSource,
           message: message
             ? getErrorMessage(
@@ -1120,7 +1120,7 @@ export function validateWasteSourceSection(
       valid: false,
       errors: [
         {
-          field: 'Waste Collection Details Waste Source',
+          field: 'Waste collection details waste source',
           code: errorCodes.wasteCollectionInvalidWasteSource,
           message: message
             ? getErrorMessage(
@@ -1153,7 +1153,7 @@ export function validateSicCodesSection(
       valid: false,
       errors: [
         {
-          field: 'Producer Standard Industrial Classification (SIC) code',
+          field: 'Producer standard industrial classification (SIC) code',
           code: errorCodes.producerEmptySicCode,
           message: message
             ? getErrorMessage(
@@ -1172,7 +1172,7 @@ export function validateSicCodesSection(
       valid: false,
       errors: [
         {
-          field: 'Producer Standard Industrial Classification (SIC) code',
+          field: 'Producer standard industrial classification (SIC) code',
           code: errorCodes.producerTooManySicCodes,
           message: message
             ? getErrorMessage(
@@ -1191,7 +1191,7 @@ export function validateSicCodesSection(
       valid: false,
       errors: [
         {
-          field: 'Producer Standard Industrial Classification (SIC) code',
+          field: 'Producer standard industrial classification (SIC) code',
           code: errorCodes.producerInvalidSicCode,
           message: message
             ? getErrorMessage(
@@ -1210,7 +1210,7 @@ export function validateSicCodesSection(
       valid: false,
       errors: [
         {
-          field: 'Producer Standard Industrial Classification (SIC) code',
+          field: 'Producer standard industrial classification (SIC) code',
           code: errorCodes.producerDuplicateSicCode,
           message: message
             ? getErrorMessage(

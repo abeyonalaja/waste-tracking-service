@@ -69,6 +69,8 @@ const defaultProps = {
     useAddress: 'Use this address and continue',
     useDifferentAddress: 'Use a different address',
   },
+  destination: '/producer/contact',
+  apiPartial: '/producer-address',
 };
 
 describe('Confirm address screen', () => {

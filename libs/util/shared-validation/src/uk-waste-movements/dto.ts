@@ -2,12 +2,10 @@ export type Locale = 'en' | 'cy';
 
 export type Context = 'csv' | 'api' | 'ui';
 
-export type Section = 'Producer' | 'Waste Collection' | 'Carrier' | 'Receiver';
+export type Section = 'Producer' | 'Waste collection' | 'Carrier' | 'Receiver';
 
 export type Field =
   | 'Reference'
-  | 'Postcode'
-  | 'AddressSelection'
   | 'Producer organisation name'
   | 'Producer building name or number'
   | 'Producer address line 1'
@@ -19,19 +17,26 @@ export type Field =
   | 'Producer contact email address'
   | 'Producer contact phone number'
   | 'Producer fax number'
-  | 'Producer Standard Industrial Classification (SIC) code'
-  | 'Waste Collection Details Waste Source'
-  | 'Waste Collection building name or number'
-  | 'Waste Collection address line 1'
-  | 'Waste Collection address line 2'
-  | 'Waste Collection town or city'
-  | 'Waste Collection country'
-  | 'Waste Collection postcode'
+  | 'Producer standard industrial classification (SIC) code'
+  | 'Waste collection details waste source'
+  | 'Waste collection building name or number'
+  | 'Waste collection address line 1'
+  | 'Waste collection address line 2'
+  | 'Waste collection town or city'
+  | 'Waste collection country'
+  | 'Waste collection postcode'
   | 'Carrier building name or number'
   | 'Carrier address line 1'
   | 'Carrier address line 2'
   | 'Carrier town or city'
   | 'Carrier country'
+  | 'Carrier postcode'
+  | 'Receiver building name or number'
+  | 'Receiver address line 1'
+  | 'Receiver address line 2'
+  | 'Receiver town or city'
+  | 'Receiver country'
+  | 'Receiver postcode'
   | 'Carrier postcode'
   | 'Receiver organisation name'
   | 'Receiver contact name'
@@ -39,13 +44,15 @@ export type Field =
   | 'Receiver contact phone number'
   | 'Receiver fax number';
 
+export type UIField = 'Postcode' | 'AddressSelection';
+
 export interface ErrorMessage {
   locale: Locale;
   context?: Context;
 }
 
 export interface FieldFormatError {
-  field: Field;
+  field: Field | UIField;
   code: number;
   message?: string;
   args?: string[];

@@ -110,7 +110,7 @@ describe('Building name or number validation', () => {
     const buildingName = faker.datatype.string(251);
     const result = validateBuildingNameOrNumber(
       buildingName,
-      'Waste Collection',
+      'Waste collection',
       {
         locale: 'en',
         context: 'ui',
@@ -121,7 +121,7 @@ describe('Building name or number validation', () => {
     if ('errors' in result) {
       expect(result.errors[0]).toEqual({
         code: 12000,
-        field: 'Waste Collection building name or number',
+        field: 'Waste collection building name or number',
         message: 'Building name or number must be less than 250 characters',
       });
     }
@@ -190,7 +190,7 @@ describe('Address line 1 validation', () => {
 
   it('should return an error when the address line 1 is too long - waste collection', () => {
     const addressLine1 = faker.datatype.string(251);
-    const result = validateAddressLine1(addressLine1, 'Waste Collection', {
+    const result = validateAddressLine1(addressLine1, 'Waste collection', {
       locale: 'en',
       context: 'ui',
     });
@@ -199,7 +199,7 @@ describe('Address line 1 validation', () => {
     if ('errors' in result) {
       expect(result.errors[0]).toEqual({
         code: 12004,
-        field: 'Waste Collection address line 1',
+        field: 'Waste collection address line 1',
         message: 'Address line 1 must be less than 250 characters',
       });
     }
@@ -266,9 +266,9 @@ describe('Address line 2 validation', () => {
     }
   });
 
-  it('should return an error when the address line 2 is too long - Waste Collection', () => {
+  it('should return an error when the address line 2 is too long - Waste collection', () => {
     const addressLine2 = faker.datatype.string(251);
-    const result = validateAddressLine2(addressLine2, 'Waste Collection', {
+    const result = validateAddressLine2(addressLine2, 'Waste collection', {
       locale: 'en',
       context: 'ui',
     });
@@ -277,7 +277,7 @@ describe('Address line 2 validation', () => {
     if ('errors' in result) {
       expect(result.errors[0]).toEqual({
         code: 12005,
-        field: 'Waste Collection address line 2',
+        field: 'Waste collection address line 2',
         message: 'Address line 2 must be less than 250 characters',
       });
     }
@@ -346,7 +346,7 @@ describe('Town or city validation', () => {
 
   it('should return an error when the town or city is too long', () => {
     const townOrCity = faker.datatype.string(251);
-    const result = validateTownCity(townOrCity, 'Waste Collection', {
+    const result = validateTownCity(townOrCity, 'Waste collection', {
       locale: 'en',
       context: 'ui',
     });
@@ -355,7 +355,7 @@ describe('Town or city validation', () => {
     if ('errors' in result) {
       expect(result.errors[0]).toEqual({
         code: 12007,
-        field: 'Waste Collection town or city',
+        field: 'Waste collection town or city',
         message: 'Town or city must be less than 250 characters',
       });
     }
@@ -393,7 +393,7 @@ describe('Country validation', () => {
   });
 
   it('should return an error when the country is empty - waste collection', () => {
-    const result = validateCountry('', 'Waste Collection', {
+    const result = validateCountry('', 'Waste collection', {
       locale: 'en',
       context: 'ui',
     });
@@ -402,7 +402,7 @@ describe('Country validation', () => {
     if ('errors' in result) {
       expect(result.errors[0]).toEqual({
         code: 12008,
-        field: 'Waste Collection country',
+        field: 'Waste collection country',
         message: 'Select a country',
       });
     }
@@ -441,8 +441,8 @@ describe('Country validation', () => {
     }
   });
 
-  it('Should return an error if the country is not england, scotland, wales or NI - Waste Collection', () => {
-    const result = validateCountry('Algeria', 'Waste Collection', {
+  it('Should return an error if the country is not england, scotland, wales or NI - Waste collection', () => {
+    const result = validateCountry('Algeria', 'Waste collection', {
       locale: 'en',
       context: 'ui',
     });
@@ -451,7 +451,7 @@ describe('Country validation', () => {
     if ('errors' in result) {
       expect(result.errors[0]).toEqual({
         code: 12009,
-        field: 'Waste Collection country',
+        field: 'Waste collection country',
         message:
           'Country must only be England, Wales, Scotland, or Northern Ireland',
       });
@@ -507,7 +507,7 @@ describe('Postcode validation', () => {
   });
 
   it('should return an error when the postcode is empty - waste collection', () => {
-    const result = validatePostcode('', 'Waste Collection', {
+    const result = validatePostcode('', 'Waste collection', {
       locale: 'en',
       context: 'ui',
     });
@@ -516,7 +516,7 @@ describe('Postcode validation', () => {
     if ('errors' in result) {
       expect(result.errors[0]).toEqual({
         code: 12010,
-        field: 'Waste Collection postcode',
+        field: 'Waste collection postcode',
         message: 'Enter a postcode',
       });
     }
@@ -555,7 +555,7 @@ describe('Postcode validation', () => {
   });
 
   it('should return an error when the postcode is invalid - waste collection', () => {
-    const result = validatePostcode('123', 'Waste Collection', {
+    const result = validatePostcode('123', 'Waste collection', {
       locale: 'en',
       context: 'ui',
     });
@@ -564,7 +564,7 @@ describe('Postcode validation', () => {
     if ('errors' in result) {
       expect(result.errors[0]).toEqual({
         code: 12010,
-        field: 'Waste Collection postcode',
+        field: 'Waste collection postcode',
         message: 'Enter a postcode',
       });
     }

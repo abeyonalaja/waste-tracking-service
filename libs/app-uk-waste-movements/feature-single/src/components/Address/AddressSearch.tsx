@@ -11,6 +11,7 @@ import {
   FormValues,
   ViewType,
 } from './types';
+import { ukwm } from '@wts/util/shared-validation';
 
 interface AddressSearchProps {
   defaultView?: ViewType;
@@ -26,6 +27,7 @@ interface AddressSearchProps {
   savedFormValues: FormValues | undefined;
   destination: string;
   apiPartial: string;
+  section: ukwm.Section;
 }
 
 const defaultFormValues: FormValues = {
@@ -52,6 +54,7 @@ export function AddressSearch({
   savedFormValues,
   destination,
   apiPartial,
+  section,
 }: AddressSearchProps): JSX.Element {
   const [formValues, setFormValues] = useState(
     savedFormValues ? savedFormValues : defaultFormValues,
@@ -71,6 +74,7 @@ export function AddressSearch({
             updateView={setView}
             updateAddressData={setAddressData}
             content={content}
+            section={section}
           />
         );
       case 'results':
@@ -123,6 +127,7 @@ export function AddressSearch({
             updateView={setView}
             content={content}
             apiPartial={apiPartial}
+            section={section}
           />
         );
       case 'edit':
@@ -137,6 +142,7 @@ export function AddressSearch({
             content={content}
             mode={'edit'}
             apiPartial={apiPartial}
+            section={section}
           />
         );
       default:

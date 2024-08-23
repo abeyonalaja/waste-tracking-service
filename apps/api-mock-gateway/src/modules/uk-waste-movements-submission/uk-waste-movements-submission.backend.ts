@@ -541,7 +541,7 @@ export function setDraftWasteCollectionAddressDetails(
     const partialAddressDetailsValidationResult =
       ukwmValidation.validationRules.validatePartialAddressDetails(
         value as Partial<UkwmAddress>,
-        'Waste Collection',
+        'Waste collection',
       );
 
     if (!partialAddressDetailsValidationResult.valid) {
@@ -562,7 +562,7 @@ export function setDraftWasteCollectionAddressDetails(
     const addressDetailsValidationResult =
       ukwmValidation.validationRules.validateAddressDetails(
         value as UkwmAddress,
-        'Waste Collection',
+        'Waste collection',
       );
 
     if (!addressDetailsValidationResult.valid) {

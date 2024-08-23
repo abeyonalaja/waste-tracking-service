@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { AddressSearch } from './AddressSearch';
+import { ukwm } from '@wts/util/shared-validation';
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
@@ -48,6 +49,12 @@ const defaultProps = {
     manualLinkShort: 'Enter the address manually',
     searchAgain: 'Search again',
     legend: 'Select an address',
+    notFound: 'Address not found',
+    notFoundPrompt: 'Please enter the address manually',
+    addressFound: 'Address found',
+    addressesFound: 'Addresses found',
+    useAddress: 'Use this address',
+    useDifferentAddress: 'Use a different address',
   },
   id: 'mock-id',
   savedFormValues: {
@@ -59,6 +66,9 @@ const defaultProps = {
     country: '',
     addressSelection: '',
   },
+  apiPartial: '/producer-address',
+  destination: '/producer/contact',
+  section: 'Producer' as ukwm.Section,
 };
 
 describe('Address parent component', () => {

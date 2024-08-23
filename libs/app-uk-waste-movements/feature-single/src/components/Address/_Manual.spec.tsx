@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Manual } from './_Manual';
+import { ukwm } from '@wts/util/shared-validation';
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
@@ -70,6 +71,8 @@ const defaultProps = {
     useDifferentAddress: 'Use a different address',
   },
   mode: undefined,
+  apiPartial: '/producer-address',
+  section: 'Producer' as ukwm.Section,
 };
 
 window.scrollTo = jest.fn();

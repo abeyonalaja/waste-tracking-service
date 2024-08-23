@@ -72,6 +72,8 @@ const defaultProps = {
     useAddress: 'Use this address and continue',
     useDifferentAddress: 'Use a different address',
   },
+  apiPartial: '/producer-address',
+  section: 'Producer',
 };
 
 describe('Address search results page', () => {
