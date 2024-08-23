@@ -537,6 +537,14 @@
         "carrierContactDetails": "Carrier contact details",
         "modeOfTransport": "Carrier mode of transport",
         "checkYourAnswers": "Check your carrier details answers"
+      },
+      "receiver": {
+        "heading": "Waste receiver details",
+        "description": "Where the waste will be taken",
+        "receiverAddress": "Receiver address",
+        "receiverContactDetails": "Receiver contact details",
+        "receiverPermitDetails": "Receiver permit details",
+        "checkYourAnswers": "Check your receiver details answers"
       }
     },
     "postcode": {
@@ -711,6 +719,35 @@
         },
         "edit": {
           "heading": "Edit the carrier’s address"
+        }
+      }
+    },
+    "receiverAddress": {
+      "metadata": {
+        "title": "Receiver address details",
+        "description": "Create a new single waste movement"
+      },
+      "caption": "Waste receiver details",
+      "postcode": {
+        "search": {
+          "heading": "What is the receiver’s address?",
+          "intro": "The receiver is the business or organsation that will treat or dispose of the waste."
+        },
+        "results": {
+          "heading": "Select the receiver’s address",
+          "intro": "{count} addresses were found for {postcode}"
+        },
+        "noResults": {
+          "heading": "No address found"
+        },
+        "confirmation": {
+          "heading": "Confirm the receiver’s address"
+        },
+        "manual": {
+          "heading": "What is the receiver’s address?"
+        },
+        "edit": {
+          "heading": "Edit the receiver’s address"
         }
       }
     }

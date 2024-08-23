@@ -65,6 +65,13 @@ export default async function TaskListPage({
       ? 'Completed'
       : 'Incomplete';
 
+  const receiverOverallStatus =
+    draft.receiver.address.status === 'Complete' &&
+    draft.receiver.contact.status === 'Complete' &&
+    draft.receiver.permitDetails.status === 'Complete'
+      ? 'Completed'
+      : 'Incomplete';
+
   return (
     <Page
       beforeChildren={
@@ -157,6 +164,33 @@ export default async function TaskListPage({
                   {
                     name: t('carrier.checkYourAnswers'),
                     href: `${params.id}/carrier/check-your-answers`,
+                    status: 'NotStarted',
+                  },
+                ],
+              },
+              {
+                heading: t('receiver.heading'),
+                description: t('receiver.description'),
+                overallSectionStatus: receiverOverallStatus,
+                tasks: [
+                  {
+                    name: t('receiver.receiverAddress'),
+                    href: `${params.id}/receiver/address`,
+                    status: draft.receiver.address.status,
+                  },
+                  {
+                    name: t('receiver.receiverContactDetails'),
+                    href: `${params.id}/carrier/contact`,
+                    status: draft.receiver.contact.status,
+                  },
+                  {
+                    name: t('receiver.receiverPermitDetails'),
+                    href: `${params.id}/receiver/permit`,
+                    status: draft.receiver.permitDetails.status,
+                  },
+                  {
+                    name: t('receiver.checkYourAnswers'),
+                    href: `${params.id}/receiver/check-your-answers`,
                     status: 'NotStarted',
                   },
                 ],
