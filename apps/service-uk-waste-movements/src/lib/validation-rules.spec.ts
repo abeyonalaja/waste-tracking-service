@@ -7,6 +7,7 @@ import {
   validateWasteTransportationDetailSection,
   validateWasteTypeDetailSection,
   validateCarrierDetailSection,
+  validateCustomerReference,
 } from './validation-rules';
 import { faker } from '@faker-js/faker';
 
@@ -115,6 +116,42 @@ const localAuthorities = [
   },
 ];
 
+describe(validateCustomerReference, () => {
+  it('passes customer reference validation', () => {
+    const result = validateCustomerReference('testref');
+    expect(result.valid).toBe(true);
+  });
+
+  it('fails customer reference validation', () => {
+    let result = validateCustomerReference('');
+    expect(result.valid).toBe(false);
+    expect(result.value).toEqual([
+      {
+        field: 'Reference',
+        code: validation.errorCodes.producerEmptyReference,
+      },
+    ]);
+
+    result = validateCustomerReference(faker.string.sample(21));
+    expect(result.valid).toBe(false);
+    expect(result.value).toEqual([
+      {
+        field: 'Reference',
+        code: validation.errorCodes.producerCharTooManyReference,
+      },
+    ]);
+
+    result = validateCustomerReference('@!"?');
+    expect(result.valid).toBe(false);
+    expect(result.value).toEqual([
+      {
+        field: 'Reference',
+        code: validation.errorCodes.producerInvalidReference,
+      },
+    ]);
+  });
+});
+
 describe(validateProducerDetailSection, () => {
   it('passes producer section validation', () => {
     const result = validateProducerDetailSection({
@@ -128,7 +165,6 @@ describe(validateProducerDetailSection, () => {
       producerPostcode: 'AB1 1CB',
       producerSicCode: '123456',
       producerTownCity: 'London',
-      customerReference: 'testRef',
     });
 
     expect(result.valid).toBe(true);
@@ -145,15 +181,10 @@ describe(validateProducerDetailSection, () => {
       producerPostcode: '',
       producerSicCode: '',
       producerTownCity: '',
-      customerReference: '',
     });
     expect(result.valid).toBe(false);
 
     expect(result.value).toEqual([
-      {
-        field: 'Reference',
-        code: validation.errorCodes.producerEmptyReference,
-      },
       {
         field: 'Producer organisation name',
         code: validation.errorCodes.producerEmptyOrganisationName,
@@ -194,16 +225,11 @@ describe(validateProducerDetailSection, () => {
       producerPostcode: 'AB1',
       producerSicCode: '     ',
       producerTownCity: '     ',
-      customerReference: '@!"?',
     });
 
     expect(result.valid).toBe(false);
 
     expect(result.value).toEqual([
-      {
-        field: 'Reference',
-        code: validation.errorCodes.producerInvalidReference,
-      },
       {
         field: 'Producer organisation name',
         code: validation.errorCodes.producerEmptyOrganisationName,
@@ -253,16 +279,11 @@ describe(validateProducerDetailSection, () => {
       producerPostcode: faker.string.sample(251),
       producerSicCode: faker.string.sample(251),
       producerTownCity: faker.string.sample(251),
-      customerReference: faker.string.sample(21),
     });
 
     expect(result.valid).toBe(false);
 
     expect(result.value).toEqual([
-      {
-        field: 'Reference',
-        code: validation.errorCodes.producerCharTooManyReference,
-      },
       {
         field: 'Producer organisation name',
         code: validation.errorCodes.producerCharTooManyOrganisationName,
@@ -1149,10 +1170,10 @@ describe(validateCarrierDetailSection, () => {
         townCity: 'London',
       },
       contact: {
-        email: 'john.smith@john.smith',
-        name: 'John Smith',
+        emailAddress: 'john.smith@john.smith',
+        fullName: 'John Smith',
         organisationName: 'Test organization',
-        phone: '0044140000000',
+        phoneNumber: '0044140000000',
       },
     });
 

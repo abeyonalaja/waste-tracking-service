@@ -21,12 +21,13 @@ const submissions: UkwmSubmittedPartialSubmission[] = [
 ].map((i) => ({
   id: uuidv4(),
   transactionId: `WM24_${i.toString().padStart(3, '0')}9ACAD`,
+  reference: `Producer Ref ${i}`,
   producer: {
     contact: {
       organisationName: `Producer Org ${i}`,
-      email: `email${i}@example.com`,
-      name: `Producer ${i}`,
-      phone: `0123456789${i}`,
+      emailAddress: `email${i}@example.com`,
+      fullName: `Producer ${i}`,
+      phoneNumber: `0123456789${i}`,
     },
     address: {
       addressLine1: `Address Line 1 ${i}`,
@@ -35,15 +36,14 @@ const submissions: UkwmSubmittedPartialSubmission[] = [
       country: `Country ${i}`,
       postcode: `Postcode ${i}`,
     },
-    reference: `Producer Ref ${i}`,
     sicCode: i.toString().padStart(6, '0'),
   },
   receiver: {
     contact: {
       organisationName: `Receiver Org ${i}`,
-      email: `email${i}@example.com`,
-      name: `Receiver ${i}`,
-      phone: `0123456789${i}`,
+      emailAddress: `email${i}@example.com`,
+      fullName: `Receiver ${i}`,
+      phoneNumber: `0123456789${i}`,
     },
     address: {
       addressLine1: `Address Line 1 ${i}`,

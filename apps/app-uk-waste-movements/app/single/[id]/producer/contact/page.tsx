@@ -80,10 +80,10 @@ export default async function ProducerContactDetailsPage({
   if (record.status === 'Complete' || record.status === 'Started') {
     initialFormState = {
       organisationName: record.organisationName,
-      organisationContactPerson: record.name,
-      emailAddress: record.email,
-      phoneNumber: record.phone,
-      faxNumber: record.fax,
+      organisationContactPerson: record.fullName,
+      emailAddress: record.emailAddress,
+      phoneNumber: record.phoneNumber,
+      faxNumber: record.faxNumber,
     };
   }
 

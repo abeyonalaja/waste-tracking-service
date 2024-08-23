@@ -152,6 +152,7 @@ describe(CosmosRepository, () => {
       const accountId = faker.string.uuid();
       const record: Draft = {
         id: '1',
+        reference: 'REF123',
         wasteInformation: {
           status: 'Complete',
           wasteTypes: [
@@ -186,9 +187,9 @@ describe(CosmosRepository, () => {
           contact: {
             status: 'Complete',
             organisationName: 'Organisation1',
-            name: 'Contact1',
-            email: 'contact1@example.com',
-            phone: '1234567890',
+            fullName: 'Contact1',
+            emailAddress: 'contact1@example.com',
+            phoneNumber: '1234567890',
           },
           address: {
             status: 'Complete',
@@ -199,7 +200,6 @@ describe(CosmosRepository, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'REF123',
             address: {
               status: 'Complete',
               addressLine1: 'Address Line 2',
@@ -209,9 +209,9 @@ describe(CosmosRepository, () => {
             contact: {
               status: 'Complete',
               organisationName: 'Organisation2',
-              name: 'Contact2',
-              email: 'contact2@example.com',
-              phone: '0987654321',
+              fullName: 'Contact2',
+              emailAddress: 'contact2@example.com',
+              phoneNumber: '0987654321',
             },
             sicCodes: {
               status: 'Complete',
@@ -236,7 +236,7 @@ describe(CosmosRepository, () => {
               country: 'Country3',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'Complete',
           },
         },
@@ -244,9 +244,9 @@ describe(CosmosRepository, () => {
           contact: {
             status: 'Complete',
             organisationName: 'Organisation2',
-            name: 'Contact2',
-            email: 'contact2@example.com',
-            phone: '0987654321',
+            fullName: 'Contact2',
+            emailAddress: 'contact2@example.com',
+            phoneNumber: '0987654321',
           },
           address: {
             status: 'Complete',
@@ -290,6 +290,7 @@ describe(CosmosRepository, () => {
       const accountId = faker.string.uuid();
       const record: Draft = {
         id: '1',
+        reference: 'REF123',
         wasteInformation: {
           status: 'Complete',
           wasteTypes: [
@@ -325,9 +326,9 @@ describe(CosmosRepository, () => {
           contact: {
             status: 'Complete',
             organisationName: 'Organisation1',
-            name: 'Contact1',
-            email: 'contact1@example.com',
-            phone: '1234567890',
+            fullName: 'Contact1',
+            emailAddress: 'contact1@example.com',
+            phoneNumber: '1234567890',
           },
           address: {
             status: 'Complete',
@@ -338,7 +339,6 @@ describe(CosmosRepository, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'REF123',
             address: {
               status: 'Complete',
               addressLine1: 'Address Line 2',
@@ -348,9 +348,9 @@ describe(CosmosRepository, () => {
             contact: {
               status: 'Complete',
               organisationName: 'Organisation2',
-              name: 'Contact2',
-              email: 'contact2@example.com',
-              phone: '0987654321',
+              fullName: 'Contact2',
+              emailAddress: 'contact2@example.com',
+              phoneNumber: '0987654321',
             },
             sicCodes: {
               status: 'Complete',
@@ -375,7 +375,7 @@ describe(CosmosRepository, () => {
               country: 'Country3',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'Complete',
           },
         },
@@ -383,9 +383,9 @@ describe(CosmosRepository, () => {
           contact: {
             status: 'Complete',
             organisationName: 'Organisation2',
-            name: 'Contact2',
-            email: 'contact2@example.com',
-            phone: '0987654321',
+            fullName: 'Contact2',
+            emailAddress: 'contact2@example.com',
+            phoneNumber: '0987654321',
           },
           address: {
             status: 'Complete',

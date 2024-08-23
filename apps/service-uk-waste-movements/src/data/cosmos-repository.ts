@@ -75,6 +75,7 @@ export default class CosmosRepository implements IRepository<Draft> {
 
     return {
       id: data.id,
+      reference: data.reference,
       wasteInformation: data.wasteInformation,
       receiver: data.receiver,
       carrier: data.carrier,

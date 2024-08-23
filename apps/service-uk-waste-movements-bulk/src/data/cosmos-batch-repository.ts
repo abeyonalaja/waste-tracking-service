@@ -146,9 +146,9 @@ export class CosmosBatchRepository implements BatchRepository {
           producerTownCity: producer?.address.townCity || '',
           producerCountry: producer?.address?.country || '',
           producerPostcode: producer?.address?.postcode || '',
-          producerContactName: producer?.contact?.name || '',
-          producerContactEmail: producer?.contact?.email || '',
-          producerContactPhone: producer?.contact?.phone || '',
+          producerContactName: producer?.contact?.fullName || '',
+          producerContactEmail: producer?.contact?.emailAddress || '',
+          producerContactPhone: producer?.contact?.phoneNumber || '',
           producerSicCode: producer?.sicCode || '',
           wasteCollectionAddressLine1:
             wasteCollection?.address?.addressLine1 || '',
@@ -173,10 +173,10 @@ export class CosmosBatchRepository implements BatchRepository {
           carrierTownCity: carrier?.address?.townCity || '',
           carrierCountry: carrier?.address?.country || '',
           carrierPostcode: carrier?.address?.postcode || '',
-          carrierContactName: carrier?.contact?.name || '',
-          carrierContactEmail: carrier?.contact?.email || '',
-          carrierContactPhone: carrier?.contact?.phone
-            ? `'${carrier?.contact?.phone}'`
+          carrierContactName: carrier?.contact?.fullName || '',
+          carrierContactEmail: carrier?.contact?.emailAddress || '',
+          carrierContactPhone: carrier?.contact?.phoneNumber
+            ? `'${carrier?.contact?.phoneNumber}'`
             : '',
           receiverAuthorizationType:
             receiver?.permitDetails?.authorizationType || '',
@@ -188,10 +188,10 @@ export class CosmosBatchRepository implements BatchRepository {
           receiverTownCity: receiver?.address?.townCity || '',
           receiverCountry: receiver?.address?.country || '',
           receiverPostcode: receiver?.address?.postcode || '',
-          receiverContactName: receiver?.contact?.name || '',
-          receiverContactEmail: receiver?.contact?.email || '',
-          receiverContactPhone: receiver?.contact?.phone
-            ? `'${receiver?.contact?.phone}'`
+          receiverContactName: receiver?.contact?.fullName || '',
+          receiverContactEmail: receiver?.contact?.emailAddress || '',
+          receiverContactPhone: receiver?.contact?.phoneNumber
+            ? `'${receiver?.contact?.phoneNumber}'`
             : '',
           wasteTransportationNumberAndTypeOfContainers:
             wasteTransportation?.numberAndTypeOfContainers || '',

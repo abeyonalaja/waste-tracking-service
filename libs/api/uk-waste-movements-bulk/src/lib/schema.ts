@@ -52,12 +52,12 @@ const address: JTDSchemaType<Address> = {
 const contact: JTDSchemaType<Contact> = {
   properties: {
     organisationName: { type: 'string' },
-    name: { type: 'string' },
-    email: { type: 'string' },
-    phone: { type: 'string' },
+    fullName: { type: 'string' },
+    emailAddress: { type: 'string' },
+    phoneNumber: { type: 'string' },
   },
   optionalProperties: {
-    fax: { type: 'string' },
+    faxNumber: { type: 'string' },
   },
 };
 
@@ -72,7 +72,6 @@ const permitDetails: JTDSchemaType<PermitDetails> = {
 
 export const producer: JTDSchemaType<ProducerDetail> = {
   properties: {
-    reference: { type: 'string' },
     contact: contact,
     address: address,
   },

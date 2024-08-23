@@ -152,7 +152,6 @@ export interface BulkSubmission {
 }
 
 export interface ProducerDetailFlattened {
-  customerReference: string;
   producerOrganisationName: string;
   producerContactName: string;
   producerContactEmail: string;
@@ -372,7 +371,7 @@ export type SubmissionFlattened = ProducerDetailFlattened &
 
 export type SubmissionFlattenedDownload = {
   transactionId: string;
-} & Omit<ProducerDetailFlattened, 'customerReference'> &
+} & ProducerDetailFlattened &
   WasteTransportationDetailFlattened &
   WasteCollectionDetailFlattened &
   CarrierDetailFlattened &

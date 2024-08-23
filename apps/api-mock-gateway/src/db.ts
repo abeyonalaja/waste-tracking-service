@@ -1674,6 +1674,7 @@ export const db: DB = {
     {
       accountId: '649376df-cdba-ee11-a569-00224883a091',
       id: '123',
+      reference: 'REF123',
       wasteInformation: {
         status: 'Complete',
         wasteTypes: [
@@ -1708,9 +1709,9 @@ export const db: DB = {
         contact: {
           status: 'Complete',
           organisationName: 'Carrier Producer Inc.',
-          name: 'Jane Doe',
-          email: 'janedoe@example.com',
-          phone: '+1234567890',
+          fullName: 'Jane Doe',
+          emailAddress: 'janedoe@example.com',
+          phoneNumber: '+1234567890',
         },
         address: {
           status: 'Complete',
@@ -1733,9 +1734,9 @@ export const db: DB = {
         contact: {
           status: 'Complete',
           organisationName: 'Waste Management Inc.',
-          name: 'John Doe',
-          email: 'johndoe@example.com',
-          phone: '+1234567890',
+          fullName: 'John Doe',
+          emailAddress: 'johndoe@example.com',
+          phoneNumber: '+1234567890',
         },
         address: {
           status: 'Complete',
@@ -1747,7 +1748,6 @@ export const db: DB = {
       },
       producerAndCollection: {
         producer: {
-          reference: 'REF123',
           sicCodes: {
             status: 'Complete',
             values: ['SIC5678', '01110'],
@@ -1755,9 +1755,9 @@ export const db: DB = {
           contact: {
             status: 'Complete',
             organisationName: 'Waste Producer Inc.',
-            name: 'Jane Doe',
-            email: 'janedoe@example.com',
-            phone: '+1234567890',
+            fullName: 'Jane Doe',
+            emailAddress: 'janedoe@example.com',
+            phoneNumber: '+1234567890',
           },
           address: {
             status: 'Complete',
@@ -1788,7 +1788,7 @@ export const db: DB = {
             country: 'Bulgaria',
           },
         },
-        confimation: {
+        confirmation: {
           status: 'Complete',
         },
       },

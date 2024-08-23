@@ -205,7 +205,7 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
               'Complete' &&
             data.producerAndCollection.wasteCollection.wasteSource.status ===
               'Complete' &&
-            data.producerAndCollection.confimation.status === 'Complete'
+            data.producerAndCollection.confirmation.status === 'Complete'
               ? 'Complete'
               : 'Incomplete'
           }
@@ -245,15 +245,17 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
                   },
                   {
                     key: 'Producer contact name',
-                    value: data.producerAndCollection.producer.contact.name,
+                    value: data.producerAndCollection.producer.contact.fullName,
                   },
                   {
                     key: 'Producer contact email address',
-                    value: data.producerAndCollection.producer.contact.email,
+                    value:
+                      data.producerAndCollection.producer.contact.emailAddress,
                   },
                   {
                     key: 'Producer contact phone number',
-                    value: data.producerAndCollection.producer.contact.phone,
+                    value:
+                      data.producerAndCollection.producer.contact.phoneNumber,
                   },
                   {
                     key: 'Producer Standard Industrial Classification (SIC) code',
@@ -354,15 +356,15 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
                   },
                   {
                     key: 'Carrier contact name',
-                    value: data.carrier.contact.name,
+                    value: data.carrier.contact.fullName,
                   },
                   {
                     key: 'Carrier contact email address',
-                    value: data.carrier.contact.email,
+                    value: data.carrier.contact.emailAddress,
                   },
                   {
                     key: 'Carrier contact phone number',
-                    value: data.carrier.contact.phone,
+                    value: data.carrier.contact.phoneNumber,
                   },
                 ]}
               />
@@ -420,15 +422,15 @@ export function Submission({ data }: SubmissionProps): JSX.Element {
                   },
                   {
                     key: 'Receiver contact name',
-                    value: data.receiver.contact.name,
+                    value: data.receiver.contact.fullName,
                   },
                   {
                     key: 'Receiver contact email address',
-                    value: data.receiver.contact.email,
+                    value: data.receiver.contact.emailAddress,
                   },
                   {
                     key: 'Receiver contact phone number',
-                    value: data.receiver.contact.phone,
+                    value: data.receiver.contact.phoneNumber,
                   },
                 ]}
               />

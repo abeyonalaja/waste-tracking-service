@@ -9,11 +9,11 @@ import {
   validatePostcode,
   validateTownCity,
   validateAddressDetails,
-  validateEmail,
-  validateFax,
+  validateEmailAddress,
+  validateFaxNumber,
   validateOrganisationName,
   validateFullName,
-  validatePhone,
+  validatePhoneNumber,
   validatePartialAddressDetails,
   validateWasteSourceSection,
   validateSicCodesSection,
@@ -829,12 +829,12 @@ describe(`Producer's contact person validation`, () => {
 
 describe(`Producer's contact email validation`, () => {
   it('should return valid true when email is valid', () => {
-    const result = validateEmail('john@gmail.com', 'Producer');
+    const result = validateEmailAddress('john@gmail.com', 'Producer');
     expect(result.valid).toBe(true);
   });
 
   it('should return valid false when email is empty', () => {
-    const result = validateEmail('', 'Producer', {
+    const result = validateEmailAddress('', 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -849,7 +849,7 @@ describe(`Producer's contact email validation`, () => {
   });
 
   it('should return valid false when email is invalid', () => {
-    const result = validateEmail('john123', 'Producer', {
+    const result = validateEmailAddress('john123', 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -866,7 +866,7 @@ describe(`Producer's contact email validation`, () => {
 
   it('should return valid false when email exceeds 250 characters', () => {
     const producerContactEmail = faker.string.sample(251);
-    const result = validateEmail(producerContactEmail, 'Producer', {
+    const result = validateEmailAddress(producerContactEmail, 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -884,12 +884,12 @@ describe(`Producer's contact email validation`, () => {
 
 describe(`Producer's contact phone validation`, () => {
   it('should return valid true when phone is valid', () => {
-    const result = validatePhone('01903230482', 'Producer');
+    const result = validatePhoneNumber('01903230482', 'Producer');
     expect(result.valid).toBe(true);
   });
 
   it('should return valid false when phone is empty', () => {
-    const result = validatePhone('', 'Producer', {
+    const result = validatePhoneNumber('', 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -904,7 +904,7 @@ describe(`Producer's contact phone validation`, () => {
   });
 
   it('should return valid false when phone is invalid', () => {
-    const result = validatePhone('21315', 'Producer', {
+    const result = validatePhoneNumber('21315', 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -922,12 +922,12 @@ describe(`Producer's contact phone validation`, () => {
 
 describe(`Producer's contact fax validation`, () => {
   it('should return valid true when fax is valid', () => {
-    const result = validateFax('00-44 1234 567890', 'Producer');
+    const result = validateFaxNumber('00-44 1234 567890', 'Producer');
     expect(result.valid).toBe(true);
   });
 
   it('should return valid false when fax is invalid', () => {
-    const result = validateFax('21315', 'Producer', {
+    const result = validateFaxNumber('21315', 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -1291,12 +1291,12 @@ describe(`Receiver's contact person validation`, () => {
 
 describe(`Receiver's contact email validation`, () => {
   it('should return valid true when email is valid', () => {
-    const result = validateEmail('john@gmail.com', 'Receiver');
+    const result = validateEmailAddress('john@gmail.com', 'Receiver');
     expect(result.valid).toBe(true);
   });
 
   it('should return valid false when email is empty', () => {
-    const result = validateEmail('', 'Receiver', {
+    const result = validateEmailAddress('', 'Receiver', {
       locale: 'en',
       context: 'ui',
     });
@@ -1311,7 +1311,7 @@ describe(`Receiver's contact email validation`, () => {
   });
 
   it('should return valid false when email is invalid', () => {
-    const result = validateEmail('john123', 'Receiver', {
+    const result = validateEmailAddress('john123', 'Receiver', {
       locale: 'en',
       context: 'ui',
     });
@@ -1328,7 +1328,7 @@ describe(`Receiver's contact email validation`, () => {
 
   it('should return valid false when email exceeds 250 characters', () => {
     const producerContactEmail = faker.string.sample(251);
-    const result = validateEmail(producerContactEmail, 'Receiver', {
+    const result = validateEmailAddress(producerContactEmail, 'Receiver', {
       locale: 'en',
       context: 'ui',
     });
@@ -1346,12 +1346,12 @@ describe(`Receiver's contact email validation`, () => {
 
 describe(`Receiver's contact phone validation`, () => {
   it('should return valid true when phone is valid', () => {
-    const result = validatePhone('01903230482', 'Receiver');
+    const result = validatePhoneNumber('01903230482', 'Receiver');
     expect(result.valid).toBe(true);
   });
 
   it('should return valid false when phone is empty', () => {
-    const result = validatePhone('', 'Receiver', {
+    const result = validatePhoneNumber('', 'Receiver', {
       locale: 'en',
       context: 'ui',
     });
@@ -1366,7 +1366,7 @@ describe(`Receiver's contact phone validation`, () => {
   });
 
   it('should return valid false when phone is invalid', () => {
-    const result = validatePhone('21315', 'Receiver', {
+    const result = validatePhoneNumber('21315', 'Receiver', {
       locale: 'en',
       context: 'ui',
     });
@@ -1384,12 +1384,12 @@ describe(`Receiver's contact phone validation`, () => {
 
 describe(`Receiver's contact fax validation`, () => {
   it('should return valid true when fax is valid', () => {
-    const result = validateFax('00-44 1234 567890', 'Receiver');
+    const result = validateFaxNumber('00-44 1234 567890', 'Receiver');
     expect(result.valid).toBe(true);
   });
 
   it('should return valid false when fax is invalid', () => {
-    const result = validateFax('21315', 'Receiver', {
+    const result = validateFaxNumber('21315', 'Receiver', {
       locale: 'en',
       context: 'ui',
     });

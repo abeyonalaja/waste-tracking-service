@@ -100,6 +100,7 @@ describe('getDraftResponse', () => {
       success: true,
       value: {
         id: '',
+        reference: 'test-ref',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -126,7 +127,6 @@ describe('getDraftResponse', () => {
               status: 'NotStarted',
               values: [],
             },
-            reference: 'test-ref',
           },
           wasteCollection: {
             address: {
@@ -142,7 +142,7 @@ describe('getDraftResponse', () => {
               year: '',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -174,6 +174,7 @@ describe('getDraftResponse', () => {
       success: true,
       value: {
         id: '1',
+        reference: 'REF123',
         wasteInformation: {
           status: 'Complete',
           wasteTypes: [
@@ -208,9 +209,9 @@ describe('getDraftResponse', () => {
           contact: {
             status: 'Complete',
             organisationName: 'Organisation1',
-            name: 'Contact1',
-            email: 'contact1@example.com',
-            phone: '1234567890',
+            fullName: 'Contact1',
+            emailAddress: 'contact1@example.com',
+            phoneNumber: '1234567890',
           },
           address: {
             status: 'Complete',
@@ -221,7 +222,6 @@ describe('getDraftResponse', () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'REF123',
             address: {
               status: 'Complete',
               addressLine1: 'Address Line 2',
@@ -231,9 +231,9 @@ describe('getDraftResponse', () => {
             contact: {
               status: 'Complete',
               organisationName: 'Organisation2',
-              name: 'Contact2',
-              email: 'contact2@example.com',
-              phone: '0987654321',
+              fullName: 'Contact2',
+              emailAddress: 'contact2@example.com',
+              phoneNumber: '0987654321',
             },
             sicCodes: {
               status: 'Complete',
@@ -258,7 +258,7 @@ describe('getDraftResponse', () => {
               country: 'Country3',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'Complete',
           },
         },
@@ -266,9 +266,9 @@ describe('getDraftResponse', () => {
           contact: {
             status: 'Complete',
             organisationName: 'Organisation2',
-            name: 'Contact2',
-            email: 'contact2@example.com',
-            phone: '0987654321',
+            fullName: 'Contact2',
+            emailAddress: 'contact2@example.com',
+            phoneNumber: '0987654321',
           },
           address: {
             status: 'Complete',
@@ -349,13 +349,12 @@ describe('producer', () => {
 
   it('is compatible with dto values', () => {
     const value: ProducerDetail = {
-      reference: 'testRef',
       sicCode: '123456',
       contact: {
         organisationName: 'org',
-        name: 'name',
-        email: 'example@email.co.uk',
-        phone: '02071234567',
+        fullName: 'name',
+        emailAddress: 'example@email.co.uk',
+        phoneNumber: '02071234567',
       },
       address: {
         buildingNameOrNumber: '123',
@@ -425,9 +424,9 @@ describe('receiver', () => {
       },
       contact: {
         organisationName: 'org',
-        name: 'name',
-        email: 'example@email.co.uk',
-        phone: '02071234567',
+        fullName: 'name',
+        emailAddress: 'example@email.co.uk',
+        phoneNumber: '02071234567',
       },
       address: {
         addressLine1: '123 Oxford Street',
@@ -449,9 +448,9 @@ describe('receiver', () => {
       },
       contact: {
         organisationName: 'org',
-        name: 'name',
-        email: 'myemail@sample.com',
-        phone: '+442071234567',
+        fullName: 'name',
+        emailAddress: 'myemail@sample.com',
+        phoneNumber: '+442071234567',
       },
       address: {
         addressLine1: '123 Oxford Street',
@@ -473,9 +472,9 @@ describe('receiver', () => {
       },
       contact: {
         organisationName: 'org',
-        name: 'name',
-        email: 'myemail@sample.com',
-        phone: '+442071234567',
+        fullName: 'name',
+        emailAddress: 'myemail@sample.com',
+        phoneNumber: '+442071234567',
       },
       address: {
         addressLine1: '123 Oxford Street',
@@ -526,9 +525,9 @@ describe('carrier', () => {
     const value: CarrierDetail = {
       contact: {
         organisationName: 'org',
-        name: 'name',
-        email: 'example@email.co.uk',
-        phone: '02071234567',
+        fullName: 'name',
+        emailAddress: 'example@email.co.uk',
+        phoneNumber: '02071234567',
       },
       address: {
         addressLine1: '123 Oxford Street',
@@ -653,6 +652,7 @@ describe('validateMultipleDraftsResponse', () => {
         accountId: faker.string.uuid(),
         values: [
           {
+            reference: 'ref',
             wasteTransportation: {
               numberAndTypeOfContainers: 'test',
               specialHandlingRequirements: 'test',
@@ -680,9 +680,9 @@ describe('validateMultipleDraftsResponse', () => {
             carrier: {
               contact: {
                 organisationName: 'org',
-                name: 'name',
-                email: 'example@email.co.uk',
-                phone: '02071234567',
+                fullName: 'name',
+                emailAddress: 'example@email.co.uk',
+                phoneNumber: '02071234567',
               },
               address: {
                 addressLine1: '123 Oxford Street',
@@ -733,10 +733,10 @@ describe('validateMultipleDraftsResponse', () => {
                 townCity: 'Receiver Town/City',
               },
               contact: {
-                email: 'Receiver Email',
-                name: 'Receiver Contact Name',
+                emailAddress: 'Receiver Email',
+                fullName: 'Receiver Contact Name',
                 organisationName: 'Receiver Organisation Name',
-                phone: 'Receiver Phone',
+                phoneNumber: 'Receiver Phone',
               },
               permitDetails: {
                 authorizationType: 'permit',
@@ -744,7 +744,6 @@ describe('validateMultipleDraftsResponse', () => {
               },
             },
             producer: {
-              reference: 'ref',
               sicCode: '123456',
               address: {
                 addressLine1: 'Producer Address Line 1',
@@ -754,10 +753,10 @@ describe('validateMultipleDraftsResponse', () => {
                 townCity: 'Producer Town/City',
               },
               contact: {
-                email: 'Producer Email',
-                name: 'Producer Contact Name',
+                emailAddress: 'Producer Email',
+                fullName: 'Producer Contact Name',
                 organisationName: 'Producer Organisation Name',
-                phone: 'Producer Phone',
+                phoneNumber: 'Producer Phone',
               },
             },
           },
@@ -779,6 +778,7 @@ describe('createMultipleDraftsRequest', () => {
       accountId: faker.string.uuid(),
       values: [
         {
+          reference: 'ref',
           wasteTransportation: {
             numberAndTypeOfContainers: 'test',
             specialHandlingRequirements: 'test',
@@ -806,9 +806,9 @@ describe('createMultipleDraftsRequest', () => {
           carrier: {
             contact: {
               organisationName: 'org',
-              name: 'name',
-              email: 'example@email.co.uk',
-              phone: '02071234567',
+              fullName: 'name',
+              emailAddress: 'example@email.co.uk',
+              phoneNumber: '02071234567',
             },
             address: {
               addressLine1: '123 Oxford Street',
@@ -859,10 +859,10 @@ describe('createMultipleDraftsRequest', () => {
               townCity: 'Receiver Town/City',
             },
             contact: {
-              email: 'Receiver Email',
-              name: 'Receiver Contact Name',
+              emailAddress: 'Receiver Email',
+              fullName: 'Receiver Contact Name',
               organisationName: 'Receiver Organisation Name',
-              phone: 'Receiver Phone',
+              phoneNumber: 'Receiver Phone',
             },
             permitDetails: {
               authorizationType: 'permit',
@@ -870,7 +870,6 @@ describe('createMultipleDraftsRequest', () => {
             },
           },
           producer: {
-            reference: 'ref',
             sicCode: '123456',
             address: {
               addressLine1: 'Producer Address Line 1',
@@ -880,10 +879,10 @@ describe('createMultipleDraftsRequest', () => {
               townCity: 'Producer Town/City',
             },
             contact: {
-              email: 'Producer Email',
-              name: 'Producer Contact Name',
+              emailAddress: 'Producer Email',
+              fullName: 'Producer Contact Name',
               organisationName: 'Producer Organisation Name',
-              phone: 'Producer Phone',
+              phoneNumber: 'Producer Phone',
             },
           },
         },
@@ -998,10 +997,10 @@ describe('setDraftProducerContactDetailRequest', () => {
       accountId: faker.string.uuid(),
       value: {
         organisationName: 'Tech Innovators Inc.',
-        name: 'John Doe',
-        email: 'john.doe@techinnovators.com',
-        phone: '+1234567890',
-        fax: '+0987654321',
+        fullName: 'John Doe',
+        emailAddress: 'john.doe@techinnovators.com',
+        phoneNumber: '+1234567890',
+        faxNumber: '+0987654321',
       },
       saveAsDraft: false,
     };
@@ -1019,8 +1018,8 @@ describe('setPartialDraftProducerContactDetailRequest', () => {
       id: faker.string.uuid(),
       accountId: faker.string.uuid(),
       value: {
-        name: 'Jane Smith',
-        email: 'jane.smith@techinnovators.com',
+        fullName: 'Jane Smith',
+        emailAddress: 'jane.smith@techinnovators.com',
       },
       saveAsDraft: true,
     };
@@ -1053,10 +1052,10 @@ describe('getDraftProducerContactDetailResponse', () => {
       value: {
         status: 'Complete',
         organisationName: 'Tech Innovators Inc.',
-        name: 'John Doe',
-        email: 'john.doe@techinnovators.com',
-        phone: '01903230482',
-        fax: '01903230482',
+        fullName: 'John Doe',
+        emailAddress: 'john.doe@techinnovators.com',
+        phoneNumber: '01903230482',
+        faxNumber: '01903230482',
       },
     };
 
@@ -1459,10 +1458,10 @@ describe('setDraftReceiverContactDetailRequest', () => {
       accountId: faker.string.uuid(),
       value: {
         organisationName: 'Tech Innovators Inc.',
-        name: 'John Doe',
-        email: 'john.doe@techinnovators.com',
-        phone: '+1234567890',
-        fax: '+0987654321',
+        fullName: 'John Doe',
+        emailAddress: 'john.doe@techinnovators.com',
+        phoneNumber: '+1234567890',
+        faxNumber: '+0987654321',
       },
       saveAsDraft: false,
     };
@@ -1480,8 +1479,8 @@ describe('setPartialDraftReceiverContactDetailRequest', () => {
       id: faker.string.uuid(),
       accountId: faker.string.uuid(),
       value: {
-        name: 'Jane Smith',
-        email: 'jane.smith@techinnovators.com',
+        fullName: 'Jane Smith',
+        emailAddress: 'jane.smith@techinnovators.com',
       },
       saveAsDraft: true,
     };
@@ -1514,10 +1513,10 @@ describe('getDraftReceiverContactDetailResponse', () => {
       value: {
         status: 'Complete',
         organisationName: 'Tech Innovators Inc.',
-        name: 'John Doe',
-        email: 'john.doe@techinnovators.com',
-        phone: '01903230482',
-        fax: '01903230482',
+        fullName: 'John Doe',
+        emailAddress: 'john.doe@techinnovators.com',
+        phoneNumber: '01903230482',
+        faxNumber: '01903230482',
       },
     };
 

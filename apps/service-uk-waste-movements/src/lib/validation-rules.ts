@@ -75,14 +75,14 @@ const wasteQuantitiesMap: { [key: string]: QuantityUnit } = {
   Litres: 'Litre',
 };
 
-export function validateProducerDetailSection(
-  value: ProducerDetailFlattened,
+export function validateCustomerReference(
+  customerReference: string,
 ):
   | { valid: false; value: FieldFormatError[] }
-  | { valid: true; value: ProducerDetail } {
+  | { valid: true; value: string } {
   const errors: FieldFormatError[] = [];
 
-  const trimmedReference = value.customerReference?.trim();
+  const trimmedReference = customerReference?.trim();
   if (!trimmedReference) {
     errors.push({
       field: 'Reference',
@@ -99,6 +99,26 @@ export function validateProducerDetailSection(
       code: validation.errorCodes.producerInvalidReference,
     });
   }
+
+  if (errors.length > 0) {
+    return {
+      valid: false,
+      value: errors,
+    };
+  }
+
+  return {
+    valid: true,
+    value: trimmedReference,
+  };
+}
+
+export function validateProducerDetailSection(
+  value: ProducerDetailFlattened,
+):
+  | { valid: false; value: FieldFormatError[] }
+  | { valid: true; value: ProducerDetail } {
+  const errors: FieldFormatError[] = [];
 
   if (!value.producerOrganisationName?.trim()) {
     errors.push({
@@ -141,13 +161,11 @@ export function validateProducerDetailSection(
       field: 'Producer town or city',
       code: validation.errorCodes.producerEmptyTownOrCity,
     });
-  } else {
-    if (value.producerTownCity.length > validation.FreeTextChar.max) {
-      errors.push({
-        field: 'Producer town or city',
-        code: validation.errorCodes.producerCharTooManyTownOrCity,
-      });
-    }
+  } else if (value.producerTownCity.length > validation.FreeTextChar.max) {
+    errors.push({
+      field: 'Producer town or city',
+      code: validation.errorCodes.producerCharTooManyTownOrCity,
+    });
   }
 
   if (!value.producerCountry?.trim()) {
@@ -241,7 +259,6 @@ export function validateProducerDetailSection(
   return {
     valid: true,
     value: {
-      reference: trimmedReference,
       sicCode: value.producerSicCode,
       address: {
         addressLine1: value.producerAddressLine1,
@@ -253,10 +270,10 @@ export function validateProducerDetailSection(
         townCity: value.producerTownCity,
       },
       contact: {
-        email: value.producerContactEmail,
-        name: value.producerContactName,
+        emailAddress: value.producerContactEmail,
+        fullName: value.producerContactName,
         organisationName: value.producerOrganisationName,
-        phone: reformattedProducerContactPhoneNumber,
+        phoneNumber: reformattedProducerContactPhoneNumber,
       },
     },
   };
@@ -324,13 +341,11 @@ export function validateCarrierDetailSection(
         field: 'Carrier town or city',
         code: validation.errorCodes.carrierEmptyTownOrCity,
       });
-    } else {
-      if (value.carrierTownCity.length > validation.FreeTextChar.max) {
-        errors.push({
-          field: 'Carrier town or city',
-          code: validation.errorCodes.carrierCharTooManyTownOrCity,
-        });
-      }
+    } else if (value.carrierTownCity.length > validation.FreeTextChar.max) {
+      errors.push({
+        field: 'Carrier town or city',
+        code: validation.errorCodes.carrierCharTooManyTownOrCity,
+      });
     }
 
     if (!value.carrierCountry?.trim()) {
@@ -413,17 +428,17 @@ export function validateCarrierDetailSection(
     valid: true,
     value: {
       address: {
-        addressLine1: value.carrierAddressLine1 || '',
+        addressLine1: value.carrierAddressLine1 ?? '',
         addressLine2: value.carrierAddressLine2,
-        townCity: value.carrierTownCity || '',
-        country: value.carrierCountry || '',
+        townCity: value.carrierTownCity ?? '',
+        country: value.carrierCountry ?? '',
         postcode: value.carrierPostcode,
       },
       contact: {
-        email: value.carrierContactEmail || '',
-        name: value.carrierContactName || '',
-        phone: reformattedCarrierContactPhoneNumber || '',
-        organisationName: value.carrierOrganisationName || '',
+        emailAddress: value.carrierContactEmail ?? '',
+        fullName: value.carrierContactName ?? '',
+        phoneNumber: reformattedCarrierContactPhoneNumber ?? '',
+        organisationName: value.carrierOrganisationName ?? '',
       },
     },
   };
@@ -449,16 +464,14 @@ export function validateWasteCollectionDetailSection(
         field: 'Waste Collection Details Address Line 1',
         code: validation.errorCodes.wasteCollectionEmptyAddressLine1,
       });
-    } else {
-      if (
-        value.wasteCollectionAddressLine1 &&
-        value.wasteCollectionAddressLine1.length > validation.FreeTextChar.max
-      ) {
-        errors.push({
-          field: 'Waste Collection Details Address Line 1',
-          code: validation.errorCodes.wasteCollectionCharTooManyAddressLine1,
-        });
-      }
+    } else if (
+      value.wasteCollectionAddressLine1 &&
+      value.wasteCollectionAddressLine1.length > validation.FreeTextChar.max
+    ) {
+      errors.push({
+        field: 'Waste Collection Details Address Line 1',
+        code: validation.errorCodes.wasteCollectionCharTooManyAddressLine1,
+      });
     }
 
     if (
@@ -476,16 +489,14 @@ export function validateWasteCollectionDetailSection(
         field: 'Waste Collection Details Town or City',
         code: validation.errorCodes.wasteCollectionEmptyTownOrCity,
       });
-    } else {
-      if (
-        value.wasteCollectionTownCity &&
-        value.wasteCollectionTownCity.length > validation.FreeTextChar.max
-      ) {
-        errors.push({
-          field: 'Waste Collection Details Town or City',
-          code: validation.errorCodes.wasteCollectionCharTooManyTownOrCity,
-        });
-      }
+    } else if (
+      value.wasteCollectionTownCity &&
+      value.wasteCollectionTownCity.length > validation.FreeTextChar.max
+    ) {
+      errors.push({
+        field: 'Waste Collection Details Town or City',
+        code: validation.errorCodes.wasteCollectionCharTooManyTownOrCity,
+      });
     }
     if (!value.wasteCollectionCountry?.trim()) {
       errors.push({
@@ -632,15 +643,15 @@ export function validateWasteCollectionDetailSection(
       expectedWasteCollectionDate: {
         day: dateParts[0]?.padStart(2, '0'),
         month: dateParts[1]?.padStart(2, '0'),
-        year: parsedDate?.getFullYear()?.toString() || dateParts[2],
+        year: parsedDate?.getFullYear()?.toString() ?? dateParts[2],
       },
       localAuthority: value.wasteCollectionLocalAuthority,
       address: {
-        addressLine1: value.wasteCollectionAddressLine1 || '',
+        addressLine1: value.wasteCollectionAddressLine1 ?? '',
         addressLine2: value.wasteCollectionAddressLine2,
-        townCity: value.wasteCollectionTownCity || '',
+        townCity: value.wasteCollectionTownCity ?? '',
         postcode: value.wasteCollectionPostcode,
-        country: value.wasteCollectionCountry || '',
+        country: value.wasteCollectionCountry ?? '',
       },
     },
   };
@@ -720,13 +731,11 @@ export function validateReceiverDetailSection(
       field: 'Receiver town or city',
       code: validation.errorCodes.receiverEmptyTownOrCity,
     });
-  } else {
-    if (value.receiverTownCity.length > validation.FreeTextChar.max) {
-      errors.push({
-        field: 'Receiver town or city',
-        code: validation.errorCodes.receiverCharTooManyTownOrCity,
-      });
-    }
+  } else if (value.receiverTownCity.length > validation.FreeTextChar.max) {
+    errors.push({
+      field: 'Receiver town or city',
+      code: validation.errorCodes.receiverCharTooManyTownOrCity,
+    });
   }
 
   if (!value.receiverCountry?.trim()) {
@@ -821,10 +830,10 @@ export function validateReceiverDetailSection(
         townCity: value.receiverTownCity,
       },
       contact: {
-        email: value.receiverContactEmail,
-        name: value.receiverContactName,
+        emailAddress: value.receiverContactEmail,
+        fullName: value.receiverContactName,
         organisationName: value.receiverOrganisationName,
-        phone: reformattedReceiverContactPhoneNumber,
+        phoneNumber: reformattedReceiverContactPhoneNumber,
       },
     },
   };
@@ -1267,23 +1276,23 @@ function validateWasteTypeEntry(
       field: 'Waste Quantity',
       code: errorCode.emptyWasteQuantity,
     });
+  } else if (
+    !validation.deicmalNumberRegex.test(wasteType.wasteTypeWasteQuantity)
+  ) {
+    errors.push({
+      field: 'Waste Quantity',
+      code: errorCode.invalidWasteQuantity,
+    });
   } else {
-    if (!validation.deicmalNumberRegex.test(wasteType.wasteTypeWasteQuantity)) {
+    wasteQuantity = Number(
+      parseFloat(wasteType.wasteTypeWasteQuantity).toFixed(2),
+    );
+
+    if (wasteQuantity <= validation.WasteQuantityValue.greaterThan) {
       errors.push({
         field: 'Waste Quantity',
-        code: errorCode.invalidWasteQuantity,
+        code: errorCode.valueTooSmallWasteQuantity,
       });
-    } else {
-      wasteQuantity = Number(
-        parseFloat(wasteType.wasteTypeWasteQuantity).toFixed(2),
-      );
-
-      if (!(wasteQuantity > validation.WasteQuantityValue.greaterThan)) {
-        errors.push({
-          field: 'Waste Quantity',
-          code: errorCode.valueTooSmallWasteQuantity,
-        });
-      }
     }
   }
 

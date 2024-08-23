@@ -133,21 +133,21 @@ const partialAddress: JTDSchemaType<Partial<Address>> = {
 const contact: JTDSchemaType<Contact> = {
   properties: {
     organisationName: { type: 'string' },
-    name: { type: 'string' },
-    email: { type: 'string' },
-    phone: { type: 'string' },
+    fullName: { type: 'string' },
+    emailAddress: { type: 'string' },
+    phoneNumber: { type: 'string' },
   },
-  optionalProperties: { fax: { type: 'string' } },
+  optionalProperties: { faxNumber: { type: 'string' } },
 };
 
 const partialContact: JTDSchemaType<Partial<Contact>> = {
   properties: {},
   optionalProperties: {
     organisationName: { type: 'string' },
-    name: { type: 'string' },
-    email: { type: 'string' },
-    phone: { type: 'string' },
-    fax: { type: 'string' },
+    fullName: { type: 'string' },
+    emailAddress: { type: 'string' },
+    phoneNumber: { type: 'string' },
+    faxNumber: { type: 'string' },
   },
 };
 
@@ -181,7 +181,6 @@ const draftPermitDetails: JTDSchemaType<DraftPermitDetails> = {
 
 export const producer: JTDSchemaType<ProducerDetail> = {
   properties: {
-    reference: { type: 'string' },
     contact: contact,
     address: address,
   },
@@ -262,7 +261,6 @@ export const draftSicCodes: JTDSchemaType<DraftSicCodes> = {
 
 export const draftProducer: JTDSchemaType<DraftProducer> = {
   properties: {
-    reference: { type: 'string' },
     address: draftAddress,
     contact: draftContact,
     sicCodes: draftSicCodes,
@@ -313,7 +311,7 @@ export const producerAndWasteCollectionDetail: JTDSchemaType<ProducerAndWasteCol
     properties: {
       producer: draftProducer,
       wasteCollection: draftWasteCollection,
-      confimation: draftSectionConfirmation,
+      confirmation: draftSectionConfirmation,
     },
   };
 
@@ -404,9 +402,10 @@ export const state: SchemaObject = {
   },
 };
 
-export const draftSubmission: SchemaObject = {
+export const draft: SchemaObject = {
   properties: {
     id: { type: 'string' },
+    reference: { type: 'string' },
     wasteInformation: wasteInformation,
     receiver: draftReceiver,
     producerAndCollection: producerAndWasteCollectionDetail,
@@ -420,7 +419,7 @@ export const getDraftResponse: SchemaObject = {
   properties: { success: { type: 'boolean' } },
   optionalProperties: {
     error: errorResponseValue,
-    value: draftSubmission,
+    value: draft,
   },
 };
 
@@ -734,6 +733,7 @@ const validationResult: SchemaObject = {
     values: {
       elements: {
         optionalProperties: {
+          reference: { type: 'string' },
           producer: producer,
           wasteCollection: wasteCollection,
           receiver: receiver,
@@ -862,6 +862,7 @@ export const createMultipleDraftsRequest: SchemaObject = {
     values: {
       elements: {
         properties: {
+          reference: { type: 'string' },
           producer: producer,
           wasteCollection: wasteCollection,
           carrier,

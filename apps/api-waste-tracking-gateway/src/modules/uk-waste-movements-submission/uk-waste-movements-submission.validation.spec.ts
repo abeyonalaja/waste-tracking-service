@@ -89,27 +89,27 @@ describe('validateSetDraftProducerContactRequest', () => {
     expect(
       validate({
         organisationName: faker.lorem.word(),
-        name: faker.lorem.word(),
-        email: faker.datatype.boolean(),
-        phone: {},
+        fullName: faker.lorem.word(),
+        emailAddress: faker.datatype.boolean(),
+        phoneNumber: {},
       }),
     ).toBe(false);
     expect(
       validate({
         organisationName: faker.lorem.word(),
-        name: faker.lorem.word(),
-        email: faker.datatype.boolean(),
-        phone: faker.phone.number(),
-        fax: faker.phone.number(),
+        fullName: faker.lorem.word(),
+        emailAddress: faker.datatype.boolean(),
+        phoneNumber: faker.phone.number(),
+        faxNumber: faker.phone.number(),
       }),
     ).toBe(false);
     expect(
       validate({
         organisationName: faker.phone.number(),
-        name: faker.phone.number(),
-        email: faker.datatype.boolean(),
-        phone: faker.phone.number(),
-        fax: faker.phone.number(),
+        fullName: faker.phone.number(),
+        emailAddress: faker.datatype.boolean(),
+        phoneNumber: faker.phone.number(),
+        faxNumber: faker.phone.number(),
       }),
     ).toBe(false);
   });
@@ -118,10 +118,10 @@ describe('validateSetDraftProducerContactRequest', () => {
     expect(
       validate({
         organisationName: faker.company.name(),
-        name: faker.lorem.word(),
-        email: faker.internet.email(),
-        phone: faker.phone.number(),
-        fax: faker.phone.number(),
+        fullName: faker.lorem.word(),
+        emailAddress: faker.internet.email(),
+        phoneNumber: faker.phone.number(),
+        faxNumber: faker.phone.number(),
       }),
     ).toBe(true);
   });
@@ -319,27 +319,27 @@ describe('validateSetDraftReceiverAddressRequest', () => {
       expect(
         validate({
           organisationName: faker.lorem.word(),
-          name: faker.lorem.word(),
-          email: faker.datatype.boolean(),
-          phone: {},
+          fullName: faker.lorem.word(),
+          emailAddress: faker.datatype.boolean(),
+          phoneNumber: {},
         }),
       ).toBe(false);
       expect(
         validate({
           organisationName: faker.lorem.word(),
-          name: faker.lorem.word(),
-          email: faker.datatype.boolean(),
-          phone: faker.phone.number(),
-          fax: faker.phone.number(),
+          fullName: faker.lorem.word(),
+          emailAddress: faker.datatype.boolean(),
+          phoneNumber: faker.phone.number(),
+          faxNumber: faker.phone.number(),
         }),
       ).toBe(false);
       expect(
         validate({
           organisationName: faker.phone.number(),
-          name: faker.phone.number(),
-          email: faker.datatype.boolean(),
-          phone: faker.phone.number(),
-          fax: faker.phone.number(),
+          fullName: faker.phone.number(),
+          emailAddress: faker.datatype.boolean(),
+          phoneNumber: faker.phone.number(),
+          faxNumber: faker.phone.number(),
         }),
       ).toBe(false);
     });
@@ -348,10 +348,10 @@ describe('validateSetDraftReceiverAddressRequest', () => {
       expect(
         validate({
           organisationName: faker.company.name(),
-          name: faker.lorem.word(),
-          email: faker.internet.email(),
-          phone: faker.phone.number(),
-          fax: faker.phone.number(),
+          fullName: faker.lorem.word(),
+          emailAddress: faker.internet.email(),
+          phoneNumber: faker.phone.number(),
+          faxNumber: faker.phone.number(),
         }),
       ).toBe(true);
     });

@@ -6,6 +6,7 @@ import { UkwmDraft } from '@wts/api/waste-tracking-gateway';
 
 const mockData: UkwmDraft = {
   id: '12345',
+  reference: 'test ref',
   wasteInformation: {
     status: 'Complete',
     wasteTypes: [
@@ -32,13 +33,12 @@ const mockData: UkwmDraft = {
   },
   producerAndCollection: {
     producer: {
-      reference: 'test ref',
       contact: {
         status: 'Complete',
         organisationName: 'Producer Org',
-        name: 'Producer Name',
-        email: 'producer@example.com',
-        phone: '1234567890',
+        fullName: 'Producer Name',
+        emailAddress: 'producer@example.com',
+        phoneNumber: '1234567890',
       },
       address: {
         status: 'Complete',
@@ -72,7 +72,7 @@ const mockData: UkwmDraft = {
       },
       brokerRegistrationNumber: 'BRN12345',
     },
-    confimation: {
+    confirmation: {
       status: 'Complete',
     },
   },
@@ -80,9 +80,9 @@ const mockData: UkwmDraft = {
     contact: {
       status: 'Complete',
       organisationName: 'Carrier Org',
-      name: 'Carrier Name',
-      email: 'carrier@example.com',
-      phone: '1234567891',
+      fullName: 'Carrier Name',
+      emailAddress: 'carrier@example.com',
+      phoneNumber: '1234567891',
     },
     address: {
       status: 'Complete',
@@ -105,9 +105,9 @@ const mockData: UkwmDraft = {
     contact: {
       status: 'Complete',
       organisationName: 'Receiver Org',
-      name: 'Receiver Name',
-      email: 'receiver@example.com',
-      phone: '0987654321',
+      fullName: 'Receiver Name',
+      emailAddress: 'receiver@example.com',
+      phoneNumber: '0987654321',
     },
     address: {
       status: 'Complete',

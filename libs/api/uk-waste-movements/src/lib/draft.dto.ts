@@ -20,6 +20,7 @@ export type WasteTransport =
   | 'Sea'
   | 'Air'
   | 'InlandWaterways';
+
 export type PhysicalForm =
   | 'Gas'
   | 'Liquid'
@@ -60,14 +61,13 @@ export interface Address {
 
 export interface Contact {
   organisationName: string;
-  name: string;
-  email: string;
-  phone: string;
-  fax?: string;
+  fullName: string;
+  emailAddress: string;
+  phoneNumber: string;
+  faxNumber?: string;
 }
 
 export interface ProducerDetail {
-  reference: string;
   sicCode?: string;
   contact: Contact;
   address: Address;
@@ -125,6 +125,7 @@ export interface Declaration {
 
 export interface SimpleDraft {
   id: string;
+  reference: string;
   producer: ProducerDetail;
   wasteCollection: WasteCollectionDetail;
   carrier: CarrierDetail;
@@ -397,7 +398,6 @@ export type DraftModeOfTransport =
   | ({ status: 'Complete' } & { value: WasteTransport });
 
 export interface DraftProducer {
-  reference: string;
   sicCodes: DraftSicCodes;
   contact: DraftContact;
   address: DraftAddress;
@@ -415,7 +415,7 @@ export interface DraftWasteCollection {
 export interface ProducerAndWasteCollectionDetail {
   producer: DraftProducer;
   wasteCollection: DraftWasteCollection;
-  confimation: DraftSectionConfirmation;
+  confirmation: DraftSectionConfirmation;
 }
 
 export type WasteInformation =
@@ -456,6 +456,7 @@ export interface DraftSectionConfirmation {
 
 export interface Draft {
   id: string;
+  reference: string;
   wasteInformation: WasteInformation;
   receiver: DraftReceiver;
   producerAndCollection: ProducerAndWasteCollectionDetail;
@@ -533,8 +534,7 @@ export const createMultipleDrafts: Method = {
 
 export type DbContainerNameKey = 'drafts';
 
-export type CreateDraftRequest = AccountIdRequest &
-  Pick<DraftProducer, 'reference'>;
+export type CreateDraftRequest = AccountIdRequest & Pick<Draft, 'reference'>;
 export type CreateDraftResponse = Response<Draft>;
 export const createDraft: Method = {
   name: 'createDraft',

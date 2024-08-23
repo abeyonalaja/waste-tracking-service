@@ -55,6 +55,14 @@ export default class SubmissionController {
 
         const fieldFormatErrors: FieldFormatError[] = [];
 
+        const reference = validationRules.validateCustomerReference(
+          s.customerReference,
+        );
+
+        if (!reference.valid) {
+          fieldFormatErrors.push(...reference.value);
+        }
+
         const producer = validationRules.validateProducerDetailSection({
           producerAddressLine1: s.producerAddressLine1,
           producerAddressLine2: s.producerAddressLine2,
@@ -66,7 +74,6 @@ export default class SubmissionController {
           producerPostcode: s.producerPostcode,
           producerSicCode: s.producerSicCode,
           producerTownCity: s.producerTownCity,
-          customerReference: s.customerReference,
         });
 
         if (!producer.valid) {
@@ -383,6 +390,7 @@ export default class SubmissionController {
         }
 
         if (
+          reference.valid &&
           receiver.valid &&
           producer.valid &&
           wasteCollection.valid &&
@@ -395,6 +403,7 @@ export default class SubmissionController {
           }
 
           submissions.push({
+            reference: reference.value,
             producer: producer.value,
             receiver: receiver.value,
             wasteTypes: wasteTypes.value,
@@ -467,7 +476,6 @@ export default class SubmissionController {
 
         const producerAndCollection: api.ProducerAndWasteCollectionDetail = {
           producer: {
-            reference: s.producer.reference,
             sicCodes: s.producer.sicCode
               ? {
                   status: 'Complete',
@@ -503,7 +511,7 @@ export default class SubmissionController {
             carrierRegistrationNumber:
               s.wasteCollection.carrierRegistrationNumber,
           },
-          confimation: {
+          confirmation: {
             status: 'Complete',
           },
         };
@@ -555,6 +563,7 @@ export default class SubmissionController {
         };
         return {
           id: s.id,
+          reference: s.reference,
           transactionId: s.transactionId,
           producerAndCollection: producerAndCollection,
           receiver: draftReceiver,
@@ -586,11 +595,11 @@ export default class SubmissionController {
     accountId,
   }) => {
     try {
-      const draft = (await this.repository.getDraft(
+      const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
-      )) as api.Draft;
+      );
       return success(draft);
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -631,6 +640,7 @@ export default class SubmissionController {
       try {
         const draft: Draft = {
           id: uuidv4(),
+          reference: request.reference,
           producerAndCollection: {
             producer: {
               contact: {
@@ -643,7 +653,6 @@ export default class SubmissionController {
                 status: 'NotStarted',
                 values: [],
               },
-              reference: request.reference,
             },
             wasteCollection: {
               address: {
@@ -653,7 +662,7 @@ export default class SubmissionController {
                 status: 'NotStarted',
               },
             },
-            confimation: {
+            confirmation: {
               status: 'NotStarted',
             },
           },
@@ -713,11 +722,11 @@ export default class SubmissionController {
     api.SetDraftProducerAddressDetailsResponse
   > = async ({ id, accountId, value, saveAsDraft }) => {
     try {
-      const draft = (await this.repository.getDraft(
+      const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
-      )) as api.Draft;
+      );
 
       if (draft === undefined) {
         return fromBoom(Boom.notFound());
@@ -765,7 +774,7 @@ export default class SubmissionController {
         };
       }
 
-      draft.producerAndCollection.confimation.status = 'NotStarted';
+      draft.producerAndCollection.confirmation.status = 'NotStarted';
 
       await this.repository.saveRecord(
         draftsContainerName,
@@ -788,11 +797,11 @@ export default class SubmissionController {
     api.GetDraftProducerAddressDetailsResponse
   > = async ({ id, accountId }) => {
     try {
-      const draft = (await this.repository.getDraft(
+      const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
-      )) as api.Draft;
+      );
 
       if (draft === undefined) {
         return fromBoom(Boom.notFound());
@@ -814,11 +823,11 @@ export default class SubmissionController {
     api.GetDraftProducerContactDetailResponse
   > = async ({ id, accountId }) => {
     try {
-      const draft = (await this.repository.getDraft(
+      const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
-      )) as api.Draft;
+      );
 
       if (!draft) {
         return fromBoom(Boom.notFound());
@@ -840,17 +849,22 @@ export default class SubmissionController {
     api.SetDraftProducerContactDetailResponse
   > = async ({ id, accountId, value, saveAsDraft }) => {
     try {
-      const draft = (await this.repository.getDraft(
+      const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
-      )) as api.Draft;
+      );
 
       if (!draft) {
         return fromBoom(Boom.notFound());
       }
 
-      if (value.organisationName && value.name && value.email && value.phone) {
+      if (
+        value.organisationName &&
+        value.fullName &&
+        value.emailAddress &&
+        value.phoneNumber
+      ) {
         saveAsDraft = false;
       }
 
@@ -882,14 +896,14 @@ export default class SubmissionController {
         }
       }
       const draftContact: api.DraftContact = saveAsDraft
-        ? { status: 'Started', ...(value as Promise<api.Contact>) }
+        ? { status: 'Started', ...value }
         : { status: 'Complete', ...(value as api.Contact) };
 
       if (draft.producerAndCollection.producer) {
         draft.producerAndCollection.producer.contact = draftContact;
       }
 
-      draft.producerAndCollection.confimation.status = 'NotStarted';
+      draft.producerAndCollection.confirmation.status = 'NotStarted';
 
       await this.repository.saveRecord(
         draftsContainerName,
@@ -912,11 +926,11 @@ export default class SubmissionController {
     api.GetDraftWasteSourceResponse
   > = async ({ id, accountId }) => {
     try {
-      const draft = (await this.repository.getDraft(
+      const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
-      )) as api.Draft;
+      );
 
       if (!draft) {
         return fromBoom(Boom.notFound());
@@ -938,11 +952,11 @@ export default class SubmissionController {
     api.SetDraftWasteSourceResponse
   > = async ({ id, accountId, wasteSource }) => {
     try {
-      const draft = (await this.repository.getDraft(
+      const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
-      )) as api.Draft;
+      );
 
       if (!draft) {
         return fromBoom(Boom.notFound());
@@ -965,7 +979,7 @@ export default class SubmissionController {
         };
       }
 
-      draft.producerAndCollection.confimation.status = 'NotStarted';
+      draft.producerAndCollection.confirmation.status = 'NotStarted';
 
       await this.repository.saveRecord(
         draftsContainerName,
@@ -988,11 +1002,11 @@ export default class SubmissionController {
     api.SetDraftWasteCollectionAddressDetailsResponse
   > = async ({ id, accountId, value, saveAsDraft }) => {
     try {
-      const draft = (await this.repository.getDraft(
+      const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
-      )) as api.Draft;
+      );
 
       if (draft === undefined) {
         return fromBoom(Boom.notFound());
@@ -1040,7 +1054,7 @@ export default class SubmissionController {
         };
       }
 
-      draft.producerAndCollection.confimation.status = 'NotStarted';
+      draft.producerAndCollection.confirmation.status = 'NotStarted';
 
       await this.repository.saveRecord(
         draftsContainerName,
@@ -1063,11 +1077,11 @@ export default class SubmissionController {
     api.GetDraftWasteCollectionAddressDetailsResponse
   > = async ({ id, accountId }) => {
     try {
-      const draft = (await this.repository.getDraft(
+      const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
-      )) as api.Draft;
+      );
 
       if (draft === undefined) {
         return fromBoom(Boom.notFound());
@@ -1089,11 +1103,11 @@ export default class SubmissionController {
     api.CreateDraftSicCodeResponse
   > = async ({ id, accountId, sicCode }) => {
     try {
-      const draft = (await this.repository.getDraft(
+      const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
-      )) as api.Draft;
+      );
 
       if (!draft) {
         return fromBoom(Boom.notFound());
@@ -1117,7 +1131,7 @@ export default class SubmissionController {
       draft.producerAndCollection.producer.sicCodes.values.push(sicCode);
       draft.producerAndCollection.producer.sicCodes.status = 'Complete';
 
-      draft.producerAndCollection.confimation.status = 'NotStarted';
+      draft.producerAndCollection.confirmation.status = 'NotStarted';
 
       await this.repository.saveRecord(
         draftsContainerName,
@@ -1140,11 +1154,11 @@ export default class SubmissionController {
     api.GetDraftSicCodesResponse
   > = async ({ id, accountId }) => {
     try {
-      const draft = (await this.repository.getDraft(
+      const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
-      )) as api.Draft;
+      );
 
       if (!draft) {
         return fromBoom(Boom.notFound());
@@ -1166,18 +1180,18 @@ export default class SubmissionController {
     api.SetDraftProducerConfirmationResponse
   > = async ({ id, accountId, isConfirmed }) => {
     try {
-      const draft = (await this.repository.getDraft(
+      const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
-      )) as api.Draft;
+      );
 
       if (!draft) {
         return fromBoom(Boom.notFound());
       }
 
       if (
-        !draft.producerAndCollection.producer.reference ||
+        !draft.reference ||
         draft.producerAndCollection.producer.contact.status !== 'Complete' ||
         draft.producerAndCollection.producer.sicCodes.status !== 'Complete' ||
         draft.producerAndCollection.wasteCollection.address.status !==
@@ -1192,7 +1206,7 @@ export default class SubmissionController {
         );
       }
 
-      draft.producerAndCollection.confimation.status = isConfirmed
+      draft.producerAndCollection.confirmation.status = isConfirmed
         ? 'Complete'
         : 'InProgress';
 
@@ -1217,11 +1231,11 @@ export default class SubmissionController {
     api.SetDraftCarrierAddressDetailsResponse
   > = async ({ id, accountId, value, saveAsDraft }) => {
     try {
-      const draft = (await this.repository.getDraft(
+      const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
-      )) as api.Draft;
+      );
 
       if (draft === undefined) {
         return fromBoom(Boom.notFound());
@@ -1290,11 +1304,11 @@ export default class SubmissionController {
     api.GetDraftCarrierAddressDetailsResponse
   > = async ({ id, accountId }) => {
     try {
-      const draft = (await this.repository.getDraft(
+      const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
-      )) as api.Draft;
+      );
 
       if (draft === undefined) {
         return fromBoom(Boom.notFound());
@@ -1316,11 +1330,11 @@ export default class SubmissionController {
     api.SetDraftReceiverAddressDetailsResponse
   > = async ({ id, accountId, value, saveAsDraft }) => {
     try {
-      const draft = (await this.repository.getDraft(
+      const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
-      )) as api.Draft;
+      );
 
       if (draft === undefined) {
         return fromBoom(Boom.notFound());
@@ -1389,11 +1403,11 @@ export default class SubmissionController {
     api.GetDraftReceiverAddressDetailsResponse
   > = async ({ id, accountId }) => {
     try {
-      const draft = (await this.repository.getDraft(
+      const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
-      )) as api.Draft;
+      );
 
       if (draft === undefined) {
         return fromBoom(Boom.notFound());
@@ -1415,11 +1429,11 @@ export default class SubmissionController {
     api.DeleteDraftSicCodeResponse
   > = async ({ id, accountId, code }) => {
     try {
-      const draft = (await this.repository.getDraft(
+      const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
-      )) as api.Draft;
+      );
 
       if (!draft) {
         return fromBoom(Boom.notFound());
@@ -1443,7 +1457,7 @@ export default class SubmissionController {
         };
       }
 
-      draft.producerAndCollection.confimation.status = 'NotStarted';
+      draft.producerAndCollection.confirmation.status = 'NotStarted';
 
       await this.repository.saveRecord(
         draftsContainerName,
@@ -1467,17 +1481,22 @@ export default class SubmissionController {
     api.SetDraftReceiverContactDetailsResponse
   > = async ({ id, accountId, value, saveAsDraft }) => {
     try {
-      const draft = (await this.repository.getDraft(
+      const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
-      )) as api.Draft;
+      );
 
       if (!draft) {
         return fromBoom(Boom.notFound());
       }
 
-      if (value.organisationName && value.name && value.email && value.phone) {
+      if (
+        value.organisationName &&
+        value.fullName &&
+        value.emailAddress &&
+        value.phoneNumber
+      ) {
         saveAsDraft = false;
       }
 
@@ -1537,11 +1556,11 @@ export default class SubmissionController {
     api.GetDraftReceiverContactDetailsResponse
   > = async ({ id, accountId }) => {
     try {
-      const draft = (await this.repository.getDraft(
+      const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
-      )) as api.Draft;
+      );
 
       if (!draft) {
         return fromBoom(Boom.notFound());

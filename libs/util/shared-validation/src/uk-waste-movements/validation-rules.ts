@@ -772,7 +772,7 @@ export function validateFullName(
   };
 }
 
-export function validateEmail(
+export function validateEmailAddress(
   contactEmail: string | undefined,
   section: Section,
   message?: ErrorMessage,
@@ -842,7 +842,7 @@ export function validateEmail(
   };
 }
 
-export function validatePhone(
+export function validatePhoneNumber(
   phoneNumber: string | undefined,
   section: Section,
   message?: ErrorMessage,
@@ -893,7 +893,7 @@ export function validatePhone(
   };
 }
 
-export function validateFax(
+export function validateFaxNumber(
   faxNumber: string | undefined,
   section: Section,
   message?: ErrorMessage,
@@ -933,9 +933,9 @@ export function validateContact(
   const errors: FieldFormatError[] = [];
   const contactToReturn: Contact = {
     organisationName: '',
-    name: '',
-    email: '',
-    phone: '',
+    fullName: '',
+    emailAddress: '',
+    phoneNumber: '',
   };
 
   const organisationName = validateOrganisationName(
@@ -949,36 +949,36 @@ export function validateContact(
     errors.push(...organisationName.errors);
   }
 
-  const name = validateFullName(value.name, section, message);
+  const name = validateFullName(value.fullName, section, message);
   if (name.valid) {
-    contactToReturn.name = name.value;
+    contactToReturn.fullName = name.value;
   } else {
     errors.push(...name.errors);
   }
 
-  const email = validateEmail(value.email, section, message);
+  const email = validateEmailAddress(value.emailAddress, section, message);
   if (email.valid) {
-    contactToReturn.email = email.value;
+    contactToReturn.emailAddress = email.value;
   } else {
     errors.push(...email.errors);
   }
 
-  const phone = validatePhone(value.phone, section, message);
+  const phone = validatePhoneNumber(value.phoneNumber, section, message);
   if (phone.valid) {
-    contactToReturn.phone = phone.value;
+    contactToReturn.phoneNumber = phone.value;
   } else {
     errors.push(...phone.errors);
   }
 
-  if (value.fax?.trim()) {
-    const fax: ValidationResult<Contact['fax']> = validateFax(
-      value.fax.trim() as string,
-      section as Section,
+  if (value.faxNumber?.trim()) {
+    const fax: ValidationResult<Contact['faxNumber']> = validateFaxNumber(
+      value.faxNumber,
+      section,
       message,
     );
 
     if (fax.valid) {
-      contactToReturn.fax = fax.value;
+      contactToReturn.faxNumber = fax.value;
     } else {
       errors.push(...fax.errors);
     }
@@ -1007,11 +1007,7 @@ export function validatePartialContact(
 
   if (value.organisationName?.trim()) {
     const organisationName: ValidationResult<Contact['organisationName']> =
-      validateOrganisationName(
-        value.organisationName.trim() as string,
-        section as Section,
-        message,
-      );
+      validateOrganisationName(value.organisationName, section, message);
 
     if (organisationName.valid) {
       fieldsToReturn.organisationName = organisationName.value;
@@ -1020,57 +1016,54 @@ export function validatePartialContact(
     }
   }
 
-  if (value.name?.trim()) {
-    const name: ValidationResult<Contact['name']> = validateFullName(
-      value.name.trim() as string,
-      section as Section,
+  if (value.fullName?.trim()) {
+    const name: ValidationResult<Contact['fullName']> = validateFullName(
+      value.fullName,
+      section,
       message,
     );
 
     if (name.valid) {
-      fieldsToReturn.name = name.value;
+      fieldsToReturn.fullName = name.value;
     } else {
       errors.push(...name.errors);
     }
   }
 
-  if (value.email?.trim()) {
-    const email: ValidationResult<Contact['email']> = validateEmail(
-      value.email.trim() as string,
-      section as Section,
-      message,
-    );
+  if (value.emailAddress?.trim()) {
+    const email: ValidationResult<Contact['emailAddress']> =
+      validateEmailAddress(value.emailAddress, section, message);
 
     if (email.valid) {
-      fieldsToReturn.email = email.value;
+      fieldsToReturn.emailAddress = email.value;
     } else {
       errors.push(...email.errors);
     }
   }
 
-  if (value.phone?.trim()) {
-    const phone: ValidationResult<Contact['phone']> = validatePhone(
-      value.phone.trim() as string,
-      section as Section,
+  if (value.phoneNumber?.trim()) {
+    const phone: ValidationResult<Contact['phoneNumber']> = validatePhoneNumber(
+      value.phoneNumber,
+      section,
       message,
     );
 
     if (phone.valid) {
-      fieldsToReturn.phone = phone.value;
+      fieldsToReturn.phoneNumber = phone.value;
     } else {
       errors.push(...phone.errors);
     }
   }
 
-  if (value.fax?.trim()) {
-    const fax: ValidationResult<Contact['fax']> = validateFax(
-      value.fax.trim() as string,
-      section as Section,
+  if (value.faxNumber?.trim()) {
+    const fax: ValidationResult<Contact['faxNumber']> = validateFaxNumber(
+      value.faxNumber,
+      section,
       message,
     );
 
     if (fax.valid) {
-      fieldsToReturn.fax = fax.value;
+      fieldsToReturn.faxNumber = fax.value;
     } else {
       errors.push(...fax.errors);
     }

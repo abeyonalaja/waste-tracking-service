@@ -183,10 +183,10 @@ describe(CosmosBatchRepository, () => {
                     townCity: 'London',
                   },
                   contact: {
-                    email: 'guy@test.com',
-                    name: 'Pro Name',
+                    emailAddress: 'guy@test.com',
+                    fullName: 'Pro Name',
                     organisationName: 'Producer org name',
-                    phone: '00447811111213',
+                    phoneNumber: '00447811111213',
                   },
                 },
                 receiver: {
@@ -202,10 +202,10 @@ describe(CosmosBatchRepository, () => {
                     townCity: 'West coast',
                   },
                   contact: {
-                    email: 'smithjones@hotmail.com',
-                    name: 'Mr. Smith Jones',
+                    emailAddress: 'smithjones@hotmail.com',
+                    fullName: 'Mr. Smith Jones',
                     organisationName: "Mac Donald 's",
-                    phone: '07811111111',
+                    phoneNumber: '07811111111',
                   },
                 },
                 wasteTypes: [
@@ -551,9 +551,9 @@ describe(CosmosBatchRepository, () => {
                     postcode: 'CV12RD',
                   },
                   contact: {
-                    email: 'guy@test.com',
-                    name: 'Pro Name',
-                    phone: "00447811111213'",
+                    emailAddress: 'guy@test.com',
+                    fullName: 'Pro Name',
+                    phoneNumber: "00447811111213'",
                     organisationName: 'Producer org name',
                   },
                 },

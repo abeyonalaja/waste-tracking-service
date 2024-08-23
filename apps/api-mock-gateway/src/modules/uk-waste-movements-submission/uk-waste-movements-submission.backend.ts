@@ -53,12 +53,13 @@ export interface UkwmDraftConfrimationRef {
 const submissions: UkwmSubmission[] = [...Array(155).keys()].map((i) => ({
   id: uuidv4(),
   transactionId: `WM24_${i.toString().padStart(3, '0')}9ACAD`,
+  reference: `Producer Ref ${i}`,
   producer: {
     contact: {
       organisationName: `Producer Org ${i}`,
-      email: `email${i}@example.com`,
-      name: `Producer ${i}`,
-      phone: `0123456789${i}`,
+      emailAddress: `email${i}@example.com`,
+      fullName: `Producer ${i}`,
+      phoneNumber: `0123456789${i}`,
     },
     address: {
       addressLine1: `Address Line 1 ${i}`,
@@ -67,15 +68,14 @@ const submissions: UkwmSubmission[] = [...Array(155).keys()].map((i) => ({
       country: `Country ${i}`,
       postcode: `Postcode ${i}`,
     },
-    reference: `Producer Ref ${i}`,
     sicCode: i.toString().padStart(6, '0'),
   },
   receiver: {
     contact: {
       organisationName: `Receiver Org ${i}`,
-      email: `email${i}@example.com`,
-      name: `Receiver ${i}`,
-      phone: `0123456789${i}`,
+      emailAddress: `email${i}@example.com`,
+      fullName: `Receiver ${i}`,
+      phoneNumber: `0123456789${i}`,
     },
     address: {
       addressLine1: `Address Line 1 ${i}`,
@@ -251,6 +251,7 @@ export function createDraft(
 
   const draft: UkwmDraft = {
     id: uuidv4(),
+    reference: reference,
     producerAndCollection: {
       producer: {
         contact: {
@@ -263,7 +264,6 @@ export function createDraft(
           status: 'Complete',
           values: [],
         },
-        reference: reference,
       },
       wasteCollection: {
         address: {
@@ -273,7 +273,7 @@ export function createDraft(
           status: 'NotStarted',
         },
       },
-      confimation: {
+      confirmation: {
         status: 'NotStarted',
       },
     },
@@ -422,7 +422,12 @@ export function setDraftProducerContactDetail(
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
 
-  if (value.organisationName && value.name && value.email && value.phone) {
+  if (
+    value.organisationName &&
+    value.faxNumber &&
+    value.emailAddress &&
+    value.phoneNumber
+  ) {
     saveAsDraft = false;
   }
 
@@ -820,7 +825,7 @@ export function setDraftProducerConfirmation(
   }
 
   if (
-    !draft.producerAndCollection.producer.reference ||
+    !draft.reference ||
     draft.producerAndCollection.producer.contact.status !== 'Complete' ||
     draft.producerAndCollection.producer.sicCodes.status !== 'Complete' ||
     draft.producerAndCollection.wasteCollection.address.status !== 'Complete' ||
@@ -834,7 +839,7 @@ export function setDraftProducerConfirmation(
     );
   }
 
-  draft.producerAndCollection.confimation.status = isConfirmed
+  draft.producerAndCollection.confirmation.status = isConfirmed
     ? 'Complete'
     : 'InProgress';
 
@@ -854,7 +859,12 @@ export function setDraftReceiverContactDetail(
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
 
-  if (value.organisationName && value.name && value.email && value.phone) {
+  if (
+    value.organisationName &&
+    value.fullName &&
+    value.emailAddress &&
+    value.phoneNumber
+  ) {
     saveAsDraft = false;
   }
 

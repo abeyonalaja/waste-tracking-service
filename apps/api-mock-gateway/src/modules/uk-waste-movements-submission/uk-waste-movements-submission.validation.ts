@@ -46,12 +46,12 @@ export const validateSetPartialDraftProducerAddressRequest = ajv.compile<
 export const validateSetDraftProducerContactRequest = ajv.compile<UkwmContact>({
   properties: {
     organisationName: { type: 'string' },
-    name: { type: 'string' },
-    email: { type: 'string' },
-    phone: { type: 'string' },
+    fullName: { type: 'string' },
+    emailAddress: { type: 'string' },
+    phoneNumber: { type: 'string' },
   },
   optionalProperties: {
-    fax: { type: 'string' },
+    faxNumber: { type: 'string' },
   },
 });
 
@@ -61,10 +61,10 @@ export const validateSetPartialDraftProducerContactRequest = ajv.compile<
   properties: {},
   optionalProperties: {
     organisationName: { type: 'string' },
-    name: { type: 'string' },
-    email: { type: 'string' },
-    phone: { type: 'string' },
-    fax: { type: 'string' },
+    fullName: { type: 'string' },
+    emailAddress: { type: 'string' },
+    phoneNumber: { type: 'string' },
+    faxNumber: { type: 'string' },
   },
 });
 
@@ -170,12 +170,12 @@ export const validateSetDraftProducerConfirmationRequest =
 export const validateSetDraftReceiverContactRequest = ajv.compile<UkwmContact>({
   properties: {
     organisationName: { type: 'string' },
-    name: { type: 'string' },
-    email: { type: 'string' },
-    phone: { type: 'string' },
+    fullName: { type: 'string' },
+    emailAddress: { type: 'string' },
+    phoneNumber: { type: 'string' },
   },
   optionalProperties: {
-    fax: { type: 'string' },
+    faxNumber: { type: 'string' },
   },
 });
 
@@ -185,9 +185,9 @@ export const validateSetPartialDraftReceiverContactRequest = ajv.compile<
   properties: {},
   optionalProperties: {
     organisationName: { type: 'string' },
-    name: { type: 'string' },
-    email: { type: 'string' },
-    phone: { type: 'string' },
-    fax: { type: 'string' },
+    fullName: { type: 'string' },
+    emailAddress: { type: 'string' },
+    phoneNumber: { type: 'string' },
+    faxNumber: { type: 'string' },
   },
 });

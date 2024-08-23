@@ -33,10 +33,10 @@ export interface UkwmAddress {
 
 export interface UkwmContact {
   organisationName: string;
-  name: string;
-  email: string;
-  phone: string;
-  fax?: string;
+  fullName: string;
+  emailAddress: string;
+  phoneNumber: string;
+  faxNumber?: string;
 }
 
 export interface UkwmPermitDetails {
@@ -53,7 +53,6 @@ export interface UkwmWasteCollectionAddress {
 }
 
 export interface UkwmProducerDetail {
-  reference: string;
   sicCode?: string;
   contact: UkwmContact;
   address: UkwmAddress;
@@ -124,6 +123,7 @@ export interface UkwmWasteTransportationDetail {
 export interface UkwmSubmission {
   id: string;
   transactionId: string;
+  reference: string;
   producer: UkwmProducerDetail;
   wasteCollection: UkwmWasteCollectionDetail;
   receiver: UkwmReceiverDetail;
@@ -198,7 +198,6 @@ export type UkwmDraftModeOfTransport =
   | ({ status: 'Complete' } & { value: UkwmWasteTransport });
 
 export interface UkwmDraftProducer {
-  reference: string;
   sicCodes: UkwmDraftSicCodes;
   contact: UkwmDraftContact;
   address: UkwmDraftAddress;
@@ -224,7 +223,7 @@ export interface UkwmDraftSectionConfirmation {
 export interface UkwmProducerAndWasteCollectionDetail {
   producer: UkwmDraftProducer;
   wasteCollection: UkwmDraftWasteCollection;
-  confimation: UkwmDraftSectionConfirmation;
+  confirmation: UkwmDraftSectionConfirmation;
 }
 
 export interface UkwmSubmissionDeclaration {
@@ -252,6 +251,7 @@ export interface UkwmSubmissionState {
 
 export interface UkwmDraft {
   id: string;
+  reference: string;
   wasteInformation: UkwmWasteInformation;
   receiver: UkwmDraftReceiver;
   producerAndCollection: UkwmProducerAndWasteCollectionDetail;
@@ -268,7 +268,7 @@ export interface UkwmDraftCarrier {
 
 export type GetUkwmSubmissionResponse = UkwmDraft;
 
-export type UkwmCreateDraftRequest = Pick<UkwmDraftProducer, 'reference'>;
+export type UkwmCreateDraftRequest = Pick<UkwmDraft, 'reference'>;
 export type UkwmCreateDraftResponse = UkwmDraft;
 
 export type UkwmGetDraftProducerAddressDetailsResponse = UkwmDraftAddress;

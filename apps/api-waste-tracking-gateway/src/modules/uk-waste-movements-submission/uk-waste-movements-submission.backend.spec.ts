@@ -92,6 +92,7 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
       success: true,
       value: {
         id: id,
+        reference: '123456',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -118,7 +119,6 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
               status: 'NotStarted',
               values: [],
             },
-            reference: '123456',
           },
           wasteCollection: {
             address: {
@@ -136,7 +136,7 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
             },
             localAuthority: '',
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -208,6 +208,7 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
       success: true,
       value: {
         id: faker.string.uuid(),
+        reference: '123456',
         producerAndCollection: {
           producer: {
             address: {
@@ -216,7 +217,6 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
             contact: {
               status: 'NotStarted',
             },
-            reference: '123456',
             sicCodes: {
               status: 'Complete',
               values: ['123456'],
@@ -230,7 +230,7 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
               status: 'NotStarted',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -365,9 +365,9 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
     );
     const value: UkwmContact = {
       organisationName: 'Org name',
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      phone: '123-456-7890',
+      fullName: 'John Doe',
+      emailAddress: 'john.doe@example.com',
+      phoneNumber: '123-456-7890',
     };
 
     await subject.setDraftProducerContactDetail({ id, accountId }, value, true);
@@ -396,9 +396,9 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
         value: {
           status: 'Started',
           organisationName: 'Org name',
-          name: 'John Doe',
-          email: 'john.doe@example.com',
-          phone: '123-456-7890',
+          fullName: 'John Doe',
+          emailAddress: 'john.doe@example.com',
+          phoneNumber: '123-456-7890',
         },
       };
 
@@ -809,9 +809,9 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
     );
     const value: UkwmContact = {
       organisationName: 'Org name',
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      phone: '123-456-7890',
+      fullName: 'John Doe',
+      emailAddress: 'john.doe@example.com',
+      phoneNumber: '123-456-7890',
     };
 
     await subject.setDraftReceiverContactDetail({ id, accountId }, value, true);
@@ -840,9 +840,9 @@ describe(ServiceUkWasteMovementsSubmissionBackend, () => {
         value: {
           status: 'Started',
           organisationName: 'Org name',
-          name: 'Mathew Jones',
-          email: 'john.doe@example.com',
-          phone: '123-456-7890',
+          fullName: 'Mathew Jones',
+          emailAddress: 'john.doe@example.com',
+          phoneNumber: '123-456-7890',
         },
       };
 

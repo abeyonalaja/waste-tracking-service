@@ -303,8 +303,8 @@ describe(SubmissionController, () => {
         accountId: accountId,
         values: [
           {
+            reference: 'testRef',
             producer: {
-              reference: 'testRef',
               sicCode: '123456',
               address: {
                 addressLine1: '123 Real Street',
@@ -314,10 +314,10 @@ describe(SubmissionController, () => {
                 townCity: 'London',
               },
               contact: {
-                email: 'john.smith@john.smith',
-                name: 'John Smith',
+                emailAddress: 'john.smith@john.smith',
+                fullName: 'John Smith',
                 organisationName: 'Test organization',
-                phone: '0044140000000',
+                phoneNumber: '0044140000000',
               },
             },
             receiver: {
@@ -327,9 +327,9 @@ describe(SubmissionController, () => {
               },
               contact: {
                 organisationName: 'Test organization',
-                name: 'John Smith',
-                email: 'john.smith@testorganisation.com',
-                phone: '0044140000000',
+                fullName: 'John Smith',
+                emailAddress: 'john.smith@testorganisation.com',
+                phoneNumber: '0044140000000',
               },
               address: {
                 addressLine1: '123 Real Street',
@@ -430,10 +430,10 @@ describe(SubmissionController, () => {
                 townCity: 'London',
               },
               contact: {
-                email: 'john.smith@john.smith',
-                name: 'John Smith',
+                emailAddress: 'john.smith@john.smith',
+                fullName: 'John Smith',
                 organisationName: 'Test organization',
-                phone: '0044140000000',
+                phoneNumber: '0044140000000',
               },
             },
           },
@@ -716,6 +716,7 @@ describe(SubmissionController, () => {
         values: [
           {
             id: faker.string.uuid(),
+            reference: 'ref',
             transactionId: 'WM2406_C7049A7F',
             wasteTransportation: {
               numberAndTypeOfContainers: 'test',
@@ -750,10 +751,10 @@ describe(SubmissionController, () => {
                 townCity: 'Carrier Town/City',
               },
               contact: {
-                email: 'Carrier Email',
-                name: 'Carrier Contact Name',
+                emailAddress: 'Carrier Email',
+                fullName: 'Carrier Contact Name',
                 organisationName: 'Carrier Organisation Name',
-                phone: 'Carrier Phone',
+                phoneNumber: 'Carrier Phone',
               },
             },
             wasteTypes: [
@@ -797,10 +798,10 @@ describe(SubmissionController, () => {
                 townCity: 'Receiver Town/City',
               },
               contact: {
-                email: 'Receiver Email',
-                name: 'Receiver Contact Name',
+                emailAddress: 'Receiver Email',
+                fullName: 'Receiver Contact Name',
                 organisationName: 'Receiver Organisation Name',
-                phone: 'Receiver Phone',
+                phoneNumber: 'Receiver Phone',
               },
               permitDetails: {
                 authorizationType: 'permit',
@@ -808,7 +809,6 @@ describe(SubmissionController, () => {
               },
             },
             producer: {
-              reference: 'ref',
               sicCode: '123456',
               address: {
                 addressLine1: 'Producer Address Line 1',
@@ -818,10 +818,10 @@ describe(SubmissionController, () => {
                 townCity: 'Producer Town/City',
               },
               contact: {
-                email: 'Producer Email',
-                name: 'Producer Contact Name',
+                emailAddress: 'Producer Email',
+                fullName: 'Producer Contact Name',
                 organisationName: 'Producer Organisation Name',
-                phone: 'Producer Phone',
+                phoneNumber: 'Producer Phone',
               },
             },
           },
@@ -841,6 +841,7 @@ describe(SubmissionController, () => {
       const id = faker.string.uuid();
       const value: Draft = {
         id: id,
+        reference: '123456',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -867,7 +868,6 @@ describe(SubmissionController, () => {
               status: 'NotStarted',
               values: [],
             },
-            reference: '123456',
           },
           wasteCollection: {
             address: {
@@ -885,7 +885,7 @@ describe(SubmissionController, () => {
             },
             localAuthority: '',
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -972,11 +972,11 @@ describe(SubmissionController, () => {
         },
         declaration: { status: 'CannotStart' },
         id: id,
+        reference: 'testRef',
         producerAndCollection: {
           producer: {
             address: { status: 'NotStarted' },
             contact: { status: 'NotStarted' },
-            reference: 'testRef',
             sicCodes: {
               status: 'NotStarted',
               values: [],
@@ -990,7 +990,7 @@ describe(SubmissionController, () => {
               status: 'NotStarted',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -1018,9 +1018,7 @@ describe(SubmissionController, () => {
       );
       expect(response.success).toBe(true);
       if (response.success) {
-        expect(response.value.producerAndCollection.producer.reference).toBe(
-          ref,
-        );
+        expect(response.value.reference).toBe(ref);
       }
     });
   });
@@ -1030,6 +1028,7 @@ describe(SubmissionController, () => {
     const accountId = faker.string.uuid();
     const draft: Draft = {
       id: id,
+      reference: 'testRef',
       wasteInformation: {
         status: 'NotStarted',
       },
@@ -1046,7 +1045,6 @@ describe(SubmissionController, () => {
       },
       producerAndCollection: {
         producer: {
-          reference: 'testRef',
           sicCodes: {
             status: 'Complete',
             values: ['01110'],
@@ -1054,9 +1052,9 @@ describe(SubmissionController, () => {
           contact: {
             status: 'Complete',
             organisationName: 'Test Organisation',
-            name: 'Test Name',
-            email: 'test@example.com',
-            phone: '0123456789',
+            fullName: 'Test Name',
+            emailAddress: 'test@example.com',
+            phoneNumber: '0123456789',
           },
           address: {
             status: 'Complete',
@@ -1090,7 +1088,7 @@ describe(SubmissionController, () => {
             country: 'England [EN]',
           },
         },
-        confimation: {
+        confirmation: {
           status: 'Complete',
         },
       },
@@ -1144,6 +1142,7 @@ describe(SubmissionController, () => {
     const accountId = faker.string.uuid();
     const draft: Draft = {
       id: id,
+      reference: 'testRef',
       wasteInformation: {
         status: 'NotStarted',
       },
@@ -1160,7 +1159,6 @@ describe(SubmissionController, () => {
       },
       producerAndCollection: {
         producer: {
-          reference: 'testRef',
           sicCodes: {
             status: 'Complete',
             values: ['01110'],
@@ -1168,9 +1166,9 @@ describe(SubmissionController, () => {
           contact: {
             status: 'Complete',
             organisationName: 'Test Organisation',
-            name: 'Test Name',
-            email: 'test@example.com',
-            phone: '0123456789',
+            fullName: 'Test Name',
+            emailAddress: 'test@example.com',
+            phoneNumber: '0123456789',
           },
           address: {
             status: 'Started',
@@ -1204,7 +1202,7 @@ describe(SubmissionController, () => {
             country: 'England [EN]',
           },
         },
-        confimation: {
+        confirmation: {
           status: 'Complete',
         },
       },
@@ -1231,6 +1229,7 @@ describe(SubmissionController, () => {
     it('successfully sets the producer address details', async () => {
       const updatedDraft: Draft = {
         id: id,
+        reference: 'testRef',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -1247,7 +1246,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'testRef',
             sicCodes: {
               status: 'Complete',
               values: ['01110'],
@@ -1255,9 +1253,9 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Complete',
               organisationName: 'Test Organisation',
-              name: 'Test Name',
-              email: 'test@example.com',
-              phone: '0123456789',
+              fullName: 'Test Name',
+              emailAddress: 'test@example.com',
+              phoneNumber: '0123456789',
             },
             address: {
               status: 'Complete',
@@ -1291,7 +1289,7 @@ describe(SubmissionController, () => {
               country: 'England [EN]',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -1356,6 +1354,7 @@ describe(SubmissionController, () => {
       const accountId = faker.string.uuid();
       const draft: Draft = {
         id: id,
+        reference: 'producerRef123',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -1372,7 +1371,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'producerRef123',
             sicCodes: {
               status: 'Complete',
               values: ['12345'],
@@ -1380,10 +1378,10 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
-              name: 'Jane Doe',
-              email: 'jane.doe@example.com',
-              phone: '987-654-3210',
-              fax: '123-456-7890',
+              fullName: 'Jane Doe',
+              emailAddress: 'jane.doe@example.com',
+              phoneNumber: '987-654-3210',
+              faxNumber: '123-456-7890',
             },
             address: {
               status: 'Complete',
@@ -1416,7 +1414,7 @@ describe(SubmissionController, () => {
               country: 'CountryName',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'Complete',
           },
         },
@@ -1449,10 +1447,10 @@ describe(SubmissionController, () => {
         value: {
           status: 'Started',
           organisationName: 'Producer Org',
-          name: 'Jane Doe',
-          email: 'jane.doe@example.com',
-          phone: '987-654-3210',
-          fax: '123-456-7890',
+          fullName: 'Jane Doe',
+          emailAddress: 'jane.doe@example.com',
+          phoneNumber: '987-654-3210',
+          faxNumber: '123-456-7890',
         },
       });
     });
@@ -1462,6 +1460,7 @@ describe(SubmissionController, () => {
       const accountId = faker.string.uuid();
       const draft: Draft = {
         id: id,
+        reference: '123456',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -1488,7 +1487,6 @@ describe(SubmissionController, () => {
               status: 'NotStarted',
               values: [],
             },
-            reference: '123456',
           },
           wasteCollection: {
             address: {
@@ -1506,7 +1504,7 @@ describe(SubmissionController, () => {
             },
             localAuthority: '',
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -1549,6 +1547,7 @@ describe(SubmissionController, () => {
       const id = faker.string.uuid();
       const initialDraft: Draft = {
         id: id,
+        reference: 'producerRef123',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -1565,7 +1564,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'producerRef123',
             sicCodes: {
               status: 'Complete',
               values: ['12345'],
@@ -1573,8 +1571,8 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
-              name: 'Jane Doe',
-              email: 'jane.doe@example.com',
+              fullName: 'Jane Doe',
+              emailAddress: 'jane.doe@example.com',
             },
             address: {
               status: 'Complete',
@@ -1593,7 +1591,7 @@ describe(SubmissionController, () => {
               status: 'NotStarted',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -1622,14 +1620,15 @@ describe(SubmissionController, () => {
         accountId: accountId,
         value: {
           organisationName: 'Producer Org',
-          name: 'Jane Doe',
-          email: 'jane.doe@example.com',
+          fullName: 'Jane Doe',
+          emailAddress: 'jane.doe@example.com',
         },
         saveAsDraft: true,
       };
       const response = await subject.setDraftProducerContactDetail(request);
       const expectedDraft: Draft = {
         id: id,
+        reference: 'producerRef123',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -1646,7 +1645,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'producerRef123',
             sicCodes: {
               status: 'Complete',
               values: ['12345'],
@@ -1654,8 +1652,8 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
-              name: 'Jane Doe',
-              email: 'jane.doe@example.com',
+              fullName: 'Jane Doe',
+              emailAddress: 'jane.doe@example.com',
             },
             address: {
               status: 'Complete',
@@ -1674,7 +1672,7 @@ describe(SubmissionController, () => {
               status: 'NotStarted',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -1721,6 +1719,7 @@ describe(SubmissionController, () => {
       const accountId = faker.string.uuid();
       const draft: Draft = {
         id: id,
+        reference: 'producerRef123',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -1737,7 +1736,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'producerRef123',
             sicCodes: {
               status: 'Complete',
               values: ['12345'],
@@ -1745,10 +1743,10 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
-              name: 'Jane Doe',
-              email: 'jane.doe@example.com',
-              phone: '987-654-3210',
-              fax: '123-456-7890',
+              fullName: 'Jane Doe',
+              emailAddress: 'jane.doe@example.com',
+              phoneNumber: '987-654-3210',
+              faxNumber: '123-456-7890',
             },
             address: {
               status: 'Complete',
@@ -1781,7 +1779,7 @@ describe(SubmissionController, () => {
               country: 'CountryName',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'Complete',
           },
         },
@@ -1823,6 +1821,7 @@ describe(SubmissionController, () => {
       const accountId = faker.string.uuid();
       const draft: Draft = {
         id: id,
+        reference: '123456',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -1849,7 +1848,6 @@ describe(SubmissionController, () => {
               status: 'NotStarted',
               values: [],
             },
-            reference: '123456',
           },
           wasteCollection: {
             address: {
@@ -1867,7 +1865,7 @@ describe(SubmissionController, () => {
             },
             localAuthority: '',
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -1910,6 +1908,7 @@ describe(SubmissionController, () => {
       const id = faker.string.uuid();
       const initialDraft: Draft = {
         id: id,
+        reference: 'producerRef123',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -1926,7 +1925,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'producerRef123',
             sicCodes: {
               status: 'Complete',
               values: ['12345'],
@@ -1934,8 +1932,8 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
-              name: 'Jane Doe',
-              email: 'jane.doe@example.com',
+              fullName: 'Jane Doe',
+              emailAddress: 'jane.doe@example.com',
             },
             address: {
               status: 'Complete',
@@ -1954,7 +1952,7 @@ describe(SubmissionController, () => {
               status: 'NotStarted',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -1986,6 +1984,7 @@ describe(SubmissionController, () => {
       const response = await subject.setDraftWasteSource(request);
       const expectedDraft: Draft = {
         id: id,
+        reference: 'producerRef123',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -2002,7 +2001,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'producerRef123',
             sicCodes: {
               status: 'Complete',
               values: ['12345'],
@@ -2010,8 +2008,8 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
-              name: 'Jane Doe',
-              email: 'jane.doe@example.com',
+              fullName: 'Jane Doe',
+              emailAddress: 'jane.doe@example.com',
             },
             address: {
               status: 'Complete',
@@ -2031,7 +2029,7 @@ describe(SubmissionController, () => {
               value: 'Industrial',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -2078,6 +2076,7 @@ describe(SubmissionController, () => {
       const accountId = faker.string.uuid();
       const draft: Draft = {
         id: id,
+        reference: 'producerRef123',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -2094,7 +2093,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'producerRef123',
             sicCodes: {
               status: 'Complete',
               values: ['12345'],
@@ -2102,10 +2100,10 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
-              name: 'Jane Doe',
-              email: 'jane.doe@example.com',
-              phone: '987-654-3210',
-              fax: '123-456-7890',
+              fullName: 'Jane Doe',
+              emailAddress: 'jane.doe@example.com',
+              phoneNumber: '987-654-3210',
+              faxNumber: '123-456-7890',
             },
             address: {
               status: 'Complete',
@@ -2138,7 +2136,7 @@ describe(SubmissionController, () => {
               country: 'CountryName',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'Complete',
           },
         },
@@ -2180,6 +2178,7 @@ describe(SubmissionController, () => {
       const accountId = faker.string.uuid();
       const draft: Draft = {
         id: id,
+        reference: '123456',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -2206,7 +2205,6 @@ describe(SubmissionController, () => {
               status: 'NotStarted',
               values: [],
             },
-            reference: '123456',
           },
           wasteCollection: {
             address: {
@@ -2224,7 +2222,7 @@ describe(SubmissionController, () => {
             },
             localAuthority: '',
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -2267,6 +2265,7 @@ describe(SubmissionController, () => {
       const id = faker.string.uuid();
       const initialDraft: Draft = {
         id: id,
+        reference: 'producerRef123',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -2283,7 +2282,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'producerRef123',
             sicCodes: {
               status: 'Complete',
               values: ['12345'],
@@ -2291,8 +2289,8 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
-              name: 'Jane Doe',
-              email: 'jane.doe@example.com',
+              fullName: 'Jane Doe',
+              emailAddress: 'jane.doe@example.com',
             },
             address: {
               status: 'Complete',
@@ -2311,7 +2309,7 @@ describe(SubmissionController, () => {
               status: 'NotStarted',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -2343,6 +2341,7 @@ describe(SubmissionController, () => {
       const response = await subject.setDraftWasteSource(request);
       const expectedDraft: Draft = {
         id: id,
+        reference: 'producerRef123',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -2359,7 +2358,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'producerRef123',
             sicCodes: {
               status: 'Complete',
               values: ['12345'],
@@ -2367,8 +2365,8 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
-              name: 'Jane Doe',
-              email: 'jane.doe@example.com',
+              fullName: 'Jane Doe',
+              emailAddress: 'jane.doe@example.com',
             },
             address: {
               status: 'Complete',
@@ -2388,7 +2386,7 @@ describe(SubmissionController, () => {
               value: 'Industrial',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -2434,6 +2432,7 @@ describe(SubmissionController, () => {
     const accountId = faker.string.uuid();
     const draft: Draft = {
       id: id,
+      reference: 'testRef',
       wasteInformation: {
         status: 'NotStarted',
       },
@@ -2450,7 +2449,6 @@ describe(SubmissionController, () => {
       },
       producerAndCollection: {
         producer: {
-          reference: 'testRef',
           sicCodes: {
             status: 'Complete',
             values: ['01110'],
@@ -2458,9 +2456,9 @@ describe(SubmissionController, () => {
           contact: {
             status: 'Complete',
             organisationName: 'Test Organisation',
-            name: 'Test Name',
-            email: 'test@example.com',
-            phone: '0123456789',
+            fullName: 'Test Name',
+            emailAddress: 'test@example.com',
+            phoneNumber: '0123456789',
           },
           address: {
             status: 'Complete',
@@ -2494,7 +2492,7 @@ describe(SubmissionController, () => {
             country: 'England [EN]',
           },
         },
-        confimation: {
+        confirmation: {
           status: 'Complete',
         },
       },
@@ -2547,6 +2545,7 @@ describe(SubmissionController, () => {
     const accountId = faker.string.uuid();
     const draft: Draft = {
       id: id,
+      reference: 'testRef',
       wasteInformation: {
         status: 'NotStarted',
       },
@@ -2563,7 +2562,6 @@ describe(SubmissionController, () => {
       },
       producerAndCollection: {
         producer: {
-          reference: 'testRef',
           sicCodes: {
             status: 'Complete',
             values: ['01110'],
@@ -2571,9 +2569,9 @@ describe(SubmissionController, () => {
           contact: {
             status: 'Complete',
             organisationName: 'Test Organisation',
-            name: 'Test Name',
-            email: 'test@example.com',
-            phone: '0123456789',
+            fullName: 'Test Name',
+            emailAddress: 'test@example.com',
+            phoneNumber: '0123456789',
           },
           address: {
             status: 'Started',
@@ -2604,7 +2602,7 @@ describe(SubmissionController, () => {
             townCity: 'London',
           },
         },
-        confimation: {
+        confirmation: {
           status: 'Complete',
         },
       },
@@ -2631,6 +2629,7 @@ describe(SubmissionController, () => {
     it('successfully sets the waste collection address details', async () => {
       const updatedDraft: Draft = {
         id: id,
+        reference: 'testRef',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -2647,7 +2646,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'testRef',
             sicCodes: {
               status: 'Complete',
               values: ['01110'],
@@ -2655,9 +2653,9 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Complete',
               organisationName: 'Test Organisation',
-              name: 'Test Name',
-              email: 'test@example.com',
-              phone: '0123456789',
+              fullName: 'Test Name',
+              emailAddress: 'test@example.com',
+              phoneNumber: '0123456789',
             },
             address: {
               status: 'Started',
@@ -2692,7 +2690,7 @@ describe(SubmissionController, () => {
               country: 'England',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -2758,6 +2756,7 @@ describe(SubmissionController, () => {
       const id = faker.string.uuid();
       const initialDraft: Draft = {
         id: id,
+        reference: 'producerRef123',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -2774,7 +2773,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'producerRef123',
             sicCodes: {
               status: 'Complete',
               values: ['12345'],
@@ -2782,8 +2780,8 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
-              name: 'Jane Doe',
-              email: 'jane.doe@example.com',
+              fullName: 'Jane Doe',
+              emailAddress: 'jane.doe@example.com',
             },
             address: {
               status: 'Complete',
@@ -2802,7 +2800,7 @@ describe(SubmissionController, () => {
               status: 'NotStarted',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -2834,6 +2832,7 @@ describe(SubmissionController, () => {
       const response = await subject.createDraftSicCode(request);
       const expectedDraft: Draft = {
         id: id,
+        reference: 'producerRef123',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -2850,7 +2849,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'producerRef123',
             sicCodes: {
               status: 'Complete',
               values: ['12345', '01110'],
@@ -2858,8 +2856,8 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
-              name: 'Jane Doe',
-              email: 'jane.doe@example.com',
+              fullName: 'Jane Doe',
+              emailAddress: 'jane.doe@example.com',
             },
             address: {
               status: 'Complete',
@@ -2878,7 +2876,7 @@ describe(SubmissionController, () => {
               status: 'NotStarted',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -2925,6 +2923,7 @@ describe(SubmissionController, () => {
       const accountId = faker.string.uuid();
       const draft: Draft = {
         id: id,
+        reference: 'producerRef123',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -2941,7 +2940,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'producerRef123',
             sicCodes: {
               status: 'Complete',
               values: ['12345', '01110', '01120'],
@@ -2949,10 +2947,10 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
-              name: 'Jane Doe',
-              email: 'jane.doe@example.com',
-              phone: '987-654-3210',
-              fax: '123-456-7890',
+              fullName: 'Jane Doe',
+              emailAddress: 'jane.doe@example.com',
+              phoneNumber: '987-654-3210',
+              faxNumber: '123-456-7890',
             },
             address: {
               status: 'Complete',
@@ -2985,7 +2983,7 @@ describe(SubmissionController, () => {
               country: 'CountryName',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'Complete',
           },
         },
@@ -3027,6 +3025,7 @@ describe(SubmissionController, () => {
       const accountId = faker.string.uuid();
       const draft: Draft = {
         id: id,
+        reference: '123456',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -3053,7 +3052,6 @@ describe(SubmissionController, () => {
               status: 'NotStarted',
               values: [],
             },
-            reference: '123456',
           },
           wasteCollection: {
             address: {
@@ -3071,7 +3069,7 @@ describe(SubmissionController, () => {
             },
             localAuthority: '',
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -3114,6 +3112,7 @@ describe(SubmissionController, () => {
     const accountId = faker.string.uuid();
     const draft: Draft = {
       id: id,
+      reference: 'testRef',
       wasteInformation: {
         status: 'NotStarted',
       },
@@ -3130,7 +3129,6 @@ describe(SubmissionController, () => {
       },
       producerAndCollection: {
         producer: {
-          reference: 'testRef',
           sicCodes: {
             status: 'Complete',
             values: ['01110'],
@@ -3138,9 +3136,9 @@ describe(SubmissionController, () => {
           contact: {
             status: 'Complete',
             organisationName: 'Test Organisation',
-            name: 'Test Name',
-            email: 'test@example.com',
-            phone: '0123456789',
+            fullName: 'Test Name',
+            emailAddress: 'test@example.com',
+            phoneNumber: '0123456789',
           },
           address: {
             status: 'Complete',
@@ -3169,7 +3167,7 @@ describe(SubmissionController, () => {
             status: 'NotStarted',
           },
         },
-        confimation: {
+        confirmation: {
           status: 'Complete',
         },
       },
@@ -3229,6 +3227,7 @@ describe(SubmissionController, () => {
     const accountId = faker.string.uuid();
     const draft: Draft = {
       id: id,
+      reference: 'testRef',
       wasteInformation: {
         status: 'NotStarted',
       },
@@ -3245,7 +3244,6 @@ describe(SubmissionController, () => {
       },
       producerAndCollection: {
         producer: {
-          reference: 'testRef',
           sicCodes: {
             status: 'Complete',
             values: ['01110'],
@@ -3253,9 +3251,9 @@ describe(SubmissionController, () => {
           contact: {
             status: 'Complete',
             organisationName: 'Test Organisation',
-            name: 'Test Name',
-            email: 'test@example.com',
-            phone: '0123456789',
+            fullName: 'Test Name',
+            emailAddress: 'test@example.com',
+            phoneNumber: '0123456789',
           },
           address: {
             status: 'Started',
@@ -3286,7 +3284,7 @@ describe(SubmissionController, () => {
             townCity: 'London',
           },
         },
-        confimation: {
+        confirmation: {
           status: 'NotStarted',
         },
       },
@@ -3313,6 +3311,7 @@ describe(SubmissionController, () => {
     it('successfully sets the carrier address details', async () => {
       const updatedDraft: Draft = {
         id: id,
+        reference: 'testRef',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -3329,7 +3328,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'testRef',
             sicCodes: {
               status: 'Complete',
               values: ['01110'],
@@ -3337,9 +3335,9 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Complete',
               organisationName: 'Test Organisation',
-              name: 'Test Name',
-              email: 'test@example.com',
-              phone: '0123456789',
+              fullName: 'Test Name',
+              emailAddress: 'test@example.com',
+              phoneNumber: '0123456789',
             },
             address: {
               status: 'Started',
@@ -3370,7 +3368,7 @@ describe(SubmissionController, () => {
               townCity: 'London',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -3441,6 +3439,7 @@ describe(SubmissionController, () => {
       const id = faker.string.uuid();
       const initialDraft: Draft = {
         id: id,
+        reference: 'producerRef123',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -3457,7 +3456,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'producerRef123',
             sicCodes: {
               status: 'Complete',
               values: ['12345', '01110', '01120'],
@@ -3465,8 +3463,8 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
-              name: 'Jane Doe',
-              email: 'jane.doe@example.com',
+              fullName: 'Jane Doe',
+              emailAddress: 'jane.doe@example.com',
             },
             address: {
               status: 'Complete',
@@ -3485,7 +3483,7 @@ describe(SubmissionController, () => {
               status: 'NotStarted',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -3517,6 +3515,7 @@ describe(SubmissionController, () => {
       const response = await subject.deleteDraftSicCode(request);
       const expectedDraft: Draft = {
         id: id,
+        reference: 'producerRef123',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -3533,7 +3532,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'producerRef123',
             sicCodes: {
               status: 'Complete',
               values: ['12345', '01120'],
@@ -3541,8 +3539,8 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
-              name: 'Jane Doe',
-              email: 'jane.doe@example.com',
+              fullName: 'Jane Doe',
+              emailAddress: 'jane.doe@example.com',
             },
             address: {
               status: 'Complete',
@@ -3561,7 +3559,7 @@ describe(SubmissionController, () => {
               status: 'NotStarted',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -3606,6 +3604,7 @@ describe(SubmissionController, () => {
       const id = faker.string.uuid();
       const initialDraft: Draft = {
         id: id,
+        reference: '123456',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -3632,7 +3631,6 @@ describe(SubmissionController, () => {
               status: 'NotStarted',
               values: [],
             },
-            reference: '123456',
           },
           wasteCollection: {
             address: {
@@ -3648,7 +3646,7 @@ describe(SubmissionController, () => {
             },
             localAuthority: '',
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -3695,6 +3693,7 @@ describe(SubmissionController, () => {
     const accountId = faker.string.uuid();
     const draft: Draft = {
       id: id,
+      reference: 'testRef',
       wasteInformation: {
         status: 'NotStarted',
       },
@@ -3717,7 +3716,6 @@ describe(SubmissionController, () => {
       },
       producerAndCollection: {
         producer: {
-          reference: 'testRef',
           sicCodes: {
             status: 'Complete',
             values: ['01110'],
@@ -3725,9 +3723,9 @@ describe(SubmissionController, () => {
           contact: {
             status: 'Complete',
             organisationName: 'Test Organisation',
-            name: 'Test Name',
-            email: 'test@example.com',
-            phone: '0123456789',
+            fullName: 'Test Name',
+            emailAddress: 'test@example.com',
+            phoneNumber: '0123456789',
           },
           address: {
             status: 'Complete',
@@ -3756,7 +3754,7 @@ describe(SubmissionController, () => {
             status: 'NotStarted',
           },
         },
-        confimation: {
+        confirmation: {
           status: 'NotStarted',
         },
       },
@@ -3816,6 +3814,7 @@ describe(SubmissionController, () => {
     const accountId = faker.string.uuid();
     const draft: Draft = {
       id: id,
+      reference: 'testRef',
       wasteInformation: {
         status: 'NotStarted',
       },
@@ -3832,7 +3831,6 @@ describe(SubmissionController, () => {
       },
       producerAndCollection: {
         producer: {
-          reference: 'testRef',
           sicCodes: {
             status: 'Complete',
             values: ['01110'],
@@ -3840,9 +3838,9 @@ describe(SubmissionController, () => {
           contact: {
             status: 'Complete',
             organisationName: 'Test Organisation',
-            name: 'Test Name',
-            email: 'test@example.com',
-            phone: '0123456789',
+            fullName: 'Test Name',
+            emailAddress: 'test@example.com',
+            phoneNumber: '0123456789',
           },
           address: {
             status: 'Started',
@@ -3873,7 +3871,7 @@ describe(SubmissionController, () => {
             townCity: 'London',
           },
         },
-        confimation: {
+        confirmation: {
           status: 'NotStarted',
         },
       },
@@ -3900,6 +3898,7 @@ describe(SubmissionController, () => {
     it('successfully sets the receiver address details', async () => {
       const updatedDraft: Draft = {
         id: id,
+        reference: 'testRef',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -3922,7 +3921,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'testRef',
             sicCodes: {
               status: 'Complete',
               values: ['01110'],
@@ -3930,9 +3928,9 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Complete',
               organisationName: 'Test Organisation',
-              name: 'Test Name',
-              email: 'test@example.com',
-              phone: '0123456789',
+              fullName: 'Test Name',
+              emailAddress: 'test@example.com',
+              phoneNumber: '0123456789',
             },
             address: {
               status: 'Started',
@@ -3963,7 +3961,7 @@ describe(SubmissionController, () => {
               townCity: 'London',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -4028,6 +4026,7 @@ describe(SubmissionController, () => {
       const id = faker.string.uuid();
       const initialDraft: Draft = {
         id: id,
+        reference: 'producerRef123',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -4044,7 +4043,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'producerRef123',
             sicCodes: {
               status: 'Complete',
               values: ['12345'],
@@ -4052,9 +4050,9 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Complete',
               organisationName: 'Producer Org',
-              name: 'Jane Doe',
-              email: 'jane.doe@example.com',
-              phone: '+44 1234 567890',
+              fullName: 'Jane Doe',
+              emailAddress: 'jane.doe@example.com',
+              phoneNumber: '+44 1234 567890',
             },
             address: {
               status: 'Complete',
@@ -4079,7 +4077,7 @@ describe(SubmissionController, () => {
               value: 'Industrial',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -4111,6 +4109,7 @@ describe(SubmissionController, () => {
       const response = await subject.setDraftProducerConfirmation(request);
       const expectedDraft: Draft = {
         id: id,
+        reference: 'producerRef123',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -4127,7 +4126,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'producerRef123',
             sicCodes: {
               status: 'Complete',
               values: ['12345'],
@@ -4135,9 +4133,9 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Complete',
               organisationName: 'Producer Org',
-              name: 'Jane Doe',
-              email: 'jane.doe@example.com',
-              phone: '+44 1234 567890',
+              fullName: 'Jane Doe',
+              emailAddress: 'jane.doe@example.com',
+              phoneNumber: '+44 1234 567890',
             },
             address: {
               status: 'Complete',
@@ -4162,7 +4160,7 @@ describe(SubmissionController, () => {
               value: 'Industrial',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'Complete',
           },
         },
@@ -4207,6 +4205,7 @@ describe(SubmissionController, () => {
       const id = faker.string.uuid();
       const initialDraft: Draft = {
         id: id,
+        reference: 'producerRef123',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -4223,7 +4222,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'producerRef123',
             sicCodes: {
               status: 'Complete',
               values: ['12345'],
@@ -4231,9 +4229,9 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
-              name: 'Jane Doe',
-              email: 'jane.doe@example.com',
-              phone: '+44 1234 567890',
+              fullName: 'Jane Doe',
+              emailAddress: 'jane.doe@example.com',
+              phoneNumber: '+44 1234 567890',
             },
             address: {
               status: 'Started',
@@ -4258,7 +4256,7 @@ describe(SubmissionController, () => {
               value: 'Industrial',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'NotStarted',
           },
         },
@@ -4311,6 +4309,7 @@ describe(SubmissionController, () => {
       const id = faker.string.uuid();
       const initialDraft: Draft = {
         id: id,
+        reference: 'producerRef123',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -4332,7 +4331,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'producerRef123',
             sicCodes: {
               status: 'Complete',
               values: ['12345'],
@@ -4340,8 +4338,8 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
-              name: 'Jane Doe',
-              email: 'jane.doe@example.com',
+              fullName: 'Jane Doe',
+              emailAddress: 'jane.doe@example.com',
             },
             address: {
               status: 'Complete',
@@ -4360,7 +4358,7 @@ describe(SubmissionController, () => {
               status: 'NotStarted',
             },
           },
-          confimation: { status: 'InProgress' },
+          confirmation: { status: 'InProgress' },
         },
         carrier: {
           address: {
@@ -4387,15 +4385,16 @@ describe(SubmissionController, () => {
         accountId: accountId,
         value: {
           organisationName: 'Producer Org',
-          name: 'Jane Doe2',
-          email: 'jane.doe@example.com',
-          phone: '01903230482',
+          fullName: 'Jane Doe2',
+          emailAddress: 'jane.doe@example.com',
+          phoneNumber: '01903230482',
         },
         saveAsDraft: false,
       };
       const response = await subject.setDraftReceiverContactDetail(request);
       const expectedDraft: Draft = {
         id: id,
+        reference: 'producerRef123',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -4411,9 +4410,9 @@ describe(SubmissionController, () => {
           contact: {
             status: 'Complete',
             organisationName: 'Producer Org',
-            name: 'Jane Doe2',
-            email: 'jane.doe@example.com',
-            phone: '01903230482',
+            fullName: 'Jane Doe2',
+            emailAddress: 'jane.doe@example.com',
+            phoneNumber: '01903230482',
           },
           permitDetails: {
             status: 'NotStarted',
@@ -4421,7 +4420,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'producerRef123',
             sicCodes: {
               status: 'Complete',
               values: ['12345'],
@@ -4429,8 +4427,8 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
-              name: 'Jane Doe',
-              email: 'jane.doe@example.com',
+              fullName: 'Jane Doe',
+              emailAddress: 'jane.doe@example.com',
             },
             address: {
               status: 'Complete',
@@ -4449,7 +4447,7 @@ describe(SubmissionController, () => {
               status: 'NotStarted',
             },
           },
-          confimation: { status: 'InProgress' },
+          confirmation: { status: 'InProgress' },
         },
         carrier: {
           address: {
@@ -4494,6 +4492,7 @@ describe(SubmissionController, () => {
       const accountId = faker.string.uuid();
       const draft: Draft = {
         id: id,
+        reference: 'producerRef123',
         wasteInformation: {
           status: 'NotStarted',
         },
@@ -4504,10 +4503,10 @@ describe(SubmissionController, () => {
           contact: {
             status: 'Complete',
             organisationName: 'Org name',
-            name: 'Jane Jones',
-            email: 'jane.jones@example.com',
-            phone: '987-654-3210',
-            fax: '123-456-7890',
+            fullName: 'Jane Jones',
+            emailAddress: 'jane.jones@example.com',
+            phoneNumber: '987-654-3210',
+            faxNumber: '123-456-7890',
           },
           permitDetails: {
             status: 'NotStarted',
@@ -4515,7 +4514,6 @@ describe(SubmissionController, () => {
         },
         producerAndCollection: {
           producer: {
-            reference: 'producerRef123',
             sicCodes: {
               status: 'Complete',
               values: ['12345'],
@@ -4523,10 +4521,10 @@ describe(SubmissionController, () => {
             contact: {
               status: 'Started',
               organisationName: 'Producer Org',
-              name: 'Jane Doe',
-              email: 'jane.doe@example.com',
-              phone: '987-654-3210',
-              fax: '123-456-7890',
+              fullName: 'Jane Doe',
+              emailAddress: 'jane.doe@example.com',
+              phoneNumber: '987-654-3210',
+              faxNumber: '123-456-7890',
             },
             address: {
               status: 'Complete',
@@ -4559,7 +4557,7 @@ describe(SubmissionController, () => {
               country: 'CountryName',
             },
           },
-          confimation: {
+          confirmation: {
             status: 'Complete',
           },
         },
@@ -4592,10 +4590,10 @@ describe(SubmissionController, () => {
         value: {
           status: 'Complete',
           organisationName: 'Org name',
-          name: 'Jane Jones',
-          email: 'jane.jones@example.com',
-          phone: '987-654-3210',
-          fax: '123-456-7890',
+          fullName: 'Jane Jones',
+          emailAddress: 'jane.jones@example.com',
+          phoneNumber: '987-654-3210',
+          faxNumber: '123-456-7890',
         },
       });
     });

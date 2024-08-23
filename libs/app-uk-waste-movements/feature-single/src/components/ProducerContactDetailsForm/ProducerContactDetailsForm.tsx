@@ -118,7 +118,7 @@ export function ProducerContactDetailsForm({
 
     const emailAddressValidationResult = ukwmValidation.uiSharedValidation(
       formState?.emailAddress,
-      ukwmValidation.validationRules.validateEmail,
+      ukwmValidation.validationRules.validateEmailAddress,
       '#email-address',
       section,
       locale,
@@ -137,7 +137,7 @@ export function ProducerContactDetailsForm({
 
     const phoneNumberValidationResult = ukwmValidation.uiSharedValidation(
       formState?.phoneNumber,
-      ukwmValidation.validationRules.validatePhone,
+      ukwmValidation.validationRules.validatePhoneNumber,
       '#phone-number',
       section,
       locale,
@@ -156,7 +156,7 @@ export function ProducerContactDetailsForm({
 
     const faxNumberValidationResult = ukwmValidation.uiSharedValidation(
       formState?.faxNumber,
-      ukwmValidation.validationRules.validateFax,
+      ukwmValidation.validationRules.validateFaxNumber,
       '#fax-number',
       section,
       locale,
@@ -186,16 +186,16 @@ export function ProducerContactDetailsForm({
       body.organisationName = formState.organisationName;
     }
     if (formState.organisationContactPerson) {
-      body.name = formState.organisationContactPerson;
+      body.fullName = formState.organisationContactPerson;
     }
     if (formState.emailAddress) {
-      body.email = formState.emailAddress;
+      body.emailAddress = formState.emailAddress;
     }
     if (formState.phoneNumber) {
-      body.phone = formState.phoneNumber;
+      body.phoneNumber = formState.phoneNumber;
     }
     if (formState.faxNumber) {
-      body.fax = formState.faxNumber;
+      body.faxNumber = formState.faxNumber;
     }
 
     let response: Response;
