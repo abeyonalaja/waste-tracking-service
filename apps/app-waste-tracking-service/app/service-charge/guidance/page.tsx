@@ -13,8 +13,7 @@ export const metadata: Metadata = {
 export default async function GuidancePage(): Promise<JSX.Element> {
   const serviceChargeEnabled = process.env.SERVICE_CHARGE_ENABLED === 'true';
   if (!serviceChargeEnabled) {
-    // Redirect to account page if service charge is not enabled
-    redirect('/account');
+    return redirect('/account');
   }
   const t = await getTranslations('charge.guidance');
   return (

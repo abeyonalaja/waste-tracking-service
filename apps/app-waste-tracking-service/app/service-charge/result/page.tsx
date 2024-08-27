@@ -23,14 +23,14 @@ export default async function PaymentResultPage(): Promise<React.ReactNode> {
   // Redirect to account page if service charge is not enabled
   const serviceChargeEnabled = process.env.SERVICE_CHARGE_ENABLED === 'true';
   if (!serviceChargeEnabled) {
-    redirect('/account');
+    return redirect('/account');
   }
 
   // Redirect user if no payment ID is present
   const referenceId = cookies().get('referenceId');
   if (referenceId === undefined) {
     console.error('No payment ID present');
-    redirect('/404');
+    return redirect('/404');
   }
 
   const session: Session | null = await getServerSession(options);
@@ -56,7 +56,7 @@ export default async function PaymentResultPage(): Promise<React.ReactNode> {
     });
   } catch (error) {
     console.error(error);
-    redirect('/404');
+    return redirect('/404');
   }
 
   if (!response.ok) {

@@ -25,7 +25,7 @@ export default async function ReviewPaymentPage(): Promise<React.ReactNode> {
   const apiUrl = process.env.NEXT_PUBLIC_API_GATEWAY_URL;
 
   if (!serviceChargeEnabled) {
-    redirect('/account');
+    return redirect('/account');
   }
   const session = await getServerSession(options);
 
@@ -45,6 +45,7 @@ export default async function ReviewPaymentPage(): Promise<React.ReactNode> {
     formattedRenewalDate = formatExpiryDate(renewalDate);
   } catch (error) {
     console.error(error);
+    return redirect('/404');
   }
 
   return (

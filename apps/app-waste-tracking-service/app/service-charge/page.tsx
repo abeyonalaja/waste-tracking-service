@@ -4,7 +4,7 @@ import { cookies } from 'next/headers';
 export default function ServiceCharge(): void {
   const serviceChargeEnabled = process.env.SERVICE_CHARGE_ENABLED === 'true';
   if (!serviceChargeEnabled) {
-    redirect('/account');
+    return redirect('/account');
   }
 
   const cookieStore = cookies();

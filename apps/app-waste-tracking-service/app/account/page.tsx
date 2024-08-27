@@ -49,14 +49,14 @@ export default async function Index(): Promise<JSX.Element> {
     } catch (error) {
       console.error('Error fetching payments', error);
     }
-  }
 
-  const serviceChargeGuidanceViewed = cookies().get(
-    'serviceChargeGuidanceViewed',
-  );
+    const serviceChargeGuidanceViewed = cookies().get(
+      'serviceChargeGuidanceViewed',
+    );
 
-  if (!serviceChargePaid && !serviceChargeGuidanceViewed) {
-    return redirect('/service-charge/guidance');
+    if (!serviceChargePaid && !serviceChargeGuidanceViewed) {
+      return redirect('/service-charge/guidance');
+    }
   }
 
   return (
