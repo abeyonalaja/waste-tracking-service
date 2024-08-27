@@ -49,7 +49,7 @@ export function UniqueReferenceForm({
 
     const referenceValidationResult = ukwmValidation.uiValidation(
       formValues.uniqueReference,
-      ukwmValidation.validationRules.validateProducerReference,
+      ukwmValidation.validationRules.validateReference,
       '#unique-reference',
       locale,
       'ui',

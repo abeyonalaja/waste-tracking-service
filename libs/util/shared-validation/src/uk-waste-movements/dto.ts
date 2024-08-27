@@ -70,7 +70,7 @@ export type ValidationResult<T> =
       errors: FieldFormatError[];
     };
 
-export type uiValidationResult = ValidationResult<string> & {
+export type uiValidationResult = ValidationResult<string | undefined> & {
   href?: string;
 };
 

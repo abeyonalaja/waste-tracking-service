@@ -15,14 +15,11 @@ import {
 } from '@wts/api/reference-data';
 import { CosmosClient } from '@azure/cosmos';
 import { CosmosRepository } from './data';
-import { ukwm as ukwmValidation } from '@wts/util/shared-validation';
-
 import {
   AzureCliCredential,
   ChainedTokenCredential,
   WorkloadIdentityCredential,
 } from '@azure/identity';
-
 import { DbContainerNameKey } from './model';
 
 const logger = winston.createLogger({
@@ -194,21 +191,6 @@ async function init() {
         if (!validateSubmission.validateCreateDraftsRequest(request)) {
           return fromBoom(Boom.badRequest());
         }
-
-        const referenceValidationResult =
-          ukwmValidation.validationRules.validateProducerReference(
-            request.reference,
-          );
-
-        if (!referenceValidationResult.valid) {
-          const boom = Boom.badRequest(
-            'Validation failed',
-            referenceValidationResult.errors,
-          );
-          return fromBoom(boom);
-        }
-
-        request.reference = referenceValidationResult.value;
 
         return await submissionController.createDraft(request);
       },

@@ -638,9 +638,20 @@ export default class SubmissionController {
   createDraft: Handler<api.CreateDraftRequest, api.CreateDraftResponse> =
     async (request) => {
       try {
+        const referenceValidationResult =
+          ukwmValidation.validationRules.validateReference(request.reference);
+
+        if (!referenceValidationResult.valid) {
+          const boom = Boom.badRequest(
+            'Validation failed',
+            referenceValidationResult.errors,
+          );
+          return fromBoom(boom);
+        }
+
         const draft: Draft = {
           id: uuidv4(),
-          reference: request.reference,
+          reference: referenceValidationResult.value,
           producerAndCollection: {
             producer: {
               contact: {
@@ -722,57 +733,37 @@ export default class SubmissionController {
     api.SetDraftProducerAddressDetailsResponse
   > = async ({ id, accountId, value, saveAsDraft }) => {
     try {
+      const addressDetailsValidationResult =
+        ukwmValidation.validationRules.validateAddressDetails(
+          value,
+          'Producer',
+          saveAsDraft,
+        );
+
+      if (!addressDetailsValidationResult.valid) {
+        return fromBoom(
+          Boom.badRequest(
+            'Validation failed',
+            addressDetailsValidationResult.errors,
+          ),
+        );
+      }
+
       const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
       );
 
-      if (draft === undefined) {
-        return fromBoom(Boom.notFound());
-      }
-
-      if (saveAsDraft) {
-        const partialProducerAddressDetailsValidation =
-          ukwmValidation.validationRules.validatePartialAddressDetails(
-            value,
-            'Producer',
-          );
-
-        if (!partialProducerAddressDetailsValidation.valid) {
-          return fromBoom(
-            Boom.badRequest(
-              'Validation failed',
-              partialProducerAddressDetailsValidation.errors,
-            ),
-          );
-        }
-
-        draft.producerAndCollection.producer.address = {
-          status: 'Started',
-          ...value,
-        };
-      } else {
-        const producerAddressDetailsValidation =
-          ukwmValidation.validationRules.validateAddressDetails(
-            value,
-            'Producer',
-          );
-
-        if (!producerAddressDetailsValidation.valid) {
-          return fromBoom(
-            Boom.badRequest(
-              'Validation failed',
-              producerAddressDetailsValidation.errors,
-            ),
-          );
-        }
-
-        draft.producerAndCollection.producer.address = {
-          status: 'Complete',
-          ...producerAddressDetailsValidation.value,
-        };
-      }
+      draft.producerAndCollection.producer.address = !saveAsDraft
+        ? {
+            status: 'Complete',
+            ...(addressDetailsValidationResult.value as api.Address),
+          }
+        : {
+            status: 'Started',
+            ...(addressDetailsValidationResult.value as Partial<api.Address>),
+          };
 
       draft.producerAndCollection.confirmation.status = 'NotStarted';
 
@@ -803,10 +794,6 @@ export default class SubmissionController {
         accountId,
       );
 
-      if (draft === undefined) {
-        return fromBoom(Boom.notFound());
-      }
-
       return success(draft.producerAndCollection.producer.address);
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -829,10 +816,6 @@ export default class SubmissionController {
         accountId,
       );
 
-      if (!draft) {
-        return fromBoom(Boom.notFound());
-      }
-
       return success(draft.producerAndCollection.producer.contact);
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -849,59 +832,36 @@ export default class SubmissionController {
     api.SetDraftProducerContactDetailResponse
   > = async ({ id, accountId, value, saveAsDraft }) => {
     try {
+      const contactDetailsValidationResult =
+        ukwmValidation.validationRules.validateContactDetails(
+          value,
+          'Producer',
+          saveAsDraft,
+        );
+
+      if (!contactDetailsValidationResult.valid) {
+        const boom = Boom.badRequest(
+          'Validation failed',
+          contactDetailsValidationResult.errors,
+        );
+        return fromBoom(boom);
+      }
+
       const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
       );
 
-      if (!draft) {
-        return fromBoom(Boom.notFound());
-      }
-
-      if (
-        value.organisationName &&
-        value.fullName &&
-        value.emailAddress &&
-        value.phoneNumber
-      ) {
-        saveAsDraft = false;
-      }
-
-      if (saveAsDraft) {
-        const partialProducerContactDetailValidationResult =
-          ukwmValidation.validationRules.validatePartialContact(
-            value,
-            'Producer',
-          );
-        if (!partialProducerContactDetailValidationResult.valid) {
-          const boom = Boom.badRequest(
-            'Validation failed',
-            partialProducerContactDetailValidationResult.errors,
-          );
-          return fromBoom(boom);
-        }
-      } else {
-        const producerContactDetailValidationResult =
-          ukwmValidation.validationRules.validateContact(
-            value as api.Contact,
-            'Producer',
-          );
-        if (!producerContactDetailValidationResult.valid) {
-          const boom = Boom.badRequest(
-            'Validation failed',
-            producerContactDetailValidationResult.errors,
-          );
-          return fromBoom(boom);
-        }
-      }
-      const draftContact: api.DraftContact = saveAsDraft
-        ? { status: 'Started', ...value }
-        : { status: 'Complete', ...(value as api.Contact) };
-
-      if (draft.producerAndCollection.producer) {
-        draft.producerAndCollection.producer.contact = draftContact;
-      }
+      draft.producerAndCollection.producer.contact = !saveAsDraft
+        ? {
+            status: 'Complete',
+            ...(contactDetailsValidationResult.value as api.Contact),
+          }
+        : {
+            status: 'Started',
+            ...(contactDetailsValidationResult.value as Promise<api.Contact>),
+          };
 
       draft.producerAndCollection.confirmation.status = 'NotStarted';
 
@@ -932,10 +892,6 @@ export default class SubmissionController {
         accountId,
       );
 
-      if (!draft) {
-        return fromBoom(Boom.notFound());
-      }
-
       return success(draft.producerAndCollection.wasteCollection.wasteSource);
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -952,16 +908,6 @@ export default class SubmissionController {
     api.SetDraftWasteSourceResponse
   > = async ({ id, accountId, wasteSource }) => {
     try {
-      const draft = await this.repository.getDraft(
-        draftsContainerName,
-        id,
-        accountId,
-      );
-
-      if (!draft) {
-        return fromBoom(Boom.notFound());
-      }
-
       const wasteSourceValidationResult =
         ukwmValidation.validationRules.validateWasteSourceSection(wasteSource);
       if (!wasteSourceValidationResult.valid) {
@@ -971,6 +917,12 @@ export default class SubmissionController {
         );
         return fromBoom(boom);
       }
+
+      const draft = await this.repository.getDraft(
+        draftsContainerName,
+        id,
+        accountId,
+      );
 
       if (draft.producerAndCollection.wasteCollection) {
         draft.producerAndCollection.wasteCollection.wasteSource = {
@@ -1002,57 +954,37 @@ export default class SubmissionController {
     api.SetDraftWasteCollectionAddressDetailsResponse
   > = async ({ id, accountId, value, saveAsDraft }) => {
     try {
+      const addressDetailsValidationResult =
+        ukwmValidation.validationRules.validateAddressDetails(
+          value,
+          'Waste collection',
+          saveAsDraft,
+        );
+
+      if (!addressDetailsValidationResult.valid) {
+        return fromBoom(
+          Boom.badRequest(
+            'Validation failed',
+            addressDetailsValidationResult.errors,
+          ),
+        );
+      }
+
       const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
       );
 
-      if (draft === undefined) {
-        return fromBoom(Boom.notFound());
-      }
-
-      if (saveAsDraft) {
-        const partialWasteCollectionAddressDetailsValidation =
-          ukwmValidation.validationRules.validatePartialAddressDetails(
-            value,
-            'Waste collection',
-          );
-
-        if (!partialWasteCollectionAddressDetailsValidation.valid) {
-          return fromBoom(
-            Boom.badRequest(
-              'Validation failed',
-              partialWasteCollectionAddressDetailsValidation.errors,
-            ),
-          );
-        }
-
-        draft.producerAndCollection.wasteCollection.address = {
-          status: 'Started',
-          ...value,
-        };
-      } else {
-        const wasteCollectionAddressDetailsValidation =
-          ukwmValidation.validationRules.validateAddressDetails(
-            value,
-            'Waste collection',
-          );
-
-        if (!wasteCollectionAddressDetailsValidation.valid) {
-          return fromBoom(
-            Boom.badRequest(
-              'Validation failed',
-              wasteCollectionAddressDetailsValidation.errors,
-            ),
-          );
-        }
-
-        draft.producerAndCollection.wasteCollection.address = {
-          status: 'Complete',
-          ...wasteCollectionAddressDetailsValidation.value,
-        };
-      }
+      draft.producerAndCollection.wasteCollection.address = !saveAsDraft
+        ? {
+            status: 'Complete',
+            ...(addressDetailsValidationResult.value as api.Address),
+          }
+        : {
+            status: 'Started',
+            ...(addressDetailsValidationResult.value as Partial<api.Address>),
+          };
 
       draft.producerAndCollection.confirmation.status = 'NotStarted';
 
@@ -1083,10 +1015,6 @@ export default class SubmissionController {
         accountId,
       );
 
-      if (draft === undefined) {
-        return fromBoom(Boom.notFound());
-      }
-
       return success(draft.producerAndCollection.wasteCollection.address);
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -1108,10 +1036,6 @@ export default class SubmissionController {
         id,
         accountId,
       );
-
-      if (!draft) {
-        return fromBoom(Boom.notFound());
-      }
 
       const draftSicCodesList =
         draft.producerAndCollection.producer.sicCodes.values;
@@ -1160,10 +1084,6 @@ export default class SubmissionController {
         accountId,
       );
 
-      if (!draft) {
-        return fromBoom(Boom.notFound());
-      }
-
       return success(draft.producerAndCollection.producer.sicCodes);
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -1185,10 +1105,6 @@ export default class SubmissionController {
         id,
         accountId,
       );
-
-      if (!draft) {
-        return fromBoom(Boom.notFound());
-      }
 
       if (
         !draft.reference ||
@@ -1231,57 +1147,37 @@ export default class SubmissionController {
     api.SetDraftCarrierAddressDetailsResponse
   > = async ({ id, accountId, value, saveAsDraft }) => {
     try {
+      const addressDetailsValidationResult =
+        ukwmValidation.validationRules.validateAddressDetails(
+          value,
+          'Carrier',
+          saveAsDraft,
+        );
+
+      if (!addressDetailsValidationResult.valid) {
+        return fromBoom(
+          Boom.badRequest(
+            'Validation failed',
+            addressDetailsValidationResult.errors,
+          ),
+        );
+      }
+
       const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
       );
 
-      if (draft === undefined) {
-        return fromBoom(Boom.notFound());
-      }
-
-      if (saveAsDraft) {
-        const partialCarrierAddressDetailsValidation =
-          ukwmValidation.validationRules.validatePartialAddressDetails(
-            value,
-            'Carrier',
-          );
-
-        if (!partialCarrierAddressDetailsValidation.valid) {
-          return fromBoom(
-            Boom.badRequest(
-              'Validation failed',
-              partialCarrierAddressDetailsValidation.errors,
-            ),
-          );
-        }
-
-        draft.carrier.address = {
-          status: 'Started',
-          ...value,
-        };
-      } else {
-        const carrierAddressDetailsValidation =
-          ukwmValidation.validationRules.validateAddressDetails(
-            value,
-            'Carrier',
-          );
-
-        if (!carrierAddressDetailsValidation.valid) {
-          return fromBoom(
-            Boom.badRequest(
-              'Validation failed',
-              carrierAddressDetailsValidation.errors,
-            ),
-          );
-        }
-
-        draft.carrier.address = {
-          status: 'Complete',
-          ...carrierAddressDetailsValidation.value,
-        };
-      }
+      draft.carrier.address = !saveAsDraft
+        ? {
+            status: 'Complete',
+            ...(addressDetailsValidationResult.value as api.Address),
+          }
+        : {
+            status: 'Started',
+            ...(addressDetailsValidationResult.value as Partial<api.Address>),
+          };
 
       await this.repository.saveRecord(
         draftsContainerName,
@@ -1310,10 +1206,6 @@ export default class SubmissionController {
         accountId,
       );
 
-      if (draft === undefined) {
-        return fromBoom(Boom.notFound());
-      }
-
       return success(draft.carrier.address);
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -1330,57 +1222,37 @@ export default class SubmissionController {
     api.SetDraftReceiverAddressDetailsResponse
   > = async ({ id, accountId, value, saveAsDraft }) => {
     try {
+      const addressDetailsValidationResult =
+        ukwmValidation.validationRules.validateAddressDetails(
+          value,
+          'Receiver',
+          saveAsDraft,
+        );
+
+      if (!addressDetailsValidationResult.valid) {
+        return fromBoom(
+          Boom.badRequest(
+            'Validation failed',
+            addressDetailsValidationResult.errors,
+          ),
+        );
+      }
+
       const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
       );
 
-      if (draft === undefined) {
-        return fromBoom(Boom.notFound());
-      }
-
-      if (saveAsDraft) {
-        const partialReceiverAddressDetailsValidation =
-          ukwmValidation.validationRules.validatePartialAddressDetails(
-            value,
-            'Receiver',
-          );
-
-        if (!partialReceiverAddressDetailsValidation.valid) {
-          return fromBoom(
-            Boom.badRequest(
-              'Validation failed',
-              partialReceiverAddressDetailsValidation.errors,
-            ),
-          );
-        }
-
-        draft.receiver.address = {
-          status: 'Started',
-          ...value,
-        };
-      } else {
-        const receiverAddressDetailsValidation =
-          ukwmValidation.validationRules.validateAddressDetails(
-            value,
-            'Receiver',
-          );
-
-        if (!receiverAddressDetailsValidation.valid) {
-          return fromBoom(
-            Boom.badRequest(
-              'Validation failed',
-              receiverAddressDetailsValidation.errors,
-            ),
-          );
-        }
-
-        draft.receiver.address = {
-          status: 'Complete',
-          ...receiverAddressDetailsValidation.value,
-        };
-      }
+      draft.receiver.address = !saveAsDraft
+        ? {
+            status: 'Complete',
+            ...(addressDetailsValidationResult.value as api.Address),
+          }
+        : {
+            status: 'Started',
+            ...(addressDetailsValidationResult.value as Partial<api.Address>),
+          };
 
       await this.repository.saveRecord(
         draftsContainerName,
@@ -1409,10 +1281,6 @@ export default class SubmissionController {
         accountId,
       );
 
-      if (draft === undefined) {
-        return fromBoom(Boom.notFound());
-      }
-
       return success(draft.receiver.address);
     } catch (err) {
       if (err instanceof Boom.Boom) {
@@ -1434,10 +1302,6 @@ export default class SubmissionController {
         id,
         accountId,
       );
-
-      if (!draft) {
-        return fromBoom(Boom.notFound());
-      }
 
       const index =
         draft.producerAndCollection.producer.sicCodes.values.findIndex(
@@ -1481,59 +1345,37 @@ export default class SubmissionController {
     api.SetDraftReceiverContactDetailsResponse
   > = async ({ id, accountId, value, saveAsDraft }) => {
     try {
+      const contactDetailsValidationResult =
+        ukwmValidation.validationRules.validateContactDetails(
+          value,
+          'Receiver',
+          saveAsDraft,
+        );
+
+      if (!contactDetailsValidationResult.valid) {
+        return fromBoom(
+          Boom.badRequest(
+            'Validation failed',
+            contactDetailsValidationResult.errors,
+          ),
+        );
+      }
+
       const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
         accountId,
       );
 
-      if (!draft) {
-        return fromBoom(Boom.notFound());
-      }
-
-      if (
-        value.organisationName &&
-        value.fullName &&
-        value.emailAddress &&
-        value.phoneNumber
-      ) {
-        saveAsDraft = false;
-      }
-
-      if (saveAsDraft) {
-        const partialReceiverContactDetailValidationResult =
-          ukwmValidation.validationRules.validatePartialContact(
-            value,
-            'Receiver',
-          );
-        if (!partialReceiverContactDetailValidationResult.valid) {
-          const boom = Boom.badRequest(
-            'Validation failed',
-            partialReceiverContactDetailValidationResult.errors,
-          );
-          return fromBoom(boom);
-        }
-      } else {
-        const receiverContactDetailValidationResult =
-          ukwmValidation.validationRules.validateContact(
-            value as api.Contact,
-            'Receiver',
-          );
-        if (!receiverContactDetailValidationResult.valid) {
-          const boom = Boom.badRequest(
-            'Validation failed',
-            receiverContactDetailValidationResult.errors,
-          );
-          return fromBoom(boom);
-        }
-      }
-      const draftContact: api.DraftContact = saveAsDraft
-        ? { status: 'Started', ...(value as Promise<api.Contact>) }
-        : { status: 'Complete', ...(value as api.Contact) };
-
-      if (draft.receiver) {
-        draft.receiver.contact = draftContact;
-      }
+      draft.receiver.contact = !saveAsDraft
+        ? {
+            status: 'Complete',
+            ...(contactDetailsValidationResult.value as api.Contact),
+          }
+        : {
+            status: 'Started',
+            ...(contactDetailsValidationResult.value as Promise<api.Contact>),
+          };
 
       await this.repository.saveRecord(
         draftsContainerName,
@@ -1561,10 +1403,6 @@ export default class SubmissionController {
         id,
         accountId,
       );
-
-      if (!draft) {
-        return fromBoom(Boom.notFound());
-      }
 
       return success(draft.receiver.contact);
     } catch (err) {

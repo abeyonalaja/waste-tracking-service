@@ -1,4 +1,4 @@
-import * as regex from './regex';
+import * as commonValidationRules from '../common/validation-rules';
 import * as constraints from './constraints';
 import * as errorCodes from './error-codes';
 import { getErrorMessage, getSharedErrorCode } from './util';
@@ -9,9 +9,7 @@ import type {
   Section,
   Field,
 } from './dto';
-import { Contact, ProducerDetail, Address, SICCode } from './model';
-
-export * from './validation-rules';
+import { Contact, Address, SICCode } from './model';
 
 function titleCaseSpacesRemoved(str: string) {
   return str
@@ -32,129 +30,69 @@ const wasteSources = [
   'Household',
 ];
 
-const fourNationsCountries = [
-  'England',
-  'Scotland',
-  'Wales',
-  'Northern Ireland',
-];
-
-export function validateProducerOrganisationName(
-  organsationName?: string,
+export function validateReference(
+  reference: string | undefined,
   message?: ErrorMessage,
 ): ValidationResult<string> {
-  const trimmedOrganisationName = organsationName?.trim();
+  const result = commonValidationRules.validateReference(reference);
+  if (!result.valid) {
+    const field: Field = 'Reference';
+    const errors: FieldFormatError[] = [];
+    result.errors.forEach((e) => {
+      switch (e) {
+        case 'empty':
+          errors.push({
+            field: field,
+            code: errorCodes.producerEmptyReference,
+            message: message
+              ? getErrorMessage(
+                  errorCodes.producerEmptyReference,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
+        case 'charTooMany':
+          errors.push({
+            field: field,
+            code: errorCodes.producerCharTooManyReference,
+            message: message
+              ? getErrorMessage(
+                  errorCodes.producerCharTooManyReference,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
+        case 'invalid':
+          errors.push({
+            field: field,
+            code: errorCodes.producerInvalidReference,
+            message: message
+              ? getErrorMessage(
+                  errorCodes.producerInvalidReference,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
+        default:
+          break;
+      }
+    });
 
-  if (!trimmedOrganisationName) {
     return {
       valid: false,
-      errors: [
-        {
-          field: 'Producer organisation name',
-          code: errorCodes.producerEmptyOrganisationName,
-          message: message
-            ? getErrorMessage(
-                errorCodes.producerEmptyOrganisationName,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
-    };
-  }
-
-  if (trimmedOrganisationName.length > constraints.FreeTextChar.max) {
-    return {
-      valid: false,
-      errors: [
-        {
-          field: 'Producer organisation name',
-          code: errorCodes.producerCharTooManyOrganisationName,
-          message: message
-            ? getErrorMessage(
-                errorCodes.producerCharTooManyOrganisationName,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
+      errors: errors,
     };
   }
 
   return {
     valid: true,
-    value: trimmedOrganisationName,
-  };
-}
-
-export function validateProducerReference(
-  reference?: string,
-  message?: ErrorMessage,
-): ValidationResult<string> {
-  const trimmedReference = reference?.trim();
-
-  if (!trimmedReference) {
-    return {
-      valid: false,
-      errors: [
-        {
-          field: 'Reference',
-          code: errorCodes.producerEmptyReference,
-          message: message
-            ? getErrorMessage(
-                errorCodes.producerEmptyReference,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
-    };
-  }
-
-  if (trimmedReference.length > constraints.ReferenceChar.max) {
-    return {
-      valid: false,
-      errors: [
-        {
-          field: 'Reference',
-          code: errorCodes.producerCharTooManyReference,
-          message: message
-            ? getErrorMessage(
-                errorCodes.producerCharTooManyReference,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
-    };
-  }
-
-  if (!regex.referenceRegex.test(trimmedReference)) {
-    return {
-      valid: false,
-      errors: [
-        {
-          field: 'Reference',
-          code: errorCodes.producerInvalidReference,
-          message: message
-            ? getErrorMessage(
-                errorCodes.producerInvalidReference,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
-    };
-  }
-
-  return {
-    valid: true,
-    value: trimmedReference,
+    value: result.value,
   };
 }
 
@@ -187,162 +125,183 @@ export function validateAddressSelection(
 }
 
 export function validateBuildingNameOrNumber(
-  buildingNameOrNumber: string,
+  buildingNameOrNumber: string | undefined,
   section: Section,
   message?: ErrorMessage,
-): ValidationResult<string> {
-  const trimmedBuildingNameOrNumber = buildingNameOrNumber?.trim();
+): ValidationResult<string | undefined> {
+  const result =
+    commonValidationRules.validateBuildingNameOrNumber(buildingNameOrNumber);
+  if (!result.valid) {
+    const errors: FieldFormatError[] = [];
+    result.errors.forEach((e) => {
+      switch (e) {
+        case 'charTooMany':
+          errors.push({
+            field: (section + ' building name or number') as Field,
+            code: getSharedErrorCode(
+              errorCodes.charTooManyBuildingNameOrNumberBase,
+              section,
+            ),
+            message: message
+              ? getErrorMessage(
+                  errorCodes.charTooManyBuildingNameOrNumberBase,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
+        default:
+          break;
+      }
+    });
 
-  if (
-    trimmedBuildingNameOrNumber &&
-    trimmedBuildingNameOrNumber.length > constraints.FreeTextChar.max
-  ) {
     return {
       valid: false,
-      errors: [
-        {
-          field: (section + ' building name or number') as Field,
-          code: getSharedErrorCode(
-            errorCodes.charTooManyBuildingNameOrNumberBase,
-            section,
-          ),
-          message: message
-            ? getErrorMessage(
-                errorCodes.charTooManyBuildingNameOrNumberBase,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
+      errors: errors,
     };
   }
 
   return {
     valid: true,
-    value: trimmedBuildingNameOrNumber,
+    value: result.value,
   };
 }
 
 export function validateAddressLine1(
-  addressLine1: string,
+  addressLine1: string | undefined,
   section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
-  const trimmedAddressLine1 = addressLine1?.trim();
+  const result = commonValidationRules.validateAddressLine1(addressLine1);
+  if (!result.valid) {
+    const errors: FieldFormatError[] = [];
+    result.errors.forEach((e) => {
+      switch (e) {
+        case 'empty':
+          errors.push({
+            field: (section + ' address line 1') as Field,
+            code: getSharedErrorCode(errorCodes.emptyAddressLine1Base, section),
+            message: message
+              ? getErrorMessage(
+                  errorCodes.emptyAddressLine1Base,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
+        case 'charTooMany':
+          errors.push({
+            field: (section + ' address line 1') as Field,
+            code: getSharedErrorCode(
+              errorCodes.charTooManyAddressLine1Base,
+              section,
+            ),
+            message: message
+              ? getErrorMessage(
+                  errorCodes.charTooManyAddressLine1Base,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
+        default:
+          break;
+      }
+    });
 
-  if (!trimmedAddressLine1) {
     return {
       valid: false,
-      errors: [
-        {
-          field: (section + ' address line 1') as Field,
-          code: getSharedErrorCode(errorCodes.emptyAddressLine1Base, section),
-          message: message
-            ? getErrorMessage(
-                errorCodes.emptyAddressLine1Base,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
-    };
-  }
-
-  if (trimmedAddressLine1.length > constraints.FreeTextChar.max) {
-    return {
-      valid: false,
-      errors: [
-        {
-          field: (section + ' address line 1') as Field,
-          code: getSharedErrorCode(
-            errorCodes.charTooManyAddressLine1Base,
-            section,
-          ),
-          message: message
-            ? getErrorMessage(
-                errorCodes.charTooManyAddressLine1Base,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
+      errors: errors,
     };
   }
 
   return {
     valid: true,
-    value: trimmedAddressLine1,
+    value: result.value,
   };
 }
 
 export function validateAddressLine2(
-  addressLine2: string,
+  addressLine2: string | undefined,
   section: Section,
   message?: ErrorMessage,
-): ValidationResult<string> {
-  const trimmedAddressLine2 = addressLine2?.trim();
+): ValidationResult<string | undefined> {
+  const result = commonValidationRules.validateAddressLine2(addressLine2);
+  if (!result.valid) {
+    const errors: FieldFormatError[] = [];
+    result.errors.forEach((e) => {
+      switch (e) {
+        case 'charTooMany':
+          errors.push({
+            field: (section + ' address line 2') as Field,
+            code: getSharedErrorCode(
+              errorCodes.charTooManyAddressLine2Base,
+              section,
+            ),
+            message: message
+              ? getErrorMessage(
+                  errorCodes.charTooManyAddressLine2Base,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
+        default:
+          break;
+      }
+    });
 
-  if (
-    trimmedAddressLine2 &&
-    trimmedAddressLine2.length > constraints.FreeTextChar.max
-  ) {
     return {
       valid: false,
-      errors: [
-        {
-          field: (section + ' address line 2') as Field,
-          code: getSharedErrorCode(
-            errorCodes.charTooManyAddressLine2Base,
-            section,
-          ),
-          message: message
-            ? getErrorMessage(
-                errorCodes.charTooManyAddressLine2Base,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
+      errors: errors,
     };
   }
 
   return {
     valid: true,
-    value: trimmedAddressLine2,
+    value: result.value,
   };
 }
 
 export function validatePostcode(
-  postcode: string,
+  postcode: string | undefined,
   section: Section,
   message?: ErrorMessage,
-): ValidationResult<string> {
-  const trimmedPostcode = postcode?.trim();
+): ValidationResult<string | undefined> {
+  const result = commonValidationRules.validatePostcode(postcode);
+  if (!result.valid) {
+    const errors: FieldFormatError[] = [];
+    result.errors.forEach((e) => {
+      switch (e) {
+        case 'invalid':
+          errors.push({
+            field: (section + ' postcode') as Field,
+            code: getSharedErrorCode(errorCodes.invalidPostcodeBase, section),
+            message: message
+              ? getErrorMessage(
+                  errorCodes.invalidPostcodeBase,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
+        default:
+          break;
+      }
+    });
 
-  if (trimmedPostcode.length > constraints.PostcodeChar.max) {
     return {
       valid: false,
-      errors: [
-        {
-          field: (section + ' postcode') as Field,
-          code: getSharedErrorCode(errorCodes.invalidPostcodeBase, section),
-          message: message
-            ? getErrorMessage(
-                errorCodes.invalidPostcodeBase,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
+      errors: errors,
     };
   }
 
-  if (!regex.postcodeRegex.test(trimmedPostcode)) {
+  if (!result.value && message?.context === 'ui') {
     return {
       valid: false,
       errors: [
@@ -363,291 +322,331 @@ export function validatePostcode(
 
   return {
     valid: true,
-    value: trimmedPostcode,
+    value: result.value,
   };
 }
 
 export function validateTownCity(
-  townCity: string,
+  townCity: string | undefined,
   section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
-  const trimmedTownCity = townCity?.trim();
+  const result = commonValidationRules.validateTownCity(townCity);
+  if (!result.valid) {
+    const errors: FieldFormatError[] = [];
+    result.errors.forEach((e) => {
+      switch (e) {
+        case 'empty':
+          errors.push({
+            field: (section + ' town or city') as Field,
+            code: getSharedErrorCode(errorCodes.emptyTownOrCityBase, section),
+            message: message
+              ? getErrorMessage(
+                  errorCodes.emptyTownOrCityBase,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
+        case 'charTooMany':
+          errors.push({
+            field: (section + ' town or city') as Field,
+            code: getSharedErrorCode(
+              errorCodes.charTooManyTownOrCityBase,
+              section,
+            ),
+            message: message
+              ? getErrorMessage(
+                  errorCodes.charTooManyTownOrCityBase,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
+        default:
+          break;
+      }
+    });
 
-  if (!trimmedTownCity) {
     return {
       valid: false,
-      errors: [
-        {
-          field: (section + ' town or city') as Field,
-          code: getSharedErrorCode(errorCodes.emptyTownOrCityBase, section),
-          message: message
-            ? getErrorMessage(
-                errorCodes.emptyTownOrCityBase,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
-    };
-  }
-
-  if (trimmedTownCity.length > constraints.FreeTextChar.max) {
-    return {
-      valid: false,
-      errors: [
-        {
-          field: (section + ' town or city') as Field,
-          code: getSharedErrorCode(
-            errorCodes.charTooManyTownOrCityBase,
-            section,
-          ),
-          message: message
-            ? getErrorMessage(
-                errorCodes.charTooManyTownOrCityBase,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
+      errors: errors,
     };
   }
 
   return {
     valid: true,
-    value: trimmedTownCity,
+    value: result.value,
   };
 }
 
 export function validateCountry(
-  country: string,
+  country: string | undefined,
   section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
-  const trimmedCountry = country?.trim();
+  const result = commonValidationRules.validateCountry(country);
+  if (!result.valid) {
+    const errors: FieldFormatError[] = [];
+    result.errors.forEach((e) => {
+      switch (e) {
+        case 'empty':
+          errors.push({
+            field: (section + ' country') as Field,
+            code: getSharedErrorCode(errorCodes.emptyCountryBase, section),
+            message: message
+              ? getErrorMessage(
+                  errorCodes.emptyCountryBase,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
+        case 'invalid':
+          errors.push({
+            field: (section + ' country') as Field,
+            code: getSharedErrorCode(errorCodes.invalidCountryBase, section),
+            message: message
+              ? getErrorMessage(
+                  errorCodes.invalidCountryBase,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
+        default:
+          break;
+      }
+    });
 
-  if (!trimmedCountry) {
     return {
       valid: false,
-      errors: [
-        {
-          field: (section + ' country') as Field,
-          code: getSharedErrorCode(errorCodes.emptyCountryBase, section),
-          message: message
-            ? getErrorMessage(
-                errorCodes.emptyCountryBase,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
-    };
-  }
-
-  if (!fourNationsCountries.includes(trimmedCountry)) {
-    return {
-      valid: false,
-      errors: [
-        {
-          field: (section + ' country') as Field,
-          code: getSharedErrorCode(errorCodes.invalidCountryBase, section),
-          message: message
-            ? getErrorMessage(
-                errorCodes.invalidCountryBase,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
+      errors: errors,
     };
   }
 
   return {
     valid: true,
-    value: trimmedCountry,
+    value: result.value,
   };
 }
 
 export function validateAddressDetails(
-  value: Address,
+  value: Address | Partial<Address>,
   section: Section,
+  saveAsDraft: boolean,
   message?: ErrorMessage,
-): ValidationResult<Address> {
-  const errors: FieldFormatError[] = [];
-  const addressToReturn: Address = {
-    addressLine1: '',
-    townCity: '',
-    postcode: '',
-    country: '',
-  };
-
-  if (value.buildingNameOrNumber?.trim()) {
-    const buildingNameOrNumber: ValidationResult<
-      Address['buildingNameOrNumber']
-    > = validateBuildingNameOrNumber(
-      value.buildingNameOrNumber.trim() as string,
-      section as Section,
-      message,
-    );
-
-    if (buildingNameOrNumber.valid) {
-      addressToReturn.buildingNameOrNumber = buildingNameOrNumber.value;
-    } else {
-      errors.push(...buildingNameOrNumber.errors);
-    }
-  }
-
-  const addressLine1 = validateAddressLine1(
-    value.addressLine1,
-    section,
-    message,
-  );
-  if (addressLine1.valid) {
-    addressToReturn.addressLine1 = addressLine1.value;
-  } else {
-    errors.push(...addressLine1.errors);
-  }
-
-  if (value.addressLine2?.trim()) {
-    const addressLine2: ValidationResult<Address['addressLine2']> =
-      validateAddressLine2(
-        value.addressLine2.trim() as string,
-        section,
-        message,
-      );
-
-    if (addressLine2.valid) {
-      addressToReturn.addressLine2 = addressLine2.value;
-    } else {
-      errors.push(...addressLine2.errors);
-    }
-  }
-
-  const townCity = validateTownCity(value.townCity, section, message);
-  if (townCity.valid) {
-    addressToReturn.townCity = townCity.value;
-  } else {
-    errors.push(...townCity.errors);
-  }
-
-  if (value.postcode?.trim()) {
-    const postcode: ValidationResult<Address['postcode']> = validatePostcode(
-      value.postcode.trim() as string,
-      section,
-      message,
-    );
-
-    if (postcode.valid) {
-      addressToReturn.postcode = postcode.value;
-    } else {
-      errors.push(...postcode.errors);
-    }
-  }
-
-  const country = validateCountry(value.country, section, message);
-  if (country.valid) {
-    addressToReturn.country = country.value;
-  } else {
-    errors.push(...country.errors);
-  }
-
-  if (errors.length > 0) {
-    return {
-      valid: false,
-      errors: errors,
+): ValidationResult<Address | Partial<Address>> {
+  if (!saveAsDraft) {
+    const errors: FieldFormatError[] = [];
+    const address: Address = {
+      addressLine1: '',
+      townCity: '',
+      postcode: '',
+      country: '',
     };
-  }
 
-  return {
-    valid: true,
-    value: addressToReturn,
-  };
-}
-
-export function validatePartialAddressDetails(
-  value: Partial<ProducerDetail['address']>,
-  section: Section,
-  message?: ErrorMessage,
-): ValidationResult<Partial<ProducerDetail['address']>> {
-  const errors: FieldFormatError[] = [];
-  const fieldsToReturn: Partial<ProducerDetail['address']> = {};
-
-  if (value.buildingNameOrNumber?.trim()) {
-    const producerBuildingNameOrNumber: ValidationResult<
-      ProducerDetail['address']['buildingNameOrNumber']
-    > = validateBuildingNameOrNumber(
+    const buildingNameOrNumber = validateBuildingNameOrNumber(
       value.buildingNameOrNumber,
       section,
       message,
     );
-
-    if (producerBuildingNameOrNumber.valid) {
-      fieldsToReturn.buildingNameOrNumber = producerBuildingNameOrNumber.value;
+    if (buildingNameOrNumber.valid) {
+      address.buildingNameOrNumber = buildingNameOrNumber.value ?? undefined;
     } else {
-      errors.push(...producerBuildingNameOrNumber.errors);
+      errors.push(...buildingNameOrNumber.errors);
     }
-  }
 
-  if (value.addressLine1?.trim()) {
-    const producerAddressLine1: ValidationResult<
-      ProducerDetail['address']['addressLine1']
-    > = validateAddressLine1(value.addressLine1, section, message);
-    if (producerAddressLine1.valid) {
-      fieldsToReturn.addressLine1 = producerAddressLine1.value;
+    const addressLine1 = validateAddressLine1(
+      value.addressLine1,
+      section,
+      message,
+    );
+    if (addressLine1.valid) {
+      address.addressLine1 = addressLine1.value;
     } else {
-      errors.push(...producerAddressLine1.errors);
+      errors.push(...addressLine1.errors);
     }
-  }
 
-  if (value.addressLine2?.trim()) {
-    const producerAddressLine2: ValidationResult<
-      ProducerDetail['address']['addressLine2']
-    > = validateAddressLine2(value.addressLine2, section, message);
-    if (producerAddressLine2.valid) {
-      fieldsToReturn.addressLine2 = producerAddressLine2.value;
+    const addressLine2 = validateAddressLine2(
+      value.addressLine2,
+      section,
+      message,
+    );
+    if (addressLine2.valid) {
+      address.addressLine2 = addressLine2.value ?? undefined;
     } else {
-      errors.push(...producerAddressLine2.errors);
+      errors.push(...addressLine2.errors);
     }
-  }
 
-  if (value.townCity?.trim()) {
-    const producerTownCity: ValidationResult<
-      ProducerDetail['address']['townCity']
-    > = validateTownCity(value.townCity, section, message);
-    if (producerTownCity.valid) {
-      fieldsToReturn.townCity = producerTownCity.value;
+    const townCity = validateTownCity(value.townCity, section, message);
+    if (townCity.valid) {
+      address.townCity = townCity.value;
     } else {
-      errors.push(...producerTownCity.errors);
+      errors.push(...townCity.errors);
     }
-  }
 
-  if (value.country?.trim()) {
-    const producerCountry: ValidationResult<
-      ProducerDetail['address']['country']
-    > = validateCountry(value.country, section, message);
-    if (producerCountry.valid) {
-      fieldsToReturn.country = producerCountry.value;
+    const postcode = validatePostcode(value.postcode, section, message);
+    if (postcode.valid) {
+      address.postcode = postcode.value ?? undefined;
     } else {
-      errors.push(...producerCountry.errors);
+      errors.push(...postcode.errors);
     }
-  }
 
-  if (value.postcode?.trim()) {
-    const producerPostcode: ValidationResult<
-      ProducerDetail['address']['postcode']
-    > = validatePostcode(value.postcode, section, message);
-    if (producerPostcode.valid) {
-      fieldsToReturn.postcode = producerPostcode.value;
+    const country = validateCountry(value.country, section, message);
+    if (country.valid) {
+      address.country = country.value;
     } else {
-      errors.push(...producerPostcode.errors);
+      errors.push(...country.errors);
     }
-  }
 
-  if (errors.length > 0) {
+    if (errors.length > 0) {
+      return {
+        valid: false,
+        errors: errors,
+      };
+    }
+
+    return {
+      valid: true,
+      value: address,
+    };
+  } else {
+    const errors: FieldFormatError[] = [];
+    const address: Partial<Address> = {};
+
+    if (value.buildingNameOrNumber) {
+      const buildingNameOrNumber = validateBuildingNameOrNumber(
+        value.buildingNameOrNumber,
+        section,
+        message,
+      );
+      if (buildingNameOrNumber.valid) {
+        address.buildingNameOrNumber = buildingNameOrNumber.value ?? undefined;
+      } else {
+        errors.push(...buildingNameOrNumber.errors);
+      }
+    }
+
+    if (value.addressLine1) {
+      const addressLine1 = validateAddressLine1(
+        value.addressLine1,
+        section,
+        message,
+      );
+      if (addressLine1.valid) {
+        address.addressLine1 = addressLine1.value;
+      } else {
+        errors.push(...addressLine1.errors);
+      }
+    }
+
+    if (value.addressLine2) {
+      const addressLine2 = validateAddressLine2(
+        value.addressLine2,
+        section,
+        message,
+      );
+      if (addressLine2.valid) {
+        address.addressLine2 = addressLine2.value ?? undefined;
+      } else {
+        errors.push(...addressLine2.errors);
+      }
+    }
+
+    if (value.townCity) {
+      const townCity = validateTownCity(value.townCity, section, message);
+      if (townCity.valid) {
+        address.townCity = townCity.value;
+      } else {
+        errors.push(...townCity.errors);
+      }
+    }
+
+    if (value.postcode) {
+      const postcode = validatePostcode(value.postcode, section, message);
+      if (postcode.valid) {
+        address.postcode = postcode.value ?? undefined;
+      } else {
+        errors.push(...postcode.errors);
+      }
+    }
+
+    if (value.country) {
+      const country = validateCountry(value.country, section, message);
+      if (country.valid) {
+        address.country = country.value;
+      } else {
+        errors.push(...country.errors);
+      }
+    }
+
+    if (errors.length > 0) {
+      return {
+        valid: false,
+        errors: errors,
+      };
+    }
+
+    return {
+      valid: true,
+      value: address,
+    };
+  }
+}
+
+export function validateOrganisationName(
+  organisationName: string | undefined,
+  section: Section,
+  message?: ErrorMessage,
+): ValidationResult<string> {
+  const result =
+    commonValidationRules.validateOrganisationName(organisationName);
+  if (!result.valid) {
+    const errors: FieldFormatError[] = [];
+    result.errors.forEach((e) => {
+      switch (e) {
+        case 'empty':
+          errors.push({
+            field: (section + ' organisation name') as Field,
+            code: getSharedErrorCode(
+              errorCodes.emptyOrganisationNameBase,
+              section,
+            ),
+            message: message
+              ? getErrorMessage(
+                  errorCodes.emptyOrganisationNameBase,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
+        case 'charTooMany':
+          errors.push({
+            field: (section + ' organisation name') as Field,
+            code: getSharedErrorCode(
+              errorCodes.charTooManyOrganisationNameBase,
+              section,
+            ),
+            message: message
+              ? getErrorMessage(
+                  errorCodes.charTooManyOrganisationNameBase,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
+        default:
+          break;
+      }
+    });
+
     return {
       valid: false,
       errors: errors,
@@ -656,189 +655,132 @@ export function validatePartialAddressDetails(
 
   return {
     valid: true,
-    value: fieldsToReturn,
-  };
-}
-
-export function validateOrganisationName(
-  contactOrganisationName: string | undefined,
-  section: Section,
-  message?: ErrorMessage,
-): ValidationResult<string> {
-  const trimmedContactOrganisationName = contactOrganisationName?.trim();
-  if (!trimmedContactOrganisationName) {
-    return {
-      valid: false,
-      errors: [
-        {
-          field: (section + ' organisation name') as Field,
-          code: getSharedErrorCode(
-            errorCodes.emptyOrganisationNameBase,
-            section,
-          ),
-          message: message
-            ? getErrorMessage(
-                errorCodes.emptyOrganisationNameBase,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
-    };
-  }
-
-  if (trimmedContactOrganisationName.length > constraints.FreeTextChar.max) {
-    return {
-      valid: false,
-      errors: [
-        {
-          field: (section + ' organisation name') as Field,
-          code: getSharedErrorCode(
-            errorCodes.charTooManyOrganisationNameBase,
-            section,
-          ),
-          message: message
-            ? getErrorMessage(
-                errorCodes.charTooManyOrganisationNameBase,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
-    };
-  }
-
-  return {
-    valid: true,
-    value: trimmedContactOrganisationName,
+    value: result.value,
   };
 }
 
 export function validateFullName(
-  contactPerson: string | undefined,
+  fullName: string | undefined,
   section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
-  const trimmedContactPerson = contactPerson?.trim();
-  if (!trimmedContactPerson) {
-    return {
-      valid: false,
-      errors: [
-        {
-          field: (section + ' contact name') as Field,
-          code: getSharedErrorCode(
-            errorCodes.emptyContactFullNameBase,
-            section,
-          ),
-          message: message
-            ? getErrorMessage(
-                errorCodes.emptyContactFullNameBase,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
-    };
-  }
+  const result = commonValidationRules.validateFullName(fullName);
+  if (!result.valid) {
+    const errors: FieldFormatError[] = [];
+    result.errors.forEach((e) => {
+      switch (e) {
+        case 'empty':
+          errors.push({
+            field: (section + ' contact name') as Field,
+            code: getSharedErrorCode(
+              errorCodes.emptyContactFullNameBase,
+              section,
+            ),
+            message: message
+              ? getErrorMessage(
+                  errorCodes.emptyContactFullNameBase,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
+        case 'charTooMany':
+          errors.push({
+            field: (section + ' contact name') as Field,
+            code: getSharedErrorCode(
+              errorCodes.charTooManyContactFullNameBase,
+              section,
+            ),
+            message: message
+              ? getErrorMessage(
+                  errorCodes.charTooManyContactFullNameBase,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
+        default:
+          break;
+      }
+    });
 
-  if (trimmedContactPerson.length > constraints.FreeTextChar.max) {
     return {
       valid: false,
-      errors: [
-        {
-          field: (section + ' contact name') as Field,
-          code: getSharedErrorCode(
-            errorCodes.charTooManyContactFullNameBase,
-            section,
-          ),
-          message: message
-            ? getErrorMessage(
-                errorCodes.charTooManyContactFullNameBase,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
+      errors: errors,
     };
   }
 
   return {
     valid: true,
-    value: trimmedContactPerson,
+    value: result.value,
   };
 }
 
 export function validateEmailAddress(
-  contactEmail: string | undefined,
+  emailAddress: string | undefined,
   section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
-  const trimmedContactEmail = contactEmail?.trim();
+  const result = commonValidationRules.validateEmailAddress(emailAddress);
+  if (!result.valid) {
+    const errors: FieldFormatError[] = [];
+    result.errors.forEach((e) => {
+      switch (e) {
+        case 'empty':
+          errors.push({
+            field: (section + ' contact email address') as Field,
+            code: getSharedErrorCode(errorCodes.emptyEmailBase, section),
+            message: message
+              ? getErrorMessage(
+                  errorCodes.emptyEmailBase,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
+        case 'charTooMany':
+          errors.push({
+            field: (section + ' contact email address') as Field,
+            code: getSharedErrorCode(errorCodes.charTooManyEmailBase, section),
+            message: message
+              ? getErrorMessage(
+                  errorCodes.charTooManyEmailBase,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
+        case 'invalid':
+          errors.push({
+            field: (section + ' contact email address') as Field,
+            code: getSharedErrorCode(errorCodes.invalidEmailBase, section),
+            message: message
+              ? getErrorMessage(
+                  errorCodes.invalidEmailBase,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
+        default:
+          break;
+      }
+    });
 
-  if (!trimmedContactEmail) {
     return {
       valid: false,
-      errors: [
-        {
-          field: (section + ' contact email address') as Field,
-          code: getSharedErrorCode(errorCodes.emptyEmailBase, section),
-          message: message
-            ? getErrorMessage(
-                errorCodes.emptyEmailBase,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
-    };
-  }
-
-  if (trimmedContactEmail.length > constraints.FreeTextChar.max) {
-    return {
-      valid: false,
-      errors: [
-        {
-          field: (section + ' contact email address') as Field,
-          code: getSharedErrorCode(errorCodes.charTooManyEmailBase, section),
-          message: message
-            ? getErrorMessage(
-                errorCodes.charTooManyEmailBase,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
-    };
-  }
-
-  if (!regex.emailRegex.test(trimmedContactEmail)) {
-    return {
-      valid: false,
-      errors: [
-        {
-          field: (section + ' contact email address') as Field,
-          code: getSharedErrorCode(errorCodes.invalidEmailBase, section),
-          message: message
-            ? getErrorMessage(
-                errorCodes.invalidEmailBase,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
+      errors: errors,
     };
   }
 
   return {
     valid: true,
-    value: trimmedContactEmail,
+    value: result.value,
   };
 }
 
@@ -847,49 +789,51 @@ export function validatePhoneNumber(
   section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
-  const trimmedPhoneNumber = phoneNumber?.trim();
+  const result = commonValidationRules.validatePhoneNumber(phoneNumber);
+  if (!result.valid) {
+    const errors: FieldFormatError[] = [];
+    result.errors.forEach((e) => {
+      switch (e) {
+        case 'empty':
+          errors.push({
+            field: (section + ' contact phone number') as Field,
+            code: getSharedErrorCode(errorCodes.emptyPhoneBase, section),
+            message: message
+              ? getErrorMessage(
+                  errorCodes.emptyPhoneBase,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
+        case 'invalid':
+          errors.push({
+            field: (section + ' contact phone number') as Field,
+            code: getSharedErrorCode(errorCodes.invalidPhoneBase, section),
+            message: message
+              ? getErrorMessage(
+                  errorCodes.invalidPhoneBase,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
+        default:
+          break;
+      }
+    });
 
-  if (!trimmedPhoneNumber) {
     return {
       valid: false,
-      errors: [
-        {
-          field: (section + ' contact phone number') as Field,
-          code: getSharedErrorCode(errorCodes.emptyPhoneBase, section),
-          message: message
-            ? getErrorMessage(
-                errorCodes.emptyPhoneBase,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
-    };
-  }
-
-  if (!regex.phoneRegex.test(trimmedPhoneNumber)) {
-    return {
-      valid: false,
-      errors: [
-        {
-          field: (section + ' contact phone number') as Field,
-          code: getSharedErrorCode(errorCodes.invalidPhoneBase, section),
-          message: message
-            ? getErrorMessage(
-                errorCodes.invalidPhoneBase,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
+      errors: errors,
     };
   }
 
   return {
     valid: true,
-    value: trimmedPhoneNumber,
+    value: result.value,
   };
 }
 
@@ -897,94 +841,30 @@ export function validateFaxNumber(
   faxNumber: string | undefined,
   section: Section,
   message?: ErrorMessage,
-): ValidationResult<string> {
-  const trimmedFaxNumber = faxNumber?.trim();
+): ValidationResult<string | undefined> {
+  const result = commonValidationRules.validateFaxNumber(faxNumber);
+  if (!result.valid) {
+    const errors: FieldFormatError[] = [];
+    result.errors.forEach((e) => {
+      switch (e) {
+        case 'invalid':
+          errors.push({
+            field: (section + ' fax number') as Field,
+            code: getSharedErrorCode(errorCodes.invalidFaxBase, section),
+            message: message
+              ? getErrorMessage(
+                  errorCodes.invalidFaxBase,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
+        default:
+          break;
+      }
+    });
 
-  if (trimmedFaxNumber && !regex.faxRegex.test(trimmedFaxNumber)) {
-    return {
-      valid: false,
-      errors: [
-        {
-          field: (section + ' fax number') as Field,
-          code: getSharedErrorCode(errorCodes.invalidFaxBase, section),
-          message: message
-            ? getErrorMessage(
-                errorCodes.invalidFaxBase,
-                message.locale,
-                message.context,
-              )
-            : undefined,
-        },
-      ],
-    };
-  }
-
-  return {
-    valid: true,
-    value: trimmedFaxNumber || '',
-  };
-}
-
-export function validateContact(
-  value: Contact,
-  section: Section,
-  message?: ErrorMessage,
-): ValidationResult<Contact> {
-  const errors: FieldFormatError[] = [];
-  const contactToReturn: Contact = {
-    organisationName: '',
-    fullName: '',
-    emailAddress: '',
-    phoneNumber: '',
-  };
-
-  const organisationName = validateOrganisationName(
-    value.organisationName,
-    section,
-    message,
-  );
-  if (organisationName.valid) {
-    contactToReturn.organisationName = organisationName.value;
-  } else {
-    errors.push(...organisationName.errors);
-  }
-
-  const name = validateFullName(value.fullName, section, message);
-  if (name.valid) {
-    contactToReturn.fullName = name.value;
-  } else {
-    errors.push(...name.errors);
-  }
-
-  const email = validateEmailAddress(value.emailAddress, section, message);
-  if (email.valid) {
-    contactToReturn.emailAddress = email.value;
-  } else {
-    errors.push(...email.errors);
-  }
-
-  const phone = validatePhoneNumber(value.phoneNumber, section, message);
-  if (phone.valid) {
-    contactToReturn.phoneNumber = phone.value;
-  } else {
-    errors.push(...phone.errors);
-  }
-
-  if (value.faxNumber?.trim()) {
-    const fax: ValidationResult<Contact['faxNumber']> = validateFaxNumber(
-      value.faxNumber,
-      section,
-      message,
-    );
-
-    if (fax.valid) {
-      contactToReturn.faxNumber = fax.value;
-    } else {
-      errors.push(...fax.errors);
-    }
-  }
-
-  if (errors.length > 0) {
     return {
       valid: false,
       errors: errors,
@@ -993,93 +873,156 @@ export function validateContact(
 
   return {
     valid: true,
-    value: contactToReturn,
+    value: result.value,
   };
 }
 
-export function validatePartialContact(
-  value: Partial<Contact>,
+export function validateContactDetails(
+  value: Contact | Partial<Contact>,
   section: Section,
+  saveAsDraft: boolean,
   message?: ErrorMessage,
-): ValidationResult<Partial<Contact>> {
-  const errors: FieldFormatError[] = [];
-  const fieldsToReturn: Partial<Contact> = {};
+): ValidationResult<Contact | Partial<Contact>> {
+  if (!saveAsDraft) {
+    const errors: FieldFormatError[] = [];
+    const contact: Contact = {
+      organisationName: '',
+      fullName: '',
+      emailAddress: '',
+      phoneNumber: '',
+    };
 
-  if (value.organisationName?.trim()) {
-    const organisationName: ValidationResult<Contact['organisationName']> =
-      validateOrganisationName(value.organisationName, section, message);
-
-    if (organisationName.valid) {
-      fieldsToReturn.organisationName = organisationName.value;
-    } else {
-      errors.push(...organisationName.errors);
-    }
-  }
-
-  if (value.fullName?.trim()) {
-    const name: ValidationResult<Contact['fullName']> = validateFullName(
-      value.fullName,
+    const organisationName = validateOrganisationName(
+      value.organisationName,
       section,
       message,
     );
-
-    if (name.valid) {
-      fieldsToReturn.fullName = name.value;
+    if (organisationName.valid) {
+      contact.organisationName = organisationName.value;
     } else {
-      errors.push(...name.errors);
+      errors.push(...organisationName.errors);
     }
-  }
 
-  if (value.emailAddress?.trim()) {
-    const email: ValidationResult<Contact['emailAddress']> =
-      validateEmailAddress(value.emailAddress, section, message);
-
-    if (email.valid) {
-      fieldsToReturn.emailAddress = email.value;
+    const fullName = validateFullName(value.fullName, section, message);
+    if (fullName.valid) {
+      contact.fullName = fullName.value;
     } else {
-      errors.push(...email.errors);
+      errors.push(...fullName.errors);
     }
-  }
 
-  if (value.phoneNumber?.trim()) {
-    const phone: ValidationResult<Contact['phoneNumber']> = validatePhoneNumber(
+    const emailAddress = validateEmailAddress(
+      value.emailAddress,
+      section,
+      message,
+    );
+    if (emailAddress.valid) {
+      contact.emailAddress = emailAddress.value;
+    } else {
+      errors.push(...emailAddress.errors);
+    }
+
+    const phoneNumber = validatePhoneNumber(
       value.phoneNumber,
       section,
       message,
     );
-
-    if (phone.valid) {
-      fieldsToReturn.phoneNumber = phone.value;
+    if (phoneNumber.valid) {
+      contact.phoneNumber = phoneNumber.value;
     } else {
-      errors.push(...phone.errors);
+      errors.push(...phoneNumber.errors);
     }
-  }
 
-  if (value.faxNumber?.trim()) {
-    const fax: ValidationResult<Contact['faxNumber']> = validateFaxNumber(
-      value.faxNumber,
-      section,
-      message,
-    );
-
-    if (fax.valid) {
-      fieldsToReturn.faxNumber = fax.value;
+    const faxNumber = validateFaxNumber(value.faxNumber, section, message);
+    if (faxNumber.valid) {
+      contact.faxNumber = faxNumber.value ?? undefined;
     } else {
-      errors.push(...fax.errors);
+      errors.push(...faxNumber.errors);
     }
-  }
 
-  if (errors.length > 0) {
+    if (errors.length > 0) {
+      return {
+        valid: false,
+        errors: errors,
+      };
+    }
+
     return {
-      valid: false,
-      errors: errors,
+      valid: true,
+      value: contact,
+    };
+  } else {
+    const errors: FieldFormatError[] = [];
+    const contact: Partial<Contact> = {};
+
+    if (value.organisationName) {
+      const organisationName = validateOrganisationName(
+        value.organisationName,
+        section,
+        message,
+      );
+      if (organisationName.valid) {
+        contact.organisationName = organisationName.value;
+      } else {
+        errors.push(...organisationName.errors);
+      }
+    }
+
+    if (value.fullName) {
+      const fullName = validateFullName(value.fullName, section, message);
+      if (fullName.valid) {
+        contact.fullName = fullName.value;
+      } else {
+        errors.push(...fullName.errors);
+      }
+    }
+
+    if (value.emailAddress) {
+      const emailAddress = validateEmailAddress(
+        value.emailAddress,
+        section,
+        message,
+      );
+      if (emailAddress.valid) {
+        contact.emailAddress = emailAddress.value;
+      } else {
+        errors.push(...emailAddress.errors);
+      }
+    }
+
+    if (value.phoneNumber) {
+      const phoneNumber = validatePhoneNumber(
+        value.phoneNumber,
+        section,
+        message,
+      );
+      if (phoneNumber.valid) {
+        contact.phoneNumber = phoneNumber.value;
+      } else {
+        errors.push(...phoneNumber.errors);
+      }
+    }
+
+    if (value.faxNumber) {
+      const faxNumber = validateFaxNumber(value.faxNumber, section, message);
+      if (faxNumber.valid) {
+        contact.faxNumber = faxNumber.value ?? undefined;
+      } else {
+        errors.push(...faxNumber.errors);
+      }
+    }
+
+    if (errors.length > 0) {
+      return {
+        valid: false,
+        errors: errors,
+      };
+    }
+
+    return {
+      valid: true,
+      value: contact,
     };
   }
-
-  return {
-    valid: true,
-    value: fieldsToReturn,
-  };
 }
 
 export function validateWasteSourceSection(
@@ -1107,7 +1050,6 @@ export function validateWasteSourceSection(
   }
 
   value = titleCaseSpacesRemoved(value);
-
   if (!wasteSources.includes(value)) {
     return {
       valid: false,
@@ -1140,7 +1082,6 @@ export function validateSicCodesSection(
   message?: ErrorMessage,
 ): ValidationResult<string> {
   const trimmedSicCode = value.trim();
-
   if (!trimmedSicCode) {
     return {
       valid: false,

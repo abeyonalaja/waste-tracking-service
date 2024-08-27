@@ -14,7 +14,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { db } from '../../db';
 import { BadRequestError, NotFoundError } from '../../lib/errors';
 import { ukwm as ukwmValidation } from '@wts/util/shared-validation';
-import { DraftContact } from '@wts/api/uk-waste-movements';
 
 export interface UkwmDraftRef {
   id: string;
@@ -242,7 +241,8 @@ export function createDraft(
   accountId: string,
 ): Promise<UkwmDraft> {
   const referenceValidationResult =
-    ukwmValidation.validationRules.validateProducerReference(reference);
+    ukwmValidation.validationRules.validateReference(reference);
+
   if (!referenceValidationResult.valid) {
     return Promise.reject(
       new BadRequestError('Validation error', referenceValidationResult.errors),
@@ -340,6 +340,22 @@ export function setDraftProducerAddressDetails(
   value: Partial<UkwmAddress> | UkwmAddress,
   saveAsDraft: boolean,
 ): Promise<void> {
+  const addressDetailsValidationResult =
+    ukwmValidation.validationRules.validateAddressDetails(
+      value,
+      'Producer',
+      saveAsDraft,
+    );
+
+  if (!addressDetailsValidationResult.valid) {
+    return Promise.reject(
+      new BadRequestError(
+        'Validation error',
+        addressDetailsValidationResult.errors,
+      ),
+    );
+  }
+
   const { id, accountId } = ref;
   let draft = db.ukwmDrafts.find((d) => d.id == id && d.accountId == accountId);
 
@@ -351,47 +367,16 @@ export function setDraftProducerAddressDetails(
     return Promise.reject(new NotFoundError('Draft not found.'));
   }
 
-  if (saveAsDraft) {
-    const partialAddressDetailsValidationResult =
-      ukwmValidation.validationRules.validatePartialAddressDetails(
-        value as Partial<UkwmAddress>,
-        'Producer',
-      );
+  draft.producerAndCollection.producer.address = !saveAsDraft
+    ? {
+        status: 'Complete',
+        ...(addressDetailsValidationResult.value as UkwmAddress),
+      }
+    : {
+        status: 'Started',
+        ...(addressDetailsValidationResult.value as Partial<UkwmAddress>),
+      };
 
-    if (!partialAddressDetailsValidationResult.valid) {
-      return Promise.reject(
-        new BadRequestError(
-          'Validation error',
-          partialAddressDetailsValidationResult.errors,
-        ),
-      );
-    }
-    draft.producerAndCollection.producer.address = {
-      status: 'Started',
-      ...(partialAddressDetailsValidationResult.value as Partial<UkwmAddress>),
-    };
-  } else {
-    value = value as UkwmAddress;
-
-    const addressDetailsValidationResult =
-      ukwmValidation.validationRules.validateAddressDetails(
-        value as UkwmAddress,
-        'Producer',
-      );
-
-    if (!addressDetailsValidationResult.valid) {
-      return Promise.reject(
-        new BadRequestError(
-          'Validation error',
-          addressDetailsValidationResult.errors,
-        ),
-      );
-    }
-    draft.producerAndCollection.producer.address = {
-      status: 'Complete',
-      ...(addressDetailsValidationResult.value as UkwmAddress),
-    };
-  }
   return Promise.resolve();
 }
 
@@ -412,8 +397,24 @@ export function getDraftProducerContactDetail({
 export function setDraftProducerContactDetail(
   ref: UkwmDraftRef,
   value: UkwmContact,
-  saveAsDraft?: boolean,
+  saveAsDraft: boolean,
 ): Promise<void> {
+  const contactDetailsValidationResult =
+    ukwmValidation.validationRules.validateContactDetails(
+      value,
+      'Producer',
+      saveAsDraft,
+    );
+
+  if (!contactDetailsValidationResult.valid) {
+    return Promise.reject(
+      new BadRequestError(
+        'Validation error',
+        contactDetailsValidationResult.errors,
+      ),
+    );
+  }
+
   const { id, accountId } = ref;
   const draft = db.ukwmDrafts.find(
     (d) => d.id == id && d.accountId == accountId,
@@ -431,37 +432,15 @@ export function setDraftProducerContactDetail(
     saveAsDraft = false;
   }
 
-  if (saveAsDraft) {
-    const partialProducerContactDetailValidationResult =
-      ukwmValidation.validationRules.validatePartialContact(value, 'Producer');
-    if (!partialProducerContactDetailValidationResult.valid) {
-      return Promise.reject(
-        new BadRequestError(
-          'Validation error',
-          partialProducerContactDetailValidationResult.errors,
-        ),
-      );
-    }
-  } else {
-    const producerContactDetailValidationResult =
-      ukwmValidation.validationRules.validateContact(value, 'Producer');
-    if (!producerContactDetailValidationResult.valid) {
-      return Promise.reject(
-        new BadRequestError(
-          'Validation error',
-          producerContactDetailValidationResult.errors,
-        ),
-      );
-    }
-  }
-  const draftContact: DraftContact = {
-    status: saveAsDraft ? 'Started' : 'Complete',
-    ...value,
-  };
-
-  if (draft.producerAndCollection.producer) {
-    draft.producerAndCollection.producer.contact = draftContact;
-  }
+  draft.producerAndCollection.producer.contact = !saveAsDraft
+    ? {
+        status: 'Complete',
+        ...(contactDetailsValidationResult.value as UkwmContact),
+      }
+    : {
+        status: 'Started',
+        ...(contactDetailsValidationResult.value as Partial<UkwmContact>),
+      };
 
   return Promise.resolve();
 }
@@ -492,6 +471,7 @@ export function setDraftWasteSource(ref: UkwmSetWasteSourceRef): Promise<void> {
 
   const wasteSourceValidationResult =
     ukwmValidation.validationRules.validateWasteSourceSection(wasteSource);
+
   if (!wasteSourceValidationResult.valid) {
     return Promise.reject(
       new BadRequestError(
@@ -532,6 +512,22 @@ export function setDraftWasteCollectionAddressDetails(
   value: Partial<UkwmAddress> | UkwmAddress,
   saveAsDraft: boolean,
 ): Promise<void> {
+  const addressDetailsValidationResult =
+    ukwmValidation.validationRules.validateAddressDetails(
+      value,
+      'Waste collection',
+      saveAsDraft,
+    );
+
+  if (!addressDetailsValidationResult.valid) {
+    return Promise.reject(
+      new BadRequestError(
+        'Validation error',
+        addressDetailsValidationResult.errors,
+      ),
+    );
+  }
+
   const { id, accountId } = ref;
   let draft = db.ukwmDrafts.find((d) => d.id == id && d.accountId == accountId);
 
@@ -542,47 +538,16 @@ export function setDraftWasteCollectionAddressDetails(
   if (draft === undefined) {
     return Promise.reject(new NotFoundError('Draft not found.'));
   }
-  if (saveAsDraft) {
-    const partialAddressDetailsValidationResult =
-      ukwmValidation.validationRules.validatePartialAddressDetails(
-        value as Partial<UkwmAddress>,
-        'Waste collection',
-      );
 
-    if (!partialAddressDetailsValidationResult.valid) {
-      return Promise.reject(
-        new BadRequestError(
-          'Validation error',
-          partialAddressDetailsValidationResult.errors,
-        ),
-      );
-    }
-    draft.producerAndCollection.wasteCollection.address = {
-      status: 'Started',
-      ...(partialAddressDetailsValidationResult.value as Partial<UkwmAddress>),
-    };
-  } else {
-    value = value as UkwmAddress;
-
-    const addressDetailsValidationResult =
-      ukwmValidation.validationRules.validateAddressDetails(
-        value as UkwmAddress,
-        'Waste collection',
-      );
-
-    if (!addressDetailsValidationResult.valid) {
-      return Promise.reject(
-        new BadRequestError(
-          'Validation error',
-          addressDetailsValidationResult.errors,
-        ),
-      );
-    }
-    draft.producerAndCollection.wasteCollection.address = {
-      status: 'Complete',
-      ...(addressDetailsValidationResult.value as UkwmAddress),
-    };
-  }
+  draft.producerAndCollection.wasteCollection.address = !saveAsDraft
+    ? {
+        status: 'Complete',
+        ...(addressDetailsValidationResult.value as UkwmAddress),
+      }
+    : {
+        status: 'Started',
+        ...(addressDetailsValidationResult.value as Partial<UkwmAddress>),
+      };
 
   return Promise.resolve();
 }
@@ -650,6 +615,22 @@ export function setDraftCarrierAddressDetails(
   value: Partial<UkwmAddress> | UkwmAddress,
   saveAsDraft: boolean,
 ): Promise<void> {
+  const addressDetailsValidationResult =
+    ukwmValidation.validationRules.validateAddressDetails(
+      value,
+      'Carrier',
+      saveAsDraft,
+    );
+
+  if (!addressDetailsValidationResult.valid) {
+    return Promise.reject(
+      new BadRequestError(
+        'Validation error',
+        addressDetailsValidationResult.errors,
+      ),
+    );
+  }
+
   const { id, accountId } = ref;
   let draft = db.ukwmDrafts.find((d) => d.id == id && d.accountId == accountId);
 
@@ -661,47 +642,16 @@ export function setDraftCarrierAddressDetails(
     return Promise.reject(new NotFoundError('Draft not found.'));
   }
 
-  if (saveAsDraft) {
-    const partialAddressDetailsValidationResult =
-      ukwmValidation.validationRules.validatePartialAddressDetails(
-        value as Partial<UkwmAddress>,
-        'Carrier',
-      );
+  draft.carrier.address = !saveAsDraft
+    ? {
+        status: 'Complete',
+        ...(addressDetailsValidationResult.value as UkwmAddress),
+      }
+    : {
+        status: 'Started',
+        ...(addressDetailsValidationResult.value as Partial<UkwmAddress>),
+      };
 
-    if (!partialAddressDetailsValidationResult.valid) {
-      return Promise.reject(
-        new BadRequestError(
-          'Validation error',
-          partialAddressDetailsValidationResult.errors,
-        ),
-      );
-    }
-    draft.carrier.address = {
-      status: 'Started',
-      ...(partialAddressDetailsValidationResult.value as Partial<UkwmAddress>),
-    };
-  } else {
-    value = value as UkwmAddress;
-
-    const addressDetailsValidationResult =
-      ukwmValidation.validationRules.validateAddressDetails(
-        value as UkwmAddress,
-        'Carrier',
-      );
-
-    if (!addressDetailsValidationResult.valid) {
-      return Promise.reject(
-        new BadRequestError(
-          'Validation error',
-          addressDetailsValidationResult.errors,
-        ),
-      );
-    }
-    draft.carrier.address = {
-      status: 'Complete',
-      ...(addressDetailsValidationResult.value as UkwmAddress),
-    };
-  }
   return Promise.resolve();
 }
 
@@ -727,6 +677,22 @@ export function setDraftReceiverAddressDetails(
   value: Partial<UkwmAddress> | UkwmAddress,
   saveAsDraft: boolean,
 ): Promise<void> {
+  const addressDetailsValidationResult =
+    ukwmValidation.validationRules.validateAddressDetails(
+      value,
+      'Receiver',
+      saveAsDraft,
+    );
+
+  if (!addressDetailsValidationResult.valid) {
+    return Promise.reject(
+      new BadRequestError(
+        'Validation error',
+        addressDetailsValidationResult.errors,
+      ),
+    );
+  }
+
   const { id, accountId } = ref;
   let draft = db.ukwmDrafts.find((d) => d.id == id && d.accountId == accountId);
 
@@ -738,47 +704,16 @@ export function setDraftReceiverAddressDetails(
     return Promise.reject(new NotFoundError('Draft not found.'));
   }
 
-  if (saveAsDraft) {
-    const partialAddressDetailsValidationResult =
-      ukwmValidation.validationRules.validatePartialAddressDetails(
-        value as Partial<UkwmAddress>,
-        'Receiver',
-      );
+  draft.receiver.address = !saveAsDraft
+    ? {
+        status: 'Complete',
+        ...(addressDetailsValidationResult.value as UkwmAddress),
+      }
+    : {
+        status: 'Started',
+        ...(addressDetailsValidationResult.value as Partial<UkwmAddress>),
+      };
 
-    if (!partialAddressDetailsValidationResult.valid) {
-      return Promise.reject(
-        new BadRequestError(
-          'Validation error',
-          partialAddressDetailsValidationResult.errors,
-        ),
-      );
-    }
-    draft.receiver.address = {
-      status: 'Started',
-      ...(partialAddressDetailsValidationResult.value as Partial<UkwmAddress>),
-    };
-  } else {
-    value = value as UkwmAddress;
-
-    const addressDetailsValidationResult =
-      ukwmValidation.validationRules.validateAddressDetails(
-        value as UkwmAddress,
-        'Receiver',
-      );
-
-    if (!addressDetailsValidationResult.valid) {
-      return Promise.reject(
-        new BadRequestError(
-          'Validation error',
-          addressDetailsValidationResult.errors,
-        ),
-      );
-    }
-    draft.receiver.address = {
-      status: 'Complete',
-      ...(addressDetailsValidationResult.value as UkwmAddress),
-    };
-  }
   return Promise.resolve();
 }
 
@@ -849,8 +784,24 @@ export function setDraftProducerConfirmation(
 export function setDraftReceiverContactDetail(
   ref: UkwmDraftRef,
   value: UkwmContact,
-  saveAsDraft?: boolean,
+  saveAsDraft: boolean,
 ): Promise<void> {
+  const contactDetailsValidationResult =
+    ukwmValidation.validationRules.validateContactDetails(
+      value,
+      'Producer',
+      saveAsDraft,
+    );
+
+  if (!contactDetailsValidationResult.valid) {
+    return Promise.reject(
+      new BadRequestError(
+        'Validation error',
+        contactDetailsValidationResult.errors,
+      ),
+    );
+  }
+
   const { id, accountId } = ref;
   const draft = db.ukwmDrafts.find(
     (d) => d.id == id && d.accountId == accountId,
@@ -868,37 +819,15 @@ export function setDraftReceiverContactDetail(
     saveAsDraft = false;
   }
 
-  if (saveAsDraft) {
-    const partialReceiverContactDetailValidationResult =
-      ukwmValidation.validationRules.validatePartialContact(value, 'Producer');
-    if (!partialReceiverContactDetailValidationResult.valid) {
-      return Promise.reject(
-        new BadRequestError(
-          'Validation error',
-          partialReceiverContactDetailValidationResult.errors,
-        ),
-      );
-    }
-  } else {
-    const receiverContactDetailValidationResult =
-      ukwmValidation.validationRules.validateContact(value, 'Producer');
-    if (!receiverContactDetailValidationResult.valid) {
-      return Promise.reject(
-        new BadRequestError(
-          'Validation error',
-          receiverContactDetailValidationResult.errors,
-        ),
-      );
-    }
-  }
-  const draftContact: DraftContact = {
-    status: saveAsDraft ? 'Started' : 'Complete',
-    ...value,
-  };
-
-  if (draft.receiver) {
-    draft.receiver.contact = draftContact;
-  }
+  draft.receiver.contact = !saveAsDraft
+    ? {
+        status: 'Complete',
+        ...(contactDetailsValidationResult.value as UkwmContact),
+      }
+    : {
+        status: 'Started',
+        ...(contactDetailsValidationResult.value as Partial<UkwmContact>),
+      };
 
   return Promise.resolve();
 }

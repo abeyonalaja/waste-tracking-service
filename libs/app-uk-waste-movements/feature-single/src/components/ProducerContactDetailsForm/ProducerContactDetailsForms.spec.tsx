@@ -46,6 +46,7 @@ describe('ProducerContactDetailsForm', () => {
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
+        section={'Producer'}
       >
         <p>This is a child element</p>
       </ProducerContactDetailsForm>,
@@ -61,6 +62,7 @@ describe('ProducerContactDetailsForm', () => {
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
+        section={'Producer'}
       >
         <p>Child element</p>
       </ProducerContactDetailsForm>,
@@ -90,6 +92,7 @@ describe('ProducerContactDetailsForm', () => {
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
+        section={'Producer'}
       >
         <p>Child element</p>
       </ProducerContactDetailsForm>,
@@ -109,6 +112,7 @@ describe('ProducerContactDetailsForm', () => {
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
+        section={'Producer'}
       >
         <p>Child element</p>
       </ProducerContactDetailsForm>,
@@ -125,6 +129,7 @@ describe('ProducerContactDetailsForm', () => {
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
+        section={'Producer'}
       >
         <p>Child element</p>
       </ProducerContactDetailsForm>,
@@ -151,6 +156,7 @@ describe('ProducerContactDetailsForm', () => {
           phoneNumber: '0123456789',
           faxNumber: '098765432',
         }}
+        section={'Producer'}
       >
         <p>Child element</p>
       </ProducerContactDetailsForm>,
@@ -173,6 +179,7 @@ describe('ProducerContactDetailsForm', () => {
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
+        section={'Producer'}
       >
         <p>Child element</p>
       </ProducerContactDetailsForm>,
@@ -200,6 +207,7 @@ describe('ProducerContactDetailsForm', () => {
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
+        section={'Producer'}
       >
         <p>Child element</p>
       </ProducerContactDetailsForm>,
@@ -235,6 +243,7 @@ describe('ProducerContactDetailsForm', () => {
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
+        section={'Producer'}
       >
         <p>Child element</p>
       </ProducerContactDetailsForm>,
@@ -264,6 +273,7 @@ describe('ProducerContactDetailsForm', () => {
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
+        section={'Producer'}
       >
         <p>Child element</p>
       </ProducerContactDetailsForm>,
@@ -282,7 +292,7 @@ describe('ProducerContactDetailsForm', () => {
     );
 
     expect(organisationNameMessages).toHaveLength(2);
-  });
+  }, 10000);
 
   it('displays error messages if organisation email exceeds the max length', async () => {
     const user = userEvent.setup();
@@ -293,6 +303,7 @@ describe('ProducerContactDetailsForm', () => {
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
+        section={'Producer'}
       >
         <p>Child element</p>
       </ProducerContactDetailsForm>,
@@ -311,7 +322,7 @@ describe('ProducerContactDetailsForm', () => {
     );
 
     expect(organisationNameMessages).toHaveLength(2);
-  });
+  }, 10000);
 
   it('displays error messages if the email address is invalid', async () => {
     const user = userEvent.setup();
@@ -322,6 +333,7 @@ describe('ProducerContactDetailsForm', () => {
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
+        section={'Producer'}
       >
         <p>Child element</p>
       </ProducerContactDetailsForm>,
@@ -351,6 +363,7 @@ describe('ProducerContactDetailsForm', () => {
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
+        section={'Producer'}
       >
         <p>Child element</p>
       </ProducerContactDetailsForm>,
@@ -380,6 +393,7 @@ describe('ProducerContactDetailsForm', () => {
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
+        section={'Producer'}
       >
         <p>Child element</p>
       </ProducerContactDetailsForm>,

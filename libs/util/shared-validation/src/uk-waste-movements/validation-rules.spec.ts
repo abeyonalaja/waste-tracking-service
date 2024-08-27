@@ -1,20 +1,18 @@
 import { SICCode } from '@wts/api/reference-data';
 import {
   validateBuildingNameOrNumber,
-  validateProducerReference,
+  validateReference,
   validateAddressLine1,
   validateAddressLine2,
   validateCountry,
-  validateProducerOrganisationName,
+  validateOrganisationName,
   validatePostcode,
   validateTownCity,
   validateAddressDetails,
   validateEmailAddress,
   validateFaxNumber,
-  validateOrganisationName,
   validateFullName,
   validatePhoneNumber,
-  validatePartialAddressDetails,
   validateWasteSourceSection,
   validateSicCodesSection,
 } from './validation-rules';
@@ -30,17 +28,17 @@ describe('Producer reference validation', () => {
     '3454   123',
     'ABC_01/02/2025',
   ])('should return valid true when reference is valid (%s)', (ref) => {
-    const result = validateProducerReference(ref);
+    const result = validateReference(ref);
     expect(result.valid).toBe(true);
   });
 
   it('should return valid false when reference is empty', () => {
-    const result = validateProducerReference('');
+    const result = validateReference('');
     expect(result.valid).toBe(false);
   });
 
   it('should return the error message in English when the reference is empty', () => {
-    const result = validateProducerReference('', {
+    const result = validateReference('', {
       locale: 'en',
       context: 'ui',
     });
@@ -53,7 +51,7 @@ describe('Producer reference validation', () => {
 
 describe('Building name or number validation', () => {
   it('should return valid true when building name or number is valid', () => {
-    const buildingName = faker.datatype.string(10);
+    const buildingName = faker.string.sample(10);
     const result = validateBuildingNameOrNumber(buildingName, 'Producer', {
       locale: 'en',
       context: 'ui',
@@ -85,12 +83,12 @@ describe('Building name or number validation', () => {
 
     expect(result.valid).toBe(true);
     if (result.valid) {
-      expect(result.value).toBe('');
+      expect(result.value).toBeUndefined();
     }
   });
 
   it('should return an error when the building name is too long - producer', () => {
-    const buildingName = faker.datatype.string(251);
+    const buildingName = faker.string.sample(251);
     const result = validateBuildingNameOrNumber(buildingName, 'Producer', {
       locale: 'en',
       context: 'ui',
@@ -107,7 +105,7 @@ describe('Building name or number validation', () => {
   });
 
   it('should return an error when the building name is too long - waste collection', () => {
-    const buildingName = faker.datatype.string(251);
+    const buildingName = faker.string.sample(251);
     const result = validateBuildingNameOrNumber(
       buildingName,
       'Waste collection',
@@ -128,7 +126,7 @@ describe('Building name or number validation', () => {
   });
 
   it('should return an error when the building name is too long - carrier', () => {
-    const buildingName = faker.datatype.string(251);
+    const buildingName = faker.string.sample(251);
     const result = validateBuildingNameOrNumber(buildingName, 'Carrier', {
       locale: 'en',
       context: 'ui',
@@ -147,7 +145,7 @@ describe('Building name or number validation', () => {
 
 describe('Address line 1 validation', () => {
   it('should return valid true when address line 1 is valid', () => {
-    const addressLine1 = faker.datatype.string(10);
+    const addressLine1 = faker.string.sample(10);
     const result = validateAddressLine1(addressLine1, 'Producer', {
       locale: 'en',
       context: 'ui',
@@ -172,7 +170,7 @@ describe('Address line 1 validation', () => {
   });
 
   it('should return an error when the address line 1 is too long - producer', () => {
-    const addressLine1 = faker.datatype.string(251);
+    const addressLine1 = faker.string.sample(251);
     const result = validateAddressLine1(addressLine1, 'Producer', {
       locale: 'en',
       context: 'ui',
@@ -189,7 +187,7 @@ describe('Address line 1 validation', () => {
   });
 
   it('should return an error when the address line 1 is too long - waste collection', () => {
-    const addressLine1 = faker.datatype.string(251);
+    const addressLine1 = faker.string.sample(251);
     const result = validateAddressLine1(addressLine1, 'Waste collection', {
       locale: 'en',
       context: 'ui',
@@ -206,7 +204,7 @@ describe('Address line 1 validation', () => {
   });
 
   it('should return an error when the address line 1 is too long - Carrier', () => {
-    const addressLine1 = faker.datatype.string(251);
+    const addressLine1 = faker.string.sample(251);
     const result = validateAddressLine1(addressLine1, 'Carrier', {
       locale: 'en',
       context: 'ui',
@@ -225,7 +223,7 @@ describe('Address line 1 validation', () => {
 
 describe('Address line 2 validation', () => {
   it('should return valid true when address line 2 is valid', () => {
-    const addressLine2 = faker.datatype.string(10);
+    const addressLine2 = faker.string.sample(10);
     const result = validateAddressLine2(addressLine2, 'Producer', {
       locale: 'en',
       context: 'ui',
@@ -250,7 +248,7 @@ describe('Address line 2 validation', () => {
   });
 
   it('should return an error when the address line 2 is too long - producer', () => {
-    const addressLine2 = faker.datatype.string(251);
+    const addressLine2 = faker.string.sample(251);
     const result = validateAddressLine2(addressLine2, 'Producer', {
       locale: 'en',
       context: 'ui',
@@ -266,8 +264,8 @@ describe('Address line 2 validation', () => {
     }
   });
 
-  it('should return an error when the address line 2 is too long - Waste collection', () => {
-    const addressLine2 = faker.datatype.string(251);
+  it('should return an error when the address line 2 is too long - Waste Collection', () => {
+    const addressLine2 = faker.string.sample(251);
     const result = validateAddressLine2(addressLine2, 'Waste collection', {
       locale: 'en',
       context: 'ui',
@@ -284,7 +282,7 @@ describe('Address line 2 validation', () => {
   });
 
   it('should return an error when the address line 2 is too long - Carrier', () => {
-    const addressLine2 = faker.datatype.string(251);
+    const addressLine2 = faker.string.sample(251);
     const result = validateAddressLine2(addressLine2, 'Carrier', {
       locale: 'en',
       context: 'ui',
@@ -303,7 +301,7 @@ describe('Address line 2 validation', () => {
 
 describe('Town or city validation', () => {
   it('should return valid true when town or city is valid', () => {
-    const townOrCity = faker.datatype.string(10);
+    const townOrCity = faker.string.sample(10);
     const result = validateTownCity(townOrCity, 'Producer', {
       locale: 'en',
       context: 'ui',
@@ -328,7 +326,7 @@ describe('Town or city validation', () => {
   });
 
   it('should return an error when the town or city is too long', () => {
-    const townOrCity = faker.datatype.string(251);
+    const townOrCity = faker.string.sample(251);
     const result = validateTownCity(townOrCity, 'Producer', {
       locale: 'en',
       context: 'ui',
@@ -345,7 +343,7 @@ describe('Town or city validation', () => {
   });
 
   it('should return an error when the town or city is too long', () => {
-    const townOrCity = faker.datatype.string(251);
+    const townOrCity = faker.string.sample(251);
     const result = validateTownCity(townOrCity, 'Waste collection', {
       locale: 'en',
       context: 'ui',
@@ -589,8 +587,8 @@ describe('Postcode validation', () => {
 
 describe('Producer organisation name validation', () => {
   it('should return valid true when organisation name is valid', () => {
-    const orgName = faker.datatype.string(10);
-    const result = validateProducerOrganisationName(orgName, {
+    const orgName = faker.string.sample(10);
+    const result = validateOrganisationName(orgName, 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -602,7 +600,7 @@ describe('Producer organisation name validation', () => {
   });
 
   it('truncates trailing spaces', () => {
-    const result = validateProducerOrganisationName('  a   ', {
+    const result = validateOrganisationName('  a   ', 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -614,8 +612,8 @@ describe('Producer organisation name validation', () => {
   });
 
   it('should return an error when the organisation name is too long', () => {
-    const orgName = faker.datatype.string(251);
-    const result = validateProducerOrganisationName(orgName, {
+    const orgName = faker.string.sample(251);
+    const result = validateOrganisationName(orgName, 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -634,15 +632,15 @@ describe('Producer organisation name validation', () => {
 describe('Address Details Validation', () => {
   it('should return valid true when all address details are valid', () => {
     const addressDetails = {
-      buildingNameOrNumber: faker.datatype.string(10),
-      addressLine1: faker.datatype.string(10),
-      addressLine2: faker.datatype.string(10),
-      townCity: faker.datatype.string(10),
+      buildingNameOrNumber: faker.string.sample(10),
+      addressLine1: faker.string.sample(10),
+      addressLine2: faker.string.sample(10),
+      townCity: faker.string.sample(10),
       country: 'England',
       postcode: 'SW1A1AA',
     };
 
-    const result = validateAddressDetails(addressDetails, 'Producer', {
+    const result = validateAddressDetails(addressDetails, 'Producer', true, {
       locale: 'en',
       context: 'ui',
     });
@@ -655,13 +653,13 @@ describe('Address Details Validation', () => {
 
   it('should return valid true when an optional field is missing', () => {
     const addressDetails = {
-      addressLine1: faker.datatype.string(10),
-      townCity: faker.datatype.string(10),
+      addressLine1: faker.string.sample(10),
+      townCity: faker.string.sample(10),
       country: 'England',
       postcode: 'SW1A1AA',
     };
 
-    const result = validateAddressDetails(addressDetails, 'Producer', {
+    const result = validateAddressDetails(addressDetails, 'Producer', true, {
       locale: 'en',
       context: 'ui',
     });
@@ -674,15 +672,15 @@ describe('Address Details Validation', () => {
 
   it('should return valid false when any address detail is invalid', () => {
     const addressDetails = {
-      buildingNameOrNumber: faker.datatype.string(10),
-      addressLine1: faker.datatype.string(10),
-      addressLine2: faker.datatype.string(10),
-      townCity: faker.datatype.string(10),
+      buildingNameOrNumber: faker.string.sample(10),
+      addressLine1: faker.string.sample(10),
+      addressLine2: faker.string.sample(10),
+      townCity: faker.string.sample(10),
       country: 'England',
       postcode: '123',
     };
 
-    const result = validateAddressDetails(addressDetails, 'Producer', {
+    const result = validateAddressDetails(addressDetails, 'Producer', true, {
       locale: 'en',
       context: 'ui',
     });
@@ -694,15 +692,15 @@ describe('Address Details Validation', () => {
 describe('validatePartialProducerAddressDetails', () => {
   it('should return valid true when all address details are valid', () => {
     const addressDetails = {
-      buildingNameOrNumber: faker.datatype.string(10),
-      addressLine1: faker.datatype.string(10),
-      addressLine2: faker.datatype.string(10),
-      townCity: faker.datatype.string(10),
+      buildingNameOrNumber: faker.string.sample(10),
+      addressLine1: faker.string.sample(10),
+      addressLine2: faker.string.sample(10),
+      townCity: faker.string.sample(10),
       country: 'England',
       postcode: 'SW1A1AA',
     };
 
-    const result = validatePartialAddressDetails(addressDetails, 'Producer', {
+    const result = validateAddressDetails(addressDetails, 'Producer', true, {
       locale: 'en',
       context: 'ui',
     });
@@ -715,12 +713,12 @@ describe('validatePartialProducerAddressDetails', () => {
 
   it('should return valid true when a mandatory field is missing', () => {
     const addressDetails = {
-      townCity: faker.datatype.string(10),
+      townCity: faker.string.sample(10),
       country: 'England',
       postcode: 'SW1A1AA',
     };
 
-    const result = validatePartialAddressDetails(addressDetails, 'Producer', {
+    const result = validateAddressDetails(addressDetails, 'Producer', true, {
       locale: 'en',
       context: 'ui',
     });
@@ -733,15 +731,15 @@ describe('validatePartialProducerAddressDetails', () => {
 
   it('should return valid false when any address detail is invalid', () => {
     const addressDetails = {
-      buildingNameOrNumber: faker.datatype.string(10),
-      addressLine1: faker.datatype.string(10),
-      addressLine2: faker.datatype.string(10),
-      townCity: faker.datatype.string(10),
+      buildingNameOrNumber: faker.string.sample(10),
+      addressLine1: faker.string.sample(10),
+      addressLine2: faker.string.sample(10),
+      townCity: faker.string.sample(10),
       country: 'England',
       postcode: '123',
     };
 
-    const result = validatePartialAddressDetails(addressDetails, 'Producer', {
+    const result = validateAddressDetails(addressDetails, 'Producer', false, {
       locale: 'en',
       context: 'ui',
     });
