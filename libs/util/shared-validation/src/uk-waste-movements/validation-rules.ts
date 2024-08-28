@@ -277,6 +277,19 @@ export function validatePostcode(
     const errors: FieldFormatError[] = [];
     result.errors.forEach((e) => {
       switch (e) {
+        case 'empty':
+          errors.push({
+            field: (section + ' postcode') as Field,
+            code: getSharedErrorCode(errorCodes.emptyPostcodeBase, section),
+            message: message
+              ? getErrorMessage(
+                  errorCodes.emptyPostcodeBase,
+                  message.locale,
+                  message.context,
+                )
+              : undefined,
+          });
+          break;
         case 'invalid':
           errors.push({
             field: (section + ' postcode') as Field,

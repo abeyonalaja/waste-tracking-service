@@ -12,6 +12,7 @@ export const charTooManyTownOrCityBase = 7;
 export const emptyCountryBase = 8;
 export const invalidCountryBase = 9;
 export const invalidPostcodeBase = 10;
+export const emptyPostcodeBase = 101;
 
 export const emptyOrganisationNameBase = 1;
 export const charTooManyOrganisationNameBase = 2;

@@ -244,7 +244,7 @@ describe('validatePostcode', () => {
     (value) => {
       const result = validatePostcode(value);
 
-      expect(result.valid).toEqual(true);
+      expect(result.valid).toEqual(false);
       if ('value' in result) {
         expect(result.value).toBeUndefined();
       }

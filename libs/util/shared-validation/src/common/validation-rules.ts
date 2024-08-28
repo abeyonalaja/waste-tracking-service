@@ -118,6 +118,12 @@ export function validatePostcode(
   postcode?: string,
 ): ValidationResult<string | undefined> {
   const trimmedPostcode = postcode?.trim();
+  if (!trimmedPostcode) {
+    return {
+      valid: false,
+      errors: ['empty'],
+    };
+  }
   if (trimmedPostcode && !commonRegex.postcodeRegex.test(trimmedPostcode)) {
     return {
       valid: false,

@@ -184,6 +184,18 @@ export const validationErrorMessages: ValidationErrorMessages = {
       ui: commonErrorMessages.emptyPostcode.cy,
     },
   },
+  [codes.emptyPostcodeBase]: {
+    en: {
+      csv: commonErrorMessages.emptyPostcode.en,
+      api: commonErrorMessages.emptyPostcode.en,
+      ui: commonErrorMessages.emptyPostcode.en,
+    },
+    cy: {
+      csv: commonErrorMessages.emptyPostcode.cy,
+      api: commonErrorMessages.emptyPostcode.cy,
+      ui: commonErrorMessages.emptyPostcode.cy,
+    },
+  },
   [codes.postcodeInvalid]: {
     en: {
       csv: commonErrorMessages.invalidPostcode.en,

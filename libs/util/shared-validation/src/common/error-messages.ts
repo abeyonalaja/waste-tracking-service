@@ -76,7 +76,7 @@ export const emptyPostcode = {
 };
 
 export const invalidPostcode = {
-  en: 'Enter a postcode',
+  en: 'Enter a valid postcode',
   cy: 'Rhowch god post',
 };
 
