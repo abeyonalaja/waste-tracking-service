@@ -225,13 +225,14 @@ export function getDraft({
 
   const submission: UkwmDraft = {
     id: value.id,
+    reference: value.reference,
     wasteInformation: value.wasteInformation,
     receiver: value.receiver,
     carrier: value.carrier,
     producerAndCollection: value.producerAndCollection,
     declaration: value.declaration,
     state: value.state,
-  } as UkwmDraft;
+  };
 
   return Promise.resolve(submission);
 }

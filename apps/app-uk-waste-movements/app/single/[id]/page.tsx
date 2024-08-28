@@ -8,6 +8,7 @@ import { getServerSession } from 'next-auth';
 import { options } from '../../api/auth/[...nextauth]/options';
 import { redirect } from 'next/navigation';
 import { generateApiUrl } from '../../../utils';
+import { GetUkwmSubmissionResponse } from '@wts/api/waste-tracking-gateway';
 
 export const metadata: Metadata = {
   title: 'Create a new single waste movement',
@@ -49,12 +50,12 @@ export default async function TaskListPage({
     }
   }
 
-  const draft = await response.json();
+  const draft: GetUkwmSubmissionResponse = await response.json();
 
   const producerAndCollectionOverallStatus =
     draft.producerAndCollection.producer.contact.status === 'Complete' &&
     draft.producerAndCollection.producer.address.status === 'Complete' &&
-    draft.producerAndCollection.wasteCollection.status === 'Complete'
+    draft.producerAndCollection.wasteCollection.address.status === 'Complete'
       ? 'Completed'
       : 'Incomplete';
 
@@ -88,7 +89,7 @@ export default async function TaskListPage({
         <GovUK.GridCol>
           <p className="govuk-heading-l" id="unique-reference-caption">
             <GovUK.Caption>{t('caption')}</GovUK.Caption>
-            {draft.producerAndCollection.producer.reference}
+            {draft.reference}
           </p>
           <GovUK.Heading>{t('title')}</GovUK.Heading>
           <TaskList
