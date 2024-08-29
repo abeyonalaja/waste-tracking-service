@@ -5,7 +5,7 @@ export {
   TaskList,
   ReuseProducerAddressConfirm,
   ReuseProducerAddressPrompt,
-  ProducerContactDetailsForm,
   WasteSourceForm,
+  ContactDetailsForm,
 } from './components';
 export { AddressSearch, formatAddress } from './components/Address';

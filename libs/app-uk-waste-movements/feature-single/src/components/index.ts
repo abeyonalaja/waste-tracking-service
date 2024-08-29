@@ -1,5 +1,5 @@
 export { AddressSearch } from './Address';
-export { ProducerContactDetailsForm } from './ProducerContactDetailsForm';
+export { ContactDetailsForm } from './ContactDetailsForm';
 export { ReuseProducerAddressConfirm } from './ReuseProducerAddressConfirm';
 export { ReuseProducerAddressPrompt } from './ReuseProducerAddressPrompt';
 export { TaskList } from './TaskList';

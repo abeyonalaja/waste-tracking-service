@@ -181,7 +181,7 @@ export default async function TaskListPage({
                   },
                   {
                     name: t('receiver.receiverContactDetails'),
-                    href: `${params.id}/carrier/contact`,
+                    href: `${params.id}/receiver/contact`,
                     status: draft.receiver.contact.status,
                   },
                   {

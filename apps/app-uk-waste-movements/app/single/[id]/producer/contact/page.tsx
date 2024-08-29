@@ -6,7 +6,7 @@ import { generateApiUrl } from '../../../../../utils';
 import { Metadata } from 'next';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { BackLink, Page } from '@wts/ui/shared-ui/server';
-import { ProducerContactDetailsForm } from '@wts/app-uk-waste-movements/feature-single';
+import { ContactDetailsForm } from '@wts/app-uk-waste-movements/feature-single';
 import { DraftContact } from '@wts/api/uk-waste-movements';
 
 export const metadata: Metadata = {
@@ -98,18 +98,20 @@ export default async function ProducerContactDetailsPage({
     >
       <GovUK.GridRow>
         <GovUK.GridCol size="two-thirds">
-          <ProducerContactDetailsForm
+          <ContactDetailsForm
             id={params.id}
             token={token}
             formStrings={formStrings}
             initialFormState={initialFormState}
             section={section}
+            endpoint={'producer-contact'}
+            nextPage={'producer/sic-code'}
           >
             <GovUK.Caption>{t('caption')}</GovUK.Caption>
             <GovUK.Heading size={'l'} level={1}>
               {t('heading')}
             </GovUK.Heading>
-          </ProducerContactDetailsForm>
+          </ContactDetailsForm>
         </GovUK.GridCol>
       </GovUK.GridRow>
     </Page>

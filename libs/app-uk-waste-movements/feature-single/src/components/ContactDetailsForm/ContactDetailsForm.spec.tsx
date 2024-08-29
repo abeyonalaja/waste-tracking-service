@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import { ProducerContactDetailsForm } from './ProducerContactDetailsForm';
+import { ContactDetailsForm } from './ContactDetailsForm';
 import userEvent from '@testing-library/user-event';
 
 const formStrings = {
@@ -34,22 +34,24 @@ global.fetch = jest.fn(() =>
   }),
 ) as jest.Mock;
 
-describe('ProducerContactDetailsForm', () => {
+describe('Contact Details Form', () => {
   afterAll(() => {
     jest.clearAllMocks();
   });
 
   it('renders child elements', () => {
     render(
-      <ProducerContactDetailsForm
+      <ContactDetailsForm
         id="123"
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
         section={'Producer'}
+        endpoint={'/api-endpoint'}
+        nextPage={'/next-page'}
       >
         <p>This is a child element</p>
-      </ProducerContactDetailsForm>,
+      </ContactDetailsForm>,
     );
 
     expect(screen.getByText('This is a child element')).toBeInTheDocument();
@@ -57,15 +59,17 @@ describe('ProducerContactDetailsForm', () => {
 
   it('renders the form with the labels and hints', () => {
     render(
-      <ProducerContactDetailsForm
+      <ContactDetailsForm
         id="123"
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
         section={'Producer'}
+        endpoint={'/api-endpoint'}
+        nextPage={'/next-page'}
       >
         <p>Child element</p>
-      </ProducerContactDetailsForm>,
+      </ContactDetailsForm>,
     );
 
     const labelOne = screen.getByLabelText('Full name of organisation');
@@ -87,15 +91,17 @@ describe('ProducerContactDetailsForm', () => {
 
   it('renders the form with buttons', () => {
     render(
-      <ProducerContactDetailsForm
+      <ContactDetailsForm
         id="123"
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
         section={'Producer'}
+        endpoint={'/api-endpoint'}
+        nextPage={'/next-page'}
       >
         <p>Child element</p>
-      </ProducerContactDetailsForm>,
+      </ContactDetailsForm>,
     );
 
     const buttonOne = screen.getByRole('button', { name: 'Save and continue' });
@@ -107,15 +113,17 @@ describe('ProducerContactDetailsForm', () => {
 
   it('renders input fields', () => {
     render(
-      <ProducerContactDetailsForm
+      <ContactDetailsForm
         id="123"
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
         section={'Producer'}
+        endpoint={'/api-endpoint'}
+        nextPage={'/next-page'}
       >
         <p>Child element</p>
-      </ProducerContactDetailsForm>,
+      </ContactDetailsForm>,
     );
 
     const input = screen.getAllByRole('textbox');
@@ -124,15 +132,17 @@ describe('ProducerContactDetailsForm', () => {
 
   it('renders the form with blank inputs when not provided any initial state', () => {
     render(
-      <ProducerContactDetailsForm
+      <ContactDetailsForm
         id="123"
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
         section={'Producer'}
+        endpoint={'/api-endpoint'}
+        nextPage={'/next-page'}
       >
         <p>Child element</p>
-      </ProducerContactDetailsForm>,
+      </ContactDetailsForm>,
     );
 
     const input = screen.getAllByRole('textbox');
@@ -145,7 +155,7 @@ describe('ProducerContactDetailsForm', () => {
 
   it('renders the form with pre-populated inputs when provided initial state', () => {
     render(
-      <ProducerContactDetailsForm
+      <ContactDetailsForm
         id="123"
         token="123ABC"
         formStrings={formStrings}
@@ -157,9 +167,11 @@ describe('ProducerContactDetailsForm', () => {
           faxNumber: '098765432',
         }}
         section={'Producer'}
+        endpoint={'/api-endpoint'}
+        nextPage={'/next-page'}
       >
         <p>Child element</p>
-      </ProducerContactDetailsForm>,
+      </ContactDetailsForm>,
     );
 
     const input = screen.getAllByRole('textbox');
@@ -174,15 +186,17 @@ describe('ProducerContactDetailsForm', () => {
     const user = userEvent.setup();
 
     render(
-      <ProducerContactDetailsForm
+      <ContactDetailsForm
         id="123"
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
         section={'Producer'}
+        endpoint={'/api-endpoint'}
+        nextPage={'/next-page'}
       >
         <p>Child element</p>
-      </ProducerContactDetailsForm>,
+      </ContactDetailsForm>,
     );
 
     const saveAndContinueButton = screen.getByRole('button', {
@@ -202,15 +216,17 @@ describe('ProducerContactDetailsForm', () => {
     const user = userEvent.setup();
 
     render(
-      <ProducerContactDetailsForm
+      <ContactDetailsForm
         id="123"
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
         section={'Producer'}
+        endpoint={'/api-endpoint'}
+        nextPage={'/next-page'}
       >
         <p>Child element</p>
-      </ProducerContactDetailsForm>,
+      </ContactDetailsForm>,
     );
 
     const saveAndContinueButton = screen.getByRole('button', {
@@ -238,15 +254,17 @@ describe('ProducerContactDetailsForm', () => {
     const user = userEvent.setup();
 
     render(
-      <ProducerContactDetailsForm
+      <ContactDetailsForm
         id="123"
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
         section={'Producer'}
+        endpoint={'/api-endpoint'}
+        nextPage={'/next-page'}
       >
         <p>Child element</p>
-      </ProducerContactDetailsForm>,
+      </ContactDetailsForm>,
     );
 
     const saveAndContinueButton = screen.getByRole('button', {
@@ -268,15 +286,17 @@ describe('ProducerContactDetailsForm', () => {
     const user = userEvent.setup();
 
     render(
-      <ProducerContactDetailsForm
+      <ContactDetailsForm
         id="123"
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
         section={'Producer'}
+        endpoint={'/api-endpoint'}
+        nextPage={'/next-page'}
       >
         <p>Child element</p>
-      </ProducerContactDetailsForm>,
+      </ContactDetailsForm>,
     );
 
     const saveAndContinueButton = screen.getByRole('button', {
@@ -298,15 +318,17 @@ describe('ProducerContactDetailsForm', () => {
     const user = userEvent.setup();
 
     render(
-      <ProducerContactDetailsForm
+      <ContactDetailsForm
         id="123"
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
         section={'Producer'}
+        endpoint={'/api-endpoint'}
+        nextPage={'/next-page'}
       >
         <p>Child element</p>
-      </ProducerContactDetailsForm>,
+      </ContactDetailsForm>,
     );
 
     const saveAndContinueButton = screen.getByRole('button', {
@@ -328,15 +350,17 @@ describe('ProducerContactDetailsForm', () => {
     const user = userEvent.setup();
 
     render(
-      <ProducerContactDetailsForm
+      <ContactDetailsForm
         id="123"
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
         section={'Producer'}
+        endpoint={'/api-endpoint'}
+        nextPage={'/next-page'}
       >
         <p>Child element</p>
-      </ProducerContactDetailsForm>,
+      </ContactDetailsForm>,
     );
 
     const saveAndContinueButton = screen.getByRole('button', {
@@ -358,15 +382,17 @@ describe('ProducerContactDetailsForm', () => {
     const user = userEvent.setup();
 
     render(
-      <ProducerContactDetailsForm
+      <ContactDetailsForm
         id="123"
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
         section={'Producer'}
+        endpoint={'/api-endpoint'}
+        nextPage={'/next-page'}
       >
         <p>Child element</p>
-      </ProducerContactDetailsForm>,
+      </ContactDetailsForm>,
     );
 
     const saveAndContinueButton = screen.getByRole('button', {
@@ -388,15 +414,17 @@ describe('ProducerContactDetailsForm', () => {
     const user = userEvent.setup();
 
     render(
-      <ProducerContactDetailsForm
+      <ContactDetailsForm
         id="123"
         token="123ABC"
         formStrings={formStrings}
         initialFormState={{}}
         section={'Producer'}
+        endpoint={'/api-endpoint'}
+        nextPage={'/next-page'}
       >
         <p>Child element</p>
-      </ProducerContactDetailsForm>,
+      </ContactDetailsForm>,
     );
 
     const saveAndContinueButton = screen.getByRole('button', {

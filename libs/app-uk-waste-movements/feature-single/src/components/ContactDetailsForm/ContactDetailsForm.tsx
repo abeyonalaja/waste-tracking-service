@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ukwm as ukwmValidation } from '@wts/util/shared-validation';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
-import { FormErrors } from '../../types/types';
+import { FormErrors } from '../../types';
 import { createErrorSummaryErrors, formHasErrors } from '../../util';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { ukwm } from '@wts/util/shared-validation';
@@ -30,23 +30,27 @@ interface InitialFormState {
   faxNumber?: string;
 }
 
-interface ProducerContactDetailsFormProps {
+interface ContactDetailsFormProps {
   id: string;
   initialFormState: InitialFormState;
   token: string;
   formStrings: FormStrings;
   children: React.ReactNode;
   section: ukwm.Section;
+  endpoint: string;
+  nextPage: string;
 }
 
-export function ProducerContactDetailsForm({
+export function ContactDetailsForm({
   id,
   initialFormState,
   token,
   formStrings,
   children,
   section,
-}: ProducerContactDetailsFormProps): React.ReactNode {
+  endpoint,
+  nextPage,
+}: ContactDetailsFormProps): React.ReactNode {
   const router = useRouter();
   const locale = useLocale() as ukwmValidation.Locale;
   const [buttonDisabled, setButtonDisabled] = useState(false);
@@ -201,7 +205,7 @@ export function ProducerContactDetailsForm({
     let response: Response;
     try {
       response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/ukwm/drafts/${id}/producer-contact?saveAsDraft=${submitType === 'returnToTaskList'}`,
+        `${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/ukwm/drafts/${id}/${endpoint}?saveAsDraft=${submitType === 'returnToTaskList'}`,
         {
           method: 'PUT',
           headers: {
@@ -214,7 +218,7 @@ export function ProducerContactDetailsForm({
 
       if (response.ok) {
         if (submitType === 'continueToNextPage') {
-          return router.push(`/single/${id}/producer/sic-code`);
+          return router.push(`/single/${id}/${nextPage}`);
         } else {
           return router.push(`/single/${id}`);
         }
