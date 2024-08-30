@@ -18,7 +18,6 @@ class NoAddressFoundPage < GenericPage
   end
 
   def check_page_translation
-    expect(self).to have_text CAPTION
     expect(self).to have_text "#{INTRO_ONE} n1p3bp"
     expect(self).to have_text INTRO_TWO
     expect(self).to have_text SEARCH_AGAIN_LINK

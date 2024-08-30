@@ -6,10 +6,6 @@ And(/^I enter valid producer postcode$/) do
   WhatsProducerAddressPage.new.enter_postcode 'AL3 8QE'
 end
 
-And(/^I click search postcode button$/) do
-  WhatsProducerAddressPage.new.search_postcode_button
-end
-
 And(/^I verify select producer address page is correctly translated$/) do
   SelectProducerAddressPage.new.check_page_translation
 end
@@ -38,7 +34,7 @@ Then(/^I complete the Enter Producer Address Manual page$/) do
 end
 
 And(/^I select first producer address$/) do
-  SelectProducerAddressPage.new.select_first_address
+  SelectProducerAddressPage.new.select_first_address 'producer'
   SelectProducerAddressPage.new.save_and_continue
 end
 
@@ -68,7 +64,7 @@ And(/^I should see the address matching the postcode and building number$/) do
 end
 
 And(/^I select second producer address$/) do
-  SelectProducerAddressPage.new.select_second_address
+  SelectProducerAddressPage.new.select_second_address 'producer'
 end
 
 And(/^I enter invalid address postcode$/) do

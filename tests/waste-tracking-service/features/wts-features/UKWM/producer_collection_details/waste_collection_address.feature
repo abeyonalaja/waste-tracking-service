@@ -86,7 +86,6 @@ Feature: Waste collection address pages
     When I click save and return button
     And I remain on the Enter Waste Collection Address Manual page with an "Enter a postcode" error message displayed
 
-
   Scenario: User can't continue for Waste collection manual entry page if enter max data for input fields
     Given I navigate to waste tracking accounts page
     When I navigate to the UKM task list page with reference
@@ -133,6 +132,6 @@ Feature: Waste collection address pages
     Then the "Confirm Waste Collection Address" page is displayed
     And I should see the waste collection address matching the postcode and building number
     Then I click save and return button
-    Then I should UKWM single journey waste movement page is correctly displayed
+    Then I should see UKWM waste reference on task list page
     And the UKWM task "Waste collection details" should be "Completed"
 

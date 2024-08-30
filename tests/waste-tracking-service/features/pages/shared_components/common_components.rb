@@ -282,12 +282,14 @@ module CommonComponents
     find(countries.fetch(selected_country), visible: false).checked?
   end
 
-  def select_first_address
+  def select_first_address(page)
+    address_text = find(:css, 'label[for="addressselection-radio-1"]').text
     find('addressselection-radio-1', visible: false).click
+    TestStatus.set_test_status("#{page}_full_address".to_sym, address_text)
   end
 
   def select_second_address(page)
-    address_text = find('label[for="addressselection-radio-1"]').text
+    address_text = find(:css, 'label[for="addressselection-radio-2"]').text
     find('addressselection-radio-2', visible: false).click
     TestStatus.set_test_status("#{page}_full_address".to_sym, address_text)
   end

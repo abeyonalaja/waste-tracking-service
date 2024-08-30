@@ -107,3 +107,8 @@ end
 When(/^I click the button Use this address and Continue$/) do
   click_on Translations.value 'single.postcode.useAddress'
 end
+
+And(/^I click search postcode button$/) do
+  click_on Translations.ukmv_value 'single.postcode.button'
+end
+

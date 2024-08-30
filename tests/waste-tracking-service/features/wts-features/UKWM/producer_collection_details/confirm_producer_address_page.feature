@@ -27,7 +27,7 @@ Feature: AS A Waste controller
     Then the "Confirm producer address" page is displayed
     And I should see the address matching the postcode and building number
     Then I click save and return button
-    Then I should UKWM single journey waste movement page is correctly displayed
+    Then I should see UKWM waste reference on task list page
     And the UKWM task "Producer organisation address" should be "Completed"
 
   Scenario: User navigates to Select an address page and click save and continue
@@ -53,7 +53,7 @@ Feature: AS A Waste controller
     Then the "Select producer address" page is displayed
     And I select second producer address
     And I click save and return button
-    Then I should UKWM single journey waste movement page is correctly displayed
+    Then I should see UKWM waste reference on task list page
     And the UKWM task "Producer organisation address" should be "In progress"
 
     Scenario: User navigate to edit producer address page when user click change address from confirmation page

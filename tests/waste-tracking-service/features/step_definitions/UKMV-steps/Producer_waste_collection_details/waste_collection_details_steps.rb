@@ -11,7 +11,7 @@ And(/^I verify select waste collection address page is correctly translated$/) d
 end
 
 And(/^I select first waste collection address$/) do
-  SelectProducerAddressPage.new.select_first_address
+  SelectProducerAddressPage.new.select_first_address 'producer'
 end
 
 And(/^I should see confirm waste collection address page translated$/) do

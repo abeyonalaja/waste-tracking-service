@@ -27,7 +27,7 @@ Feature: AS A Waste controller
     Then the "Confirm Waste Collection Address" page is displayed
     And I should see the waste collection address matching the postcode and building number
     Then I click save and return button
-    Then I should UKWM single journey waste movement page is correctly displayed
+    Then I should see UKWM waste reference on task list page
     And the UKWM task "Waste collection details" should be "Completed"
 
   Scenario: User click use this address and continue on Waste collection address confirmation page

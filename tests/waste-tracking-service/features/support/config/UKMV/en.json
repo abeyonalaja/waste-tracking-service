@@ -129,7 +129,6 @@
     "cardLink": "Create a new multiple waste movement",
     "cardOneTitle": "Start a new waste movement",
     "cardOneContent": "Create multiple new waste movements",
-
     "newWasteMovements": {
       "title": "New waste movements",
       "description": "Create a single waste movement, upload a CSV file of multiple movements, or continue a draft waste movement.",
@@ -541,10 +540,28 @@
       "producerAndCollection": {
         "heading": "Waste producer and collection details",
         "description": "Details of the waste producer and waste collection",
-        "taskOne": "Producer organisation address",
-        "taskTwo": "Producer organisation contact details",
-        "taskThree": "Waste collection details",
-        "taskFive": "Source of the waste"
+        "organisationAddress": "Producer organisation address",
+        "organisationContactDetails": "Producer organisation contact details",
+        "sicCode": "Producer SIC code",
+        "collectionDetails": "Waste collection details",
+        "sourceOfWaste": "Source of the waste",
+        "checkYourAnswers": "Check your producer and waste collection answers"
+      },
+      "carrier": {
+        "heading": "Waste carrier details (optional)",
+        "description": "Details of who transports the waste. All carrier details need to be entered if you know them in advance of the waste collection.",
+        "carrierAddress": "Carrier address",
+        "carrierContactDetails": "Carrier contact details",
+        "modeOfTransport": "Carrier mode of transport",
+        "checkYourAnswers": "Check your carrier details answers"
+      },
+      "receiver": {
+        "heading": "Waste receiver details",
+        "description": "Where the waste will be taken",
+        "receiverAddress": "Receiver address",
+        "receiverContactDetails": "Receiver contact details",
+        "receiverPermitDetails": "Receiver permit details",
+        "checkYourAnswers": "Check your receiver details answers"
       }
     },
     "postcode": {
@@ -690,6 +707,64 @@
           "edit": {
             "heading": "Edit the waste collection address"
           }
+        }
+      }
+    },
+    "carrierAddress": {
+      "metadata": {
+        "title": "Carrier address",
+        "description": "Create a new single waste movement"
+      },
+      "caption": "Waste carrier details",
+      "postcode": {
+        "search": {
+          "heading": "What is the carrier’s address?",
+          "intro": "The carrier is the person or business responsible for collecting and moving the waste."
+        },
+        "results": {
+          "heading": "Select the carrier’s address",
+          "intro": "{count} addresses were found for {postcode}"
+        },
+        "noResults": {
+          "heading": "No address found"
+        },
+        "confirmation": {
+          "heading": "Confirm the carrier’s address"
+        },
+        "manual": {
+          "heading": "What is the carrier’s address?"
+        },
+        "edit": {
+          "heading": "Edit the carrier’s address"
+        }
+      }
+    },
+    "receiverAddress": {
+      "metadata": {
+        "title": "Receiver address details",
+        "description": "Create a new single waste movement"
+      },
+      "caption": "Waste receiver details",
+      "postcode": {
+        "search": {
+          "heading": "What is the receiver’s address?",
+          "intro": "The receiver is the business or organsation that will treat or dispose of the waste."
+        },
+        "results": {
+          "heading": "Select the receiver’s address",
+          "intro": "{count} addresses were found for {postcode}"
+        },
+        "noResults": {
+          "heading": "No address found"
+        },
+        "confirmation": {
+          "heading": "Confirm the receiver’s address"
+        },
+        "manual": {
+          "heading": "What is the receiver’s address?"
+        },
+        "edit": {
+          "heading": "Edit the receiver’s address"
         }
       }
     }

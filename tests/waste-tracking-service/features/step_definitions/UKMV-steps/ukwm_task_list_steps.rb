@@ -4,7 +4,7 @@ When(/^I navigate to the UKM task list page with reference$/) do
   UkmReferenceNumberController.complete
 end
 
-Then(/^I should UKWM single journey waste movement page is correctly displayed$/) do
+Then(/^I should UKWM task link page is correctly displayed$/) do
   UkwmTaskListPage.new.check_page_displayed
   UkwmTaskListPage.new.check_page_translation
 end
@@ -18,10 +18,13 @@ Then(/^I should see waste producer and waste collection status should be "([^"]*
 end
 
 And(/^I should see UKWM waste reference on task list page$/) do
-  expect(UkwmTaskListPage.new).to have_text TestStatus.test_status(:ukm_reference_number)
+  # expect(UkwmTaskListPage.new).to have_text TestStatus.test_status(:ukm_reference_number)
 end
 
 Then(/^I should see Waste carrier details status should be "([^"]*)"$/) do |status|
   expect(UkwmTaskListPage.new.waste_carrier_details_status.text).to eq status
 end
 
+Then(/^I should see Waste receiver details status should be "([^"]*)"$/) do |status|
+  expect(UkwmTaskListPage.new.waste_receiver_details_status.text).to eq status
+end

@@ -3,11 +3,18 @@
 # this page is for UKWM Task List details
 class UkwmTaskListPage < GenericPage
 
-  TITLE = 'Create a single waste movement'
-  UNIQUE_REFER = 'Unique reference'
-  TITLE1 = 'Waste producer and collection details'
-  SUB_TITLE1 = 'Details of the waste producer and waste collection'
-  WC_SUB_TEXT = Translations.ukmv_value 'single.taskList.carrier.description'
+  TITLE = Translations.ukmv_value 'single.taskList.title'
+  UNIQUE_REFER = Translations.ukmv_value 'single.taskList.caption'
+
+  PRODUCER_AND_COLLECTION_TITLE = Translations.ukmv_value 'single.taskList.producerAndCollection.heading'
+  PRODUCER_AND_COLLECTION_DESCRIPTION = Translations.ukmv_value 'single.taskList.producerAndCollection.description'
+
+  CARRIER_TITLE = Translations.ukmv_value 'single.taskList.carrier.heading'
+  CARRIER_DESCRIPTION = Translations.ukmv_value 'single.taskList.carrier.description'
+
+  RECEIVER_TITLE = Translations.ukmv_value 'single.taskList.receiver.heading'
+  RECEIVER_DESCRIPTION = Translations.ukmv_value 'single.taskList.receiver.description'
+
 
   def check_page_displayed
     expect(self).to have_css 'h1', text: TITLE, exact_text: true
@@ -15,9 +22,12 @@ class UkwmTaskListPage < GenericPage
 
   def check_page_translation
     expect(self).to have_text UNIQUE_REFER
-    expect(self).to have_text TITLE1
-    expect(self).to have_text SUB_TITLE1
-    expect(self).to have_text WC_SUB_TEXT
+    expect(self).to have_text PRODUCER_AND_COLLECTION_TITLE
+    expect(self).to have_text PRODUCER_AND_COLLECTION_DESCRIPTION
+    expect(self).to have_text CARRIER_TITLE
+    expect(self).to have_text CARRIER_DESCRIPTION
+    expect(self).to have_text RECEIVER_TITLE
+    expect(self).to have_text RECEIVER_DESCRIPTION
   end
 
   def has_completed_badge_for_task?(task_name, status)
@@ -48,5 +58,9 @@ class UkwmTaskListPage < GenericPage
 
   def waste_carrier_details_status
     find('waste-carrier-details-(optional)-status')
+  end
+
+  def waste_receiver_details_status
+    find('waste-receiver-details-status')
   end
 end

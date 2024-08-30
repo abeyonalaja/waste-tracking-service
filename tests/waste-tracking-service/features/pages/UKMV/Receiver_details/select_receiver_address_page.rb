@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 # this page is for select producer address page
-class SelectProducerAddressPage < GenericPage
+class SelectReceiverAddressPage < GenericPage
   include CommonComponents
   include GeneralHelpers
   include ErrorBox
   include PageHelper
 
-  TITLE = Translations.ukmv_value 'single.producer.postcode.results.heading'
-  INTRO = Translations.ukmv_value 'single.producer.postcode.results.intro'
-  MANUAL_LINK = Translations.ukmv_value 'single.postcode.manualLinkShort'
+  TITLE = Translations.ukmv_value 'single.receiverAddress.postcode.results.heading'
+  INTRO = Translations.ukmv_value 'single.receiverAddress.postcode.results.intro'
+  MANUAL_LINK = Translations.ukmv_value 'single.receiverAddress.manualLinkShort'
 
   INTRO.gsub!('{count}', '6')
 
