@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import AppInsightsProvider from './providers/AppInsightsProvider';
 import SessionProvider from './providers/SessionProvider';
+import { ReactQueryProvider } from './providers/ReactQueryProvider';
 import { getServerSession } from 'next-auth';
 import { options } from './api/auth/[...nextauth]/options';
 import { getLocale, getMessages, getTranslations } from 'next-intl/server';
@@ -30,50 +31,52 @@ export default async function RootLayout({
   return (
     <AppInsightsProvider connectionString={connectionString!}>
       <SessionProvider session={session}>
-        <html
-          lang={locale}
-          className={'govuk-template govuk-frontend-supported'}
-        >
-          <body className={'govuk-template__body'}>
-            <NextIntlClientProvider
-              messages={pick(messages, ['error'])}
-              locale={locale}
-            >
-              <GovUK.SkipLink />
-              <GovUK.Header
-                serviceNameLink={
-                  <Link
-                    href="/"
-                    className="govuk-header__link govuk-header__service-name"
-                  >
-                    {t('title')}
-                  </Link>
-                }
-                navigation={
-                  <Suspense>
-                    <AuthNavigation />
-                  </Suspense>
-                }
-              />
-              <GovUK.WidthContainer>
-                <GovUK.PhaseBanner tag={`Private beta`}>
-                  {t.rich('phaseBanner', {
-                    link: (chunks) => (
-                      <Link
-                        href="/feedback"
-                        className={'govuk-link govuk-link--no-visited-state'}
-                      >
-                        {chunks}
-                      </Link>
-                    ),
-                  })}
-                </GovUK.PhaseBanner>
-              </GovUK.WidthContainer>
-              {children}
-              <GovUK.Footer />
-            </NextIntlClientProvider>
-          </body>
-        </html>
+        <ReactQueryProvider>
+          <html
+            lang={locale}
+            className={'govuk-template govuk-frontend-supported'}
+          >
+            <body className={'govuk-template__body'}>
+              <NextIntlClientProvider
+                messages={pick(messages, ['error'])}
+                locale={locale}
+              >
+                <GovUK.SkipLink />
+                <GovUK.Header
+                  serviceNameLink={
+                    <Link
+                      href="/"
+                      className="govuk-header__link govuk-header__service-name"
+                    >
+                      {t('title')}
+                    </Link>
+                  }
+                  navigation={
+                    <Suspense>
+                      <AuthNavigation />
+                    </Suspense>
+                  }
+                />
+                <GovUK.WidthContainer>
+                  <GovUK.PhaseBanner tag={`Private beta`}>
+                    {t.rich('phaseBanner', {
+                      link: (chunks) => (
+                        <Link
+                          href="/feedback"
+                          className={'govuk-link govuk-link--no-visited-state'}
+                        >
+                          {chunks}
+                        </Link>
+                      ),
+                    })}
+                  </GovUK.PhaseBanner>
+                </GovUK.WidthContainer>
+                {children}
+                <GovUK.Footer />
+              </NextIntlClientProvider>
+            </body>
+          </html>
+        </ReactQueryProvider>
       </SessionProvider>
     </AppInsightsProvider>
   );

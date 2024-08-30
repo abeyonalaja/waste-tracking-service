@@ -20,6 +20,7 @@ interface Props {
   inline?: boolean;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   testId?: string;
+  ariaLabelledBy?: string;
 }
 
 export const Radios = ({
@@ -35,17 +36,24 @@ export const Radios = ({
   inline,
   onChange,
   testId,
+  ariaLabelledBy,
 }: Props): JSX.Element => {
   return (
     <FormGroup error={!!error}>
-      <fieldset className="govuk-fieldset">
-        <legend
-          className={`govuk-fieldset__legend ${legendSize ? `govuk-fieldset__legend--${legendSize}` : ''} ${
-            legendHidden ? `govuk-visually-hidden` : ''
-          }`}
-        >
-          {legendText}
-        </legend>
+      <fieldset
+        className="govuk-fieldset"
+        aria-labelledby={ariaLabelledBy ? ariaLabelledBy : undefined}
+      >
+        {legendText && (
+          <legend
+            className={`govuk-fieldset__legend ${legendSize ? `govuk-fieldset__legend--${legendSize}` : ''} ${
+              legendHidden ? `govuk-visually-hidden` : ''
+            }`}
+          >
+            {legendText}
+          </legend>
+        )}
+
         {hint && <Hint text={hint} />}
         {error && <ErrorMessage text={error} />}
         <div

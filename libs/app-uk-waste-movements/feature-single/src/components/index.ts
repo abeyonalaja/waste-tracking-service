@@ -6,3 +6,4 @@ export { TaskList } from './TaskList';
 export { UniqueReferenceForm } from './UniqueReferenceForm';
 export { WasteSourceForm } from './WasteSourceForm';
 export { formatAddress } from './Address';
+export { SicCodes } from './SicCodes';

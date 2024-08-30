@@ -1,4 +1,5 @@
 // Client components
+export { AutoComplete } from './AutoComplete';
 export { LanguageSwitcher } from './LanguageSwitcher';
 export { BackLink } from './BackLink';
 export { Breadcrumbs } from './Breadcrumbs';

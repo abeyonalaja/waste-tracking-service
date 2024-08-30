@@ -7,5 +7,6 @@ export {
   ReuseProducerAddressPrompt,
   WasteSourceForm,
   ContactDetailsForm,
+  SicCodes,
 } from './components';
 export { AddressSearch, formatAddress } from './components/Address';
