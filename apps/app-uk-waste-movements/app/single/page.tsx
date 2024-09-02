@@ -23,7 +23,7 @@ export default async function ReferencePage(): Promise<React.ReactNode> {
   };
 
   return (
-    <Page beforeChildren={<BackLink href={'../'} />}>
+    <Page beforeChildren={<BackLink href={'/'} />}>
       <GovUK.GridRow>
         <GovUK.GridCol size="two-thirds">
           <UniqueReferenceForm
