@@ -27,6 +27,9 @@ const mockRouterPush = jest.fn();
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ push: mockRouterPush }),
+  useSearchParams: jest.fn(() => ({
+    get: jest.fn(),
+  })),
 }));
 
 const defaultProps = {

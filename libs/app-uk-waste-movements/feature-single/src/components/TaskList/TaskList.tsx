@@ -108,15 +108,19 @@ export function TaskList({ sections }: TaskListProps): React.ReactNode {
                     className={`govuk-task-list__item govuk-task-list__item--with-link ${index === 0 && styles.firstTask}`}
                   >
                     <div className="govuk-task-list__name-and-hint">
-                      <Link
-                        href={task.href}
-                        className="govuk-link govuk-task-list__link govuk-link--no-visited-state"
-                        aria-describedby={formatToKebabCase(
-                          `${task.name}-status`,
-                        )}
-                      >
-                        {task.name}
-                      </Link>
+                      {tagText === 'Cannot start yet' ? (
+                        <p className="govuk-!-margin-0">{task.name}</p>
+                      ) : (
+                        <Link
+                          href={task.href}
+                          className="govuk-link govuk-task-list__link govuk-link--no-visited-state"
+                          aria-describedby={formatToKebabCase(
+                            `${task.name}-status`,
+                          )}
+                        >
+                          {task.name}
+                        </Link>
+                      )}
                     </div>
                     <div className="govuk-task-list__status">
                       {tagText === 'Completed' ? (

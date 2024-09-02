@@ -3,7 +3,10 @@ import { Metadata } from 'next';
 import { Breadcrumbs } from '@wts/ui/shared-ui';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { getTranslations } from 'next-intl/server';
-import { TaskList } from '@wts/app-uk-waste-movements/feature-single';
+import {
+  TaskList,
+  generateSectionStatuses,
+} from '@wts/app-uk-waste-movements/feature-single';
 import { getServerSession } from 'next-auth';
 import { options } from '../../api/auth/[...nextauth]/options';
 import { redirect } from 'next/navigation';
@@ -52,26 +55,7 @@ export default async function TaskListPage({
 
   const draft: GetUkwmSubmissionResponse = await response.json();
 
-  const producerAndCollectionOverallStatus =
-    draft.producerAndCollection.producer.contact.status === 'Complete' &&
-    draft.producerAndCollection.producer.address.status === 'Complete' &&
-    draft.producerAndCollection.wasteCollection.address.status === 'Complete'
-      ? 'Completed'
-      : 'Incomplete';
-
-  const carrierOverallStatus =
-    draft.carrier.address.status === 'Complete' &&
-    draft.carrier.contact.status === 'Complete' &&
-    draft.carrier.modeOfTransport.status === 'Complete'
-      ? 'Completed'
-      : 'Incomplete';
-
-  const receiverOverallStatus =
-    draft.receiver.address.status === 'Complete' &&
-    draft.receiver.contact.status === 'Complete' &&
-    draft.receiver.permitDetails.status === 'Complete'
-      ? 'Completed'
-      : 'Incomplete';
+  const sectionStatuses = generateSectionStatuses(draft);
 
   return (
     <Page
@@ -97,7 +81,7 @@ export default async function TaskListPage({
               {
                 heading: t('producerAndCollection.heading'),
                 description: t('producerAndCollection.description'),
-                overallSectionStatus: producerAndCollectionOverallStatus,
+                overallSectionStatus: sectionStatuses.producer.overall,
                 tasks: [
                   {
                     name: t('producerAndCollection.organisationAddress'),
@@ -138,14 +122,14 @@ export default async function TaskListPage({
                   {
                     name: t('producerAndCollection.checkYourAnswers'),
                     href: `${params.id}/producer/check-your-answers`,
-                    status: 'NotStarted',
+                    status: sectionStatuses.producer.checkYourAnswers,
                   },
                 ],
               },
               {
                 heading: t('carrier.heading'),
                 description: t('carrier.description'),
-                overallSectionStatus: carrierOverallStatus,
+                overallSectionStatus: sectionStatuses.carrier.overall,
                 tasks: [
                   {
                     name: t('carrier.carrierAddress'),
@@ -165,14 +149,14 @@ export default async function TaskListPage({
                   {
                     name: t('carrier.checkYourAnswers'),
                     href: `${params.id}/carrier/check-your-answers`,
-                    status: 'NotStarted',
+                    status: sectionStatuses.carrier.checkYourAnswers,
                   },
                 ],
               },
               {
                 heading: t('receiver.heading'),
                 description: t('receiver.description'),
-                overallSectionStatus: receiverOverallStatus,
+                overallSectionStatus: 'NotStarted',
                 tasks: [
                   {
                     name: t('receiver.receiverAddress'),
@@ -192,7 +176,7 @@ export default async function TaskListPage({
                   {
                     name: t('receiver.checkYourAnswers'),
                     href: `${params.id}/receiver/check-your-answers`,
-                    status: 'NotStarted',
+                    status: 'CannotStart',
                   },
                 ],
               },

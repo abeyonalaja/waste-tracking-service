@@ -106,6 +106,7 @@ export default async function ProducerContactDetailsPage({
             section={section}
             endpoint={'producer-contact'}
             nextPage={'producer/sic-code'}
+            answersPage={`/single/${params.id}/producer/check-your-answers`}
           >
             <GovUK.Caption>{t('caption')}</GovUK.Caption>
             <GovUK.Heading size={'l'} level={1}>

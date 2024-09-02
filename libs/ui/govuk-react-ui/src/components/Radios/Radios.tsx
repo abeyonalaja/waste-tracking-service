@@ -10,7 +10,7 @@ export interface Option {
 interface Props {
   name: string;
   value?: string;
-  legendText?: string;
+  legendText?: string | React.ReactNode;
   legendSize?: 's' | 'm' | 'l' | null;
   legendHidden?: boolean;
   options: Option[];

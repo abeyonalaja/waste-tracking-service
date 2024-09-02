@@ -15,9 +15,13 @@ interface PageProps {
   params: {
     id: string;
   };
+  searchParams: {
+    check?: string;
+  };
 }
 export default async function ProducerAddressPage({
   params,
+  searchParams,
 }: PageProps): Promise<JSX.Element> {
   const session = await getServerSession(options);
   const t = await getTranslations('single.postcode');
@@ -118,7 +122,11 @@ export default async function ProducerAddressPage({
       content={content}
       id={params.id}
       savedFormValues={savedFormValues}
-      destination="/producer/contact"
+      destination={
+        searchParams.check
+          ? '/producer/check-your-answers'
+          : '/producer/contact'
+      }
       apiPartial="/producer-address"
       section="Producer"
     />

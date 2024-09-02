@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ukwm as ukwmValidation } from '@wts/util/shared-validation';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { FormErrors } from '../../types';
 import { createErrorSummaryErrors, formHasErrors } from '../../util';
@@ -39,6 +39,7 @@ interface ContactDetailsFormProps {
   section: ukwm.Section;
   endpoint: string;
   nextPage: string;
+  answersPage?: string;
 }
 
 export function ContactDetailsForm({
@@ -50,8 +51,10 @@ export function ContactDetailsForm({
   section,
   endpoint,
   nextPage,
+  answersPage,
 }: ContactDetailsFormProps): React.ReactNode {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const locale = useLocale() as ukwmValidation.Locale;
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [formErrors, setFormErrors] = useState<FormErrors>({});
@@ -217,6 +220,9 @@ export function ContactDetailsForm({
       );
 
       if (response.ok) {
+        if (searchParams.get('check') && answersPage) {
+          return router.push(answersPage);
+        }
         if (submitType === 'continueToNextPage') {
           return router.push(`/single/${id}/${nextPage}`);
         } else {
@@ -321,15 +327,17 @@ export function ContactDetailsForm({
           <GovUK.Button disabled={buttonDisabled} type="submit">
             {formStrings.buttonOne}
           </GovUK.Button>
-          <button
-            disabled={buttonDisabled}
-            onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-              handleSubmit(e, 'returnToTaskList')
-            }
-            className="govuk-button govuk-button--secondary"
-          >
-            {formStrings.buttonTwo}
-          </button>
+          {!searchParams.get('check') && (
+            <button
+              disabled={buttonDisabled}
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                handleSubmit(e, 'returnToTaskList')
+              }
+              className="govuk-button govuk-button--secondary"
+            >
+              {formStrings.buttonTwo}
+            </button>
+          )}
         </GovUK.ButtonGroup>
       </form>
     </>

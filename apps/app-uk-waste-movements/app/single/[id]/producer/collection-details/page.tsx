@@ -16,9 +16,14 @@ interface PageProps {
   params: {
     id: string;
   };
+  searchParams: {
+    check?: string;
+  };
 }
+
 export default async function CollectionAddressPage({
   params,
+  searchParams,
 }: PageProps): Promise<JSX.Element> {
   const session = await getServerSession(options);
   const t = await getTranslations('single.postcode');
@@ -125,7 +130,9 @@ export default async function CollectionAddressPage({
       id={params.id}
       savedFormValues={savedFormValues}
       apiPartial={'/waste-collection-address'}
-      destination={'/producer/source'}
+      destination={
+        searchParams.check ? '/producer/check-your-answers' : '/producer/source'
+      }
       section={'Waste collection'}
     />
   );

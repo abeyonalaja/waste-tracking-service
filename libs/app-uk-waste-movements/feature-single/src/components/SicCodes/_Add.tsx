@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { AutoComplete } from '@wts/ui/shared-ui';
@@ -39,6 +39,7 @@ export function Add({
   strings,
 }: AddProps): React.ReactNode {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const [codeToAdd, setCodeToAdd] = useState<SICCode>();
   const [codeError, setCodeError] = useState('');
@@ -108,6 +109,10 @@ export function Add({
 
       addMutation.mutate(codeToAdd?.code as string);
       return;
+    }
+
+    if (selection === 'no' && searchParams.get('check')) {
+      return router.push(`/single/${id}/producer/check-your-answers`);
     }
 
     if (selection === 'no' && submitType === 'returnToTaskList') {
@@ -308,14 +313,16 @@ export function Add({
         </div>
         <GovUK.ButtonGroup>
           <GovUK.Button type="submit">{strings.saveAndContinue}</GovUK.Button>
-          <button
-            onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-              handleSubmit(e, 'returnToTaskList')
-            }
-            className="govuk-button govuk-button--secondary"
-          >
-            {strings.saveAndReturn}
-          </button>
+          {!searchParams.get('check') && (
+            <button
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                handleSubmit(e, 'returnToTaskList')
+              }
+              className="govuk-button govuk-button--secondary"
+            >
+              {strings.saveAndReturn}
+            </button>
+          )}
         </GovUK.ButtonGroup>
       </form>
     </>

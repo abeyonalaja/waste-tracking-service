@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 
 interface FormStrings {
@@ -37,6 +38,7 @@ export function WasteSourceForm({
   children,
 }: WasteSourceFormProps): React.ReactNode {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [showError, setShowError] = useState(false);
   const [wasteSource, setWasteSource] = useState<WasteSource | undefined>(
@@ -51,7 +53,10 @@ export function WasteSourceForm({
     event:
       | React.FormEvent<HTMLFormElement>
       | React.MouseEvent<HTMLButtonElement>,
-    submitType: 'continueToNextPage' | 'returnToTaskList',
+    submitType:
+      | 'continueToNextPage'
+      | 'returnToTaskList'
+      | 'returnToCheckAnswers',
   ): Promise<void> {
     event.preventDefault();
     setButtonDisabled(true);
@@ -84,6 +89,14 @@ export function WasteSourceForm({
       );
 
       if (response.ok) {
+        if (submitType === 'returnToTaskList') {
+          return router.push(`/single/${id}`);
+        }
+
+        if (submitType === 'returnToCheckAnswers') {
+          return router.push(`/single/${id}/producer/check-your-answers`);
+        }
+
         if (submitType === 'continueToNextPage') {
           // Checks to see if all other producer sections are complete to determine
           // if the user should be redirected to the check your answers page or task list
@@ -107,12 +120,14 @@ export function WasteSourceForm({
 
           // TODO: Add check for SIC code completeness once implemented
           const otherProducerSectionsAreComplete =
-            draft.producerAndCollection.producer.contact.status ===
-              'Complete' &&
             draft.producerAndCollection.producer.address.status ===
               'Complete' &&
-            draft.producerAndCollection.wasteCollection.status === 'Complete' &&
-            draft.producerAndCollection.wasteSource.status === 'Complete';
+            draft.producerAndCollection.producer.contact.status ===
+              'Complete' &&
+            draft.producerAndCollection.wasteCollection.address.status ===
+              'Complete' &&
+            draft.producerAndCollection.wasteCollection.wasteSource.status ===
+              'Complete';
 
           if (otherProducerSectionsAreComplete) {
             window.location.assign(
@@ -124,7 +139,6 @@ export function WasteSourceForm({
             return;
           }
         }
-        return router.push(`/single/${id}`);
       }
     } catch (error) {
       console.error(error);
@@ -143,7 +157,9 @@ export function WasteSourceForm({
       {children}
       <form
         onSubmit={(e: React.FormEvent<HTMLFormElement>) =>
-          handleSubmit(e, 'continueToNextPage')
+          searchParams.get('check')
+            ? handleSubmit(e, 'returnToCheckAnswers')
+            : handleSubmit(e, 'continueToNextPage')
         }
       >
         <GovUK.FormGroup error={showError} id="waste-source">
@@ -169,15 +185,18 @@ export function WasteSourceForm({
           <GovUK.Button type="submit" disabled={buttonDisabled}>
             {formStrings.buttonOne}
           </GovUK.Button>
-          <button
-            disabled={buttonDisabled}
-            onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-              handleSubmit(e, 'returnToTaskList')
-            }
-            className="govuk-button govuk-button--secondary"
-          >
-            {formStrings.buttonTwo}
-          </button>
+
+          {!searchParams.get('check') && (
+            <button
+              disabled={buttonDisabled}
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                handleSubmit(e, 'returnToTaskList')
+              }
+              className="govuk-button govuk-button--secondary"
+            >
+              {formStrings.buttonTwo}
+            </button>
+          )}
         </GovUK.ButtonGroup>
       </form>
     </>

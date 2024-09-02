@@ -7,7 +7,7 @@ import {
   FormValues,
   ViewType,
 } from './types';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Page } from '@wts/ui/shared-ui/server';
 
@@ -47,6 +47,8 @@ export function Confirm({
   apiPartial,
 }: ConfirmProps): JSX.Element {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   const handleSearchAgain = (e: React.MouseEvent) => {
     e.preventDefault();
     updateFormValues(defaultFormValues);
@@ -125,12 +127,14 @@ export function Confirm({
                 text={content.useAddress}
                 id="button-save-continue"
               />
-              <GovUK.Button
-                secondary
-                text={content.buttonSecondary}
-                id="button-save-and-return"
-                onClick={(e: React.MouseEvent) => handleSecondaryButton(e)}
-              />
+              {!searchParams.get('check') && (
+                <GovUK.Button
+                  secondary
+                  text={content.buttonSecondary}
+                  id="button-save-and-return"
+                  onClick={(e: React.MouseEvent) => handleSecondaryButton(e)}
+                />
+              )}
             </GovUK.ButtonGroup>
             <GovUK.Paragraph>
               <Link href="#" onClick={handleSearchAgain}>

@@ -136,7 +136,7 @@ describe('TaskList', () => {
 
     const taskLinks = screen.getAllByRole('link');
 
-    expect(taskLinks).toHaveLength(6);
+    expect(taskLinks).toHaveLength(5);
   });
 
   it('task links render with correct hrefs', () => {

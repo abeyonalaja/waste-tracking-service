@@ -11,6 +11,7 @@ import { Remove, RemoveStrings } from './_Remove';
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { BackLink, Loading, Page } from '@wts/ui/shared-ui/server';
 import type { SICCode } from '@wts/api/reference-data';
+import { useSearchParams } from 'next/navigation';
 
 interface Strings {
   backLink: string;
@@ -43,6 +44,7 @@ export function SicCodes({
   strings,
 }: SicCodesProps): React.ReactNode {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const locale = useLocale();
   const [codeToRemove, setCodeToRemove] = useState<string>('');
 
@@ -173,9 +175,12 @@ export function SicCodes({
               >
                 {strings.saveAndContinue}
               </GovUK.Button>
-              <GovUK.Button secondary={true} href={`/single/${id}/`}>
-                {strings.saveAndReturn}
-              </GovUK.Button>
+
+              {!searchParams.get('check') && (
+                <GovUK.Button secondary={true} href={`/single/${id}/`}>
+                  {strings.saveAndReturn}
+                </GovUK.Button>
+              )}
             </GovUK.ButtonGroup>
           </GovUK.GridCol>
         </GovUK.GridRow>

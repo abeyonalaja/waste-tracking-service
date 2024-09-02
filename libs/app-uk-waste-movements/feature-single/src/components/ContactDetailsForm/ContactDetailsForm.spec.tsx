@@ -22,6 +22,9 @@ jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: jest.fn(),
   }),
+  useSearchParams: jest.fn(() => ({
+    get: jest.fn(),
+  })),
 }));
 
 jest.mock('next-intl', () => ({

@@ -53,6 +53,9 @@ global.TextEncoder = TextEncoder;
 
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
+  useSearchParams: jest.fn(() => ({
+    get: jest.fn(),
+  })),
 }));
 
 jest.mock('@tanstack/react-query', () => {

@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 interface SummaryListProps {
   testId?: string;
-  items: Array<{ key: string; value: ReactNode }>;
+  items: Array<{ key: string; value: ReactNode; action?: ReactNode }>;
   hideBorders?: boolean;
   hideEmptyRows?: boolean;
 }
@@ -54,6 +54,9 @@ export function SummaryList({
               >
                 {item.value}
               </dd>
+              {item.action && (
+                <dd className="govuk-summary-list__actions">{item.action}</dd>
+              )}
             </div>
           );
         }

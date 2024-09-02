@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { Page } from '@wts/ui/shared-ui/server';
 import { useRouter } from 'next/navigation';
 import { createErrorSummaryErrors, formHasErrors } from '../../util';
+import { useSearchParams } from 'next/navigation';
 
 interface ManualProps {
   id: string;
@@ -35,6 +36,7 @@ export function Manual({
 }: ManualProps): JSX.Element {
   const locale = useLocale() as ukwmValidation.Locale;
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [formErrors, setFormErrors] = useState<FormErrors>({});
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -263,11 +265,14 @@ export function Manual({
             />
             <GovUK.ButtonGroup>
               <GovUK.Button text={content.buttonSave} />
-              <GovUK.Button
-                secondary
-                text={content.buttonSecondary}
-                onClick={(e: React.MouseEvent) => handleSecondaryButton(e)}
-              />
+
+              {!searchParams.get('check') && (
+                <GovUK.Button
+                  secondary
+                  text={content.buttonSecondary}
+                  onClick={(e: React.MouseEvent) => handleSecondaryButton(e)}
+                />
+              )}
             </GovUK.ButtonGroup>
           </form>
         </GovUK.GridCol>
