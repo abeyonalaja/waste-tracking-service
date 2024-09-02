@@ -588,6 +588,7 @@ const plugin: Plugin<PluginOptions> = {
           return request as dto.PutCollectionDateResponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
+            err.output.payload.data = err?.data ?? undefined;
             return err;
           }
 

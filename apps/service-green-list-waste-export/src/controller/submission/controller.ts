@@ -21,6 +21,7 @@ import {
   WasteCodeType,
 } from '@wts/api/reference-data';
 import { CosmosRepository } from '../../data';
+import { common as commonValidation } from '@wts/util/shared-validation';
 
 export type Handler<Request, Response> = (
   request: Request,
@@ -196,6 +197,21 @@ export default class SubmissionController {
     api.SetCollectionDateResponse
   > = async ({ id, accountId, value }) => {
     try {
+      const date =
+        value.type === 'ActualDate' ? value.actualDate : value.estimateDate;
+      const dateValidationResult =
+        commonValidation.commonValidationRules.validateCollectionDate(
+          date.day,
+          date.month,
+          date.year,
+        );
+
+      if (!dateValidationResult.valid) {
+        return fromBoom(
+          Boom.badRequest('Validation failed', dateValidationResult.errors),
+        );
+      }
+
       const submission = (await this.repository.getRecord(
         submissionContainerName,
         id,

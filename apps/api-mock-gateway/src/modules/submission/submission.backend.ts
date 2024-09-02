@@ -37,12 +37,12 @@ import {
   isWasteCodeChangingBulkToBulkDifferentType,
   isWasteCodeChangingBulkToBulkSameType,
   setBaseWasteDescription,
-  isCollectionDateValid,
   paginateArray,
   setSubmissionConfirmation,
   setSubmissionDeclaration,
 } from '../../lib/util';
 import { validation } from '@wts/api/green-list-waste-export';
+import { common as commonValidation } from '@wts/util/shared-validation';
 
 export interface SubmissionRef {
   id: string;
@@ -758,6 +758,25 @@ export async function setCollectionDate(
     }
 
     const v = value as CollectionDate;
+    if (v.status !== 'NotStarted') {
+      const date =
+        v.value.type === 'ActualDate'
+          ? v.value.actualDate
+          : v.value.estimateDate;
+      const dateValidationResult =
+        commonValidation.commonValidationRules.validateCollectionDate(
+          date.day,
+          date.month,
+          date.year,
+        );
+
+      if (!dateValidationResult.valid) {
+        return Promise.reject(
+          new BadRequestError('Validation error', dateValidationResult.errors),
+        );
+      }
+    }
+
     let collectionDate = v;
     if (
       v.status !== 'NotStarted' &&
@@ -798,6 +817,21 @@ export async function setCollectionDate(
     }
 
     const v = value as CollectionDateData;
+
+    const date = v.type === 'ActualDate' ? v.actualDate : v.estimateDate;
+    const dateValidationResult =
+      commonValidation.commonValidationRules.validateCollectionDate(
+        date.day,
+        date.month,
+        date.year,
+      );
+
+    if (!dateValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError('Validation error', dateValidationResult.errors),
+      );
+    }
+
     let collectionDate = v;
     if (v.type === 'ActualDate') {
       collectionDate = {
@@ -1385,12 +1419,26 @@ export async function updateSubmissionConfirmation(
     );
   }
 
-  if (!isCollectionDateValid(submission.collectionDate)) {
-    submission.collectionDate = { status: 'NotStarted' };
-    submission.submissionConfirmation = setSubmissionConfirmation(submission);
+  if (submission.collectionDate.status !== 'NotStarted') {
+    const date =
+      submission.collectionDate.value.type === 'ActualDate'
+        ? submission.collectionDate.value.actualDate
+        : submission.collectionDate.value.estimateDate;
 
-    db.drafts.push(submission);
-    return Promise.reject(new Error('Invalid collection date'));
+    const collectionDateValidationResult =
+      commonValidation.commonValidationRules.validateCollectionDate(
+        date.day,
+        date.month,
+        date.year,
+      );
+
+    if (!collectionDateValidationResult.valid) {
+      submission.collectionDate = { status: 'NotStarted' };
+      submission.submissionConfirmation = setSubmissionConfirmation(submission);
+
+      db.drafts.push(submission);
+      return Promise.reject(new Error('Invalid collection date'));
+    }
   }
 
   submission.submissionConfirmation = value;
@@ -1431,15 +1479,29 @@ export async function updateSubmissionDeclaration(
     );
   }
 
-  if (!isCollectionDateValid(submission.collectionDate)) {
-    submission.collectionDate = { status: 'NotStarted' };
+  if (submission.collectionDate.status !== 'NotStarted') {
+    const date =
+      submission.collectionDate.value.type === 'ActualDate'
+        ? submission.collectionDate.value.actualDate
+        : submission.collectionDate.value.estimateDate;
 
-    submission.submissionConfirmation = setSubmissionConfirmation(submission);
-    submission.submissionDeclaration = setSubmissionDeclaration(submission);
-    submission.submissionState.timestamp = new Date();
+    const collectionDateValidationResult =
+      commonValidation.commonValidationRules.validateCollectionDate(
+        date.day,
+        date.month,
+        date.year,
+      );
 
-    db.drafts.push(submission);
-    return Promise.reject(new BadRequestError('Invalid collection date'));
+    if (!collectionDateValidationResult.valid) {
+      submission.collectionDate = { status: 'NotStarted' };
+
+      submission.submissionConfirmation = setSubmissionConfirmation(submission);
+      submission.submissionDeclaration = setSubmissionDeclaration(submission);
+      submission.submissionState.timestamp = new Date();
+
+      db.drafts.push(submission);
+      return Promise.reject(new BadRequestError('Invalid collection date'));
+    }
   }
 
   if (

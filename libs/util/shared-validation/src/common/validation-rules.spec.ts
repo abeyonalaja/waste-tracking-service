@@ -4,6 +4,7 @@ import {
   validateAddressLine1,
   validateAddressLine2,
   validateBuildingNameOrNumber,
+  validateCollectionDate,
   validateCountry,
   validateEmailAddress,
   validateFaxNumber,
@@ -561,4 +562,52 @@ describe('validateFaxNumber', () => {
       }
     },
   );
+});
+
+describe(validateCollectionDate, () => {
+  it('should return valid for valid date', () => {
+    const now = new Date();
+    now.setDate(now.getDate() + 7);
+
+    const result = validateCollectionDate(
+      now.getDate(),
+      now.getMonth() + 1,
+      now.getFullYear(),
+    );
+
+    expect(result.valid).toEqual(true);
+  });
+  it.each([
+    [30, 2, 2024],
+    [1, 13, 2024],
+    [32, 1, 2024],
+  ])(
+    'should return invalid error if supplied value is in incorrect format(%i-%i-%i)',
+    (day, month, year) => {
+      const result = validateCollectionDate(day, month, year);
+
+      expect(result.valid).toEqual(false);
+      if (!result.valid) {
+        expect(result.errors.length).toEqual(1);
+        expect(result.errors).toContain('empty');
+      }
+    },
+  );
+
+  it('should return date in past error if supplied value is in the past', () => {
+    const now = new Date();
+    now.setDate(now.getDate() - 7);
+
+    const result = validateCollectionDate(
+      now.getDate(),
+      now.getMonth() + 1,
+      now.getFullYear(),
+    );
+
+    expect(result.valid).toEqual(false);
+    if (!result.valid) {
+      expect(result.errors.length).toEqual(1);
+      expect(result.errors).toContain('invalid');
+    }
+  });
 });

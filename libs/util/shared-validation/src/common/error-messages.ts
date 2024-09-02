@@ -124,3 +124,29 @@ export const charTooManyBuildingNameOrNumber = {
   en: `Building name or number must be less than ${commonConstraints.FreeTextChar.max} characters`,
   cy: `Rhaid i enw'r adeilad neu rif fod yn llai na ${commonConstraints.FreeTextChar.max} o gymeriadau`,
 };
+
+export const emptyCollectionDate = {
+  en: {
+    ui: 'Enter a real date',
+    csv: 'Enter a real collection date',
+    api: 'Enter a real collection date',
+  },
+  cy: {
+    ui: 'Rhowch ddyddiad go iawn',
+    csv: 'Rhowch ddyddiad casglu go iawn',
+    api: 'Rhowch ddyddiad casglu go iawn',
+  },
+};
+
+export const invalidCollectionDate = {
+  en: {
+    ui: 'Enter a date in the future',
+    csv: 'Enter a collection date in the future',
+    api: 'Enter a collection date in the future',
+  },
+  cy: {
+    ui: 'Rhowch ddyddiad yn y dyfodol',
+    csv: 'Nodwch ddyddiad casglu yn y dyfodol',
+    api: 'Nodwch ddyddiad casglu yn y dyfodol',
+  },
+};

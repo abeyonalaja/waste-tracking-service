@@ -119,12 +119,6 @@ export const ImporterDetailValidationErrorMessages = {
   charTooManyEmail: `The importer email address must be less than ${FreeTextChar.max} characters`,
 };
 
-export const CollectionDateValidationErrorMessages = {
-  empty: 'Enter a real collection date',
-  invalid: 'Enter a collection date in the future',
-  missingType: "Enter if this is an 'estimate' or 'actual' collection date",
-};
-
 interface CarrierErrorMessages {
   emptyOrganisationName: string;
   charTooManyOrganisationName: string;

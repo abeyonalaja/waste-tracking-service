@@ -11,6 +11,10 @@ import {
   validation,
 } from '../../model';
 import { CosmosRepository } from '../../data';
+
+import { common as commonValidation } from '@wts/util/shared-validation';
+import { glwe } from '@wts/util/shared-validation';
+
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
     error: jest.fn(),
@@ -1098,12 +1102,13 @@ describe(SubmissionController, () => {
               },
               {
                 field: 'CollectionDate',
-                message: validation.CollectionDateValidationErrorMessages.empty,
+                message:
+                  commonValidation.commonErrorMessages.emptyCollectionDate.en
+                    .csv,
               },
               {
                 field: 'CollectionDate',
-                message:
-                  validation.CollectionDateValidationErrorMessages.missingType,
+                message: glwe.errorMessages.missingTypeCollectionDate.en.csv,
               },
               {
                 field: 'Carriers',
@@ -2782,9 +2787,9 @@ describe(SubmissionController, () => {
     const actualCollectionDate = {
       type: 'ActualDate',
       actualDate: {
-        year: '01',
+        year: '2025',
         month: '01',
-        day: '2025',
+        day: '01',
       },
     } as CollectionDate;
 
@@ -2797,6 +2802,8 @@ describe(SubmissionController, () => {
         value: actualCollectionDate,
       });
       expect(response.success).toBe(false);
+
+      console.log(response);
       if (response.success) {
         return;
       }

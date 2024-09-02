@@ -21,7 +21,6 @@ import {
   WasteQuantity,
 } from '../../model';
 import {
-  isCollectionDateValid,
   isWasteCodeChangingBulkToBulkDifferentType,
   isWasteCodeChangingBulkToBulkSameType,
   isWasteCodeChangingBulkToSmall,
@@ -31,6 +30,7 @@ import {
   setSubmissionDeclarationStatus,
 } from '../../lib/util';
 import { CosmosRepository } from '../../data';
+import { common as commonValidation } from '@wts/util/shared-validation';
 
 export type Handler<Request, Response> = (
   request: Request,
@@ -600,6 +600,27 @@ export default class DraftController {
     api.SetDraftCollectionDateResponse
   > = async ({ id, accountId, value }) => {
     try {
+      if (value.status !== 'NotStarted') {
+        const date =
+          value.value.type === 'ActualDate'
+            ? value.value.actualDate
+            : value.value.estimateDate;
+        const collectionDateValidationResult =
+          commonValidation.commonValidationRules.validateCollectionDate(
+            date.day,
+            date.month,
+            date.year,
+          );
+
+        if (!collectionDateValidationResult.valid) {
+          return fromBoom(
+            Boom.badRequest(
+              'Validation failed',
+              collectionDateValidationResult.errors,
+            ),
+          );
+        }
+      }
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
@@ -1376,18 +1397,33 @@ export default class DraftController {
         return fromBoom(Boom.badRequest());
       }
 
-      if (!isCollectionDateValid(draft.collectionDate)) {
-        draft.collectionDate = { status: 'NotStarted' };
-        draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
-        draft.submissionState.timestamp = new Date();
+      if (draft.collectionDate.status !== 'NotStarted') {
+        const date =
+          draft.collectionDate.value.type === 'ActualDate'
+            ? draft.collectionDate.value.actualDate
+            : draft.collectionDate.value.estimateDate;
 
-        await this.repository.saveRecord(
-          draftContainerName,
-          { ...draft },
-          accountId,
-        );
-        return fromBoom(Boom.badRequest());
+        const collectionDateValidationResult =
+          commonValidation.commonValidationRules.validateCollectionDate(
+            date.day,
+            date.month,
+            date.year,
+          );
+
+        if (!collectionDateValidationResult.valid) {
+          draft.collectionDate = { status: 'NotStarted' };
+          draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
+          draft.submissionState.timestamp = new Date();
+
+          await this.repository.saveRecord(
+            draftContainerName,
+            { ...draft },
+            accountId,
+          );
+          return fromBoom(Boom.badRequest());
+        }
       }
+
       draft.submissionConfirmation = value;
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
       draft.submissionState.timestamp = new Date();
@@ -1444,19 +1480,33 @@ export default class DraftController {
         return fromBoom(Boom.badRequest());
       }
 
-      if (!isCollectionDateValid(draft.collectionDate)) {
-        draft.collectionDate = { status: 'NotStarted' };
+      if (draft.collectionDate.status !== 'NotStarted') {
+        const date =
+          draft.collectionDate.value.type === 'ActualDate'
+            ? draft.collectionDate.value.actualDate
+            : draft.collectionDate.value.estimateDate;
 
-        draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
-        draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
-        draft.submissionState.timestamp = new Date();
+        const collectionDateValidationResult =
+          commonValidation.commonValidationRules.validateCollectionDate(
+            date.day,
+            date.month,
+            date.year,
+          );
 
-        await this.repository.saveRecord(
-          draftContainerName,
-          { ...draft },
-          accountId,
-        );
-        return fromBoom(Boom.badRequest());
+        if (!collectionDateValidationResult.valid) {
+          draft.collectionDate = { status: 'NotStarted' };
+
+          draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
+          draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
+          draft.submissionState.timestamp = new Date();
+
+          await this.repository.saveRecord(
+            draftContainerName,
+            { ...draft },
+            accountId,
+          );
+          return fromBoom(Boom.badRequest());
+        }
       }
 
       let submissionDeclaration: DraftSubmission['submissionDeclaration'] =

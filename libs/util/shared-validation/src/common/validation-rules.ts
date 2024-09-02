@@ -1,4 +1,5 @@
 import { commonConstraints, commonRegex, ValidationResult } from '.';
+import { isPast, isValid, parse } from 'date-fns';
 
 export function titleCase(str: string): string {
   return str
@@ -301,5 +302,46 @@ export function validateFaxNumber(
   return {
     valid: true,
     value: !trimmedFaxNumber ? undefined : trimmedFaxNumber,
+  };
+}
+
+export function validateCollectionDate(
+  day?: number | string,
+  month?: number | string,
+  year?: number | string,
+  futureDatesOnly = true,
+): ValidationResult<Date> {
+  if (!day || !month || !year) {
+    return {
+      valid: false,
+      errors: ['empty'],
+    };
+  }
+
+  const formattedDay = day.toString().padStart(2, '0');
+  const formattedMonth = month.toString().padStart(2, '0');
+  const parsedDate = parse(
+    `${year}-${formattedMonth}-${formattedDay}`,
+    'yyyy-MM-dd',
+    new Date(),
+  );
+
+  if (!isValid(parsedDate)) {
+    return {
+      valid: false,
+      errors: ['empty'],
+    };
+  }
+
+  if (futureDatesOnly && isPast(parsedDate)) {
+    return {
+      valid: false,
+      errors: ['invalid'],
+    };
+  }
+
+  return {
+    valid: true,
+    value: parsedDate,
   };
 }

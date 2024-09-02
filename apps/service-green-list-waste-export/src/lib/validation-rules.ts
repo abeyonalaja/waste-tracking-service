@@ -1,4 +1,3 @@
-import { isPast, isValid } from 'date-fns';
 import {
   WasteCodeType,
   WasteCode,
@@ -36,6 +35,9 @@ import {
   Carrier,
   RecoveryFacilityDetail,
 } from '../model';
+
+import { common as commonValidation } from '@wts/util/shared-validation';
+import { glwe } from '@wts/util/shared-validation';
 
 function titleCase(str: string) {
   return str
@@ -1006,46 +1008,61 @@ export function validateCollectionDateSection(
   if (!value.wasteCollectionDate) {
     errors.push({
       field: 'CollectionDate',
-      message: validation.CollectionDateValidationErrorMessages.empty,
+      message: commonValidation.commonErrorMessages.emptyCollectionDate.en.csv,
     });
   } else {
     dateArr = value.wasteCollectionDate.replace(/-/g, '/').split('/');
-    collectionDate = new Date(
-      Number(dateArr[2]),
-      Number(dateArr[1]) - 1,
-      Number(dateArr[0]),
-    );
-    if (
-      !isValid(collectionDate) ||
-      !(collectionDate.getMonth() + 1 === Number(dateArr[1]))
-    ) {
-      errors.push({
-        field: 'CollectionDate',
-        message: validation.CollectionDateValidationErrorMessages.empty,
-      });
-    } else {
-      if (isPast(collectionDate)) {
-        errors.push({
-          field: 'CollectionDate',
-          message: validation.CollectionDateValidationErrorMessages.invalid,
-        });
+
+    const collectionDateValidationResult =
+      commonValidation.commonValidationRules.validateCollectionDate(
+        dateArr[0],
+        dateArr[1],
+        dateArr[2],
+      );
+
+    if (!collectionDateValidationResult.valid) {
+      for (const error of collectionDateValidationResult.errors) {
+        switch (error) {
+          case 'empty':
+            errors.push({
+              field: 'CollectionDate',
+              message:
+                commonValidation.commonErrorMessages.emptyCollectionDate.en.csv,
+            });
+            break;
+
+          case 'invalid':
+            errors.push({
+              field: 'CollectionDate',
+              message:
+                commonValidation.commonErrorMessages.invalidCollectionDate.en
+                  .csv,
+            });
+            break;
+        }
       }
     }
   }
 
-  let collectionDateType = '';
-  const quantityType = value.estimatedOrActualCollectionDate
-    .replace(/\s/g, '')
-    .toLowerCase();
-  if (quantityType === 'actual') {
-    collectionDateType = 'ActualDate';
-  } else if (quantityType === 'estimate') {
-    collectionDateType = 'EstimateDate';
+  const collectionDateTypeValidationResult =
+    glwe.validationRules.validateCollectionDateType(
+      value.estimatedOrActualCollectionDate,
+    );
+  let collectionDateType: 'EstimateDate' | 'ActualDate' = 'EstimateDate';
+
+  if (!collectionDateTypeValidationResult.valid) {
+    for (const error of collectionDateTypeValidationResult.errors) {
+      switch (error) {
+        case 'invalid':
+          errors.push({
+            field: 'CollectionDate',
+            message: glwe.errorMessages.missingTypeCollectionDate.en.csv,
+          });
+          break;
+      }
+    }
   } else {
-    errors.push({
-      field: 'CollectionDate',
-      message: validation.CollectionDateValidationErrorMessages.missingType,
-    });
+    collectionDateType = collectionDateTypeValidationResult.value;
   }
 
   if (errors.length > 0) {
@@ -1060,10 +1077,11 @@ export function validateCollectionDateSection(
     month: dateArr[1]?.padStart(2, '0'),
     year: collectionDate?.getFullYear()?.toString() || dateArr[2],
   };
+
   return {
     valid: true,
     value: {
-      type: collectionDateType as 'EstimateDate' | 'ActualDate',
+      type: collectionDateType,
       estimateDate: collectionDateType === 'EstimateDate' ? date : {},
       actualDate: collectionDateType === 'ActualDate' ? date : {},
     },

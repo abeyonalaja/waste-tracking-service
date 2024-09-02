@@ -42,30 +42,6 @@ export function setSubmissionDeclaration(
   }
 }
 
-export function isCollectionDateValid(
-  date: draft.DraftSubmission['collectionDate'],
-): boolean {
-  if (date.status !== 'NotStarted') {
-    const {
-      day: dayStr,
-      month: monthStr,
-      year: yearStr,
-    } = date.value[
-      date.value.type === 'ActualDate' ? 'actualDate' : 'estimateDate'
-    ];
-    const [day, month, year] = [
-      parseInt(dayStr as string),
-      parseInt(monthStr as string) - 1,
-      parseInt(yearStr as string),
-    ];
-
-    if (Number.isNaN(day) || Number.isNaN(month) || Number.isNaN(year)) {
-      return false;
-    }
-  }
-  return true;
-}
-
 export function setSubmissionConfirmationStatus(
   draft: draft.DraftSubmission,
 ): draft.DraftSubmission['submissionConfirmation'] {

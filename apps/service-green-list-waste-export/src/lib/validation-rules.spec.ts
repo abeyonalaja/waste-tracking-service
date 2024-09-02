@@ -26,6 +26,9 @@ import {
 } from './validation-rules';
 import { faker } from '@faker-js/faker';
 
+import { common as commonValidation } from '@wts/util/shared-validation';
+import { glwe } from '@wts/util/shared-validation';
+
 const wasteCodes = [
   {
     type: 'BaselAnnexIX',
@@ -3820,7 +3823,8 @@ describe('validateCollectionDateSection', () => {
     expect(response.value).toEqual([
       {
         field: 'CollectionDate',
-        message: validation.CollectionDateValidationErrorMessages.empty,
+        message:
+          commonValidation.commonErrorMessages.emptyCollectionDate.en.csv,
       },
     ]);
 
@@ -3832,7 +3836,8 @@ describe('validateCollectionDateSection', () => {
     expect(response.value).toEqual([
       {
         field: 'CollectionDate',
-        message: validation.CollectionDateValidationErrorMessages.empty,
+        message:
+          commonValidation.commonErrorMessages.emptyCollectionDate.en.csv,
       },
     ]);
 
@@ -3844,7 +3849,8 @@ describe('validateCollectionDateSection', () => {
     expect(response.value).toEqual([
       {
         field: 'CollectionDate',
-        message: validation.CollectionDateValidationErrorMessages.empty,
+        message:
+          commonValidation.commonErrorMessages.emptyCollectionDate.en.csv,
       },
     ]);
 
@@ -3856,7 +3862,8 @@ describe('validateCollectionDateSection', () => {
     expect(response.value).toEqual([
       {
         field: 'CollectionDate',
-        message: validation.CollectionDateValidationErrorMessages.invalid,
+        message:
+          commonValidation.commonErrorMessages.invalidCollectionDate.en.csv,
       },
     ]);
 
@@ -3868,11 +3875,12 @@ describe('validateCollectionDateSection', () => {
     expect(response.value).toEqual([
       {
         field: 'CollectionDate',
-        message: validation.CollectionDateValidationErrorMessages.empty,
+        message:
+          commonValidation.commonErrorMessages.emptyCollectionDate.en.csv,
       },
       {
         field: 'CollectionDate',
-        message: validation.CollectionDateValidationErrorMessages.missingType,
+        message: glwe.errorMessages.missingTypeCollectionDate.en.csv,
       },
     ]);
 
@@ -3884,7 +3892,7 @@ describe('validateCollectionDateSection', () => {
     expect(response.value).toEqual([
       {
         field: 'CollectionDate',
-        message: validation.CollectionDateValidationErrorMessages.missingType,
+        message: glwe.errorMessages.missingTypeCollectionDate.en.csv,
       },
     ]);
   });
