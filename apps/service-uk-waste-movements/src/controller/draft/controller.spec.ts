@@ -13,6 +13,7 @@ import {
   SetDraftWasteCollectionAddressDetailsRequest,
   SetDraftWasteSourceRequest,
   SetDraftCarrierAddressDetailsRequest,
+  SetDraftCarrierContactDetailRequest,
   SetDraftReceiverAddressDetailsRequest,
   SetDraftProducerConfirmationRequest,
   SetDraftReceiverContactDetailsRequest,
@@ -3427,6 +3428,368 @@ describe(SubmissionController, () => {
         accountId,
       );
 
+      if (response.success) {
+        expect(response.value).toBeUndefined();
+      }
+    });
+  });
+
+  describe('getDraftCarrierContactDetail', () => {
+    it('successfully gets carrier contact detail from a draft', async () => {
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
+      const draft: Draft = {
+        id: id,
+        reference: 'carrierRef123',
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
+        },
+        producerAndCollection: {
+          producer: {
+            address: {
+              status: 'NotStarted',
+            },
+            contact: {
+              status: 'NotStarted',
+            },
+            sicCodes: {
+              status: 'NotStarted',
+              values: [],
+            },
+          },
+          wasteCollection: {
+            address: {
+              status: 'NotStarted',
+            },
+            wasteSource: {
+              status: 'NotStarted',
+            },
+            brokerRegistrationNumber: '',
+            carrierRegistrationNumber: '',
+            expectedWasteCollectionDate: {
+              day: '',
+              month: '',
+              year: '',
+            },
+            localAuthority: '',
+          },
+          confirmation: {
+            status: 'NotStarted',
+          },
+        },
+        carrier: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'Started',
+            organisationName: 'Carrier Org',
+            fullName: 'Jane Doe',
+            emailAddress: 'jane.doe@example.com',
+            phoneNumber: '987-654-3210',
+            faxNumber: '123-456-7890',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      };
+      mockRepository.getDraft.mockResolvedValue(draft);
+      const response = await subject.getDraftCarrierContactDetail({
+        id,
+        accountId,
+      });
+      expect(response).toEqual({
+        success: true,
+        value: {
+          status: 'Started',
+          organisationName: 'Carrier Org',
+          fullName: 'Jane Doe',
+          emailAddress: 'jane.doe@example.com',
+          phoneNumber: '987-654-3210',
+          faxNumber: '123-456-7890',
+        },
+      });
+    });
+
+    it('returns status not started if producer and collection status is neither complete or started', async () => {
+      const id = faker.string.uuid();
+      const accountId = faker.string.uuid();
+      const draft: Draft = {
+        id: id,
+        reference: '123456',
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
+        },
+        producerAndCollection: {
+          producer: {
+            address: {
+              status: 'NotStarted',
+            },
+            contact: {
+              status: 'NotStarted',
+            },
+            sicCodes: {
+              status: 'NotStarted',
+              values: [],
+            },
+          },
+          wasteCollection: {
+            address: {
+              status: 'NotStarted',
+            },
+            wasteSource: {
+              status: 'NotStarted',
+            },
+            brokerRegistrationNumber: '',
+            carrierRegistrationNumber: '',
+            expectedWasteCollectionDate: {
+              day: '',
+              month: '',
+              year: '',
+            },
+            localAuthority: '',
+          },
+          confirmation: {
+            status: 'NotStarted',
+          },
+        },
+        carrier: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      };
+      mockRepository.getDraft.mockResolvedValue(draft);
+      const response = await subject.getDraftCarrierContactDetail({
+        id,
+        accountId,
+      });
+      expect(response).toEqual({
+        success: true,
+        value: {
+          status: 'NotStarted',
+        },
+      });
+    });
+  });
+
+  describe('setDraftCarrierContactDetail', () => {
+    it('successfully sets carrier contact detail on a draft', async () => {
+      const accountId = faker.string.uuid();
+      const id = faker.string.uuid();
+      const initialDraft: Draft = {
+        id: id,
+        reference: 'carrierRef123',
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
+        },
+        producerAndCollection: {
+          producer: {
+            address: {
+              status: 'NotStarted',
+            },
+            contact: {
+              status: 'NotStarted',
+            },
+            sicCodes: {
+              status: 'NotStarted',
+              values: [],
+            },
+          },
+          wasteCollection: {
+            address: {
+              status: 'NotStarted',
+            },
+            wasteSource: {
+              status: 'NotStarted',
+            },
+            brokerRegistrationNumber: '',
+            carrierRegistrationNumber: '',
+            expectedWasteCollectionDate: {
+              day: '',
+              month: '',
+              year: '',
+            },
+            localAuthority: '',
+          },
+          confirmation: {
+            status: 'NotStarted',
+          },
+        },
+        carrier: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'Started',
+            organisationName: 'Carrier Org',
+            fullName: 'Jane Doe',
+            emailAddress: 'jane.doe@example.com',
+            phoneNumber: '987-654-3210',
+            faxNumber: '123-456-7890',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      };
+      mockRepository.getDraft.mockResolvedValue(initialDraft);
+      const request: SetDraftCarrierContactDetailRequest = {
+        id: id,
+        accountId: accountId,
+        value: {
+          organisationName: 'Carrier Org',
+          fullName: 'Jane Doe',
+          emailAddress: 'jane.doe@example.com',
+        },
+        saveAsDraft: true,
+      };
+      const response = await subject.setDraftCarrierContactDetail(request);
+      const expectedDraft: Draft = {
+        id: id,
+        reference: 'carrierRef123',
+        wasteInformation: {
+          status: 'NotStarted',
+        },
+        receiver: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'NotStarted',
+          },
+          permitDetails: {
+            status: 'NotStarted',
+          },
+        },
+        producerAndCollection: {
+          producer: {
+            address: {
+              status: 'NotStarted',
+            },
+            contact: {
+              status: 'NotStarted',
+            },
+            sicCodes: {
+              status: 'NotStarted',
+              values: [],
+            },
+          },
+          wasteCollection: {
+            address: {
+              status: 'NotStarted',
+            },
+            wasteSource: {
+              status: 'NotStarted',
+            },
+            brokerRegistrationNumber: '',
+            carrierRegistrationNumber: '',
+            expectedWasteCollectionDate: {
+              day: '',
+              month: '',
+              year: '',
+            },
+            localAuthority: '',
+          },
+          confirmation: {
+            status: 'NotStarted',
+          },
+        },
+        carrier: {
+          address: {
+            status: 'NotStarted',
+          },
+          contact: {
+            status: 'Started',
+            organisationName: 'Carrier Org',
+            fullName: 'Jane Doe',
+            emailAddress: 'jane.doe@example.com',
+          },
+          modeOfTransport: {
+            status: 'NotStarted',
+          },
+        },
+        declaration: {
+          status: 'NotStarted',
+        },
+        state: {
+          status: 'SubmittedWithEstimates',
+          timestamp: new Date(),
+        },
+      };
+
+      expect(response.success).toBe(true);
+      expect(mockRepository.getDraft).toHaveBeenCalledWith(
+        'drafts',
+        id,
+        accountId,
+      );
+      expect(mockRepository.saveRecord).toHaveBeenCalledWith(
+        'drafts',
+        expectedDraft,
+        accountId,
+      );
       if (response.success) {
         expect(response.value).toBeUndefined();
       }

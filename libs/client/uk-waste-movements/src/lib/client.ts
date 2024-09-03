@@ -50,6 +50,12 @@ import {
   SetDraftCarrierAddressDetailsResponse,
   getDraftCarrierAddressDetails,
   setDraftCarrierAddressDetails,
+  SetDraftCarrierContactDetailRequest,
+  SetDraftCarrierContactDetailResponse,
+  setDraftCarrierContactDetail,
+  getDraftCarrierContactDetail,
+  GetDraftCarrierContactDetailRequest,
+  GetDraftCarrierContactDetailResponse,
   GetDraftReceiverAddressDetailsRequest,
   GetDraftReceiverAddressDetailsResponse,
   SetDraftReceiverAddressDetailsRequest,
@@ -255,6 +261,28 @@ export class DaprUkWasteMovementsClient {
       HttpMethod.POST,
       req,
     )) as SetDraftCarrierAddressDetailsResponse;
+  }
+
+  async getDraftCarrierContactDetail(
+    req: GetDraftCarrierContactDetailRequest,
+  ): Promise<GetDraftCarrierContactDetailResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.ukWasteMovementsAppId,
+      getDraftCarrierContactDetail.name,
+      HttpMethod.POST,
+      req,
+    )) as GetDraftCarrierContactDetailResponse;
+  }
+
+  async setDraftCarrierContactDetail(
+    req: SetDraftCarrierContactDetailRequest,
+  ): Promise<SetDraftCarrierContactDetailResponse> {
+    return (await this.daprClient.invoker.invoke(
+      this.ukWasteMovementsAppId,
+      setDraftCarrierContactDetail.name,
+      HttpMethod.POST,
+      req,
+    )) as SetDraftCarrierContactDetailResponse;
   }
 
   async getDraftReceiverAddressDetails(

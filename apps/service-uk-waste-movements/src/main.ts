@@ -518,6 +518,55 @@ async function init() {
     );
 
     await server.invoker.listen(
+      api.getDraftCarrierContactDetail.name,
+      async ({ body }) => {
+        if (body === undefined) {
+          return fromBoom(Boom.badRequest('Missing body'));
+        }
+
+        const request = JSON.parse(
+          body,
+        ) as api.GetDraftCarrierContactDetailRequest;
+        if (request === undefined) {
+          return fromBoom(Boom.badRequest());
+        }
+
+        return await submissionController.getDraftCarrierContactDetail(request);
+      },
+      { method: HttpMethod.POST },
+    );
+
+    await server.invoker.listen(
+      api.setDraftCarrierContactDetail.name,
+      async ({ body }) => {
+        if (body === undefined) {
+          return fromBoom(Boom.badRequest('Missing body'));
+        }
+        const request = JSON.parse(
+          body,
+        ) as api.SetDraftCarrierContactDetailRequest;
+        if (request.saveAsDraft) {
+          if (
+            !validateSubmission.validateSetPartialDraftCarrierContactDetailRequest(
+              request,
+            )
+          ) {
+            return fromBoom(Boom.badRequest());
+          }
+        } else {
+          if (
+            !validateSubmission.validateSetDraftCarrierContactDetailRequest(
+              request,
+            )
+          ) {
+            return fromBoom(Boom.badRequest());
+          }
+        }
+        return await submissionController.setDraftCarrierContactDetail(request);
+      },
+      { method: HttpMethod.POST },
+    );
+    await server.invoker.listen(
       api.getDraftReceiverAddressDetails.name,
       async ({ body }) => {
         if (body === undefined) {

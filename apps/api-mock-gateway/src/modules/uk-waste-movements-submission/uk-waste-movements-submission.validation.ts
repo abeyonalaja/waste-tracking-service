@@ -68,6 +68,31 @@ export const validateSetPartialDraftProducerContactRequest = ajv.compile<
   },
 });
 
+export const validateSetDraftCarrierContactRequest = ajv.compile<UkwmContact>({
+  properties: {
+    organisationName: { type: 'string' },
+    fullName: { type: 'string' },
+    emailAddress: { type: 'string' },
+    phoneNumber: { type: 'string' },
+  },
+  optionalProperties: {
+    faxNumber: { type: 'string' },
+  },
+});
+
+export const validateSetPartialDraftCarrierContactRequest = ajv.compile<
+  Partial<UkwmContact>
+>({
+  properties: {},
+  optionalProperties: {
+    organisationName: { type: 'string' },
+    fullName: { type: 'string' },
+    emailAddress: { type: 'string' },
+    phoneNumber: { type: 'string' },
+    faxNumber: { type: 'string' },
+  },
+});
+
 export const validateSetDraftWasteSource =
   ajv.compile<UkwmSetDraftWasteSourceRequest>({
     properties: { wasteSource: { type: 'string' } },

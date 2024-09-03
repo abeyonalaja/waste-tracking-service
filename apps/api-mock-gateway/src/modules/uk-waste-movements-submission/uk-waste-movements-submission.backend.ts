@@ -381,6 +381,71 @@ export function setDraftProducerAddressDetails(
   return Promise.resolve();
 }
 
+export function getDraftCarrierContactDetail({
+  id,
+  accountId,
+}: UkwmDraftRef): Promise<UkwmDraftContact | undefined> {
+  const draft = db.ukwmDrafts.find(
+    (d) => d.id == id && d.accountId == accountId,
+  );
+  if (draft === undefined) {
+    return Promise.reject(new NotFoundError('Submission not found.'));
+  }
+
+  return Promise.resolve(draft.carrier.contact);
+}
+
+export function setDraftCarrierContactDetail(
+  ref: UkwmDraftRef,
+  value: UkwmContact,
+  saveAsDraft: boolean,
+): Promise<void> {
+  const contactDetailsValidationResult =
+    ukwmValidation.validationRules.validateContactDetails(
+      value,
+      'Carrier',
+      saveAsDraft,
+    );
+
+  if (!contactDetailsValidationResult.valid) {
+    return Promise.reject(
+      new BadRequestError(
+        'Validation error',
+        contactDetailsValidationResult.errors,
+      ),
+    );
+  }
+
+  const { id, accountId } = ref;
+  const draft = db.ukwmDrafts.find(
+    (d) => d.id == id && d.accountId == accountId,
+  );
+  if (draft === undefined) {
+    return Promise.reject(new NotFoundError('Submission not found.'));
+  }
+
+  if (
+    value.organisationName &&
+    value.faxNumber &&
+    value.emailAddress &&
+    value.phoneNumber
+  ) {
+    saveAsDraft = false;
+  }
+
+  draft.carrier.contact = !saveAsDraft
+    ? {
+        status: 'Complete',
+        ...(contactDetailsValidationResult.value as UkwmContact),
+      }
+    : {
+        status: 'Started',
+        ...(contactDetailsValidationResult.value as Partial<UkwmContact>),
+      };
+
+  return Promise.resolve();
+}
+
 export function getDraftProducerContactDetail({
   id,
   accountId,

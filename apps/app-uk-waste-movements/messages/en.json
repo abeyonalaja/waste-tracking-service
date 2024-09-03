@@ -587,6 +587,29 @@
       "useAddress": "Use this address and continue",
       "useDifferentAddress": "Use a different address"
     },
+    "carrier": {
+      "contactDetails": {
+        "metadata": {
+          "title": "Carrier contact details",
+          "description": "Create a new single waste movement"
+        },
+        "backLink": "Back",
+        "caption": "Waste carrier details",
+        "heading": "What are the carrier's contact details?",
+        "form": {
+          "errorSummaryHeading": "There is a problem",
+          "labelOne": "Full name of organisation",
+          "labelTwo": "Organisation contact person",
+          "hintOne": "Full name",
+          "labelThree": "Email address",
+          "labelFour": "Phone number",
+          "hintTwo": "Include the area or country code",
+          "labelFive": "Fax number (optional)",
+          "buttonOne": "Save and continue",
+          "buttonTwo": "Save and return"
+        }
+      }
+    },
     "producer": {
       "caption": "Producer and waste collection details",
       "postcode": {

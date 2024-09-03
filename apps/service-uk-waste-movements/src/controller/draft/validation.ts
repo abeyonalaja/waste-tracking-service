@@ -16,6 +16,8 @@ import {
   GetDraftSicCodesRequest,
   GetDraftCarrierAddressDetailsRequest,
   SetDraftCarrierAddressDetailsRequest,
+  SetDraftCarrierContactDetailRequest,
+  GetDraftCarrierContactDetailRequest,
   GetDraftReceiverAddressDetailsRequest,
   SetDraftReceiverAddressDetailsRequest,
   DeleteDraftSicCodeRequest,
@@ -120,6 +122,21 @@ export const validateSetPartialDraftCarrierAddressDetailsRequest =
 export const validateGetDraftCarrierAddressDetailsRequest =
   ajv.compile<GetDraftCarrierAddressDetailsRequest>(
     draftSchema.getDraftCarrierAddressDetailsRequest,
+  );
+
+export const validateGetDraftCarrierContactDetailRequest =
+  ajv.compile<GetDraftCarrierContactDetailRequest>(
+    draftSchema.getDraftCarrierContactDetailRequest,
+  );
+
+export const validateSetDraftCarrierContactDetailRequest =
+  ajv.compile<SetDraftCarrierContactDetailRequest>(
+    draftSchema.setDraftCarrierContactDetailRequest,
+  );
+
+export const validateSetPartialDraftCarrierContactDetailRequest =
+  ajv.compile<SetDraftCarrierContactDetailRequest>(
+    draftSchema.setPartialDraftCarrierContactDetailRequest,
   );
 
 export const validateSetDraftReceiverAddressDetailsRequest =

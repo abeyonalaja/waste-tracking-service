@@ -1217,6 +1217,88 @@ export default class SubmissionController {
     }
   };
 
+  getDraftCarrierContactDetail: Handler<
+    api.GetDraftCarrierContactDetailRequest,
+    api.GetDraftCarrierContactDetailResponse
+  > = async ({ id, accountId }) => {
+    try {
+      const draft = await this.repository.getDraft(
+        draftsContainerName,
+        id,
+        accountId,
+      );
+
+      return success(draft.carrier.contact);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
+
+  setDraftCarrierContactDetail: Handler<
+    api.SetDraftCarrierContactDetailRequest,
+    api.SetDraftCarrierContactDetailResponse
+  > = async ({ id, accountId, value, saveAsDraft }) => {
+    try {
+      const contactDetailsValidationResult =
+        ukwmValidation.validationRules.validateContactDetails(
+          value,
+          'Carrier',
+          saveAsDraft,
+        );
+
+      if (!contactDetailsValidationResult.valid) {
+        const boom = Boom.badRequest(
+          'Validation failed',
+          contactDetailsValidationResult.errors,
+        );
+        return fromBoom(boom);
+      }
+
+      const draft = await this.repository.getDraft(
+        draftsContainerName,
+        id,
+        accountId,
+      );
+
+      if (
+        value.organisationName &&
+        value.faxNumber &&
+        value.emailAddress &&
+        value.phoneNumber
+      ) {
+        saveAsDraft = false;
+      }
+
+      draft.carrier.contact = !saveAsDraft
+        ? {
+            status: 'Complete',
+            ...(contactDetailsValidationResult.value as api.Contact),
+          }
+        : {
+            status: 'Started',
+            ...(contactDetailsValidationResult.value as Promise<api.Contact>),
+          };
+
+      await this.repository.saveRecord(
+        draftsContainerName,
+        { ...draft },
+        accountId,
+      );
+      return success(undefined);
+    } catch (err) {
+      if (err instanceof Boom.Boom) {
+        return fromBoom(err);
+      }
+
+      this.logger.error('Unknown error', { error: err });
+      return fromBoom(Boom.internal());
+    }
+  };
   setDraftReceiverAddressDetails: Handler<
     api.SetDraftReceiverAddressDetailsRequest,
     api.SetDraftReceiverAddressDetailsResponse

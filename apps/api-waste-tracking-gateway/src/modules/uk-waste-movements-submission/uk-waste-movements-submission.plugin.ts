@@ -16,6 +16,8 @@ import {
   validateCreateDraftSicCodeRequest,
   validateSetDraftCarrierAddressDetailsRequest,
   validateSetPartialDraftCarrierAddressDetailsRequest,
+  validateSetDraftCarrierContactRequest,
+  validateSetPartialDraftCarrierContactRequest,
   validateSetDraftReceiverAddressDetailsRequest,
   validateSetPartialDraftReceiverAddressDetailsRequest,
   validateSetDraftProducerConfirmationRequest,
@@ -484,6 +486,71 @@ const plugin: Plugin<PluginOptions> = {
         const request = payload as dto.UkwmSetDraftCarrierAddressDetailsRequest;
         try {
           await backend.setDraftCarrierAddressDetails(
+            {
+              id: params.id,
+              accountId: h.request.auth.credentials.accountId as string,
+            },
+            request,
+            saveAsDraft,
+          );
+          return request;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            err.output.payload.data = err?.data;
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/drafts/{id}/carrier-contact',
+      handler: async function ({ params }, h) {
+        try {
+          const value = await backend.getDraftCarrierContactDetail({
+            id: params.id,
+            accountId: h.request.auth.credentials.accountId as string,
+          });
+          return value as dto.UkwmGetDraftCarrierContactDetailResponse;
+        } catch (err) {
+          if (err instanceof Boom.Boom) {
+            return err;
+          }
+
+          logger.error('Unknown error', { error: err });
+          return Boom.internal();
+        }
+      },
+    });
+
+    server.route({
+      method: 'PUT',
+      path: '/drafts/{id}/carrier-contact',
+      handler: async function ({ params, payload, query }, h) {
+        const saveAsDraftStr = query['saveAsDraft'] as string | undefined;
+        if (
+          !saveAsDraftStr ||
+          !['true', 'false'].includes(saveAsDraftStr.toLowerCase())
+        ) {
+          return Boom.badRequest();
+        }
+        const saveAsDraft: boolean = saveAsDraftStr.toLowerCase() === 'true';
+        if (!saveAsDraft) {
+          if (!validateSetDraftCarrierContactRequest(payload)) {
+            return Boom.badRequest();
+          }
+        } else {
+          if (!validateSetPartialDraftCarrierContactRequest(payload)) {
+            return Boom.badRequest();
+          }
+        }
+        const request = payload as dto.UkwmSetDraftCarrierContactDetailRequest;
+        try {
+          await backend.setDraftCarrierContactDetail(
             {
               id: params.id,
               accountId: h.request.auth.credentials.accountId as string,

@@ -7,6 +7,7 @@ import {
   UkwmAddress,
   UkwmDraftContact,
   UkwmGetDraftProducerContactDetailResponse,
+  UkwmGetDraftCarrierContactDetailResponse,
   UkwmContact,
   UkwmDraftWasteSource,
   UkwmGetDraftWasteSourceResponse,
@@ -31,6 +32,8 @@ import {
   CreateDraftSicCodeResponse,
   GetDraftSicCodesResponse,
   GetDraftCarrierAddressDetailsResponse,
+  GetDraftCarrierContactDetailResponse,
+  SetDraftCarrierContactDetailResponse,
   GetDraftReceiverAddressDetailsResponse,
   DeleteDraftSicCodeResponse,
   SetDraftProducerConfirmationResponse,
@@ -129,6 +132,14 @@ export interface UkWasteMovementsSubmissionBackend {
     value: UkwmAddress,
     saveAsDraft: boolean,
   ): Promise<void>;
+  setDraftCarrierContactDetail(
+    ref: UkwmDraftRef,
+    value: UkwmContact,
+    saveAsDraft: boolean,
+  ): Promise<void>;
+  getDraftCarrierContactDetail({
+    id,
+  }: SubmissionRef): Promise<UkwmDraftContact | undefined>;
   getDraftReceiverAddressDetails({
     id,
   }: SubmissionRef): Promise<UkwmDraftAddress | undefined>;
@@ -521,6 +532,54 @@ export class ServiceUkWasteMovementsSubmissionBackend
     }
   }
 
+  async getDraftCarrierContactDetail({
+    id,
+    accountId,
+  }: UkwmDraftRef): Promise<UkwmDraftContact | undefined> {
+    let response: GetDraftCarrierContactDetailResponse;
+    try {
+      response = await this.client.getDraftCarrierContactDetail({
+        id,
+        accountId,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+    if (response) {
+      if (!response.success) {
+        throw new Boom.Boom(response.error.message, {
+          statusCode: response.error.statusCode,
+        });
+      }
+      return response.value as UkwmGetDraftCarrierContactDetailResponse;
+    }
+  }
+
+  async setDraftCarrierContactDetail(
+    { id, accountId }: UkwmDraftRef,
+    value: UkwmContact,
+    saveAsDraft: boolean,
+  ): Promise<void> {
+    let response: SetDraftCarrierContactDetailResponse;
+    try {
+      response = await this.client.setDraftCarrierContactDetail({
+        id,
+        accountId,
+        value,
+        saveAsDraft,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw Boom.internal();
+    }
+    if (!response.success) {
+      throw new Boom.Boom(response.error.message, {
+        statusCode: response.error.statusCode,
+        data: response.error.data,
+      });
+    }
+  }
   async setDraftReceiverAddressDetails(
     { id, accountId }: SubmissionRef,
     value: UkwmAddress,

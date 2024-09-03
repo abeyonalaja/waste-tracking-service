@@ -1098,6 +1098,39 @@ export const setDraftCarrierAddressDetailsResponse: SchemaObject = {
   },
 };
 
+export const setDraftCarrierContactDetailRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+    value: contact,
+    saveAsDraft: { type: 'boolean' },
+  },
+};
+
+export const setPartialDraftCarrierContactDetailRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+    value: partialContact,
+    saveAsDraft: { type: 'boolean' },
+  },
+};
+
+export const getDraftCarrierContactDetailRequest: SchemaObject = {
+  properties: {
+    id: { type: 'string' },
+    accountId: { type: 'string' },
+  },
+};
+
+export const getDraftCarrierContactDetailResponse: SchemaObject = {
+  properties: { success: { type: 'boolean' } },
+  optionalProperties: {
+    error: errorResponseValue,
+    value: draftContact,
+  },
+};
+
 export const getDraftReceiverAddressDetailsRequest: SchemaObject = {
   properties: {
     accountId: { type: 'string' },

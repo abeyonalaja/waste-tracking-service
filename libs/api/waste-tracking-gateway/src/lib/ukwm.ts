@@ -302,6 +302,10 @@ export type UkwmGetDraftCarrierAddressDetailsResponse = UkwmDraftAddress;
 
 export type UkwmSetDraftCarrierAddressDetailsRequest = UkwmAddress;
 
+export type UkwmGetDraftCarrierContactDetailResponse = UkwmDraftContact;
+
+export type UkwmSetDraftCarrierContactDetailRequest = UkwmContact;
+
 export type UkwmGetDraftReceiverAddressDetailsResponse = UkwmDraftAddress;
 
 export type UkwmSetDraftReceiverAddressDetailsRequest = UkwmAddress;

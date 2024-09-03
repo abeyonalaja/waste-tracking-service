@@ -645,6 +645,23 @@ export const setDraftCarrierAddressDetails: Method = {
   name: 'setDraftCarrierAddressDetails',
 };
 
+export type GetDraftCarrierContactDetailRequest = IdRequest & AccountIdRequest;
+export type GetDraftCarrierContactDetailResponse = Response<DraftContact>;
+export const getDraftCarrierContactDetail: Method = {
+  name: 'getDraftCarrierContactDetail',
+};
+
+export type SetDraftCarrierContactDetailRequest =
+  | (IdRequest &
+      AccountIdRequest & { value: Partial<Contact> } & { saveAsDraft: true })
+  | (IdRequest &
+      AccountIdRequest & { value: Contact } & { saveAsDraft: false });
+
+export type SetDraftCarrierContactDetailResponse = Response<void>;
+export const setDraftCarrierContactDetail: Method = {
+  name: 'setDraftCarrierContactDetail',
+};
+
 export type GetDraftReceiverAddressDetailsRequest = IdRequest &
   AccountIdRequest;
 export type GetDraftReceiverAddressDetailsResponse =
