@@ -329,22 +329,35 @@ const Pages = ({ data }): React.ReactNode => {
 
             <>
               <Text>
-                {data.wasteDescription.wasteCode.type === 'NotApplicable' ? (
-                  <>
-                    <Text style={styles.label}>Waste code: </Text>
-                    Not applicable
-                  </>
-                ) : (
-                  <>
-                    <Text style={styles.label}>
-                      {data.wasteDescription.wasteCode.type}:{' '}
-                    </Text>
-                    {data.wasteDescription.wasteCode.code}
-                  </>
-                )}
+                <Text style={styles.label}>(i) Basel Annex IX: </Text>
+                <>
+                  {data.wasteDescription.wasteCode.type === 'BaselAnnexIX' &&
+                    data.wasteDescription.wasteCode.code}
+                </>
               </Text>
               <Text>
-                <Text style={styles.label}>EC list of wastes: </Text>
+                <Text style={styles.label}>(ii) OECD: </Text>
+                <>
+                  {data.wasteDescription.wasteCode.type === 'OECD' &&
+                    data.wasteDescription.wasteCode.code}
+                </>
+              </Text>
+              <Text>
+                <Text style={styles.label}>(iii) Annex IIIA: </Text>
+                <>
+                  {data.wasteDescription.wasteCode.type === 'AnnexIIIA' &&
+                    data.wasteDescription.wasteCode.code}
+                </>
+              </Text>
+              <Text>
+                <Text style={styles.label}>(iv) Annex IIIB: </Text>
+                <>
+                  {data.wasteDescription.wasteCode.type === 'AnnexIIIB' &&
+                    data.wasteDescription.wasteCode.code}
+                </>
+              </Text>
+              <Text>
+                <Text style={styles.label}>(v) EC list of wastes: </Text>
                 {data.wasteDescription.ewcCodes
                   .slice(0, 3)
                   .map((item: EwcCodeType, index) => (
@@ -355,7 +368,7 @@ const Pages = ({ data }): React.ReactNode => {
                   ))}
               </Text>
               <Text>
-                <Text style={styles.label}>National code: </Text>
+                <Text style={styles.label}>(vi) National code: </Text>
                 <>
                   {data.wasteDescription.nationalCode?.provided === 'Yes' &&
                     data.wasteDescription.nationalCode?.value}
