@@ -25,8 +25,6 @@ import {
   CarriersFlattened,
   CollectionDetail,
   CollectionDetailFlattened,
-  ExitLocationFlattened,
-  UkExitLocation,
   TransitCountries,
   TransitCountriesFlattened,
   RecoveryFacilityDetailFlattened,
@@ -1652,44 +1650,6 @@ export function validateCollectionDetailSection(
       },
     },
   };
-}
-
-export function validateUkExitLocationSection(
-  value: ExitLocationFlattened,
-):
-  | { valid: false; value: FieldFormatError }
-  | { valid: true; value: UkExitLocation } {
-  value.whereWasteLeavesUk = value.whereWasteLeavesUk.trim();
-  let location: UkExitLocation = { provided: 'No' };
-
-  if (value.whereWasteLeavesUk) {
-    if (value.whereWasteLeavesUk.length > validation.UkExitLocationChar.max) {
-      return {
-        valid: false,
-        value: {
-          field: 'UkExitLocation',
-          message: validation.UkExitLocationValidationErrorMessages.charTooMany,
-        },
-      };
-    }
-
-    if (!validation.ukExitLocationRegex.test(value.whereWasteLeavesUk)) {
-      return {
-        valid: false,
-        value: {
-          field: 'UkExitLocation',
-          message: validation.UkExitLocationValidationErrorMessages.invalid,
-        },
-      };
-    }
-
-    location = {
-      provided: 'Yes',
-      value: value.whereWasteLeavesUk,
-    };
-  }
-
-  return { valid: true, value: location };
 }
 
 export function validateTransitCountriesSection(

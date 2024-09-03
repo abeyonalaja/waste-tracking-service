@@ -23,6 +23,7 @@ import {
   copyCarriersNoTransport,
 } from '../../lib/util';
 import { CosmosRepository } from '../../data';
+import { glwe as glwValidation } from '@wts/util/shared-validation';
 
 export type Handler<Request, Response> = (
   request: Request,
@@ -745,6 +746,19 @@ export default class TemplateController {
     draft.SetDraftUkExitLocationResponse
   > = async ({ id, accountId, value }) => {
     try {
+      if (value.status === 'Complete') {
+        const uKExitLocationValidationResult =
+          glwValidation.validationRules.validateUkExitLocation(
+            value.exitLocation,
+          );
+        if (!uKExitLocationValidationResult.valid) {
+          const boom = Boom.badRequest(
+            'Validation failed',
+            uKExitLocationValidationResult.errors,
+          );
+          return fromBoom(boom);
+        }
+      }
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,

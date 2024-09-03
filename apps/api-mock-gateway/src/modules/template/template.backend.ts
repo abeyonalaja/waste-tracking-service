@@ -31,6 +31,7 @@ import {
   setBaseWasteDescription,
   doesTemplateAlreadyExist,
 } from '../../lib/util';
+import { glwe as glwValidation } from '@wts/util/shared-validation';
 
 export interface SubmissionRef {
   id: string;
@@ -823,6 +824,19 @@ export async function setExitLocation(
   { id, accountId }: SubmissionRef,
   value: ExitLocation,
 ): Promise<void> {
+  if (value.status === 'Complete') {
+    const uKExitLocationValidationResult =
+      glwValidation.validationRules.validateUkExitLocation(value.exitLocation);
+    if (!uKExitLocationValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation error',
+          uKExitLocationValidationResult.errors,
+        ),
+      );
+    }
+  }
+
   const template = db.templates.find(
     (t) => t.id == id && t.accountId == accountId,
   );

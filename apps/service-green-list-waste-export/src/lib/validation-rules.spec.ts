@@ -15,7 +15,6 @@ import {
   validateImporterDetailSection,
   validateRecoveryFacilityDetailSection,
   validateTransitCountriesSection,
-  validateUkExitLocationSection,
   validateWasteCodeSubSection,
   validateWasteCodeSubSectionAndQuantityCrossSection,
   validateWasteCodeSubSectionAndCarriersCrossSection,
@@ -4832,51 +4831,6 @@ describe('validateCollectionDetailSection', () => {
           validation.CollectionDetailValidationErrorMessages.charTooManyEmail,
       },
     ]);
-  });
-});
-
-describe('validateUkExitLocationSection', () => {
-  it('passes UkExitLocation section validation', async () => {
-    let response = validateUkExitLocationSection({
-      whereWasteLeavesUk: '',
-    });
-    expect(response.valid).toEqual(true);
-    expect(response.value).toEqual({ provided: 'No' });
-
-    response = validateUkExitLocationSection({
-      whereWasteLeavesUk: 'Dover',
-    });
-    expect(response.valid).toEqual(true);
-    expect(response.value).toEqual({ provided: 'Yes', value: 'Dover' });
-
-    response = validateUkExitLocationSection({
-      whereWasteLeavesUk: "some-value.-,'",
-    });
-    expect(response.valid).toEqual(true);
-    expect(response.value).toEqual({
-      provided: 'Yes',
-      value: "some-value.-,'",
-    });
-  });
-
-  it('fails UkExitLocation section validation', async () => {
-    let response = validateUkExitLocationSection({
-      whereWasteLeavesUk: faker.string.sample(51),
-    });
-    expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'UkExitLocation',
-      message: validation.UkExitLocationValidationErrorMessages.charTooMany,
-    });
-
-    response = validateUkExitLocationSection({
-      whereWasteLeavesUk: 'some_value',
-    });
-    expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'UkExitLocation',
-      message: validation.UkExitLocationValidationErrorMessages.invalid,
-    });
   });
 });
 

@@ -2803,7 +2803,6 @@ describe(SubmissionController, () => {
       });
       expect(response.success).toBe(false);
 
-      console.log(response);
       if (response.success) {
         return;
       }

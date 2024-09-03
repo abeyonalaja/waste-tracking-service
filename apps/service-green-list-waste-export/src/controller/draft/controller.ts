@@ -31,6 +31,7 @@ import {
 } from '../../lib/util';
 import { CosmosRepository } from '../../data';
 import { common as commonValidation } from '@wts/util/shared-validation';
+import { glwe as glwValidation } from '@wts/util/shared-validation';
 
 export type Handler<Request, Response> = (
   request: Request,
@@ -1037,6 +1038,19 @@ export default class DraftController {
     api.SetDraftUkExitLocationResponse
   > = async ({ id, accountId, value }) => {
     try {
+      if (value.status === 'Complete') {
+        const uKExitLocationValidationResult =
+          glwValidation.validationRules.validateUkExitLocation(
+            value.exitLocation,
+          );
+        if (!uKExitLocationValidationResult.valid) {
+          const boom = Boom.badRequest(
+            'Validation failed',
+            uKExitLocationValidationResult.errors,
+          );
+          return fromBoom(boom);
+        }
+      }
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,

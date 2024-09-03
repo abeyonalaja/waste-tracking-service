@@ -44,6 +44,7 @@ import {
 import { validation } from '@wts/api/green-list-waste-export';
 import { common as commonValidation } from '@wts/util/shared-validation';
 
+import { glwe as glwValidation } from '@wts/util/shared-validation';
 export interface SubmissionRef {
   id: string;
   accountId: string;
@@ -1130,6 +1131,19 @@ export async function setExitLocation(
   { id, accountId }: SubmissionRef,
   value: ExitLocation,
 ): Promise<void> {
+  if (value.status === 'Complete') {
+    const uKExitLocationValidationResult =
+      glwValidation.validationRules.validateUkExitLocation(value.exitLocation);
+    if (!uKExitLocationValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation error',
+          uKExitLocationValidationResult.errors,
+        ),
+      );
+    }
+  }
+
   const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId,
   );

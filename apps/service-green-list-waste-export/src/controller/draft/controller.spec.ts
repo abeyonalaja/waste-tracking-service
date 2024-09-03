@@ -2454,7 +2454,7 @@ describe(DraftController, () => {
 
       const setExitLocationRequest = {
         status: 'Complete',
-        exitLocation: { provided: 'Yes', value: faker.string.sample() },
+        exitLocation: { provided: 'Yes', value: 'London' },
       } as DraftSubmission['ukExitLocation'];
       const accountId = faker.string.uuid();
       const response = await subject.setDraftUkExitLocation({
@@ -2510,6 +2510,49 @@ describe(DraftController, () => {
       expect(mockRepository.saveRecord).toBeCalledTimes(1);
 
       expect(response.success).toBe(true);
+    });
+
+    it('rejects a request if provided is Yes and the given value is invalid', async () => {
+      const id = faker.string.uuid();
+      const timestamp = new Date();
+      mockRepository.getRecord.mockResolvedValue({
+        id,
+        reference: 'abc',
+        wasteDescription: { status: 'NotStarted' },
+        wasteQuantity: { status: 'NotStarted' },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        collectionDate: { status: 'NotStarted' },
+        carriers: {
+          status: 'NotStarted',
+          transport: true,
+        },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: { status: 'NotStarted' },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: timestamp,
+        },
+      });
+
+      const setExitLocationRequest = {
+        status: 'Complete',
+        exitLocation: { provided: 'Yes', value: 'London12@.,/@#4>2s' },
+      } as DraftSubmission['ukExitLocation'];
+
+      const accountId = faker.string.uuid();
+      const response = await subject.setDraftUkExitLocation({
+        id,
+        accountId,
+        value: setExitLocationRequest,
+      });
+
+      expect(mockRepository.saveRecord).toBeCalledTimes(0);
+      expect(response.success).toBe(false);
     });
   });
 

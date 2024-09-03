@@ -2877,6 +2877,22 @@ describe(TemplateController, () => {
       );
       expect(template.ukExitLocation).toEqual(ukExitLocation);
     });
+
+    it('fails to set the UK exit location if the provided location is not valid', async () => {
+      const ukExitLocation = {
+        status: 'Complete',
+        exitLocation: { provided: 'Yes', value: 'London?>/2#?>2.' },
+      } as DraftUkExitLocation;
+
+      mockRepository.getRecord.mockResolvedValue(template);
+
+      const response = await subject.setTemplateUkExitLocation({
+        id,
+        accountId,
+        value: ukExitLocation,
+      });
+      expect(response.success).toBe(false);
+    });
   });
 
   describe('getTemplateTransitCountries', () => {
