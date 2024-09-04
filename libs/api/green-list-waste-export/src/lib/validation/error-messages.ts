@@ -1,12 +1,9 @@
 import {
   ReferenceChar,
-  EWCCodesLength,
-  WasteDescriptionChar,
   BulkWasteQuantityValue,
   SmallWasteQuantityValue,
   FreeTextChar,
   CarrierTransportDescriptionChar,
-  UkExitLocationChar,
 } from './constraints';
 
 export const ReferenceValidationErrorMessages = {
@@ -14,49 +11,6 @@ export const ReferenceValidationErrorMessages = {
   charTooFew: `Your unique reference must be more than ${ReferenceChar.min} character`,
   charTooMany: `The unique reference must be ${ReferenceChar.max} characters or less`,
   invalid: 'The reference must only include letters a to z, and numbers',
-};
-
-export const BaselAnnexIXCodeValidationErrorMessages = {
-  invalid: 'Enter Basel Annex IX code in correct format',
-};
-
-export const OECDCodeValidationErrorMessages = {
-  invalid: 'Enter OECD code in correct format',
-};
-
-export const AnnexIIIACodeValidationErrorMessages = {
-  invalid: 'Enter Annex IIIA code in correct format',
-};
-
-export const AnnexIIIBCodeValidationErrorMessages = {
-  invalid: 'Enter Annex IIIB code in correct format',
-};
-
-export const UnlistedValidationErrorMessages = {
-  invalid: "Enter 'yes' if you are sending unlisted waste to a laboratory",
-};
-
-export const EWCCodeErrorMessages = {
-  empty: 'Enter an EWC code',
-  invalid: 'Enter EWC code in correct format',
-  tooMany: `You can only enter a maximum of ${EWCCodesLength.max} EWC codes`,
-};
-
-export const NationalCodeValidationErrorMessages = {
-  invalid: 'Enter national code in correct format',
-};
-
-export const WasteCodeValidationErrorMessages = {
-  empty: 'Enter a waste code',
-  tooMany:
-    'You can only enter one Basel Annex IX, OECD, Annex IIIA, or Annex IIB code',
-  laboratory: 'Do not enter a waste code if the waste is going to a laboratory',
-};
-
-export const WasteDescriptionValidationErrorMessages = {
-  empty: 'Waste description cannot be left blank',
-  charTooFew: `Enter at least ${WasteDescriptionChar.min} letter or number`,
-  charTooMany: `Waste description must be less than ${WasteDescriptionChar.max} characters`,
 };
 
 export const BulkWasteQuantityValidationErrorMessages = {
@@ -210,12 +164,6 @@ export const CollectionDetailValidationErrorMessages = {
   emptyEmail: 'Enter waste collection email address',
   invalidEmail: 'Enter a real email address for the waste collection',
   charTooManyEmail: `The waste collection email address must be less than ${FreeTextChar.max} characters`,
-};
-
-export const UkExitLocationValidationErrorMessages = {
-  invalid:
-    'The location must only include letters a to z, and special characters such as full stops, hyphens, commas, and apostrophes',
-  charTooMany: `The location must be less than ${UkExitLocationChar.max} characters`,
 };
 
 export const TransitCountriesValidationErrorMessages = {

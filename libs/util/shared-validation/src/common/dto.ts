@@ -11,7 +11,8 @@ export type ValidationFailureReason =
   | 'empty'
   | 'invalid'
   | 'charTooMany'
-  | 'charTooFew';
+  | 'charTooFew'
+  | 'tooMany';
 
 export type ValidationResult<T> =
   | {

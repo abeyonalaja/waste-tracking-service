@@ -220,15 +220,12 @@ export default class ServiceChargeController {
     accountId,
   }): Promise<CancelPaymentResponse> => {
     try {
-      console.log('here');
       const { paymentId } = await this.repository.getRecord(
         accountId,
         this.draftContainerName,
         id,
       );
-      console.log('Payment ID: ' + paymentId);
       await this.serviceChargeClient.cancelPayment(paymentId);
-      console.log('here2');
       await this.repository.deleteRecord(
         this.draftContainerName,
         id,

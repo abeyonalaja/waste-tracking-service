@@ -1,9 +1,5 @@
 import Boom from '@hapi/boom';
-import {
-  submission as api,
-  common,
-  validation,
-} from '@wts/api/green-list-waste-export';
+import { submission as api, common } from '@wts/api/green-list-waste-export';
 import { fromBoom, success } from '@wts/util/invocation';
 import { v4 as uuidv4 } from 'uuid';
 import { Logger } from 'winston';
@@ -26,7 +22,6 @@ import {
 } from '@wts/api/reference-data';
 import { CosmosRepository } from '../../data';
 import { common as commonValidation } from '@wts/util/shared-validation';
-import { glwe as glwValidation } from '@wts/util/shared-validation';
 
 export type Handler<Request, Response> = (
   request: Request,
@@ -544,31 +539,11 @@ export default class SubmissionController {
           fieldFormatErrors.push(...collectionDetail.value);
         }
 
-        const ukExitLocation =
-          glwValidation.validationRules.validateUkExitLocation({
-            provided: 'Yes',
-            value: s.whereWasteLeavesUk,
-          });
+        const ukExitLocation = validationRules.validateUkExitLocationSection({
+          whereWasteLeavesUk: s.whereWasteLeavesUk,
+        });
         if (!ukExitLocation.valid) {
-          ukExitLocation.errors.forEach((e) => {
-            switch (e) {
-              case 'charTooMany':
-                fieldFormatErrors.push({
-                  field: 'UkExitLocation',
-                  message:
-                    validation.UkExitLocationValidationErrorMessages
-                      .charTooMany,
-                });
-                break;
-              case 'invalid':
-                fieldFormatErrors.push({
-                  field: 'UkExitLocation',
-                  message:
-                    validation.UkExitLocationValidationErrorMessages.invalid,
-                });
-                break;
-            }
-          });
+          fieldFormatErrors.push(ukExitLocation.value);
         }
 
         const transitCountries =

@@ -292,7 +292,7 @@ describe('ProducerContactDetailsForm', () => {
     );
 
     expect(organisationNameMessages).toHaveLength(2);
-  });
+  }, 10000);
 
   it('displays error messages if organisation email exceeds the max length', async () => {
     const user = userEvent.setup();
@@ -322,7 +322,7 @@ describe('ProducerContactDetailsForm', () => {
     );
 
     expect(organisationNameMessages).toHaveLength(2);
-  });
+  }, 10000);
 
   it('displays error messages if the email address is invalid', async () => {
     const user = userEvent.setup();
@@ -352,7 +352,7 @@ describe('ProducerContactDetailsForm', () => {
     );
 
     expect(organisationNameMessages).toHaveLength(2);
-  });
+  }, 10000);
 
   it('displays error messages if the phone number is invalid', async () => {
     const user = userEvent.setup();

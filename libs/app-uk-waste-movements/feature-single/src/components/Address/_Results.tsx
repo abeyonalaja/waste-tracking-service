@@ -1,6 +1,9 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { createErrorSummaryErrors, formHasErrors } from '../../util';
-import { ukwm as ukwmValidation } from '@wts/util/shared-validation';
+import {
+  ukwm as ukwmValidation,
+  common as commonValidation,
+} from '@wts/util/shared-validation';
 import {
   AddressSearchResult,
   ContentStrings,
@@ -37,7 +40,7 @@ export function Results({
   content,
   apiPartial,
 }: ResultsProps): JSX.Element {
-  const locale = useLocale() as ukwmValidation.Locale;
+  const locale = useLocale() as commonValidation.Locale;
   const router = useRouter();
   const [formErrors, setFormErrors] = useState<FormErrors>({});
 

@@ -15,7 +15,7 @@ export type WasteCode =
   | { type: 'NotApplicable' }
   | {
       type: 'BaselAnnexIX' | 'OECD' | 'AnnexIIIA' | 'AnnexIIIB';
-      code: string;
+      code?: string;
     };
 
 export interface EwcCode {

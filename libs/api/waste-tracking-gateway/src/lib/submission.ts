@@ -21,7 +21,7 @@ export interface WasteDescriptionData {
     | { type: 'NotApplicable' }
     | {
         type: 'BaselAnnexIX' | 'OECD' | 'AnnexIIIA' | 'AnnexIIIB';
-        code: string;
+        code?: string;
       };
   ewcCodes: EwcCode[];
   nationalCode?: { provided: 'Yes'; value: string } | { provided: 'No' };

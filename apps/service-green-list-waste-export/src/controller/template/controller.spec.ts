@@ -39,9 +39,100 @@ const mockRepository = {
   getTotalNumber: jest.fn<CosmosRepository['getTotalNumber']>(),
 };
 
+const wasteCodes = [
+  {
+    type: 'BaselAnnexIX',
+    values: [
+      {
+        code: 'B1010',
+        value: {
+          description: {
+            en: 'English Description',
+            cy: 'Welsh Description',
+          },
+        },
+      },
+    ],
+  },
+  {
+    type: 'OECD',
+    values: [
+      {
+        code: 'GB040',
+        value: {
+          description: {
+            en: 'English Description',
+            cy: 'Welsh Description',
+          },
+        },
+      },
+    ],
+  },
+  {
+    type: 'AnnexIIIA',
+    values: [
+      {
+        code: 'B1010 and B1050',
+        value: {
+          description: {
+            en: 'English Description',
+            cy: 'Welsh Description',
+          },
+        },
+      },
+      {
+        code: 'B1010 and B1070',
+        value: {
+          description: {
+            en: 'English Description',
+            cy: 'Welsh Description',
+          },
+        },
+      },
+    ],
+  },
+  {
+    type: 'AnnexIIIB',
+    values: [
+      {
+        code: 'BEU04',
+        value: {
+          description: {
+            en: 'English Description',
+            cy: 'Welsh Description',
+          },
+        },
+      },
+    ],
+  },
+];
+
+const ewcCodes = [
+  {
+    code: '010101',
+    value: {
+      description: {
+        en: 'English Description',
+        cy: 'Welsh Description',
+      },
+    },
+  },
+  {
+    code: '010102',
+    value: {
+      description: {
+        en: 'English Description',
+        cy: 'Welsh Description',
+      },
+    },
+  },
+];
+
 describe(TemplateController, () => {
   const subject = new TemplateController(
     mockRepository as unknown as CosmosRepository,
+    wasteCodes,
+    ewcCodes,
     new winston.Logger(),
   );
   const timestamp = new Date();
@@ -187,7 +278,7 @@ describe(TemplateController, () => {
         status: 'Complete',
         wasteCode: {
           type: 'AnnexIIIA',
-          code: 'A',
+          code: 'B1010 and B1050',
         },
         ewcCodes: [],
         nationalCode: { provided: 'No' },
@@ -1121,7 +1212,7 @@ describe(TemplateController, () => {
         accountId,
         value: {
           status: 'Started',
-          wasteCode: { type: 'AnnexIIIA', code: 'X' },
+          wasteCode: { type: 'AnnexIIIA', code: 'B1010 and B1050' },
         },
       });
 
@@ -1150,7 +1241,7 @@ describe(TemplateController, () => {
           status: 'Complete',
           wasteCode: {
             type: 'AnnexIIIA',
-            code: 'A',
+            code: 'B1010 and B1050',
           },
           ewcCodes: [],
           nationalCode: { provided: 'No' },
@@ -1321,7 +1412,7 @@ describe(TemplateController, () => {
           status: 'Started',
           wasteCode: {
             type: 'AnnexIIIA',
-            code: 'A',
+            code: 'B1010 and B1050',
           },
         },
       });
@@ -1363,7 +1454,7 @@ describe(TemplateController, () => {
           status: 'Complete',
           wasteCode: {
             type: 'AnnexIIIA',
-            code: 'A',
+            code: 'B1010 and B1050',
           },
           ewcCodes: [],
           nationalCode: { provided: 'No' },
@@ -1431,7 +1522,7 @@ describe(TemplateController, () => {
           status: 'Started',
           wasteCode: {
             type: 'AnnexIIIB',
-            code: 'A',
+            code: 'BEU04',
           },
         },
       });
@@ -1475,7 +1566,7 @@ describe(TemplateController, () => {
           status: 'Complete',
           wasteCode: {
             type: 'AnnexIIIA',
-            code: 'A',
+            code: 'B1010 and B1050',
           },
           ewcCodes: [],
           nationalCode: { provided: 'No' },
@@ -1579,7 +1670,7 @@ describe(TemplateController, () => {
           status: 'Started',
           wasteCode: {
             type: 'AnnexIIIA',
-            code: 'Z',
+            code: 'B1010 and B1070',
           },
         },
       });

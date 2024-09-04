@@ -93,7 +93,12 @@ const WasteCode = (): React.ReactNode => {
           status: 'Started',
           wasteCode: {
             type: wasteCodeCategory,
-            code: wasteCodeCategory === 'NotApplicable' ? undefined : code,
+            code:
+              wasteCodeCategory === 'NotApplicable'
+                ? undefined
+                : !code
+                  ? undefined
+                  : code,
           },
         };
         try {

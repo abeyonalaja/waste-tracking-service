@@ -1,6 +1,9 @@
 import * as GovUK from '@wts/ui/govuk-react-ui';
 import { useLocale } from 'next-intl';
-import { ukwm as ukwmValidation } from '@wts/util/shared-validation';
+import {
+  ukwm as ukwmValidation,
+  common as commonValidation,
+} from '@wts/util/shared-validation';
 import { ContentStrings, FormValues, ViewType } from './types';
 import { FormErrors } from '../../types';
 import { useState } from 'react';
@@ -34,7 +37,7 @@ export function Manual({
   apiPartial,
   section,
 }: ManualProps): JSX.Element {
-  const locale = useLocale() as ukwmValidation.Locale;
+  const locale = useLocale() as commonValidation.Locale;
   const router = useRouter();
   const searchParams = useSearchParams();
   const [formErrors, setFormErrors] = useState<FormErrors>({});

@@ -3,21 +3,6 @@ export const ReferenceChar = {
   max: 20,
 };
 
-export const EWCCodesLength = {
-  min: 1,
-  max: 5,
-};
-
-export const NationalCodeChar = {
-  min: 1,
-  max: 50,
-};
-
-export const WasteDescriptionChar = {
-  min: 1,
-  max: 100,
-};
-
 export const BulkWasteQuantityValue = {
   greaterThan: 0,
   lessThan: 1000000,
@@ -42,11 +27,6 @@ export const CarrierTransportDescriptionChar = {
   max: 200,
 };
 
-export const UkExitLocationChar = {
-  min: 1,
-  max: 50,
-};
-
 export const TemplateNameChar = {
   min: 1,
   max: 50,
@@ -67,9 +47,5 @@ export const InterimSiteLength = {
 
 export const RecoveryFacilityLength = {
   min: 1,
-  max: 5,
-};
-
-export const WasteCodeLength = {
   max: 5,
 };

@@ -1,7 +1,3 @@
-export type Locale = 'en' | 'cy';
-
-export type Context = 'csv' | 'api' | 'ui';
-
 export type Section = 'Producer' | 'Waste collection' | 'Carrier' | 'Receiver';
 
 export type Field =
@@ -50,11 +46,6 @@ export type Field =
   | 'Receiver fax number';
 
 export type UIField = 'Postcode' | 'AddressSelection';
-
-export interface ErrorMessage {
-  locale: Locale;
-  context?: Context;
-}
 
 export interface FieldFormatError {
   field: Field | UIField;

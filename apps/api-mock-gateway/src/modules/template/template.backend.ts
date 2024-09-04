@@ -31,7 +31,7 @@ import {
   setBaseWasteDescription,
   doesTemplateAlreadyExist,
 } from '../../lib/util';
-import { glwe as glwValidation } from '@wts/util/shared-validation';
+import { glwe } from '@wts/util/shared-validation';
 
 export interface SubmissionRef {
   id: string;
@@ -485,6 +485,104 @@ export async function setWasteDescription(
   { id, accountId }: SubmissionRef,
   value: WasteDescription,
 ): Promise<void> {
+  if (value.status !== 'NotStarted') {
+    const errors = {
+      fieldFormatErrors: [] as validation.FieldFormatError[],
+    };
+    if (value.wasteCode) {
+      if (
+        value.status === 'Complete' &&
+        value.wasteCode.type !== 'NotApplicable' &&
+        !('code' in value.wasteCode)
+      ) {
+        const wasteCodeValidationResult =
+          glwe.validationRules.validateWasteCode(
+            '',
+            value.wasteCode.type,
+            db.wasteCodes,
+          );
+        if (!wasteCodeValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            wasteCodeValidationResult.error.fieldFormatError,
+          );
+        } else {
+          value.wasteCode = wasteCodeValidationResult.value;
+        }
+      } else if (
+        'code' in value.wasteCode &&
+        typeof value.wasteCode.code === 'string'
+      ) {
+        const wasteCodeValidationResult =
+          glwe.validationRules.validateWasteCode(
+            value.wasteCode.code,
+            value.wasteCode.type,
+            db.wasteCodes,
+          );
+
+        if (!wasteCodeValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            wasteCodeValidationResult.error.fieldFormatError,
+          );
+        } else {
+          value.wasteCode = wasteCodeValidationResult.value;
+        }
+      } else {
+        value.wasteCode = {
+          type: value.wasteCode.type,
+        };
+      }
+    }
+
+    if (value.ewcCodes) {
+      const ewcCodesValidationResult = glwe.validationRules.validateEwcCodes(
+        value.ewcCodes.map((e) => e.code),
+        db.ewcCodes,
+      );
+
+      if (!ewcCodesValidationResult.valid) {
+        errors.fieldFormatErrors.push(
+          ewcCodesValidationResult.error.fieldFormatError,
+        );
+      } else {
+        value.ewcCodes = ewcCodesValidationResult.value;
+      }
+    }
+
+    if (value.nationalCode) {
+      const nationalCodeValidationResult =
+        glwe.validationRules.validateNationalCode(
+          value.nationalCode.provided === 'Yes'
+            ? value.nationalCode.value
+            : undefined,
+        );
+
+      if (!nationalCodeValidationResult.valid) {
+        errors.fieldFormatErrors.push(
+          nationalCodeValidationResult.error.fieldFormatError,
+        );
+      } else {
+        value.nationalCode = nationalCodeValidationResult.value;
+      }
+    }
+
+    if (value.description) {
+      const descriptionValidationResult =
+        glwe.validationRules.validateWasteDecription(value.description);
+
+      if (!descriptionValidationResult.valid) {
+        errors.fieldFormatErrors.push(
+          descriptionValidationResult.error.fieldFormatError,
+        );
+      } else {
+        value.description = descriptionValidationResult.value;
+      }
+    }
+
+    if (errors.fieldFormatErrors.length > 0) {
+      return Promise.reject(new BadRequestError('Validation error', errors));
+    }
+  }
+
   const template = db.templates.find(
     (t) => t.id == id && t.accountId == accountId,
   );
@@ -826,12 +924,17 @@ export async function setExitLocation(
 ): Promise<void> {
   if (value.status === 'Complete') {
     const uKExitLocationValidationResult =
-      glwValidation.validationRules.validateUkExitLocation(value.exitLocation);
+      glwe.validationRules.validateUkExitLocation(
+        'value' in value.exitLocation &&
+          typeof value.exitLocation.value === 'string'
+          ? value.exitLocation.value
+          : undefined,
+      );
     if (!uKExitLocationValidationResult.valid) {
       return Promise.reject(
         new BadRequestError(
           'Validation error',
-          uKExitLocationValidationResult.errors,
+          uKExitLocationValidationResult.error,
         ),
       );
     }

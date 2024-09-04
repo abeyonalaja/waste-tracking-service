@@ -1,9 +1,4 @@
-import {
-  ReferenceChar,
-  NationalCodeChar,
-  DecimalPlacesChar,
-  UkExitLocationChar,
-} from './constraints';
+import { ReferenceChar, DecimalPlacesChar } from './constraints';
 
 const numeric = '0-9';
 const alphabetic = 'a-zA-Z';
@@ -11,10 +6,6 @@ const alphaNumeric = `${alphabetic}${numeric}`;
 
 export const referenceRegex = new RegExp(
   `^[${alphaNumeric}]{${ReferenceChar.min},${ReferenceChar.max}}$`,
-);
-
-export const nationalCodeRegex = new RegExp(
-  `^[${alphaNumeric}\\\\\\- ]{${NationalCodeChar.min},${NationalCodeChar.max}}$`,
 );
 
 export const wasteQuantityRegex = new RegExp(
@@ -40,9 +31,5 @@ export const phoneInternationalRegex = new RegExp(
 export const faxRegex = phoneRegex;
 
 export const faxInternationalRegex = phoneInternationalRegex;
-
-export const ukExitLocationRegex = new RegExp(
-  `^[${alphaNumeric}\\-.,']{${UkExitLocationChar.min},${UkExitLocationChar.max}}$`,
-);
 
 export const templateNameRegex = new RegExp(`^[${alphaNumeric}\\-._'/() ]+$`);

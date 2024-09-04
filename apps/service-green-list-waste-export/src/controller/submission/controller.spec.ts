@@ -516,6 +516,9 @@ describe(SubmissionController, () => {
   });
 
   describe('validateSubmissions', () => {
+    const locale = 'en';
+    const context = 'csv';
+
     it('passes submission validation', async () => {
       const accountId = faker.string.uuid();
       const response = await subject.validateSubmissions({
@@ -1000,11 +1003,13 @@ describe(SubmissionController, () => {
               {
                 field: 'WasteDescription',
                 message:
-                  validation.AnnexIIIACodeValidationErrorMessages.invalid,
+                  glwe.errorMessages.invalidWasteCode['AnnexIIIA'][locale][
+                    context
+                  ],
               },
               {
                 field: 'WasteDescription',
-                message: validation.EWCCodeErrorMessages.invalid,
+                message: glwe.errorMessages.invalidEwcCodes[locale][context],
               },
               {
                 field: 'WasteQuantity',

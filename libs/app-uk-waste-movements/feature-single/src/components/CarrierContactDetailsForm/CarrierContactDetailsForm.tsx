@@ -1,7 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { ukwm as ukwmValidation } from '@wts/util/shared-validation';
+import {
+  ukwm as ukwmValidation,
+  common as commonValidation,
+} from '@wts/util/shared-validation';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { FormErrors } from '../../types/types';
@@ -48,7 +51,7 @@ export function CarrierContactDetailsForm({
   section,
 }: CarrierContactDetailsFormProps): React.ReactNode {
   const router = useRouter();
-  const locale = useLocale() as ukwmValidation.Locale;
+  const locale = useLocale() as commonValidation.Locale;
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [formState, setFormState] = useState<InitialFormState>({

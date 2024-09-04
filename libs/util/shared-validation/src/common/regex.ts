@@ -1,8 +1,8 @@
 import * as constraints from './constraints';
 
-const numeric = '0-9';
-const alphabetic = 'a-zA-Z';
-const alphaNumeric = `${alphabetic}${numeric}`;
+export const numeric = '0-9';
+export const alphabetic = 'a-zA-Z';
+export const alphaNumeric = `${alphabetic}${numeric}`;
 
 export const referenceRegex = new RegExp(
   `^[${alphaNumeric}\\-\\/\\\\_ ]{${constraints.ReferenceChar.min},${constraints.ReferenceChar.max}}$`,

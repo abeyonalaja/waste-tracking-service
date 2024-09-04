@@ -164,9 +164,6 @@ export default class GovUkPayServiceChargeClient
           },
         },
       );
-      console.log(response.status);
-      console.log('Error: ############');
-      console.log(error);
 
       if (!response.ok) {
         if (error) {

@@ -72,9 +72,6 @@ const repository = new CosmosRepository(
   logger,
 );
 
-const draftController = new draft.DraftController(repository, logger);
-const templateController = new template.TemplateController(repository, logger);
-
 const referenceDataClient = new DaprReferenceDataClient(
   server.client,
   process.env['REFERENCE_DATA_APP_ID'] || 'service-reference-data',
@@ -112,6 +109,19 @@ async function init() {
   ) {
     throw new Error('Failed to get reference datasets');
   }
+
+  const draftController = new draft.DraftController(
+    repository,
+    wasteCodesResponse.value,
+    ewcCodesResponse.value,
+    logger,
+  );
+  const templateController = new template.TemplateController(
+    repository,
+    wasteCodesResponse.value,
+    ewcCodesResponse.value,
+    logger,
+  );
 
   const submissionController = new submission.SubmissionController(
     repository,

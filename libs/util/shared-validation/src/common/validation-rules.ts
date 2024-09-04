@@ -262,7 +262,6 @@ export function validateEmailAddress(
   };
 }
 
-// for csv .replace(/'/g, '')
 export function validatePhoneNumber(
   phoneNumber?: string,
 ): ValidationResult<string> {
@@ -287,7 +286,6 @@ export function validatePhoneNumber(
   };
 }
 
-// for csv .replace(/'/g, '')
 export function validateFaxNumber(
   faxNumber?: string,
 ): ValidationResult<string | undefined> {

@@ -1,13 +1,14 @@
-import { validationErrorMessages } from './validation-error-messages';
-import { Locale, Context, Section, uiValidationResult } from './dto';
+import { errorMessages } from './error-messages';
+import { Section, uiValidationResult } from './dto';
 import { errorCodes } from '.';
+import { Locale, Context } from '../common';
 
 export function getErrorMessage(
   errorCode: number,
   locale: string,
   context?: 'csv' | 'api' | 'ui',
 ): string {
-  const errorMessage = validationErrorMessages[errorCode]?.[locale];
+  const errorMessage = errorMessages[errorCode]?.[locale];
 
   if (typeof errorMessage === 'string') {
     return errorMessage;

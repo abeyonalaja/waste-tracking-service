@@ -3,7 +3,10 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { createErrorSummaryErrors, formHasErrors } from '../../util';
 import type { Address } from '@wts/api/address';
-import { ukwm as ukwmValidation } from '@wts/util/shared-validation';
+import {
+  ukwm as ukwmValidation,
+  common as commonValidation,
+} from '@wts/util/shared-validation';
 import {
   AddressSearchResult,
   ContentStrings,
@@ -37,7 +40,7 @@ export function Search({
   section,
 }: SearchProps): JSX.Element {
   const router = useRouter();
-  const locale = useLocale() as ukwmValidation.Locale;
+  const locale = useLocale() as commonValidation.Locale;
   const [formErrors, setFormErrors] = useState<FormErrors>({});
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {

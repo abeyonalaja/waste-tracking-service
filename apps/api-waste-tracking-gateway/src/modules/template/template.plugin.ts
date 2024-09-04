@@ -296,6 +296,7 @@ const plugin: Plugin<PluginOptions> = {
           return request as dto.PutWasteDescriptionResponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
+            err.output.payload.data = err.data ?? undefined;
             return err;
           }
 
@@ -637,7 +638,7 @@ const plugin: Plugin<PluginOptions> = {
           return request as dto.PutExitLocationResponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
-            err.output.payload.data = err?.data;
+            err.output.payload.data = err.data ?? undefined;
             return err;
           }
 

@@ -3,7 +3,7 @@ import * as constraints from './constraints';
 import { ValidationErrorMessages } from './dto';
 import { commonErrorMessages, commonConstraints } from '../common';
 
-export const validationErrorMessages: ValidationErrorMessages = {
+export const errorMessages: ValidationErrorMessages = {
   [codes.defaultErrorCode]: {
     en: {
       csv: commonErrorMessages.defaultErrorMessage.en,

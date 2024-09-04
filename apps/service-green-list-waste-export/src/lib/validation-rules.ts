@@ -32,6 +32,8 @@ import {
   WasteCodeSubSectionFlattened,
   Carrier,
   RecoveryFacilityDetail,
+  ExitLocationFlattened,
+  UkExitLocation,
 } from '../model';
 
 import { common as commonValidation } from '@wts/util/shared-validation';
@@ -61,6 +63,9 @@ const carrierMeansOfTransport = [
   'Air',
   'InlandWaterways',
 ];
+
+const locale = 'en';
+const context = 'csv';
 
 export function validateCustomerReferenceSection(
   value: CustomerReferenceFlattened,
@@ -128,7 +133,7 @@ export function validateWasteCodeSubSection(
       valid: false,
       value: {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.empty,
+        message: glwe.errorMessages.emptyWasteCodeType[locale][context],
       },
     };
   }
@@ -145,7 +150,7 @@ export function validateWasteCodeSubSection(
       valid: false,
       value: {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
       },
     };
   }
@@ -161,108 +166,84 @@ export function validateWasteCodeSubSection(
       valid: false,
       value: {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.laboratory,
+        message: glwe.errorMessages.laboratoryType[locale][context],
       },
     };
   }
 
   if (value.baselAnnexIXCode) {
-    const filteredWasteCodeList = wasteCodeList
-      .filter((c) => c.type === 'BaselAnnexIX')[0]
-      .values.filter(
-        (v) =>
-          v.code === value.baselAnnexIXCode.replace(/\s/g, '').toUpperCase(),
-      );
-    if (filteredWasteCodeList.length !== 1) {
+    const wasteCodeValidationResult = glwe.validationRules.validateWasteCode(
+      value.baselAnnexIXCode,
+      'BaselAnnexIX',
+      wasteCodeList,
+      locale,
+      context,
+    );
+
+    if (!wasteCodeValidationResult.valid) {
       return {
         valid: false,
-        value: {
-          field: 'WasteDescription',
-          message: validation.BaselAnnexIXCodeValidationErrorMessages.invalid,
-        },
+        value: wasteCodeValidationResult.error.fieldFormatError,
       };
     } else {
-      wasteCode = {
-        type: 'BaselAnnexIX',
-        code: filteredWasteCodeList[0].code,
-      };
+      wasteCode = wasteCodeValidationResult.value;
     }
   }
 
   if (value.oecdCode) {
-    const filteredWasteCodeList = wasteCodeList
-      .filter((c) => c.type === 'OECD')[0]
-      .values.filter(
-        (v) => v.code === value.oecdCode.replace(/\s/g, '').toUpperCase(),
-      );
-    if (filteredWasteCodeList.length !== 1) {
+    const wasteCodeValidationResult = glwe.validationRules.validateWasteCode(
+      value.oecdCode,
+      'OECD',
+      wasteCodeList,
+      locale,
+      context,
+    );
+
+    if (!wasteCodeValidationResult.valid) {
       return {
         valid: false,
-        value: {
-          field: 'WasteDescription',
-          message: validation.OECDCodeValidationErrorMessages.invalid,
-        },
+        value: wasteCodeValidationResult.error.fieldFormatError,
       };
     } else {
-      wasteCode = {
-        type: 'OECD',
-        code: filteredWasteCodeList[0].code,
-      };
+      wasteCode = wasteCodeValidationResult.value;
     }
   }
 
   if (value.annexIIIACode) {
-    const codeArr = value.annexIIIACode
-      .replace(/\s/g, '')
-      .toUpperCase()
-      .split(';');
-    if (codeArr.some((c) => c.length !== validation.WasteCodeLength.max)) {
+    const wasteCodeValidationResult = glwe.validationRules.validateWasteCode(
+      value.annexIIIACode,
+      'AnnexIIIA',
+      wasteCodeList,
+      locale,
+      context,
+    );
+
+    if (!wasteCodeValidationResult.valid) {
       return {
         valid: false,
-        value: {
-          field: 'WasteDescription',
-          message: validation.AnnexIIIACodeValidationErrorMessages.invalid,
-        },
-      };
-    }
-    const filteredWasteCodeList = wasteCodeList
-      .filter((c) => c.type === 'AnnexIIIA')[0]
-      .values.filter((v) => codeArr.every((c) => v.code.includes(c)));
-    if (filteredWasteCodeList.length !== 1) {
-      return {
-        valid: false,
-        value: {
-          field: 'WasteDescription',
-          message: validation.AnnexIIIACodeValidationErrorMessages.invalid,
-        },
+        value: wasteCodeValidationResult.error.fieldFormatError,
       };
     } else {
-      wasteCode = {
-        type: 'AnnexIIIA',
-        code: filteredWasteCodeList[0].code,
-      };
+      wasteCode = wasteCodeValidationResult.value;
     }
   }
 
   if (value.annexIIIBCode) {
-    const filteredWasteCodeList = wasteCodeList
-      .filter((c) => c.type === 'AnnexIIIB')[0]
-      .values.filter(
-        (v) => v.code === value.annexIIIBCode.replace(/\s/g, '').toUpperCase(),
-      );
-    if (filteredWasteCodeList.length !== 1) {
+    const wasteCodeValidationResult = glwe.validationRules.validateWasteCode(
+      value.annexIIIBCode,
+      'AnnexIIIB',
+      wasteCodeList,
+      locale,
+      context,
+    );
+
+    if (!wasteCodeValidationResult.valid) {
       return {
         valid: false,
-        value: {
-          field: 'WasteDescription',
-          message: validation.AnnexIIIBCodeValidationErrorMessages.invalid,
-        },
+        value: wasteCodeValidationResult.error.fieldFormatError,
       };
     } else {
-      wasteCode = {
-        type: 'AnnexIIIB',
-        code: filteredWasteCodeList[0].code,
-      };
+      wasteCode = wasteCodeValidationResult.value;
     }
   }
 
@@ -273,7 +254,7 @@ export function validateWasteCodeSubSection(
         valid: false,
         value: {
           field: 'WasteDescription',
-          message: validation.UnlistedValidationErrorMessages.invalid,
+          message: glwe.errorMessages.invalidUnlistedWasteType[locale][context],
         },
       };
     } else {
@@ -300,62 +281,46 @@ export function validateWasteDescriptionSubSection(
   if (!value.ewcCodes) {
     errors.push({
       field: 'WasteDescription',
-      message: validation.EWCCodeErrorMessages.empty,
+      message: glwe.errorMessages.emptyEwcCodes[locale][context],
     });
   } else {
-    const ewcCodeArr = value.ewcCodes
-      .replace(/'/g, '')
-      .replace(/\s/g, '')
-      .split(';');
-    if (ewcCodeArr.length > validation.EWCCodesLength.max) {
-      errors.push({
-        field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.tooMany,
-      });
-    } else if (
-      !ewcCodeArr.every((val) => ewcCodeList.map((v) => v.code).includes(val))
-    ) {
-      errors.push({
-        field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.invalid,
-      });
+    const ewcCodesValidationResult = glwe.validationRules.validateEwcCodes(
+      value.ewcCodes.replace(/'/g, '').replace(/\s/g, '').split(';'),
+      ewcCodeList,
+      locale,
+      context,
+    );
+
+    if (!ewcCodesValidationResult.valid) {
+      errors.push(ewcCodesValidationResult.error.fieldFormatError);
     } else {
-      ewcCodes = ewcCodeArr.map((c) => {
-        return { code: c };
-      });
+      ewcCodes = ewcCodesValidationResult.value;
     }
   }
 
   let nationalCode: NationalCodeComponent = { provided: 'No' };
-  if (value.nationalCode) {
-    if (!validation.nationalCodeRegex.test(value.nationalCode)) {
-      errors.push({
-        field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
-      });
-    }
-    nationalCode = { provided: 'Yes', value: value.nationalCode };
-  }
-  if (!value.wasteDescription) {
-    errors.push({
-      field: 'WasteDescription',
-      message: validation.WasteDescriptionValidationErrorMessages.empty,
-    });
+  const nationalCodeValidationResult =
+    glwe.validationRules.validateNationalCode(
+      value.nationalCode,
+      locale,
+      context,
+    );
+  if (!nationalCodeValidationResult.valid) {
+    errors.push(nationalCodeValidationResult.error.fieldFormatError);
   } else {
-    value.wasteDescription = value.wasteDescription.trim();
-    if (value.wasteDescription.length < validation.WasteDescriptionChar.min) {
-      errors.push({
-        field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
-      });
-    }
+    nationalCode = nationalCodeValidationResult.value;
+  }
 
-    if (value.wasteDescription.length > validation.WasteDescriptionChar.max) {
-      errors.push({
-        field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
-      });
-    }
+  const descriptionValidationResult =
+    glwe.validationRules.validateWasteDecription(
+      value.wasteDescription,
+      locale,
+      context,
+    );
+  if (!descriptionValidationResult.valid) {
+    errors.push(descriptionValidationResult.error.fieldFormatError);
+  } else {
+    value.wasteDescription = descriptionValidationResult.value;
   }
 
   if (errors.length > 0) {
@@ -1649,6 +1614,31 @@ export function validateCollectionDetailSection(
           : reformattedwasteCollectionFaxNumber,
       },
     },
+  };
+}
+
+export function validateUkExitLocationSection(
+  value: ExitLocationFlattened,
+):
+  | { valid: false; value: FieldFormatError }
+  | { valid: true; value: UkExitLocation } {
+  const ukExitLocationValidationResult =
+    glwe.validationRules.validateUkExitLocation(
+      value.whereWasteLeavesUk,
+      locale,
+      context,
+    );
+
+  if (!ukExitLocationValidationResult.valid) {
+    return {
+      valid: false,
+      value: ukExitLocationValidationResult.error.fieldFormatError,
+    };
+  }
+
+  return {
+    valid: true,
+    value: ukExitLocationValidationResult.value,
   };
 }
 

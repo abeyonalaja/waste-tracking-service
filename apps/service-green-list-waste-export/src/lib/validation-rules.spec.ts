@@ -22,6 +22,7 @@ import {
   validateWasteDescriptionSection,
   validateWasteDescriptionSubSection,
   validateWasteQuantitySection,
+  validateUkExitLocationSection,
 } from './validation-rules';
 import { faker } from '@faker-js/faker';
 
@@ -182,6 +183,9 @@ const disposalCodes = [
   },
 ];
 
+const locale = 'en';
+const context = 'csv';
+
 describe('validateCustomerReferenceSection', () => {
   it('passes CustomerReference section validation', async () => {
     const response = validateCustomerReferenceSection({
@@ -341,7 +345,8 @@ describe('validateWasteCodeSubSection', () => {
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
       field: 'WasteDescription',
-      message: validation.BaselAnnexIXCodeValidationErrorMessages.invalid,
+      message:
+        glwe.errorMessages.invalidWasteCode['BaselAnnexIX'][locale][context],
     });
 
     response = validateWasteCodeSubSection(
@@ -357,7 +362,7 @@ describe('validateWasteCodeSubSection', () => {
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
       field: 'WasteDescription',
-      message: validation.OECDCodeValidationErrorMessages.invalid,
+      message: glwe.errorMessages.invalidWasteCode['OECD'][locale][context],
     });
 
     response = validateWasteCodeSubSection(
@@ -373,7 +378,8 @@ describe('validateWasteCodeSubSection', () => {
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
       field: 'WasteDescription',
-      message: validation.AnnexIIIACodeValidationErrorMessages.invalid,
+      message:
+        glwe.errorMessages.invalidWasteCode['AnnexIIIA'][locale][context],
     });
 
     response = validateWasteCodeSubSection(
@@ -389,7 +395,8 @@ describe('validateWasteCodeSubSection', () => {
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
       field: 'WasteDescription',
-      message: validation.AnnexIIIACodeValidationErrorMessages.invalid,
+      message:
+        glwe.errorMessages.invalidWasteCode['AnnexIIIA'][locale][context],
     });
 
     response = validateWasteCodeSubSection(
@@ -405,7 +412,8 @@ describe('validateWasteCodeSubSection', () => {
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
       field: 'WasteDescription',
-      message: validation.AnnexIIIBCodeValidationErrorMessages.invalid,
+      message:
+        glwe.errorMessages.invalidWasteCode['AnnexIIIB'][locale][context],
     });
 
     response = validateWasteCodeSubSection(
@@ -421,7 +429,7 @@ describe('validateWasteCodeSubSection', () => {
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
       field: 'WasteDescription',
-      message: validation.UnlistedValidationErrorMessages.invalid,
+      message: glwe.errorMessages.invalidUnlistedWasteType[locale][context],
     });
 
     response = validateWasteCodeSubSection(
@@ -437,7 +445,7 @@ describe('validateWasteCodeSubSection', () => {
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
       field: 'WasteDescription',
-      message: validation.WasteCodeValidationErrorMessages.empty,
+      message: glwe.errorMessages.emptyWasteCodeType[locale][context],
     });
 
     response = validateWasteCodeSubSection(
@@ -453,7 +461,7 @@ describe('validateWasteCodeSubSection', () => {
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
       field: 'WasteDescription',
-      message: validation.WasteCodeValidationErrorMessages.tooMany,
+      message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
     });
 
     response = validateWasteCodeSubSection(
@@ -469,7 +477,7 @@ describe('validateWasteCodeSubSection', () => {
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
       field: 'WasteDescription',
-      message: validation.WasteCodeValidationErrorMessages.tooMany,
+      message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
     });
 
     response = validateWasteCodeSubSection(
@@ -485,7 +493,7 @@ describe('validateWasteCodeSubSection', () => {
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
       field: 'WasteDescription',
-      message: validation.WasteCodeValidationErrorMessages.tooMany,
+      message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
     });
 
     response = validateWasteCodeSubSection(
@@ -501,7 +509,7 @@ describe('validateWasteCodeSubSection', () => {
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
       field: 'WasteDescription',
-      message: validation.WasteCodeValidationErrorMessages.tooMany,
+      message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
     });
 
     response = validateWasteCodeSubSection(
@@ -517,7 +525,7 @@ describe('validateWasteCodeSubSection', () => {
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
       field: 'WasteDescription',
-      message: validation.WasteCodeValidationErrorMessages.tooMany,
+      message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
     });
 
     response = validateWasteCodeSubSection(
@@ -533,7 +541,7 @@ describe('validateWasteCodeSubSection', () => {
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
       field: 'WasteDescription',
-      message: validation.WasteCodeValidationErrorMessages.tooMany,
+      message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
     });
 
     response = validateWasteCodeSubSection(
@@ -549,7 +557,7 @@ describe('validateWasteCodeSubSection', () => {
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
       field: 'WasteDescription',
-      message: validation.WasteCodeValidationErrorMessages.laboratory,
+      message: glwe.errorMessages.laboratoryType[locale][context],
     });
 
     response = validateWasteCodeSubSection(
@@ -565,7 +573,7 @@ describe('validateWasteCodeSubSection', () => {
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
       field: 'WasteDescription',
-      message: validation.WasteCodeValidationErrorMessages.laboratory,
+      message: glwe.errorMessages.laboratoryType[locale][context],
     });
 
     response = validateWasteCodeSubSection(
@@ -581,7 +589,7 @@ describe('validateWasteCodeSubSection', () => {
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
       field: 'WasteDescription',
-      message: validation.WasteCodeValidationErrorMessages.laboratory,
+      message: glwe.errorMessages.laboratoryType[locale][context],
     });
 
     response = validateWasteCodeSubSection(
@@ -597,7 +605,7 @@ describe('validateWasteCodeSubSection', () => {
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual({
       field: 'WasteDescription',
-      message: validation.WasteCodeValidationErrorMessages.laboratory,
+      message: glwe.errorMessages.laboratoryType[locale][context],
     });
   });
 });
@@ -764,7 +772,7 @@ describe('validateWasteDescriptionSubSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.empty,
+        message: glwe.errorMessages.emptyEwcCodes[locale][context],
       },
     ]);
 
@@ -780,7 +788,7 @@ describe('validateWasteDescriptionSubSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyEwcCodes[locale][context],
       },
     ]);
 
@@ -796,7 +804,7 @@ describe('validateWasteDescriptionSubSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.invalid,
+        message: glwe.errorMessages.invalidEwcCodes[locale][context],
       },
     ]);
 
@@ -812,7 +820,7 @@ describe('validateWasteDescriptionSubSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
     ]);
   });
@@ -830,7 +838,7 @@ describe('validateWasteDescriptionSubSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
     ]);
   });
@@ -848,7 +856,8 @@ describe('validateWasteDescriptionSubSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+        message:
+          glwe.errorMessages.charTooManyWasteDescription[locale][context],
       },
     ]);
 
@@ -864,7 +873,7 @@ describe('validateWasteDescriptionSubSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+        message: glwe.errorMessages.charTooFewWasteDescription[locale][context],
       },
     ]);
   });
@@ -882,15 +891,15 @@ describe('validateWasteDescriptionSubSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.empty,
+        message: glwe.errorMessages.emptyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.empty,
+        message: glwe.errorMessages.emptyWasteDescription[locale][context],
       },
     ]);
 
@@ -906,15 +915,15 @@ describe('validateWasteDescriptionSubSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.empty,
+        message: glwe.errorMessages.emptyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+        message: glwe.errorMessages.charTooFewWasteDescription[locale][context],
       },
     ]);
 
@@ -922,8 +931,7 @@ describe('validateWasteDescriptionSubSection', () => {
       {
         ewcCodes: '',
         nationalCode: '*****',
-        wasteDescription:
-          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+        wasteDescription: faker.string.sample(101),
       },
       ewcCodes,
     );
@@ -931,15 +939,16 @@ describe('validateWasteDescriptionSubSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.empty,
+        message: glwe.errorMessages.emptyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+        message:
+          glwe.errorMessages.charTooManyWasteDescription[locale][context],
       },
     ]);
 
@@ -955,15 +964,15 @@ describe('validateWasteDescriptionSubSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.invalid,
+        message: glwe.errorMessages.invalidEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.empty,
+        message: glwe.errorMessages.emptyWasteDescription[locale][context],
       },
     ]);
 
@@ -979,15 +988,15 @@ describe('validateWasteDescriptionSubSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.invalid,
+        message: glwe.errorMessages.invalidEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+        message: glwe.errorMessages.charTooFewWasteDescription[locale][context],
       },
     ]);
 
@@ -995,8 +1004,7 @@ describe('validateWasteDescriptionSubSection', () => {
       {
         ewcCodes: '010107',
         nationalCode: '*****',
-        wasteDescription:
-          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+        wasteDescription: faker.string.sample(101),
       },
       ewcCodes,
     );
@@ -1004,15 +1012,16 @@ describe('validateWasteDescriptionSubSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.invalid,
+        message: glwe.errorMessages.invalidEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+        message:
+          glwe.errorMessages.charTooManyWasteDescription[locale][context],
       },
     ]);
 
@@ -1028,15 +1037,15 @@ describe('validateWasteDescriptionSubSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.empty,
+        message: glwe.errorMessages.emptyWasteDescription[locale][context],
       },
     ]);
 
@@ -1052,15 +1061,15 @@ describe('validateWasteDescriptionSubSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+        message: glwe.errorMessages.charTooFewWasteDescription[locale][context],
       },
     ]);
 
@@ -1068,8 +1077,7 @@ describe('validateWasteDescriptionSubSection', () => {
       {
         ewcCodes: '010101;010102;010101;010102;010101;010102',
         nationalCode: '*****',
-        wasteDescription:
-          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+        wasteDescription: faker.string.sample(101),
       },
       ewcCodes,
     );
@@ -1077,15 +1085,16 @@ describe('validateWasteDescriptionSubSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+        message:
+          glwe.errorMessages.charTooManyWasteDescription[locale][context],
       },
     ]);
   });
@@ -1317,7 +1326,8 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.BaselAnnexIXCodeValidationErrorMessages.invalid,
+        message:
+          glwe.errorMessages.invalidWasteCode['BaselAnnexIX'][locale][context],
       },
     ]);
 
@@ -1339,7 +1349,7 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.OECDCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidWasteCode['OECD'][locale][context],
       },
     ]);
 
@@ -1361,7 +1371,8 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.AnnexIIIACodeValidationErrorMessages.invalid,
+        message:
+          glwe.errorMessages.invalidWasteCode['AnnexIIIA'][locale][context],
       },
     ]);
 
@@ -1383,7 +1394,8 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.AnnexIIIBCodeValidationErrorMessages.invalid,
+        message:
+          glwe.errorMessages.invalidWasteCode['AnnexIIIB'][locale][context],
       },
     ]);
 
@@ -1405,7 +1417,7 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.UnlistedValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidUnlistedWasteType[locale][context],
       },
     ]);
 
@@ -1427,7 +1439,7 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.empty,
+        message: glwe.errorMessages.emptyWasteCodeType[locale][context],
       },
     ]);
 
@@ -1449,7 +1461,7 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
       },
     ]);
 
@@ -1471,7 +1483,7 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
       },
     ]);
 
@@ -1493,7 +1505,7 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
       },
     ]);
 
@@ -1515,7 +1527,7 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
       },
     ]);
 
@@ -1537,7 +1549,7 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
       },
     ]);
 
@@ -1559,7 +1571,7 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
       },
     ]);
 
@@ -1581,7 +1593,7 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.laboratory,
+        message: glwe.errorMessages.laboratoryType[locale][context],
       },
     ]);
 
@@ -1603,7 +1615,7 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.laboratory,
+        message: glwe.errorMessages.laboratoryType[locale][context],
       },
     ]);
 
@@ -1625,7 +1637,7 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.laboratory,
+        message: glwe.errorMessages.laboratoryType[locale][context],
       },
     ]);
 
@@ -1647,7 +1659,7 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.laboratory,
+        message: glwe.errorMessages.laboratoryType[locale][context],
       },
     ]);
   });
@@ -1671,7 +1683,7 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.empty,
+        message: glwe.errorMessages.emptyEwcCodes[locale][context],
       },
     ]);
 
@@ -1693,7 +1705,7 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyEwcCodes[locale][context],
       },
     ]);
 
@@ -1715,7 +1727,7 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.invalid,
+        message: glwe.errorMessages.invalidEwcCodes[locale][context],
       },
     ]);
 
@@ -1737,7 +1749,7 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
     ]);
   });
@@ -1761,7 +1773,7 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
     ]);
   });
@@ -1785,7 +1797,8 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+        message:
+          glwe.errorMessages.charTooManyWasteDescription[locale][context],
       },
     ]);
 
@@ -1807,7 +1820,7 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+        message: glwe.errorMessages.charTooFewWasteDescription[locale][context],
       },
     ]);
   });
@@ -1831,19 +1844,19 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.empty,
+        message: glwe.errorMessages.emptyWasteCodeType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.empty,
+        message: glwe.errorMessages.emptyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.empty,
+        message: glwe.errorMessages.emptyWasteDescription[locale][context],
       },
     ]);
 
@@ -1865,19 +1878,19 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.empty,
+        message: glwe.errorMessages.emptyWasteCodeType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.empty,
+        message: glwe.errorMessages.emptyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+        message: glwe.errorMessages.charTooFewWasteDescription[locale][context],
       },
     ]);
 
@@ -1890,8 +1903,7 @@ describe('validateWasteDescriptionSection', () => {
         laboratory: '',
         ewcCodes: '',
         nationalCode: '*****',
-        wasteDescription:
-          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+        wasteDescription: faker.string.sample(101),
       },
       wasteCodes,
       ewcCodes,
@@ -1900,19 +1912,20 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.empty,
+        message: glwe.errorMessages.emptyWasteCodeType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.empty,
+        message: glwe.errorMessages.emptyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+        message:
+          glwe.errorMessages.charTooManyWasteDescription[locale][context],
       },
     ]);
 
@@ -1934,53 +1947,19 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.empty,
+        message: glwe.errorMessages.emptyWasteCodeType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.invalid,
+        message: glwe.errorMessages.invalidEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.empty,
-      },
-    ]);
-
-    response = validateWasteDescriptionSection(
-      {
-        baselAnnexIXCode: '',
-        oecdCode: '',
-        annexIIIACode: '',
-        annexIIIBCode: '',
-        laboratory: '',
-        ewcCodes: '010107',
-        nationalCode: '*****',
-        wasteDescription: ' ',
-      },
-      wasteCodes,
-      ewcCodes,
-    );
-    expect(response.valid).toEqual(false);
-    expect(response.value).toEqual([
-      {
-        field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.empty,
-      },
-      {
-        field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.invalid,
-      },
-      {
-        field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
-      },
-      {
-        field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+        message: glwe.errorMessages.emptyWasteDescription[locale][context],
       },
     ]);
 
@@ -1993,8 +1972,7 @@ describe('validateWasteDescriptionSection', () => {
         laboratory: '',
         ewcCodes: '010107',
         nationalCode: '*****',
-        wasteDescription:
-          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+        wasteDescription: ' ',
       },
       wasteCodes,
       ewcCodes,
@@ -2003,19 +1981,54 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.empty,
+        message: glwe.errorMessages.emptyWasteCodeType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.invalid,
+        message: glwe.errorMessages.invalidEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+        message: glwe.errorMessages.charTooFewWasteDescription[locale][context],
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: '',
+        ewcCodes: '010107',
+        nationalCode: '*****',
+        wasteDescription: faker.string.sample(101),
+      },
+      wasteCodes,
+      ewcCodes,
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: glwe.errorMessages.emptyWasteCodeType[locale][context],
+      },
+      {
+        field: 'WasteDescription',
+        message: glwe.errorMessages.invalidEwcCodes[locale][context],
+      },
+      {
+        field: 'WasteDescription',
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
+      },
+      {
+        field: 'WasteDescription',
+        message:
+          glwe.errorMessages.charTooManyWasteDescription[locale][context],
       },
     ]);
 
@@ -2037,53 +2050,19 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.empty,
+        message: glwe.errorMessages.emptyWasteCodeType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.empty,
-      },
-    ]);
-
-    response = validateWasteDescriptionSection(
-      {
-        baselAnnexIXCode: '',
-        oecdCode: '',
-        annexIIIACode: '',
-        annexIIIBCode: '',
-        laboratory: '',
-        ewcCodes: '010101;010102;010101;010102;010101;010102',
-        nationalCode: '*****',
-        wasteDescription: ' ',
-      },
-      wasteCodes,
-      ewcCodes,
-    );
-    expect(response.valid).toEqual(false);
-    expect(response.value).toEqual([
-      {
-        field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.empty,
-      },
-      {
-        field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.tooMany,
-      },
-      {
-        field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
-      },
-      {
-        field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+        message: glwe.errorMessages.emptyWasteDescription[locale][context],
       },
     ]);
 
@@ -2096,8 +2075,7 @@ describe('validateWasteDescriptionSection', () => {
         laboratory: '',
         ewcCodes: '010101;010102;010101;010102;010101;010102',
         nationalCode: '*****',
-        wasteDescription:
-          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+        wasteDescription: ' ',
       },
       wasteCodes,
       ewcCodes,
@@ -2106,19 +2084,54 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.empty,
+        message: glwe.errorMessages.emptyWasteCodeType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+        message: glwe.errorMessages.charTooFewWasteDescription[locale][context],
+      },
+    ]);
+
+    response = validateWasteDescriptionSection(
+      {
+        baselAnnexIXCode: '',
+        oecdCode: '',
+        annexIIIACode: '',
+        annexIIIBCode: '',
+        laboratory: '',
+        ewcCodes: '010101;010102;010101;010102;010101;010102',
+        nationalCode: '*****',
+        wasteDescription: faker.string.sample(101),
+      },
+      wasteCodes,
+      ewcCodes,
+    );
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: glwe.errorMessages.emptyWasteCodeType[locale][context],
+      },
+      {
+        field: 'WasteDescription',
+        message: glwe.errorMessages.tooManyEwcCodes[locale][context],
+      },
+      {
+        field: 'WasteDescription',
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
+      },
+      {
+        field: 'WasteDescription',
+        message:
+          glwe.errorMessages.charTooManyWasteDescription[locale][context],
       },
     ]);
 
@@ -2140,19 +2153,19 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.empty,
+        message: glwe.errorMessages.emptyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.empty,
+        message: glwe.errorMessages.emptyWasteDescription[locale][context],
       },
     ]);
 
@@ -2174,19 +2187,19 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.empty,
+        message: glwe.errorMessages.emptyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+        message: glwe.errorMessages.charTooFewWasteDescription[locale][context],
       },
     ]);
 
@@ -2199,8 +2212,7 @@ describe('validateWasteDescriptionSection', () => {
         laboratory: '',
         ewcCodes: '',
         nationalCode: '*****',
-        wasteDescription:
-          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+        wasteDescription: faker.string.sample(101),
       },
       wasteCodes,
       ewcCodes,
@@ -2209,19 +2221,20 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.empty,
+        message: glwe.errorMessages.emptyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+        message:
+          glwe.errorMessages.charTooManyWasteDescription[locale][context],
       },
     ]);
 
@@ -2243,19 +2256,19 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.invalid,
+        message: glwe.errorMessages.invalidEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.empty,
+        message: glwe.errorMessages.emptyWasteDescription[locale][context],
       },
     ]);
 
@@ -2277,19 +2290,19 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.invalid,
+        message: glwe.errorMessages.invalidEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+        message: glwe.errorMessages.charTooFewWasteDescription[locale][context],
       },
     ]);
 
@@ -2302,8 +2315,7 @@ describe('validateWasteDescriptionSection', () => {
         laboratory: '',
         ewcCodes: '010107',
         nationalCode: '*****',
-        wasteDescription:
-          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+        wasteDescription: faker.string.sample(101),
       },
       wasteCodes,
       ewcCodes,
@@ -2312,19 +2324,20 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.invalid,
+        message: glwe.errorMessages.invalidEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+        message:
+          glwe.errorMessages.charTooManyWasteDescription[locale][context],
       },
     ]);
 
@@ -2346,19 +2359,19 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.empty,
+        message: glwe.errorMessages.emptyWasteDescription[locale][context],
       },
     ]);
 
@@ -2380,19 +2393,19 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+        message: glwe.errorMessages.charTooFewWasteDescription[locale][context],
       },
     ]);
 
@@ -2405,8 +2418,7 @@ describe('validateWasteDescriptionSection', () => {
         laboratory: '',
         ewcCodes: '010101;010102;010101;010102;010101;010102',
         nationalCode: '*****',
-        wasteDescription:
-          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+        wasteDescription: faker.string.sample(101),
       },
       wasteCodes,
       ewcCodes,
@@ -2415,19 +2427,20 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+        message:
+          glwe.errorMessages.charTooManyWasteDescription[locale][context],
       },
     ]);
     response = validateWasteDescriptionSection(
@@ -2448,19 +2461,19 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.laboratory,
+        message: glwe.errorMessages.laboratoryType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.empty,
+        message: glwe.errorMessages.emptyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.empty,
+        message: glwe.errorMessages.emptyWasteDescription[locale][context],
       },
     ]);
 
@@ -2482,19 +2495,19 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.laboratory,
+        message: glwe.errorMessages.laboratoryType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.empty,
+        message: glwe.errorMessages.emptyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+        message: glwe.errorMessages.charTooFewWasteDescription[locale][context],
       },
     ]);
 
@@ -2507,8 +2520,7 @@ describe('validateWasteDescriptionSection', () => {
         laboratory: 'Yes',
         ewcCodes: '',
         nationalCode: '*****',
-        wasteDescription:
-          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+        wasteDescription: faker.string.sample(101),
       },
       wasteCodes,
       ewcCodes,
@@ -2517,19 +2529,20 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.laboratory,
+        message: glwe.errorMessages.laboratoryType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.empty,
+        message: glwe.errorMessages.emptyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+        message:
+          glwe.errorMessages.charTooManyWasteDescription[locale][context],
       },
     ]);
 
@@ -2551,19 +2564,19 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.laboratory,
+        message: glwe.errorMessages.laboratoryType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.invalid,
+        message: glwe.errorMessages.invalidEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.empty,
+        message: glwe.errorMessages.emptyWasteDescription[locale][context],
       },
     ]);
 
@@ -2585,19 +2598,19 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.laboratory,
+        message: glwe.errorMessages.laboratoryType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.invalid,
+        message: glwe.errorMessages.invalidEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+        message: glwe.errorMessages.charTooFewWasteDescription[locale][context],
       },
     ]);
 
@@ -2610,8 +2623,7 @@ describe('validateWasteDescriptionSection', () => {
         laboratory: 'Yes',
         ewcCodes: '010107',
         nationalCode: '*****',
-        wasteDescription:
-          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+        wasteDescription: faker.string.sample(101),
       },
       wasteCodes,
       ewcCodes,
@@ -2620,19 +2632,20 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.laboratory,
+        message: glwe.errorMessages.laboratoryType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.invalid,
+        message: glwe.errorMessages.invalidEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+        message:
+          glwe.errorMessages.charTooManyWasteDescription[locale][context],
       },
     ]);
 
@@ -2654,19 +2667,19 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.laboratory,
+        message: glwe.errorMessages.laboratoryType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.empty,
+        message: glwe.errorMessages.emptyWasteDescription[locale][context],
       },
     ]);
 
@@ -2688,19 +2701,19 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.laboratory,
+        message: glwe.errorMessages.laboratoryType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooFew,
+        message: glwe.errorMessages.charTooFewWasteDescription[locale][context],
       },
     ]);
 
@@ -2713,8 +2726,7 @@ describe('validateWasteDescriptionSection', () => {
         laboratory: 'Yes',
         ewcCodes: '010101;010102;010101;010102;010101;010102',
         nationalCode: '*****',
-        wasteDescription:
-          'thisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlthisistenlm',
+        wasteDescription: faker.string.sample(101),
       },
       wasteCodes,
       ewcCodes,
@@ -2723,19 +2735,20 @@ describe('validateWasteDescriptionSection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteDescription',
-        message: validation.WasteCodeValidationErrorMessages.laboratory,
+        message: glwe.errorMessages.laboratoryType[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.EWCCodeErrorMessages.tooMany,
+        message: glwe.errorMessages.tooManyEwcCodes[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.NationalCodeValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidNationalCode[locale][context],
       },
       {
         field: 'WasteDescription',
-        message: validation.WasteDescriptionValidationErrorMessages.charTooMany,
+        message:
+          glwe.errorMessages.charTooManyWasteDescription[locale][context],
       },
     ]);
   });
@@ -4831,6 +4844,51 @@ describe('validateCollectionDetailSection', () => {
           validation.CollectionDetailValidationErrorMessages.charTooManyEmail,
       },
     ]);
+  });
+});
+
+describe('validateUkExitLocationSection', () => {
+  it('passes UkExitLocation section validation', async () => {
+    let response = validateUkExitLocationSection({
+      whereWasteLeavesUk: '',
+    });
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({ provided: 'No' });
+
+    response = validateUkExitLocationSection({
+      whereWasteLeavesUk: 'Dover',
+    });
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({ provided: 'Yes', value: 'Dover' });
+
+    response = validateUkExitLocationSection({
+      whereWasteLeavesUk: "some-value.-,'",
+    });
+    expect(response.valid).toEqual(true);
+    expect(response.value).toEqual({
+      provided: 'Yes',
+      value: "some-value.-,'",
+    });
+  });
+
+  it('fails UkExitLocation section validation', async () => {
+    let response = validateUkExitLocationSection({
+      whereWasteLeavesUk: faker.string.sample(51),
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'UkExitLocation',
+      message: glwe.errorMessages.charTooManyUkExitLocation[locale][context],
+    });
+
+    response = validateUkExitLocationSection({
+      whereWasteLeavesUk: 'some_value',
+    });
+    expect(response.valid).toEqual(false);
+    expect(response.value).toEqual({
+      field: 'UkExitLocation',
+      message: glwe.errorMessages.invalidUkExitLocation[locale][context],
+    });
   });
 });
 

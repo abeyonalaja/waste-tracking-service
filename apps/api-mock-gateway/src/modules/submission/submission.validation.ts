@@ -41,10 +41,10 @@ export const validatePutWasteDescriptionRequest =
         discriminator: 'type',
         mapping: {
           NotApplicable: { properties: {} },
-          BaselAnnexIX: { properties: { code: { type: 'string' } } },
-          OECD: { properties: { code: { type: 'string' } } },
-          AnnexIIIA: { properties: { code: { type: 'string' } } },
-          AnnexIIIB: { properties: { code: { type: 'string' } } },
+          BaselAnnexIX: { optionalProperties: { code: { type: 'string' } } },
+          OECD: { optionalProperties: { code: { type: 'string' } } },
+          AnnexIIIA: { optionalProperties: { code: { type: 'string' } } },
+          AnnexIIIB: { optionalProperties: { code: { type: 'string' } } },
         },
       },
       ewcCodes: {

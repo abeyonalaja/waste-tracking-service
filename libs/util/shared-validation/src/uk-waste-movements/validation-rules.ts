@@ -2,14 +2,9 @@ import * as commonValidationRules from '../common/validation-rules';
 import * as constraints from './constraints';
 import * as errorCodes from './error-codes';
 import { getErrorMessage, getSharedErrorCode } from './util';
-import type {
-  ErrorMessage,
-  ValidationResult,
-  FieldFormatError,
-  Section,
-  Field,
-} from './dto';
+import type { ValidationResult, FieldFormatError, Section, Field } from './dto';
 import { Contact, Address, SICCode } from './model';
+import { ErrorMessage } from '../common';
 
 function titleCaseSpacesRemoved(str: string) {
   return str

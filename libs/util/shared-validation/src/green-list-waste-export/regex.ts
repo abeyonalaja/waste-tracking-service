@@ -1,9 +1,10 @@
-import * as constraints from './constraints';
+import { NationalCodeChar, UkExitLocationChar } from './constraints';
+import { commonRegex } from '../common';
 
-const numeric = '0-9';
-const alphabetic = 'a-zA-Z';
-const alphaNumeric = `${alphabetic}${numeric}`;
+export const nationalCodeRegex = new RegExp(
+  `^[${commonRegex.alphaNumeric}\\\\\\- ]{${NationalCodeChar.min},${NationalCodeChar.max}}$`,
+);
 
 export const ukExitLocationRegex = new RegExp(
-  `^[${alphaNumeric}\\-.,']{${constraints.UkExitLocationChar.min},${constraints.UkExitLocationChar.max}}$`,
+  `^[${commonRegex.alphaNumeric}\\-.,']{${UkExitLocationChar.min},${UkExitLocationChar.max}}$`,
 );

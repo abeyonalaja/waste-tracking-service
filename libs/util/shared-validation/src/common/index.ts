@@ -1,4 +1,4 @@
-export type { ErrorMessage, Locale, ValidationResult } from './dto';
+export type { ErrorMessage, Locale, Context, ValidationResult } from './dto';
 
 export * as commonConstraints from './constraints';
 export * as commonRegex from './regex';

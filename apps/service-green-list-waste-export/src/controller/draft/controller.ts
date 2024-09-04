@@ -16,6 +16,7 @@ import {
   DraftRecoveryFacilityDetails,
   DraftRecoveryFacilityPartial,
   DraftSubmission,
+  FieldFormatError,
   RecordState,
   Submission,
   WasteQuantity,
@@ -30,8 +31,8 @@ import {
   setSubmissionDeclarationStatus,
 } from '../../lib/util';
 import { CosmosRepository } from '../../data';
-import { common as commonValidation } from '@wts/util/shared-validation';
-import { glwe as glwValidation } from '@wts/util/shared-validation';
+import { common as commonValidation, glwe } from '@wts/util/shared-validation';
+import { WasteCode, WasteCodeType } from '@wts/api/reference-data';
 
 export type Handler<Request, Response> = (
   request: Request,
@@ -43,6 +44,8 @@ const submissionContainerName = 'submissions';
 export default class DraftController {
   constructor(
     private repository: CosmosRepository,
+    private wasteCodeList: WasteCodeType[],
+    private ewcCodeList: WasteCode[],
     private logger: Logger,
   ) {}
 
@@ -263,6 +266,105 @@ export default class DraftController {
     api.SetDraftWasteDescriptionResponse
   > = async ({ id, accountId, value }) => {
     try {
+      if (value.status !== 'NotStarted') {
+        const errors = {
+          fieldFormatErrors: [] as FieldFormatError[],
+        };
+        if (value.wasteCode) {
+          if (
+            value.status === 'Complete' &&
+            value.wasteCode.type !== 'NotApplicable' &&
+            !('code' in value.wasteCode)
+          ) {
+            const wasteCodeValidationResult =
+              glwe.validationRules.validateWasteCode(
+                '',
+                value.wasteCode.type,
+                this.wasteCodeList,
+              );
+            if (!wasteCodeValidationResult.valid) {
+              errors.fieldFormatErrors.push(
+                wasteCodeValidationResult.error.fieldFormatError,
+              );
+            } else {
+              value.wasteCode = wasteCodeValidationResult.value;
+            }
+          } else if (
+            'code' in value.wasteCode &&
+            typeof value.wasteCode.code === 'string'
+          ) {
+            const wasteCodeValidationResult =
+              glwe.validationRules.validateWasteCode(
+                value.wasteCode.code,
+                value.wasteCode.type,
+                this.wasteCodeList,
+              );
+
+            if (!wasteCodeValidationResult.valid) {
+              errors.fieldFormatErrors.push(
+                wasteCodeValidationResult.error.fieldFormatError,
+              );
+            } else {
+              value.wasteCode = wasteCodeValidationResult.value;
+            }
+          } else {
+            value.wasteCode = {
+              type: value.wasteCode.type,
+            };
+          }
+        }
+
+        if (value.ewcCodes) {
+          const ewcCodesValidationResult =
+            glwe.validationRules.validateEwcCodes(
+              value.ewcCodes.map((e) => e.code),
+              this.ewcCodeList,
+            );
+
+          if (!ewcCodesValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ewcCodesValidationResult.error.fieldFormatError,
+            );
+          } else {
+            value.ewcCodes = ewcCodesValidationResult.value;
+          }
+        }
+
+        if (value.nationalCode) {
+          const nationalCodeValidationResult =
+            glwe.validationRules.validateNationalCode(
+              value.nationalCode.provided === 'Yes'
+                ? value.nationalCode.value
+                : undefined,
+            );
+
+          if (!nationalCodeValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              nationalCodeValidationResult.error.fieldFormatError,
+            );
+          } else {
+            value.nationalCode = nationalCodeValidationResult.value;
+          }
+        }
+
+        if (value.description) {
+          const descriptionValidationResult =
+            glwe.validationRules.validateWasteDecription(value.description);
+
+          if (!descriptionValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              descriptionValidationResult.error.fieldFormatError,
+            );
+          } else {
+            value.description = descriptionValidationResult.value;
+          }
+        }
+
+        if (errors.fieldFormatErrors.length > 0) {
+          return fromBoom(Boom.badRequest('Validation failed', errors));
+        }
+      }
+
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
@@ -1039,18 +1141,22 @@ export default class DraftController {
   > = async ({ id, accountId, value }) => {
     try {
       if (value.status === 'Complete') {
-        const uKExitLocationValidationResult =
-          glwValidation.validationRules.validateUkExitLocation(
-            value.exitLocation,
+        const ukExitLocationValidationResult =
+          glwe.validationRules.validateUkExitLocation(
+            'value' in value.exitLocation &&
+              typeof value.exitLocation.value === 'string'
+              ? value.exitLocation.value
+              : undefined,
           );
-        if (!uKExitLocationValidationResult.valid) {
+        if (!ukExitLocationValidationResult.valid) {
           const boom = Boom.badRequest(
             'Validation failed',
-            uKExitLocationValidationResult.errors,
+            ukExitLocationValidationResult.error,
           );
           return fromBoom(boom);
         }
       }
+
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
