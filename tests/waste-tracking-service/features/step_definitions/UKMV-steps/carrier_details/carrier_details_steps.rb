@@ -73,3 +73,39 @@ And(/^I should see selected carried address displayed correctly$/) do
   expect(ConfirmCarrierAddressPage.new.address_line_four).to eq 'AL3 8QE'
   expect(ConfirmCarrierAddressPage.new.address_line_five).to eq 'England'
 end
+
+And(/^I verify Carrier contact details page is correctly translated$/) do
+  CarrierContactDetailsPage.new.check_page_translation
+end
+
+And(/^I complete the Carrier contact details page$/) do
+  UkmCarrierContactDetailsController.complete
+end
+
+And(/^I should see previously entered carrier contact details pre\-populated$/) do
+  expect(CarrierContactDetailsPage.new.organisation_name).to eq TestStatus.test_status(:org_name)
+  expect(CarrierContactDetailsPage.new.contact_person).to eq TestStatus.test_status(:contact_person)
+  expect(CarrierContactDetailsPage.new.email_address).to eq TestStatus.test_status(:email)
+  expect(CarrierContactDetailsPage.new.phone_number).to eq TestStatus.test_status(:phone_number)
+end
+
+And(/^I complete the carrier contact details page with new entries$/) do
+  CarrierContactDetailsPage.new.fill_organisation_name ''
+  CarrierContactDetailsPage.new.fill_organisation_contact_person ''
+  CarrierContactDetailsPage.new.fill_email_address ''
+  CarrierContactDetailsPage.new.fill_phone_number ''
+  UkmCarrierContactDetailsController.complete
+end
+
+And(/^I complete Carrier contact details page partially$/) do
+  org_name = Faker::Company.name
+  contact_person = Faker::Name.name
+  CarrierContactDetailsPage.new.fill_organisation_name org_name
+  CarrierContactDetailsPage.new.fill_organisation_contact_person contact_person
+  TestStatus.set_test_status(:org_name, org_name)
+  TestStatus.set_test_status(:contact_person, contact_person)
+end
+
+And(/^I enter invalid fax number for carrier contact details$/) do
+  CarrierContactDetailsPage.new.fill_fax_number 'fax123'
+end
