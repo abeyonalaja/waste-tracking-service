@@ -650,6 +650,38 @@
         "caption": "Producer and waste collection details",
         "heading": "What are the producer’s SIC (standard industry classification) codes?"
       },
+      "sicCodes": {
+        "backLink": "Back",
+        "caption": "Producer and waste collection details",
+        "titleNone": "What is the producer's first Standard Industry Classification (SIC) code?",
+        "titleOne": "You have added 1 Standard Industry Classification (SIC) code",
+        "titleMultipleOne": "You have added",
+        "titleMultipleTwo": "Standard Industry Classification (SIC) codes",
+        "description": "These are the 5 digit codes that describe the activites and they can have up to 4 codes listed. You can ",
+        "link": "search the Companies House register to find them for the producer (opens in new tab)",
+        "maxWarning": "This is the maximum number of SIC codes you can enter. To add another SIC code, you will need to remove one of the SIC codes you have previously entered.",
+        "saveAndContinue": "Save and continue",
+        "saveAndReturn": "Save and return",
+        "errorSummary": "There is a problem",
+        "yesRadio": "Yes",
+        "noRadio": "No",
+        "list": {
+          "remove": "Remove",
+          "hidden": "SIC Code"
+        },
+        "remove": {
+          "title": "Are you sure you want to remove this Standard Industry Classification (SIC) code?",
+          "errorMessage": "Select yes if you want to remove this SIC code"
+        },
+        "add": {
+          "title": "Do you need to add another SIC code?",
+          "label": "Choose from the list or start typing",
+          "hiddenError": "Error: ",
+          "selectionErrorMessage": "Select yes if you want to add another SIC code",
+          "errorMessageEmpty": "Enter a code",
+          "errorMessageDuplicate": "You have already added this SIC code"
+        }
+      },
       "sourceOfWaste": {
         "backLink": "Back",
         "caption": "Producer and waste collection details",
