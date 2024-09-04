@@ -853,6 +853,10 @@ export default class SubmissionController {
         accountId,
       );
 
+      if (value.organisationName && value.emailAddress && value.phoneNumber) {
+        saveAsDraft = false;
+      }
+
       draft.producerAndCollection.producer.contact = !saveAsDraft
         ? {
             status: 'Complete',
@@ -1265,12 +1269,7 @@ export default class SubmissionController {
         accountId,
       );
 
-      if (
-        value.organisationName &&
-        value.faxNumber &&
-        value.emailAddress &&
-        value.phoneNumber
-      ) {
+      if (value.organisationName && value.emailAddress && value.phoneNumber) {
         saveAsDraft = false;
       }
 

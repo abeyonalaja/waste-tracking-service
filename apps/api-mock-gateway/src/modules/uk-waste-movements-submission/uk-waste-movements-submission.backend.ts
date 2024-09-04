@@ -424,12 +424,7 @@ export function setDraftCarrierContactDetail(
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
 
-  if (
-    value.organisationName &&
-    value.faxNumber &&
-    value.emailAddress &&
-    value.phoneNumber
-  ) {
+  if (value.organisationName && value.emailAddress && value.phoneNumber) {
     saveAsDraft = false;
   }
 
@@ -489,12 +484,7 @@ export function setDraftProducerContactDetail(
     return Promise.reject(new NotFoundError('Submission not found.'));
   }
 
-  if (
-    value.organisationName &&
-    value.faxNumber &&
-    value.emailAddress &&
-    value.phoneNumber
-  ) {
+  if (value.organisationName && value.emailAddress && value.phoneNumber) {
     saveAsDraft = false;
   }
 
