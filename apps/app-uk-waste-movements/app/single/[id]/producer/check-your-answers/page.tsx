@@ -154,6 +154,7 @@ export default async function ProducerCheckYourAnswersPage({
                     JSON.stringify(
                       draft.producerAndCollection.producer.address,
                     ),
+                    1,
                   ),
 
                   action: (
@@ -262,6 +263,7 @@ export default async function ProducerCheckYourAnswersPage({
                         JSON.stringify(
                           draft.producerAndCollection.wasteCollection.address,
                         ),
+                        2,
                       )}
                     </>
                   ),

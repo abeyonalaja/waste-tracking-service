@@ -13,7 +13,10 @@ const isHouseNumber = (addressLine: string | undefined): boolean => {
   );
 };
 
-export function formatAddress(addressString: string | undefined): JSX.Element {
+export function formatAddress(
+  addressString: string | undefined,
+  uniqueCount?: number,
+): JSX.Element {
   if (!addressString) {
     return <span></span>;
   }
@@ -21,7 +24,11 @@ export function formatAddress(addressString: string | undefined): JSX.Element {
   return (
     <p>
       <span
-        id="address-buildingNameOrNumber"
+        id={
+          uniqueCount
+            ? `address-buildingNameOrNumber-${uniqueCount}`
+            : 'address-buildingNameOrNumber'
+        }
         className={
           isHouseNumber(address.buildingNameOrNumber) ? 'houseNumber' : ''
         }
@@ -31,7 +38,11 @@ export function formatAddress(addressString: string | undefined): JSX.Element {
           : ''}
       </span>
       <span
-        id="address-addressLine1"
+        id={
+          uniqueCount
+            ? `address-addressLine1-${uniqueCount}`
+            : 'address-addressLine1'
+        }
         className={isHouseNumber(address.addressLine1) ? 'houseNumber' : ''}
       >
         {address.addressLine1}
@@ -39,7 +50,11 @@ export function formatAddress(addressString: string | undefined): JSX.Element {
       <br />
       {address.addressLine2 && (
         <span
-          id="address-addressLine2"
+          id={
+            uniqueCount
+              ? `address-addressLine2-${uniqueCount}`
+              : 'address-addressLine2'
+          }
           className={
             isHouseNumber(address.addressLine1) ? 'houseNumberFollower' : ''
           }
@@ -48,15 +63,29 @@ export function formatAddress(addressString: string | undefined): JSX.Element {
           <br />
         </span>
       )}
-      <span id="address-townCity">{address.townCity}</span>
+      <span
+        id={
+          uniqueCount ? `address-townCity-${uniqueCount}` : 'address-townCity'
+        }
+      >
+        {address.townCity}
+      </span>
       <br />
       {address.postcode && (
-        <span id="address-postcode">
+        <span
+          id={
+            uniqueCount ? `address-postcode-${uniqueCount}` : 'address-postcode'
+          }
+        >
           {address.postcode}
           <br />
         </span>
       )}
-      <span id="address-country">{address.country}</span>
+      <span
+        id={uniqueCount ? `address-country-${uniqueCount}` : 'address-country'}
+      >
+        {address.country}
+      </span>
     </p>
   );
 }
