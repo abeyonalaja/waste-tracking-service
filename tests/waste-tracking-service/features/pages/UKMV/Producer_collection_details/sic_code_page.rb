@@ -28,4 +28,8 @@ class SicCodePage < GenericPage
     TestStatus.set_test_status(:sic_code_description, first('sic-code').value)
   end
 
+  def select_no_option
+    page.find(id:'selection-no').click
+  end
+
 end

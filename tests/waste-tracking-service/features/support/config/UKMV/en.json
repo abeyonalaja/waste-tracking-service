@@ -742,6 +742,35 @@
         }
       }
     },
+    "checkYourAnswers": {
+      "backLink": "Back",
+      "changeLink": "Change",
+      "notProvided": "Not provided",
+      "headingOne": "Check your answers",
+      "headingTwo": "Waste producer and collection details",
+      "description": "The waste producer and collection details for the waste.",
+      "headingThree": "Producer contact details",
+      "labels": {
+        "producerAddress": "Producer address",
+        "organisationName": "Organisation name",
+        "contactName": "Contact full name",
+        "contactEmail": "Email address",
+        "phoneNumber": "Phone number",
+        "faxNumber": "Fax number (optional)",
+        "sicCodes": "Producer Standard Industry (SIC) {count, plural, =1 {code} other {codes}}",
+        "collectionAddress": "Waste collection address",
+        "wasteSource": "Waste source"
+      },
+      "sameAddress": "Same as producer address",
+      "form": {
+        "legend": "Have you completed this section?",
+        "radioOne": "Yes",
+        "radioTwo": "No",
+        "button": "Save and continue",
+        "errorSummaryTitle": "There is a problem",
+        "validationError": "Select whether you’ve completed this section"
+      }
+    },
     "carrierAddress": {
       "metadata": {
         "title": "Carrier address",

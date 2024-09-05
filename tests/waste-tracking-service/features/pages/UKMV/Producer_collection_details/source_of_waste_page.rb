@@ -5,6 +5,7 @@ class SourceOfTheWastePage < GenericPage
   include CommonComponents
   include PageHelper
   include ErrorBox
+  include GeneralHelpers
 
   TITLE = Translations.ukmv_value 'single.producer.sourceOfWaste.heading'
   CAPTION = Translations.ukmv_value 'single.producer.sourceOfWaste.caption'
