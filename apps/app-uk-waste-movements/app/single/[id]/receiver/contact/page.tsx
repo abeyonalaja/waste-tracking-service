@@ -18,10 +18,12 @@ interface PageProps {
   params: {
     id: string;
   };
+  searchParams?: { [key: string]: string | string[] | undefined };
 }
 
 export default async function ProducerContactDetailsPage({
   params,
+  searchParams,
 }: PageProps): Promise<React.ReactNode> {
   const t = await getTranslations('single.receiverAddress.contactDetails');
   const session = await getServerSession(options);
@@ -92,7 +94,11 @@ export default async function ProducerContactDetailsPage({
       beforeChildren={
         <BackLink
           text={t('backLink')}
-          href={`/single/${params.id}/receiver/address`}
+          href={
+            searchParams?.source === 'tasklist'
+              ? `/single/${params.id}`
+              : `/single/${params.id}/receiver/address`
+          }
         />
       }
     >

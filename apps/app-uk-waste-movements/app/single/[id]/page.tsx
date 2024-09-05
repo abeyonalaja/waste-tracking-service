@@ -90,7 +90,7 @@ export default async function TaskListPage({
                   },
                   {
                     name: t('producerAndCollection.organisationContactDetails'),
-                    href: `${params.id}/producer/contact`,
+                    href: `${params.id}/producer/contact?source=tasklist`,
                     status: draft.producerAndCollection.producer.contact.status,
                   },
                   {
@@ -138,7 +138,7 @@ export default async function TaskListPage({
                   },
                   {
                     name: t('carrier.carrierContactDetails'),
-                    href: `${params.id}/carrier/contact`,
+                    href: `${params.id}/carrier/contact?source=tasklist`,
                     status: draft.carrier.contact.status,
                   },
                   {
@@ -165,7 +165,7 @@ export default async function TaskListPage({
                   },
                   {
                     name: t('receiver.receiverContactDetails'),
-                    href: `${params.id}/receiver/contact`,
+                    href: `${params.id}/receiver/contact?source=tasklist`,
                     status: draft.receiver.contact.status,
                   },
                   {

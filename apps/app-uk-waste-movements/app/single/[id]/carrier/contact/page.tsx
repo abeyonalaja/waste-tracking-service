@@ -21,10 +21,12 @@ interface PageProps {
   params: {
     id: string;
   };
+  searchParams?: { [key: string]: string | string[] | undefined };
 }
 
 export default async function CarrierContactDetailsPage({
   params,
+  searchParams,
 }: PageProps): Promise<React.ReactNode> {
   const t = await getTranslations('single.carrier.contactDetails');
   const session = await getServerSession(options);
@@ -95,7 +97,11 @@ export default async function CarrierContactDetailsPage({
       beforeChildren={
         <BackLink
           text={t('backLink')}
-          href={`/single/${params.id}/carrier/address`}
+          href={
+            searchParams?.source === 'tasklist'
+              ? `/single/${params.id}`
+              : `/single/${params.id}/carrier/address`
+          }
         />
       }
     >
