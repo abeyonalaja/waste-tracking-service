@@ -32,6 +32,7 @@ import {
   doesTemplateAlreadyExist,
 } from '../../lib/util';
 import { glwe } from '@wts/util/shared-validation';
+import { listCountries } from '../reference-data/reference-data.backend';
 
 export interface SubmissionRef {
   id: string;
@@ -503,7 +504,7 @@ export async function setWasteDescription(
           );
         if (!wasteCodeValidationResult.valid) {
           errors.fieldFormatErrors.push(
-            wasteCodeValidationResult.error.fieldFormatError,
+            ...wasteCodeValidationResult.error.fieldFormatErrors,
           );
         } else {
           value.wasteCode = wasteCodeValidationResult.value;
@@ -521,7 +522,7 @@ export async function setWasteDescription(
 
         if (!wasteCodeValidationResult.valid) {
           errors.fieldFormatErrors.push(
-            wasteCodeValidationResult.error.fieldFormatError,
+            ...wasteCodeValidationResult.error.fieldFormatErrors,
           );
         } else {
           value.wasteCode = wasteCodeValidationResult.value;
@@ -541,7 +542,7 @@ export async function setWasteDescription(
 
       if (!ewcCodesValidationResult.valid) {
         errors.fieldFormatErrors.push(
-          ewcCodesValidationResult.error.fieldFormatError,
+          ...ewcCodesValidationResult.error.fieldFormatErrors,
         );
       } else {
         value.ewcCodes = ewcCodesValidationResult.value;
@@ -558,7 +559,7 @@ export async function setWasteDescription(
 
       if (!nationalCodeValidationResult.valid) {
         errors.fieldFormatErrors.push(
-          nationalCodeValidationResult.error.fieldFormatError,
+          ...nationalCodeValidationResult.error.fieldFormatErrors,
         );
       } else {
         value.nationalCode = nationalCodeValidationResult.value;
@@ -571,7 +572,7 @@ export async function setWasteDescription(
 
       if (!descriptionValidationResult.valid) {
         errors.fieldFormatErrors.push(
-          descriptionValidationResult.error.fieldFormatError,
+          ...descriptionValidationResult.error.fieldFormatErrors,
         );
       } else {
         value.description = descriptionValidationResult.value;
@@ -660,6 +661,26 @@ export async function setImporterDetail(
   );
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
+  }
+
+  if (
+    (template.transitCountries.status === 'Complete' ||
+      template.transitCountries.status === 'Started') &&
+    (value.status === 'Complete' || value.status === 'Started')
+  ) {
+    const transitCountriesCrossValidationResult =
+      glwe.validationRules.validateImporterDetailAndTransitCountriesCross(
+        value,
+        template.transitCountries.values,
+      );
+    if (!transitCountriesCrossValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation error',
+          transitCountriesCrossValidationResult.error,
+        ),
+      );
+    }
   }
 
   template.importerDetail = value;
@@ -971,11 +992,49 @@ export async function setTransitCountries(
   { id, accountId }: SubmissionRef,
   value: TransitCountries,
 ): Promise<void> {
+  const countryList = await listCountries(db, false);
+  if (value.status === 'Started' || value.status === 'Complete') {
+    const transitCountriesValidationResult =
+      glwe.validationRules.validateTransitCountries(
+        countryList,
+        value.values.toString().replace(/,/g, ';'),
+      );
+    if (!transitCountriesValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation error',
+          transitCountriesValidationResult.error,
+        ),
+      );
+    }
+  }
   const template = db.templates.find(
     (t) => t.id == id && t.accountId == accountId,
   );
+
   if (template === undefined) {
     return Promise.reject(new NotFoundError('Template not found.'));
+  }
+
+  if (
+    (template.importerDetail.status === 'Complete' &&
+      value.status === 'Started') ||
+    (template.importerDetail.status === 'Complete' &&
+      value.status === 'Complete')
+  ) {
+    const transitCountriesCrossValidationResult =
+      glwe.validationRules.validateImporterDetailAndTransitCountriesCross(
+        template.importerDetail,
+        value.values,
+      );
+    if (!transitCountriesCrossValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation error',
+          transitCountriesCrossValidationResult.error,
+        ),
+      );
+    }
   }
 
   template.transitCountries = value;

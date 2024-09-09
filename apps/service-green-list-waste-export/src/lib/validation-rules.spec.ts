@@ -11,10 +11,8 @@ import {
   validateCollectionDetailSection,
   validateCustomerReferenceSection,
   validateExporterDetailSection,
-  validateImporterDetailAndTransitCountriesCrossSection,
   validateImporterDetailSection,
   validateRecoveryFacilityDetailSection,
-  validateTransitCountriesSection,
   validateWasteCodeSubSection,
   validateWasteCodeSubSectionAndQuantityCrossSection,
   validateWasteCodeSubSectionAndCarriersCrossSection,
@@ -23,6 +21,8 @@ import {
   validateWasteDescriptionSubSection,
   validateWasteQuantitySection,
   validateUkExitLocationSection,
+  validateTransitCountriesSection,
+  validateImporterDetailAndTransitCountriesCrossSection,
 } from './validation-rules';
 import { faker } from '@faker-js/faker';
 
@@ -343,11 +343,13 @@ describe('validateWasteCodeSubSection', () => {
       wasteCodes,
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message:
-        glwe.errorMessages.invalidWasteCode['BaselAnnexIX'][locale][context],
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message:
+          glwe.errorMessages.invalidWasteCode['BaselAnnexIX'][locale][context],
+      },
+    ]);
 
     response = validateWasteCodeSubSection(
       {
@@ -360,10 +362,12 @@ describe('validateWasteCodeSubSection', () => {
       wasteCodes,
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: glwe.errorMessages.invalidWasteCode['OECD'][locale][context],
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: glwe.errorMessages.invalidWasteCode['OECD'][locale][context],
+      },
+    ]);
 
     response = validateWasteCodeSubSection(
       {
@@ -376,11 +380,13 @@ describe('validateWasteCodeSubSection', () => {
       wasteCodes,
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message:
-        glwe.errorMessages.invalidWasteCode['AnnexIIIA'][locale][context],
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message:
+          glwe.errorMessages.invalidWasteCode['AnnexIIIA'][locale][context],
+      },
+    ]);
 
     response = validateWasteCodeSubSection(
       {
@@ -393,11 +399,13 @@ describe('validateWasteCodeSubSection', () => {
       wasteCodes,
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message:
-        glwe.errorMessages.invalidWasteCode['AnnexIIIA'][locale][context],
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message:
+          glwe.errorMessages.invalidWasteCode['AnnexIIIA'][locale][context],
+      },
+    ]);
 
     response = validateWasteCodeSubSection(
       {
@@ -410,11 +418,13 @@ describe('validateWasteCodeSubSection', () => {
       wasteCodes,
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message:
-        glwe.errorMessages.invalidWasteCode['AnnexIIIB'][locale][context],
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message:
+          glwe.errorMessages.invalidWasteCode['AnnexIIIB'][locale][context],
+      },
+    ]);
 
     response = validateWasteCodeSubSection(
       {
@@ -427,10 +437,12 @@ describe('validateWasteCodeSubSection', () => {
       wasteCodes,
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: glwe.errorMessages.invalidUnlistedWasteType[locale][context],
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: glwe.errorMessages.invalidUnlistedWasteType[locale][context],
+      },
+    ]);
 
     response = validateWasteCodeSubSection(
       {
@@ -443,10 +455,12 @@ describe('validateWasteCodeSubSection', () => {
       wasteCodes,
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: glwe.errorMessages.emptyWasteCodeType[locale][context],
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: glwe.errorMessages.emptyWasteCodeType[locale][context],
+      },
+    ]);
 
     response = validateWasteCodeSubSection(
       {
@@ -459,10 +473,12 @@ describe('validateWasteCodeSubSection', () => {
       wasteCodes,
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
+      },
+    ]);
 
     response = validateWasteCodeSubSection(
       {
@@ -475,10 +491,12 @@ describe('validateWasteCodeSubSection', () => {
       wasteCodes,
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
+      },
+    ]);
 
     response = validateWasteCodeSubSection(
       {
@@ -491,10 +509,12 @@ describe('validateWasteCodeSubSection', () => {
       wasteCodes,
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
+      },
+    ]);
 
     response = validateWasteCodeSubSection(
       {
@@ -507,10 +527,12 @@ describe('validateWasteCodeSubSection', () => {
       wasteCodes,
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
+      },
+    ]);
 
     response = validateWasteCodeSubSection(
       {
@@ -523,10 +545,12 @@ describe('validateWasteCodeSubSection', () => {
       wasteCodes,
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
+      },
+    ]);
 
     response = validateWasteCodeSubSection(
       {
@@ -539,10 +563,12 @@ describe('validateWasteCodeSubSection', () => {
       wasteCodes,
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
+      },
+    ]);
 
     response = validateWasteCodeSubSection(
       {
@@ -555,10 +581,12 @@ describe('validateWasteCodeSubSection', () => {
       wasteCodes,
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: glwe.errorMessages.laboratoryType[locale][context],
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: glwe.errorMessages.laboratoryType[locale][context],
+      },
+    ]);
 
     response = validateWasteCodeSubSection(
       {
@@ -571,10 +599,12 @@ describe('validateWasteCodeSubSection', () => {
       wasteCodes,
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: glwe.errorMessages.laboratoryType[locale][context],
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: glwe.errorMessages.laboratoryType[locale][context],
+      },
+    ]);
 
     response = validateWasteCodeSubSection(
       {
@@ -587,10 +617,12 @@ describe('validateWasteCodeSubSection', () => {
       wasteCodes,
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: glwe.errorMessages.laboratoryType[locale][context],
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: glwe.errorMessages.laboratoryType[locale][context],
+      },
+    ]);
 
     response = validateWasteCodeSubSection(
       {
@@ -603,10 +635,12 @@ describe('validateWasteCodeSubSection', () => {
       wasteCodes,
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'WasteDescription',
-      message: glwe.errorMessages.laboratoryType[locale][context],
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'WasteDescription',
+        message: glwe.errorMessages.laboratoryType[locale][context],
+      },
+    ]);
   });
 });
 
@@ -4876,19 +4910,23 @@ describe('validateUkExitLocationSection', () => {
       whereWasteLeavesUk: faker.string.sample(51),
     });
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'UkExitLocation',
-      message: glwe.errorMessages.charTooManyUkExitLocation[locale][context],
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'UkExitLocation',
+        message: glwe.errorMessages.charTooManyUkExitLocation[locale][context],
+      },
+    ]);
 
     response = validateUkExitLocationSection({
       whereWasteLeavesUk: 'some_value',
     });
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'UkExitLocation',
-      message: glwe.errorMessages.invalidUkExitLocation[locale][context],
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'UkExitLocation',
+        message: glwe.errorMessages.invalidUkExitLocation[locale][context],
+      },
+    ]);
   });
 });
 
@@ -4943,10 +4981,12 @@ describe('validateTransitCountriesSection', () => {
       countries,
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'TransitCountries',
-      message: validation.TransitCountriesValidationErrorMessages.invalid,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'TransitCountries',
+        message: glwe.errorMessages.invalidTransitCountry[locale][context],
+      },
+    ]);
 
     response = validateTransitCountriesSection(
       {
@@ -4955,10 +4995,12 @@ describe('validateTransitCountriesSection', () => {
       countries,
     );
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'TransitCountries',
-      message: validation.TransitCountriesValidationErrorMessages.invalid,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'TransitCountries',
+        message: glwe.errorMessages.invalidTransitCountry[locale][context],
+      },
+    ]);
   });
 });
 
@@ -5017,19 +5059,22 @@ describe('validateImporterDetailAndTransitCountriesCrossSection', () => {
     if (response.valid) {
       return;
     }
+
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
       {
         fields: ['ImporterDetail', 'TransitCountries'],
         message:
-          validation.ImporterDetailValidationErrorMessages
-            .invalidCrossSectionCountry,
+          glwe.errorMessages.importerDetailsInvalidCrossSectionTransitCountry[
+            locale
+          ][context],
       },
       {
         fields: ['ImporterDetail', 'TransitCountries'],
         message:
-          validation.TransitCountriesValidationErrorMessages
-            .invalidCrossSection,
+          glwe.errorMessages.transitCountriesInvalidCrossSectionTransitCountry[
+            locale
+          ][context],
       },
     ]);
   });

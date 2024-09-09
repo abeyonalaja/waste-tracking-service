@@ -128,11 +128,32 @@ const ewcCodes = [
   },
 ];
 
+const countries = [
+  {
+    name: 'Afghanistan [AF]',
+  },
+  {
+    name: 'France [FR]',
+  },
+  {
+    name: 'Belgium [BE]',
+  },
+  {
+    name: 'Burkina Faso [BF]',
+  },
+  {
+    name: 'Åland Islands [AX]',
+  },
+  {
+    name: 'Albania [AB]',
+  },
+];
 describe(TemplateController, () => {
   const subject = new TemplateController(
     mockRepository as unknown as CosmosRepository,
     wasteCodes,
     ewcCodes,
+    countries,
     new winston.Logger(),
   );
   const timestamp = new Date();
@@ -3125,6 +3146,20 @@ describe(TemplateController, () => {
         lastModifiedDate.getTime(),
       );
       expect(template.transitCountries).toEqual(transitCountries);
+    });
+
+    it('fails to set the transit countries if the given data is invalid', async () => {
+      mockRepository.getRecord.mockResolvedValue(template);
+
+      const response = await subject.setTemplateTransitCountries({
+        id,
+        accountId,
+        value: {
+          status: 'Complete',
+          values: ['London'],
+        },
+      });
+      expect(response.success).toBe(false);
     });
   });
 

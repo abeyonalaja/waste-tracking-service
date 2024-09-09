@@ -8,6 +8,9 @@ import {
   WasteCode,
   WasteCodeType,
   WasteDescription,
+  Country,
+  ImporterDetail,
+  TransitCountry,
 } from './model';
 import * as constraints from './constraints';
 import * as regex from './regex';
@@ -45,10 +48,13 @@ export function validateWasteCode(
           return {
             valid: false,
             error: {
-              fieldFormatError: {
-                field: 'WasteDescription',
-                message: errorMessages.invalidWasteCode[type][locale][context],
-              },
+              fieldFormatErrors: [
+                {
+                  field: 'WasteDescription',
+                  message:
+                    errorMessages.invalidWasteCode[type][locale][context],
+                },
+              ],
             },
           };
         }
@@ -72,10 +78,12 @@ export function validateWasteCode(
       return {
         valid: false,
         error: {
-          fieldFormatError: {
-            field: 'WasteDescription',
-            message: errorMessages.invalidWasteCode[type][locale][context],
-          },
+          fieldFormatErrors: [
+            {
+              field: 'WasteDescription',
+              message: errorMessages.invalidWasteCode[type][locale][context],
+            },
+          ],
         },
       };
     } else {
@@ -106,10 +114,12 @@ export function validateEwcCodes(
     return {
       valid: false,
       error: {
-        fieldFormatError: {
-          field: 'WasteDescription',
-          message: errorMessages.emptyEwcCodes[locale][context],
-        },
+        fieldFormatErrors: [
+          {
+            field: 'WasteDescription',
+            message: errorMessages.emptyEwcCodes[locale][context],
+          },
+        ],
       },
     };
   } else {
@@ -117,13 +127,15 @@ export function validateEwcCodes(
       return {
         valid: false,
         error: {
-          fieldFormatError: {
-            field: 'WasteDescription',
-            message:
-              errorMessages.tooManyEwcCodes[locale][
-                context as Exclude<Context, 'ui'>
-              ],
-          },
+          fieldFormatErrors: [
+            {
+              field: 'WasteDescription',
+              message:
+                errorMessages.tooManyEwcCodes[locale][
+                  context as Exclude<Context, 'ui'>
+                ],
+            },
+          ],
         },
       };
     } else if (
@@ -134,10 +146,12 @@ export function validateEwcCodes(
       return {
         valid: false,
         error: {
-          fieldFormatError: {
-            field: 'WasteDescription',
-            message: errorMessages.invalidEwcCodes[locale][context],
-          },
+          fieldFormatErrors: [
+            {
+              field: 'WasteDescription',
+              message: errorMessages.invalidEwcCodes[locale][context],
+            },
+          ],
         },
       };
     } else {
@@ -166,10 +180,12 @@ export function validateNationalCode(
       return {
         valid: false,
         error: {
-          fieldFormatError: {
-            field: 'WasteDescription',
-            message: errorMessages.invalidNationalCode[locale][context],
-          },
+          fieldFormatErrors: [
+            {
+              field: 'WasteDescription',
+              message: errorMessages.invalidNationalCode[locale][context],
+            },
+          ],
         },
       };
     }
@@ -192,10 +208,12 @@ export function validateWasteDecription(
     return {
       valid: false,
       error: {
-        fieldFormatError: {
-          field: 'WasteDescription',
-          message: errorMessages.emptyWasteDescription[locale][context],
-        },
+        fieldFormatErrors: [
+          {
+            field: 'WasteDescription',
+            message: errorMessages.emptyWasteDescription[locale][context],
+          },
+        ],
       },
     };
   }
@@ -205,13 +223,15 @@ export function validateWasteDecription(
     return {
       valid: false,
       error: {
-        fieldFormatError: {
-          field: 'WasteDescription',
-          message:
-            errorMessages.charTooFewWasteDescription[locale][
-              context as Exclude<Context, 'ui'>
-            ],
-        },
+        fieldFormatErrors: [
+          {
+            field: 'WasteDescription',
+            message:
+              errorMessages.charTooFewWasteDescription[locale][
+                context as Exclude<Context, 'ui'>
+              ],
+          },
+        ],
       },
     };
   }
@@ -220,10 +240,12 @@ export function validateWasteDecription(
     return {
       valid: false,
       error: {
-        fieldFormatError: {
-          field: 'WasteDescription',
-          message: errorMessages.charTooManyWasteDescription[locale][context],
-        },
+        fieldFormatErrors: [
+          {
+            field: 'WasteDescription',
+            message: errorMessages.charTooManyWasteDescription[locale][context],
+          },
+        ],
       },
     };
   }
@@ -269,13 +291,15 @@ export function validateUkExitLocation(
       return {
         valid: false,
         error: {
-          fieldFormatError: {
-            field: 'UkExitLocation',
-            message:
-              errorMessages.charTooManyUkExitLocation[locale][
-                context as Exclude<Context, 'ui'>
-              ],
-          },
+          fieldFormatErrors: [
+            {
+              field: 'UkExitLocation',
+              message:
+                errorMessages.charTooManyUkExitLocation[locale][
+                  context as Exclude<Context, 'ui'>
+                ],
+            },
+          ],
         },
       };
     }
@@ -284,10 +308,12 @@ export function validateUkExitLocation(
       return {
         valid: false,
         error: {
-          fieldFormatError: {
-            field: 'UkExitLocation',
-            message: errorMessages.invalidUkExitLocation[locale][context],
-          },
+          fieldFormatErrors: [
+            {
+              field: 'UkExitLocation',
+              message: errorMessages.invalidUkExitLocation[locale][context],
+            },
+          ],
         },
       };
     }
@@ -302,4 +328,76 @@ export function validateUkExitLocation(
     valid: true,
     value: location,
   };
+}
+
+export function validateTransitCountries(
+  countryList: Country[],
+  value?: string,
+  locale: Locale = 'en',
+  context: Context = 'api',
+): ValidationResult<TransitCountry[]> {
+  const countries: string[] = [];
+  value = value?.trim();
+  if (value) {
+    const countryArr = [...new Set(value.trim().toUpperCase().split(';'))];
+
+    for (let i = 0; i < countryArr.length; i++) {
+      const filteredCountryList = countryList.filter((v) =>
+        v.name.toUpperCase().includes(countryArr[i].trim()),
+      );
+      if (filteredCountryList.length !== 1) {
+        return {
+          valid: false,
+          error: {
+            fieldFormatErrors: [
+              {
+                field: 'TransitCountries',
+                message: errorMessages.invalidTransitCountry[locale][context],
+              },
+            ],
+          },
+        };
+      }
+      countries.push(filteredCountryList[0].name);
+    }
+  }
+
+  return { valid: true, value: countries };
+}
+
+export function validateImporterDetailAndTransitCountriesCross(
+  importerDetail: ImporterDetail | Partial<ImporterDetail>,
+  transitCountries: TransitCountry[],
+  locale: Locale = 'en',
+  context: Context = 'csv',
+): ValidationResult<undefined> {
+  if (
+    transitCountries.some(
+      (c) => c && c === importerDetail.importerAddressDetails?.country,
+    )
+  ) {
+    return {
+      valid: false,
+      error: {
+        invalidStructureErrors: [
+          {
+            fields: ['ImporterDetail', 'TransitCountries'],
+            message:
+              errorMessages.importerDetailsInvalidCrossSectionTransitCountry[
+                locale
+              ][context],
+          },
+          {
+            fields: ['ImporterDetail', 'TransitCountries'],
+            message:
+              errorMessages.transitCountriesInvalidCrossSectionTransitCountry[
+                locale
+              ][context],
+          },
+        ],
+        fieldFormatErrors: [],
+      },
+    };
+  }
+  return { valid: true, value: undefined };
 }

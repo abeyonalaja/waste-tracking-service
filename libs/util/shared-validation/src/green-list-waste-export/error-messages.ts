@@ -210,3 +210,42 @@ export const charTooManyUkExitLocation = {
     api: `Rhaid i'r lleoliad fod yn llai na ${UkExitLocationChar.max} nod`,
   },
 };
+
+export const invalidTransitCountry = {
+  en: {
+    ui: 'Enter transit country in full',
+    csv: 'Enter transit country in full',
+    api: 'Enter transit country in full',
+  },
+  cy: {
+    ui: 'Rhowch y wlad drawsgludo yn llawn',
+    csv: 'Rhowch y wlad drawsgludo yn llawn',
+    api: 'Rhowch y wlad drawsgludo yn llawn',
+  },
+};
+
+export const transitCountriesInvalidCrossSectionTransitCountry = {
+  en: {
+    ui: 'The transit country cannot be the same as the importer country',
+    csv: 'The transit country cannot be the same as the importer country',
+    api: 'The transit country cannot be the same as the importer country',
+  },
+  cy: {
+    ui: 'Ni all y wlad drawsgludo fod yr un fath â’r wlad fewnforio',
+    csv: 'Ni all y wlad drawsgludo fod yr un fath â’r wlad fewnforio',
+    api: 'Ni all y wlad drawsgludo fod yr un fath â’r wlad fewnforio',
+  },
+};
+
+export const importerDetailsInvalidCrossSectionTransitCountry = {
+  en: {
+    ui: 'The importer country cannot be the same as the transit country',
+    csv: 'The importer country cannot be the same as the transit country',
+    api: 'The importer country cannot be the same as the transit country',
+  },
+  cy: {
+    ui: "Ni all y wlad fewnforiwr fod yr un peth â'r wlad dramwy",
+    csv: "Ni all y wlad fewnforiwr fod yr un peth â'r wlad dramwy",
+    api: "Ni all y wlad fewnforiwr fod yr un peth â'r wlad dramwy",
+  },
+};

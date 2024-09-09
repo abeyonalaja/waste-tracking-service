@@ -22,7 +22,7 @@ export interface InvalidAttributeCombinationError {
 }
 
 export interface Error {
-  fieldFormatError: FieldFormatError;
+  fieldFormatErrors: FieldFormatError[];
   invalidStructureErrors?: InvalidAttributeCombinationError[];
 }
 

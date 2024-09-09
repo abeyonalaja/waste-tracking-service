@@ -61,8 +61,6 @@ export const ImporterDetailValidationErrorMessages = {
   charTooManyAddress: `The importer address must be less than ${FreeTextChar.max} characters`,
   emptyCountry: 'Enter the importer country',
   invalidCountry: 'Enter the importer country in full',
-  invalidCrossSectionCountry:
-    'The importer country cannot be the same as a transit country',
   emptyContactFullName: 'Enter full name of importer contact',
   charTooManyContactFullName: `The importer contact full name must be less than ${FreeTextChar.max} characters`,
   emptyPhone: 'Enter importer contact phone number',
@@ -164,12 +162,6 @@ export const CollectionDetailValidationErrorMessages = {
   emptyEmail: 'Enter waste collection email address',
   invalidEmail: 'Enter a real email address for the waste collection',
   charTooManyEmail: `The waste collection email address must be less than ${FreeTextChar.max} characters`,
-};
-
-export const TransitCountriesValidationErrorMessages = {
-  invalid: 'Enter transit country in full',
-  invalidCrossSection:
-    'The transit country cannot be the same as the importer country',
 };
 
 interface RecoveryFacilityErrorMessages {

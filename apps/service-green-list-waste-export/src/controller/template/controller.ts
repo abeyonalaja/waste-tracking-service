@@ -26,6 +26,8 @@ import {
 import { CosmosRepository } from '../../data';
 import { glwe } from '@wts/util/shared-validation';
 import { WasteCode, WasteCodeType } from '@wts/api/reference-data';
+import { glwe as glwValidation } from '@wts/util/shared-validation';
+import { Country } from '@wts/api/reference-data';
 
 export type Handler<Request, Response> = (
   request: Request,
@@ -40,6 +42,7 @@ export default class TemplateController {
     private repository: CosmosRepository,
     private wasteCodeList: WasteCodeType[],
     private ewcCodeList: WasteCode[],
+    private countryList: Country[],
     private logger: Logger,
   ) {}
 
@@ -290,7 +293,7 @@ export default class TemplateController {
               );
             if (!wasteCodeValidationResult.valid) {
               errors.fieldFormatErrors.push(
-                wasteCodeValidationResult.error.fieldFormatError,
+                ...wasteCodeValidationResult.error.fieldFormatErrors,
               );
             } else {
               value.wasteCode = wasteCodeValidationResult.value;
@@ -308,7 +311,7 @@ export default class TemplateController {
 
             if (!wasteCodeValidationResult.valid) {
               errors.fieldFormatErrors.push(
-                wasteCodeValidationResult.error.fieldFormatError,
+                ...wasteCodeValidationResult.error.fieldFormatErrors,
               );
             } else {
               value.wasteCode = wasteCodeValidationResult.value;
@@ -329,7 +332,7 @@ export default class TemplateController {
 
           if (!ewcCodesValidationResult.valid) {
             errors.fieldFormatErrors.push(
-              ewcCodesValidationResult.error.fieldFormatError,
+              ...ewcCodesValidationResult.error.fieldFormatErrors,
             );
           } else {
             value.ewcCodes = ewcCodesValidationResult.value;
@@ -346,7 +349,7 @@ export default class TemplateController {
 
           if (!nationalCodeValidationResult.valid) {
             errors.fieldFormatErrors.push(
-              nationalCodeValidationResult.error.fieldFormatError,
+              ...nationalCodeValidationResult.error.fieldFormatErrors,
             );
           } else {
             value.nationalCode = nationalCodeValidationResult.value;
@@ -359,7 +362,7 @@ export default class TemplateController {
 
           if (!descriptionValidationResult.valid) {
             errors.fieldFormatErrors.push(
-              descriptionValidationResult.error.fieldFormatError,
+              ...descriptionValidationResult.error.fieldFormatErrors,
             );
           } else {
             value.description = descriptionValidationResult.value;
@@ -491,6 +494,25 @@ export default class TemplateController {
       )) as Template;
       template.importerDetail = value;
       template.templateDetails.lastModified = new Date();
+
+      if (
+        (template.transitCountries.status === 'Complete' ||
+          template.transitCountries.status === 'Started') &&
+        (value.status === 'Complete' || value.status === 'Started')
+      ) {
+        const transitCountriesCrossValidationResult =
+          glwe.validationRules.validateImporterDetailAndTransitCountriesCross(
+            value,
+            template.transitCountries.values,
+          );
+        if (!transitCountriesCrossValidationResult.valid) {
+          const boom = Boom.badRequest(
+            'Validation failed',
+            transitCountriesCrossValidationResult.error,
+          );
+          return fromBoom(boom);
+        }
+      }
 
       await this.repository.saveRecord(
         templateContainerName,
@@ -917,12 +939,45 @@ export default class TemplateController {
     draft.SetDraftTransitCountriesResponse
   > = async ({ id, accountId, value }) => {
     try {
+      if (value.status === 'Started' || value.status === 'Complete') {
+        const transitCountriesValidationResult =
+          glwValidation.validationRules.validateTransitCountries(
+            this.countryList,
+            value.values.toString().replace(/,/g, ';'),
+          );
+        if (!transitCountriesValidationResult.valid) {
+          const boom = Boom.badRequest(
+            'Validation failed',
+            transitCountriesValidationResult.error,
+          );
+          return fromBoom(boom);
+        }
+      }
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
         accountId,
       )) as Template;
       template.transitCountries = value;
+
+      if (
+        (template.importerDetail.status === 'Complete' ||
+          template.importerDetail.status === 'Started') &&
+        (value.status === 'Complete' || value.status === 'Started')
+      ) {
+        const transitCountriesCrossValidationResult =
+          glwe.validationRules.validateImporterDetailAndTransitCountriesCross(
+            template.importerDetail,
+            value.values,
+          );
+        if (!transitCountriesCrossValidationResult.valid) {
+          const boom = Boom.badRequest(
+            'Validation failed',
+            transitCountriesCrossValidationResult.error,
+          );
+          return fromBoom(boom);
+        }
+      }
 
       template.templateDetails.lastModified = new Date();
       await this.repository.saveRecord(

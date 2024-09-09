@@ -43,7 +43,7 @@ import {
 } from '../../lib/util';
 import { validation } from '@wts/api/green-list-waste-export';
 import { common as commonValidation, glwe } from '@wts/util/shared-validation';
-
+import { listCountries } from '../reference-data/reference-data.backend';
 export interface SubmissionRef {
   id: string;
   accountId: string;
@@ -429,7 +429,7 @@ export async function setWasteDescription(
           );
         if (!wasteCodeValidationResult.valid) {
           errors.fieldFormatErrors.push(
-            wasteCodeValidationResult.error.fieldFormatError,
+            ...wasteCodeValidationResult.error.fieldFormatErrors,
           );
         } else {
           value.wasteCode = wasteCodeValidationResult.value;
@@ -447,7 +447,7 @@ export async function setWasteDescription(
 
         if (!wasteCodeValidationResult.valid) {
           errors.fieldFormatErrors.push(
-            wasteCodeValidationResult.error.fieldFormatError,
+            ...wasteCodeValidationResult.error.fieldFormatErrors,
           );
         } else {
           value.wasteCode = wasteCodeValidationResult.value;
@@ -467,7 +467,7 @@ export async function setWasteDescription(
 
       if (!ewcCodesValidationResult.valid) {
         errors.fieldFormatErrors.push(
-          ewcCodesValidationResult.error.fieldFormatError,
+          ...ewcCodesValidationResult.error.fieldFormatErrors,
         );
       } else {
         value.ewcCodes = ewcCodesValidationResult.value;
@@ -484,7 +484,7 @@ export async function setWasteDescription(
 
       if (!nationalCodeValidationResult.valid) {
         errors.fieldFormatErrors.push(
-          nationalCodeValidationResult.error.fieldFormatError,
+          ...nationalCodeValidationResult.error.fieldFormatErrors,
         );
       } else {
         value.nationalCode = nationalCodeValidationResult.value;
@@ -497,7 +497,7 @@ export async function setWasteDescription(
 
       if (!descriptionValidationResult.valid) {
         errors.fieldFormatErrors.push(
-          descriptionValidationResult.error.fieldFormatError,
+          ...descriptionValidationResult.error.fieldFormatErrors,
         );
       } else {
         value.description = descriptionValidationResult.value;
@@ -817,6 +817,26 @@ export async function setImporterDetail(
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
+  }
+
+  if (
+    (submission.transitCountries.status === 'Complete' ||
+      submission.transitCountries.status === 'Started') &&
+    (value.status === 'Complete' || value.status === 'Started')
+  ) {
+    const transitCountriesCrossValidationResult =
+      glwe.validationRules.validateImporterDetailAndTransitCountriesCross(
+        value,
+        submission.transitCountries.values,
+      );
+    if (!transitCountriesCrossValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation error',
+          transitCountriesCrossValidationResult.error,
+        ),
+      );
+    }
   }
 
   submission.importerDetail = value;
@@ -1279,11 +1299,48 @@ export async function setTransitCountries(
   { id, accountId }: SubmissionRef,
   value: TransitCountries,
 ): Promise<void> {
+  const countryList = await listCountries(db, false);
+  if (value.status === 'Started' || value.status === 'Complete') {
+    const transitCountriesValidationResult =
+      glwe.validationRules.validateTransitCountries(
+        countryList,
+        value.values.toString().replace(/,/g, ';'),
+      );
+    if (!transitCountriesValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation error',
+          transitCountriesValidationResult.error,
+        ),
+      );
+    }
+  }
   const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId,
   );
+
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
+  }
+
+  if (
+    (submission.importerDetail.status === 'Started' ||
+      submission.importerDetail.status === 'Complete') &&
+    (value.status === 'Started' || value.status === 'Complete')
+  ) {
+    const transitCountriesCrossValidationResult =
+      glwe.validationRules.validateImporterDetailAndTransitCountriesCross(
+        submission.importerDetail,
+        value.values,
+      );
+    if (!transitCountriesCrossValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation error',
+          transitCountriesCrossValidationResult.error,
+        ),
+      );
+    }
   }
 
   submission.transitCountries = value;

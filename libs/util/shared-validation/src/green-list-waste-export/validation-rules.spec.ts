@@ -6,10 +6,13 @@ import {
   validateUkExitLocation,
   validateWasteCode,
   validateWasteDecription,
+  validateImporterDetailAndTransitCountriesCross,
+  validateTransitCountries,
 } from './validation-rules';
 import { UkExitLocationChar } from './constraints';
 import * as errorMessages from './error-messages';
 import { submission } from '@wts/api/green-list-waste-export';
+import { ImporterDetail } from './model';
 
 const wasteCodes = [
   {
@@ -91,6 +94,30 @@ const ewcCodes = [
   },
 ];
 
+const countries = [
+  {
+    name: 'Afghanistan [AF]',
+  },
+  {
+    name: 'France [FR]',
+  },
+  {
+    name: 'Belgium [BE]',
+  },
+  {
+    name: 'Burkina Faso [BF]',
+  },
+  {
+    name: 'Åland Islands [AX]',
+  },
+  {
+    name: 'United Kingdom (Northern Ireland) [GB-NIR]',
+  },
+  {
+    name: 'United Kingdom (Wales) [GB-WLS]',
+  },
+];
+
 const locale = 'en';
 const context = 'api';
 
@@ -153,10 +180,12 @@ describe(validateWasteCode, () => {
     expect(response.valid).toEqual(false);
     if (!response.valid) {
       expect(response.error).toEqual({
-        fieldFormatError: {
-          field: 'WasteDescription',
-          message: errorMessages.invalidWasteCode[type][locale][context],
-        },
+        fieldFormatErrors: [
+          {
+            field: 'WasteDescription',
+            message: errorMessages.invalidWasteCode[type][locale][context],
+          },
+        ],
       });
     }
 
@@ -165,10 +194,12 @@ describe(validateWasteCode, () => {
     expect(response.valid).toEqual(false);
     if (!response.valid) {
       expect(response.error).toEqual({
-        fieldFormatError: {
-          field: 'WasteDescription',
-          message: errorMessages.invalidWasteCode[type][locale][context],
-        },
+        fieldFormatErrors: [
+          {
+            field: 'WasteDescription',
+            message: errorMessages.invalidWasteCode[type][locale][context],
+          },
+        ],
       });
     }
 
@@ -177,10 +208,12 @@ describe(validateWasteCode, () => {
     expect(response.valid).toEqual(false);
     if (!response.valid) {
       expect(response.error).toEqual({
-        fieldFormatError: {
-          field: 'WasteDescription',
-          message: errorMessages.invalidWasteCode[type][locale][context],
-        },
+        fieldFormatErrors: [
+          {
+            field: 'WasteDescription',
+            message: errorMessages.invalidWasteCode[type][locale][context],
+          },
+        ],
       });
     }
 
@@ -188,10 +221,12 @@ describe(validateWasteCode, () => {
     expect(response.valid).toEqual(false);
     if (!response.valid) {
       expect(response.error).toEqual({
-        fieldFormatError: {
-          field: 'WasteDescription',
-          message: errorMessages.invalidWasteCode[type][locale][context],
-        },
+        fieldFormatErrors: [
+          {
+            field: 'WasteDescription',
+            message: errorMessages.invalidWasteCode[type][locale][context],
+          },
+        ],
       });
     }
 
@@ -200,10 +235,12 @@ describe(validateWasteCode, () => {
     expect(response.valid).toEqual(false);
     if (!response.valid) {
       expect(response.error).toEqual({
-        fieldFormatError: {
-          field: 'WasteDescription',
-          message: errorMessages.invalidWasteCode[type][locale][context],
-        },
+        fieldFormatErrors: [
+          {
+            field: 'WasteDescription',
+            message: errorMessages.invalidWasteCode[type][locale][context],
+          },
+        ],
       });
     }
   });
@@ -240,10 +277,12 @@ describe(validateEwcCodes, () => {
     expect(response.valid).toEqual(false);
     if (!response.valid) {
       expect(response.error).toEqual({
-        fieldFormatError: {
-          field: 'WasteDescription',
-          message: errorMessages.emptyEwcCodes[locale][context],
-        },
+        fieldFormatErrors: [
+          {
+            field: 'WasteDescription',
+            message: errorMessages.emptyEwcCodes[locale][context],
+          },
+        ],
       });
     }
 
@@ -254,10 +293,12 @@ describe(validateEwcCodes, () => {
     expect(response.valid).toEqual(false);
     if (!response.valid) {
       expect(response.error).toEqual({
-        fieldFormatError: {
-          field: 'WasteDescription',
-          message: errorMessages.tooManyEwcCodes[locale][context],
-        },
+        fieldFormatErrors: [
+          {
+            field: 'WasteDescription',
+            message: errorMessages.tooManyEwcCodes[locale][context],
+          },
+        ],
       });
     }
 
@@ -265,10 +306,12 @@ describe(validateEwcCodes, () => {
     expect(response.valid).toEqual(false);
     if (!response.valid) {
       expect(response.error).toEqual({
-        fieldFormatError: {
-          field: 'WasteDescription',
-          message: errorMessages.invalidEwcCodes[locale][context],
-        },
+        fieldFormatErrors: [
+          {
+            field: 'WasteDescription',
+            message: errorMessages.invalidEwcCodes[locale][context],
+          },
+        ],
       });
     }
   });
@@ -308,10 +351,12 @@ describe(validateNationalCode, () => {
     expect(response.valid).toEqual(false);
     if (!response.valid) {
       expect(response.error).toEqual({
-        fieldFormatError: {
-          field: 'WasteDescription',
-          message: errorMessages.invalidNationalCode[locale][context],
-        },
+        fieldFormatErrors: [
+          {
+            field: 'WasteDescription',
+            message: errorMessages.invalidNationalCode[locale][context],
+          },
+        ],
       });
     }
   });
@@ -331,10 +376,12 @@ describe(validateWasteDecription, () => {
     expect(response.valid).toEqual(false);
     if (!response.valid) {
       expect(response.error).toEqual({
-        fieldFormatError: {
-          field: 'WasteDescription',
-          message: errorMessages.charTooManyWasteDescription[locale][context],
-        },
+        fieldFormatErrors: [
+          {
+            field: 'WasteDescription',
+            message: errorMessages.charTooManyWasteDescription[locale][context],
+          },
+        ],
       });
     }
 
@@ -342,10 +389,12 @@ describe(validateWasteDecription, () => {
     expect(response.valid).toEqual(false);
     if (!response.valid) {
       expect(response.error).toEqual({
-        fieldFormatError: {
-          field: 'WasteDescription',
-          message: errorMessages.emptyWasteDescription[locale][context],
-        },
+        fieldFormatErrors: [
+          {
+            field: 'WasteDescription',
+            message: errorMessages.emptyWasteDescription[locale][context],
+          },
+        ],
       });
     }
 
@@ -353,10 +402,12 @@ describe(validateWasteDecription, () => {
     expect(response.valid).toEqual(false);
     if (!response.valid) {
       expect(response.error).toEqual({
-        fieldFormatError: {
-          field: 'WasteDescription',
-          message: errorMessages.charTooFewWasteDescription[locale][context],
-        },
+        fieldFormatErrors: [
+          {
+            field: 'WasteDescription',
+            message: errorMessages.charTooFewWasteDescription[locale][context],
+          },
+        ],
       });
     }
   });
@@ -420,16 +471,111 @@ describe(validateUkExitLocation, () => {
     expect(result.valid).toEqual(false);
     if (!result.valid) {
       if (value.length > UkExitLocationChar.max) {
-        expect(result.error.fieldFormatError).toEqual({
-          field: 'UkExitLocation',
-          message: errorMessages.charTooManyUkExitLocation[locale][context],
-        });
+        expect(result.error.fieldFormatErrors).toEqual([
+          {
+            field: 'UkExitLocation',
+            message: errorMessages.charTooManyUkExitLocation[locale][context],
+          },
+        ]);
       } else {
-        expect(result.error.fieldFormatError).toEqual({
-          field: 'UkExitLocation',
-          message: errorMessages.invalidUkExitLocation[locale][context],
-        });
+        expect(result.error.fieldFormatErrors).toEqual([
+          {
+            field: 'UkExitLocation',
+            message: errorMessages.invalidUkExitLocation[locale][context],
+          },
+        ]);
       }
+    }
+  });
+});
+
+describe('validateTransitCountries', () => {
+  it('should return array of strings in correct format (%s)', () => {
+    const request = { value: 'Belgium;France', countryList: countries };
+    const result = validateTransitCountries(request.countryList, request.value);
+    expect(result.valid).toEqual(true);
+    if (result.valid) {
+      expect(result.value).toEqual(['Belgium [BE]', 'France [FR]']);
+    }
+  });
+
+  it('should return invalid error if the provided countries do not exist on the countryList', () => {
+    const request = { value: 'Bulgaria;France', countryList: countries };
+    const result = validateTransitCountries(request.countryList, request.value);
+    console.log(result);
+    expect(result.valid).toEqual(false);
+    if (!result.valid) {
+      expect(result.error).toEqual({
+        fieldFormatErrors: [
+          {
+            field: 'TransitCountries',
+            message: 'Enter transit country in full',
+          },
+        ],
+      });
+    }
+  });
+});
+
+describe('validateImporterDetailAndTransitCountriesCross', () => {
+  it('should return valid true if the provided transitCountries are not present in the importerDetail object', () => {
+    const transitCountries = ['France'];
+    const importerDetail: ImporterDetail = {
+      importerAddressDetails: {
+        organisationName: 'Global Imports Ltd.',
+        address: '123 International Way, Suite 400',
+        country: 'Belgium',
+      },
+      importerContactDetails: {
+        fullName: 'Ivan Petrov',
+        emailAddress: 'ivan.petrov@globalimports.com',
+        phoneNumber: '+359 88 123 4567',
+        faxNumber: '+359 88 765 4321',
+      },
+    };
+    const result = validateImporterDetailAndTransitCountriesCross(
+      importerDetail,
+      transitCountries,
+    );
+    expect(result.valid).toEqual(true);
+  });
+
+  it('should return valid false if the provided transitCountries are present in the importerDetail object', () => {
+    const transitCountries = ['Portugal'];
+    const importerDetail: ImporterDetail = {
+      importerAddressDetails: {
+        organisationName: 'Global Imports Ltd.',
+        address: '123 International Way, Suite 400',
+        country: 'Portugal',
+      },
+      importerContactDetails: {
+        fullName: 'Ivan Petrov',
+        emailAddress: 'ivan.petrov@globalimports.com',
+        phoneNumber: '+359 88 123 4567',
+        faxNumber: '+359 88 765 4321',
+      },
+    };
+    const result = validateImporterDetailAndTransitCountriesCross(
+      importerDetail,
+      transitCountries,
+    );
+    expect(result.valid).toEqual(false);
+    if (!result.valid) {
+      expect(result.error).toEqual({
+        invalidStructureErrors: [
+          {
+            fields: ['ImporterDetail', 'TransitCountries'],
+            message:
+              'The importer country cannot be the same as the transit country',
+          },
+          {
+            fields: ['ImporterDetail', 'TransitCountries'],
+            message:
+              'The transit country cannot be the same as the importer country',
+          },
+        ],
+        fieldFormatErrors: [],
+      });
     }
   });
 });

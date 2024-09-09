@@ -367,7 +367,7 @@ export default class SubmissionController {
           this.wasteCodeList,
         );
         if (!wasteCodeSubSection.valid) {
-          fieldFormatErrors.push(wasteCodeSubSection.value);
+          fieldFormatErrors.push(...wasteCodeSubSection.value);
         }
 
         const wasteDescriptionSubSection =
@@ -543,7 +543,7 @@ export default class SubmissionController {
           whereWasteLeavesUk: s.whereWasteLeavesUk,
         });
         if (!ukExitLocation.valid) {
-          fieldFormatErrors.push(ukExitLocation.value);
+          fieldFormatErrors.push(...ukExitLocation.value);
         }
 
         const transitCountries =
@@ -554,7 +554,7 @@ export default class SubmissionController {
             this.countryList,
           );
         if (!transitCountries.valid) {
-          fieldFormatErrors.push(transitCountries.value);
+          fieldFormatErrors.push(...transitCountries.value);
         }
 
         if (importerDetail.valid && transitCountries.valid) {

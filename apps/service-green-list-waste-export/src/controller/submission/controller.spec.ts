@@ -1389,14 +1389,18 @@ describe(SubmissionController, () => {
               {
                 fields: ['ImporterDetail', 'TransitCountries'],
                 message:
-                  validation.ImporterDetailValidationErrorMessages
-                    .invalidCrossSectionCountry,
+                  glwe.errorMessages
+                    .importerDetailsInvalidCrossSectionTransitCountry[locale][
+                    context
+                  ],
               },
               {
                 fields: ['ImporterDetail', 'TransitCountries'],
                 message:
-                  validation.TransitCountriesValidationErrorMessages
-                    .invalidCrossSection,
+                  glwe.errorMessages
+                    .transitCountriesInvalidCrossSectionTransitCountry[locale][
+                    context
+                  ],
               },
               {
                 fields: ['WasteDescription', 'RecoveryFacilityDetail'],

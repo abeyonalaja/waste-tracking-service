@@ -114,12 +114,14 @@ async function init() {
     repository,
     wasteCodesResponse.value,
     ewcCodesResponse.value,
+    countriesResponse.value,
     logger,
   );
   const templateController = new template.TemplateController(
     repository,
     wasteCodesResponse.value,
     ewcCodesResponse.value,
+    countriesResponse.value,
     logger,
   );
 

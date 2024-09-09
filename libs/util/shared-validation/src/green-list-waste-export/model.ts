@@ -6,3 +6,9 @@ export type WasteCodeType = apiRefData.WasteCodeType;
 export type WasteDescription = api.submission.WasteDescription;
 
 export type UkExitLocation = api.submission.UkExitLocation;
+
+export type TransitCountry = api.submission.TransitCountry;
+
+export type Country = apiRefData.Country;
+
+export type ImporterDetail = api.submission.ImporterDetail;

@@ -120,11 +120,36 @@ const ewcCodes = [
   },
 ];
 
+const countries = [
+  {
+    name: 'Afghanistan [AF]',
+  },
+  {
+    name: 'France [FR]',
+  },
+  {
+    name: 'Belgium [BE]',
+  },
+  {
+    name: 'Burkina Faso [BF]',
+  },
+  {
+    name: 'Åland Islands [AX]',
+  },
+  {
+    name: 'United Kingdom (Northern Ireland) [GB-NIR]',
+  },
+  {
+    name: 'United Kingdom (Wales) [GB-WLS]',
+  },
+];
+
 describe(DraftController, () => {
   const subject = new DraftController(
     mockRepository as unknown as CosmosRepository,
     wasteCodes,
     ewcCodes,
+    countries,
     new winston.Logger(),
   );
 
@@ -2752,13 +2777,61 @@ describe(DraftController, () => {
         accountId,
         value: {
           status: 'Complete',
-          values: ['N.Ireland', 'Wales'],
+          values: [
+            'United Kingdom (Northern Ireland) [GB-NIR]',
+            'United Kingdom (Wales) [GB-WLS]',
+          ],
         },
       });
 
       expect(mockRepository.saveRecord).toBeCalledTimes(1);
 
       expect(response.success).toBe(true);
+    });
+
+    it('rejets invalid Transit Countries data', async () => {
+      const id = faker.string.uuid();
+      const timestamp = new Date();
+      mockRepository.getRecord.mockResolvedValue({
+        id,
+        reference: 'abc',
+        wasteDescription: { status: 'NotStarted' },
+        wasteQuantity: { status: 'NotStarted' },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        collectionDate: { status: 'NotStarted' },
+        carriers: {
+          status: 'NotStarted',
+          transport: true,
+        },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: { status: 'NotStarted' },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: timestamp,
+        },
+      });
+
+      const accountId = faker.string.uuid();
+      const response = await subject.setDraftTransitCountries({
+        id,
+        accountId,
+        value: {
+          status: 'Complete',
+          values: [
+            'United Kingdom (Northern London) [GB-NIR]',
+            'United Kingdom (Wales) [GB-WLS]',
+          ],
+        },
+      });
+
+      expect(mockRepository.saveRecord).toBeCalledTimes(0);
+
+      expect(response.success).toBe(false);
     });
   });
 

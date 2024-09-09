@@ -33,6 +33,7 @@ import {
 import { CosmosRepository } from '../../data';
 import { common as commonValidation, glwe } from '@wts/util/shared-validation';
 import { WasteCode, WasteCodeType } from '@wts/api/reference-data';
+import { Country } from '@wts/api/reference-data';
 
 export type Handler<Request, Response> = (
   request: Request,
@@ -46,6 +47,7 @@ export default class DraftController {
     private repository: CosmosRepository,
     private wasteCodeList: WasteCodeType[],
     private ewcCodeList: WasteCode[],
+    private countryList: Country[],
     private logger: Logger,
   ) {}
 
@@ -284,7 +286,7 @@ export default class DraftController {
               );
             if (!wasteCodeValidationResult.valid) {
               errors.fieldFormatErrors.push(
-                wasteCodeValidationResult.error.fieldFormatError,
+                ...wasteCodeValidationResult.error.fieldFormatErrors,
               );
             } else {
               value.wasteCode = wasteCodeValidationResult.value;
@@ -302,7 +304,7 @@ export default class DraftController {
 
             if (!wasteCodeValidationResult.valid) {
               errors.fieldFormatErrors.push(
-                wasteCodeValidationResult.error.fieldFormatError,
+                ...wasteCodeValidationResult.error.fieldFormatErrors,
               );
             } else {
               value.wasteCode = wasteCodeValidationResult.value;
@@ -323,7 +325,7 @@ export default class DraftController {
 
           if (!ewcCodesValidationResult.valid) {
             errors.fieldFormatErrors.push(
-              ewcCodesValidationResult.error.fieldFormatError,
+              ...ewcCodesValidationResult.error.fieldFormatErrors,
             );
           } else {
             value.ewcCodes = ewcCodesValidationResult.value;
@@ -340,7 +342,7 @@ export default class DraftController {
 
           if (!nationalCodeValidationResult.valid) {
             errors.fieldFormatErrors.push(
-              nationalCodeValidationResult.error.fieldFormatError,
+              ...nationalCodeValidationResult.error.fieldFormatErrors,
             );
           } else {
             value.nationalCode = nationalCodeValidationResult.value;
@@ -353,7 +355,7 @@ export default class DraftController {
 
           if (!descriptionValidationResult.valid) {
             errors.fieldFormatErrors.push(
-              descriptionValidationResult.error.fieldFormatError,
+              ...descriptionValidationResult.error.fieldFormatErrors,
             );
           } else {
             value.description = descriptionValidationResult.value;
@@ -654,6 +656,25 @@ export default class DraftController {
         id,
         accountId,
       )) as DraftSubmission;
+
+      if (
+        (draft.transitCountries.status === 'Complete' ||
+          draft.transitCountries.status === 'Started') &&
+        (value.status === 'Complete' || value.status === 'Started')
+      ) {
+        const transitCountriesCrossValidationResult =
+          glwe.validationRules.validateImporterDetailAndTransitCountriesCross(
+            value,
+            draft.transitCountries.values,
+          );
+        if (!transitCountriesCrossValidationResult.valid) {
+          const boom = Boom.badRequest(
+            'Validation failed',
+            transitCountriesCrossValidationResult.error,
+          );
+          return fromBoom(boom);
+        }
+      }
 
       draft.importerDetail = value;
 
@@ -1210,11 +1231,44 @@ export default class DraftController {
     api.SetDraftTransitCountriesResponse
   > = async ({ id, accountId, value }) => {
     try {
+      if (value.status === 'Started' || value.status === 'Complete') {
+        const transitCountriesValidationResult =
+          glwe.validationRules.validateTransitCountries(
+            this.countryList,
+            value.values.toString().replace(/,/g, ';'),
+          );
+        if (!transitCountriesValidationResult.valid) {
+          const boom = Boom.badRequest(
+            'Validation failed',
+            transitCountriesValidationResult.error,
+          );
+          return fromBoom(boom);
+        }
+      }
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
         accountId,
       )) as DraftSubmission;
+
+      if (
+        (draft.importerDetail.status === 'Started' ||
+          draft.importerDetail.status === 'Complete') &&
+        (value.status === 'Started' || value.status === 'Complete')
+      ) {
+        const transitCountriesCrossValidationResult =
+          glwe.validationRules.validateImporterDetailAndTransitCountriesCross(
+            draft.importerDetail,
+            value.values,
+          );
+        if (!transitCountriesCrossValidationResult.valid) {
+          const boom = Boom.badRequest(
+            'Validation failed',
+            transitCountriesCrossValidationResult.error,
+          );
+          return fromBoom(boom);
+        }
+      }
 
       draft.transitCountries = value;
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);

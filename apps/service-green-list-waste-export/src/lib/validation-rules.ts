@@ -25,8 +25,6 @@ import {
   CarriersFlattened,
   CollectionDetail,
   CollectionDetailFlattened,
-  TransitCountries,
-  TransitCountriesFlattened,
   RecoveryFacilityDetailFlattened,
   WasteDescriptionSubSectionFlattened,
   WasteCodeSubSectionFlattened,
@@ -34,6 +32,8 @@ import {
   RecoveryFacilityDetail,
   ExitLocationFlattened,
   UkExitLocation,
+  TransitCountriesFlattened,
+  TransitCountries,
 } from '../model';
 
 import { common as commonValidation } from '@wts/util/shared-validation';
@@ -119,7 +119,7 @@ export function validateWasteCodeSubSection(
   value: WasteCodeSubSectionFlattened,
   wasteCodeList: WasteCodeType[],
 ):
-  | { valid: false; value: FieldFormatError }
+  | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: WasteDescription['wasteCode'] } {
   let wasteCode: WasteDescription['wasteCode'] = { type: 'NotApplicable' };
   if (
@@ -131,10 +131,12 @@ export function validateWasteCodeSubSection(
   ) {
     return {
       valid: false,
-      value: {
-        field: 'WasteDescription',
-        message: glwe.errorMessages.emptyWasteCodeType[locale][context],
-      },
+      value: [
+        {
+          field: 'WasteDescription',
+          message: glwe.errorMessages.emptyWasteCodeType[locale][context],
+        },
+      ],
     };
   }
 
@@ -148,10 +150,12 @@ export function validateWasteCodeSubSection(
   ) {
     return {
       valid: false,
-      value: {
-        field: 'WasteDescription',
-        message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
-      },
+      value: [
+        {
+          field: 'WasteDescription',
+          message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
+        },
+      ],
     };
   }
 
@@ -164,10 +168,12 @@ export function validateWasteCodeSubSection(
   ) {
     return {
       valid: false,
-      value: {
-        field: 'WasteDescription',
-        message: glwe.errorMessages.laboratoryType[locale][context],
-      },
+      value: [
+        {
+          field: 'WasteDescription',
+          message: glwe.errorMessages.laboratoryType[locale][context],
+        },
+      ],
     };
   }
 
@@ -183,7 +189,7 @@ export function validateWasteCodeSubSection(
     if (!wasteCodeValidationResult.valid) {
       return {
         valid: false,
-        value: wasteCodeValidationResult.error.fieldFormatError,
+        value: wasteCodeValidationResult.error.fieldFormatErrors,
       };
     } else {
       wasteCode = wasteCodeValidationResult.value;
@@ -202,7 +208,7 @@ export function validateWasteCodeSubSection(
     if (!wasteCodeValidationResult.valid) {
       return {
         valid: false,
-        value: wasteCodeValidationResult.error.fieldFormatError,
+        value: wasteCodeValidationResult.error.fieldFormatErrors,
       };
     } else {
       wasteCode = wasteCodeValidationResult.value;
@@ -221,7 +227,7 @@ export function validateWasteCodeSubSection(
     if (!wasteCodeValidationResult.valid) {
       return {
         valid: false,
-        value: wasteCodeValidationResult.error.fieldFormatError,
+        value: wasteCodeValidationResult.error.fieldFormatErrors,
       };
     } else {
       wasteCode = wasteCodeValidationResult.value;
@@ -240,7 +246,7 @@ export function validateWasteCodeSubSection(
     if (!wasteCodeValidationResult.valid) {
       return {
         valid: false,
-        value: wasteCodeValidationResult.error.fieldFormatError,
+        value: wasteCodeValidationResult.error.fieldFormatErrors,
       };
     } else {
       wasteCode = wasteCodeValidationResult.value;
@@ -252,10 +258,13 @@ export function validateWasteCodeSubSection(
     if (laboratory !== 'yes') {
       return {
         valid: false,
-        value: {
-          field: 'WasteDescription',
-          message: glwe.errorMessages.invalidUnlistedWasteType[locale][context],
-        },
+        value: [
+          {
+            field: 'WasteDescription',
+            message:
+              glwe.errorMessages.invalidUnlistedWasteType[locale][context],
+          },
+        ],
       };
     } else {
       wasteCode = {
@@ -292,7 +301,7 @@ export function validateWasteDescriptionSubSection(
     );
 
     if (!ewcCodesValidationResult.valid) {
-      errors.push(ewcCodesValidationResult.error.fieldFormatError);
+      errors.push(...ewcCodesValidationResult.error.fieldFormatErrors);
     } else {
       ewcCodes = ewcCodesValidationResult.value;
     }
@@ -306,7 +315,7 @@ export function validateWasteDescriptionSubSection(
       context,
     );
   if (!nationalCodeValidationResult.valid) {
-    errors.push(nationalCodeValidationResult.error.fieldFormatError);
+    errors.push(...nationalCodeValidationResult.error.fieldFormatErrors);
   } else {
     nationalCode = nationalCodeValidationResult.value;
   }
@@ -318,7 +327,7 @@ export function validateWasteDescriptionSubSection(
       context,
     );
   if (!descriptionValidationResult.valid) {
-    errors.push(descriptionValidationResult.error.fieldFormatError);
+    errors.push(...descriptionValidationResult.error.fieldFormatErrors);
   } else {
     value.wasteDescription = descriptionValidationResult.value;
   }
@@ -361,7 +370,7 @@ export function validateWasteDescriptionSection(
   );
 
   if (!wasteCodeSubSection.valid) {
-    errors.push(wasteCodeSubSection.value);
+    errors.push(...wasteCodeSubSection.value);
   }
 
   const wasteDescriptionSubSection = validateWasteDescriptionSubSection(
@@ -1620,7 +1629,7 @@ export function validateCollectionDetailSection(
 export function validateUkExitLocationSection(
   value: ExitLocationFlattened,
 ):
-  | { valid: false; value: FieldFormatError }
+  | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: UkExitLocation } {
   const ukExitLocationValidationResult =
     glwe.validationRules.validateUkExitLocation(
@@ -1632,7 +1641,7 @@ export function validateUkExitLocationSection(
   if (!ukExitLocationValidationResult.valid) {
     return {
       valid: false,
-      value: ukExitLocationValidationResult.error.fieldFormatError,
+      value: ukExitLocationValidationResult.error.fieldFormatErrors,
     };
   }
 
@@ -1646,32 +1655,27 @@ export function validateTransitCountriesSection(
   value: TransitCountriesFlattened,
   countryList: Country[],
 ):
-  | { valid: false; value: FieldFormatError }
+  | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: TransitCountries } {
-  const countries: string[] = [];
-  if (value.transitCountries && value.transitCountries.trim()) {
-    const countryArr = [
-      ...new Set(value.transitCountries.trim().toUpperCase().split(';')),
-    ];
+  const transitCountriesValidationResult =
+    glwe.validationRules.validateTransitCountries(
+      countryList,
+      value.transitCountries,
+      locale,
+      context,
+    );
 
-    for (let i = 0; i < countryArr.length; i++) {
-      const filteredCountryList = countryList.filter((v) =>
-        v.name.toUpperCase().includes(countryArr[i].trim()),
-      );
-      if (filteredCountryList.length !== 1) {
-        return {
-          valid: false,
-          value: {
-            field: 'TransitCountries',
-            message: validation.TransitCountriesValidationErrorMessages.invalid,
-          },
-        };
-      }
-      countries.push(filteredCountryList[0].name);
-    }
+  if (!transitCountriesValidationResult.valid) {
+    return {
+      valid: false,
+      value: transitCountriesValidationResult.error.fieldFormatErrors,
+    };
   }
 
-  return { valid: true, value: countries };
+  return {
+    valid: true,
+    value: transitCountriesValidationResult.value,
+  };
 }
 
 export function validateImporterDetailAndTransitCountriesCrossSection(
@@ -1680,30 +1684,27 @@ export function validateImporterDetailAndTransitCountriesCrossSection(
 ):
   | { valid: false; value: InvalidAttributeCombinationError[] }
   | { valid: true } {
+  const transitCountriesCrossValidationResult =
+    glwe.validationRules.validateImporterDetailAndTransitCountriesCross(
+      importerDetail,
+      transitCountries,
+      locale,
+      context,
+    );
+
   if (
-    transitCountries.some(
-      (c) => c === importerDetail.importerAddressDetails.country,
-    )
+    !transitCountriesCrossValidationResult.valid &&
+    transitCountriesCrossValidationResult.error.invalidStructureErrors
   ) {
     return {
       valid: false,
-      value: [
-        {
-          fields: ['ImporterDetail', 'TransitCountries'],
-          message:
-            validation.ImporterDetailValidationErrorMessages
-              .invalidCrossSectionCountry,
-        },
-        {
-          fields: ['ImporterDetail', 'TransitCountries'],
-          message:
-            validation.TransitCountriesValidationErrorMessages
-              .invalidCrossSection,
-        },
-      ],
+      value: transitCountriesCrossValidationResult.error.invalidStructureErrors,
     };
   }
-  return { valid: true };
+
+  return {
+    valid: true,
+  };
 }
 
 interface RecoveryFacilityEntry {
