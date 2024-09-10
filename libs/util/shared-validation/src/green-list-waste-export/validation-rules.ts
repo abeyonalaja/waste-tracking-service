@@ -2,8 +2,9 @@ import {
   Context,
   Locale,
   ValidationResult as commonValidationResult,
-  commonValidationRules,
   commonConstraints,
+  commonErrorMessages,
+  commonValidationRules,
 } from '../common';
 import {
   UkExitLocation,
@@ -14,6 +15,8 @@ import {
   ImporterDetail,
   TransitCountry,
   Carrier,
+  WasteQuantityData,
+  WasteQuantity,
 } from './model';
 import * as constraints from './constraints';
 import * as regex from './regex';
@@ -1155,4 +1158,239 @@ export function validateWasteCodeSubSectionAndCarriersCrossSection(
   }
 
   return { valid: true, value: undefined };
+}
+
+export function validateWasteQuantity(
+  quantityType: 'Volume' | 'Weight',
+  unit: 'Tonne' | 'Cubic Metre' | 'Kilogram' | 'Litre',
+  value: string | number | undefined,
+  locale: Locale = 'en',
+  context: Context = 'api',
+): ValidationResult<WasteQuantityData> {
+  const safeValue = value?.toString() || '';
+  if (!safeValue) {
+    return {
+      valid: false,
+      errors: {
+        fieldFormatErrors: [
+          {
+            field: 'WasteQuantity',
+            message: errorMessages.emptyWasteQuantity[locale][context],
+          },
+        ],
+      },
+    };
+  } else {
+    if (!regex.wasteQuantityRegex.test(safeValue)) {
+      return {
+        valid: false,
+        errors: {
+          fieldFormatErrors: [
+            {
+              field: 'WasteQuantity',
+              message: errorMessages.invalidWasteQuantity[locale][context],
+            },
+          ],
+        },
+      };
+    } else {
+      const parsedWasteQuantity = Number(parseFloat(safeValue).toFixed(2));
+
+      if (unit === 'Kilogram') {
+        if (
+          !(
+            parsedWasteQuantity >
+              constraints.SmallWasteQuantityValue.greaterThan &&
+            parsedWasteQuantity <=
+              constraints.SmallWasteQuantityValue.lessThanOrEqual
+          )
+        ) {
+          return {
+            valid: false,
+            errors: {
+              fieldFormatErrors: [
+                {
+                  field: 'WasteQuantity',
+                  message:
+                    errorMessages.invalidSmallWasteQuantity[locale][context],
+                },
+              ],
+            },
+          };
+        }
+      } else if (
+        !(
+          parsedWasteQuantity >
+            constraints.BulkWasteQuantityValue.greaterThan &&
+          parsedWasteQuantity < constraints.BulkWasteQuantityValue.lessThan
+        )
+      ) {
+        return {
+          valid: false,
+          errors: {
+            fieldFormatErrors: [
+              {
+                field: 'WasteQuantity',
+                message:
+                  errorMessages.invalidBulkWasteQuantity[locale][context],
+              },
+            ],
+          },
+        };
+      }
+
+      return {
+        valid: true,
+        value: {
+          quantityType: quantityType,
+          unit: unit,
+          value: parsedWasteQuantity,
+        },
+      };
+    }
+  }
+}
+
+export function validateWasteQuantityType(
+  value: string,
+): commonValidationResult<'EstimateData' | 'ActualData'> {
+  let wasteQuantityType = '';
+  const quantityType = value.replace(/\s/g, '').toLowerCase();
+  if (quantityType === 'actual') {
+    wasteQuantityType = 'ActualData';
+  } else if (quantityType === 'estimate') {
+    wasteQuantityType = 'EstimateData';
+  } else {
+    return {
+      valid: false,
+      errors: ['invalid'],
+    };
+  }
+
+  return {
+    valid: true,
+    value: wasteQuantityType as 'EstimateData' | 'ActualData',
+  };
+}
+
+export function validateWasteCodeSubSectionAndQuantityCrossSection(
+  wasteCodeSubSection: WasteDescription['wasteCode'] | undefined,
+  wasteQuantity:
+    | WasteQuantity
+    | {
+        type?: 'NotApplicable' | 'EstimateData' | 'ActualData';
+        estimateData?: WasteQuantity['estimateData'];
+        actualData?: WasteQuantity['actualData'];
+      }
+    | undefined,
+  locale: Locale = 'en',
+  context: Context = 'api',
+): ValidationResult<undefined> {
+  if (
+    wasteCodeSubSection?.type !== 'NotApplicable' &&
+    (wasteQuantity?.actualData?.unit === 'Kilogram' ||
+      wasteQuantity?.estimateData?.unit === 'Kilogram')
+  ) {
+    return {
+      valid: false,
+      errors: {
+        invalidStructureErrors: [
+          {
+            fields: ['WasteDescription', 'WasteQuantity'],
+            message: errorMessages.laboratoryWasteQuantity[locale][context],
+          },
+        ],
+        fieldFormatErrors: [],
+      },
+    };
+  }
+  if (
+    wasteCodeSubSection?.type === 'NotApplicable' &&
+    (wasteQuantity?.type === 'EstimateData' ||
+      wasteQuantity?.type === 'ActualData') &&
+    (wasteQuantity?.estimateData?.unit === 'Cubic Metre' ||
+      wasteQuantity?.actualData?.unit === 'Cubic Metre')
+  ) {
+    return {
+      valid: false,
+      errors: {
+        invalidStructureErrors: [
+          {
+            fields: ['WasteDescription', 'WasteQuantity'],
+            message: errorMessages.smallNonKgwasteQuantity[locale][context],
+          },
+        ],
+        fieldFormatErrors: [],
+      },
+    };
+  }
+  if (
+    wasteCodeSubSection?.type === 'NotApplicable' &&
+    (wasteQuantity?.type === 'EstimateData' ||
+      wasteQuantity?.type === 'ActualData') &&
+    (wasteQuantity?.estimateData?.unit === 'Tonne' ||
+      wasteQuantity?.actualData?.unit === 'Tonne')
+  ) {
+    return {
+      valid: false,
+      errors: {
+        invalidStructureErrors: [
+          {
+            fields: ['WasteDescription', 'WasteQuantity'],
+            message: errorMessages.smallNonKgwasteQuantity[locale][context],
+          },
+        ],
+        fieldFormatErrors: [],
+      },
+    };
+  }
+
+  return { valid: true, value: undefined };
+}
+
+export function validateReference(
+  reference: string | undefined,
+  locale: Locale = 'en',
+  context: Context = 'api',
+): ValidationResult<string> {
+  const result = commonValidationRules.validateReference(reference);
+  if (!result.valid) {
+    const errors: FieldFormatError[] = [];
+    for (const error of result.errors) {
+      switch (error) {
+        case 'empty':
+          errors.push({
+            field: 'CustomerReference',
+            message: commonErrorMessages.emptyReference[locale][context],
+          });
+          break;
+        case 'charTooMany':
+          errors.push({
+            field: 'CustomerReference',
+            message: commonErrorMessages.charTooManyReference[locale][context],
+          });
+          break;
+        case 'invalid':
+          errors.push({
+            field: 'CustomerReference',
+            message: commonErrorMessages.invalidReference[locale][context],
+          });
+          break;
+        default:
+          break;
+      }
+    }
+
+    return {
+      valid: false,
+      errors: {
+        fieldFormatErrors: errors,
+      },
+    };
+  }
+
+  return {
+    valid: true,
+    value: result.value,
+  };
 }

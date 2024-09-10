@@ -19,7 +19,7 @@ import {
 import TemplateController from './controller';
 import { CosmosRepository } from '../../data';
 import { v4 as uuidv4 } from 'uuid';
-import { glwe } from '@wts/util/shared-validation';
+import { glwe, common } from '@wts/util/shared-validation';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -519,7 +519,9 @@ describe(TemplateController, () => {
       const response = await subject.createDraftFromTemplate({
         id,
         accountId,
-        reference: faker.string.sample(validation.ReferenceChar.max + 1),
+        reference: faker.string.sample(
+          common.commonConstraints.ReferenceChar.max + 1,
+        ),
       });
 
       expect(response.success).toBe(false);

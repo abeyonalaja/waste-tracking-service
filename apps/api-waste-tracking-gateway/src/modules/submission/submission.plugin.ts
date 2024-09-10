@@ -140,6 +140,7 @@ const plugin: Plugin<PluginOptions> = {
             .code(201);
         } catch (err) {
           if (err instanceof Boom.Boom) {
+            err.output.payload.data = err.data ?? undefined;
             return err;
           }
 
@@ -170,6 +171,7 @@ const plugin: Plugin<PluginOptions> = {
             .code(201);
         } catch (err) {
           if (err instanceof Boom.Boom) {
+            err.output.payload.data = err.data ?? undefined;
             return err;
           }
 
@@ -354,9 +356,10 @@ const plugin: Plugin<PluginOptions> = {
             },
             request,
           );
-          return request as dto.PutWasteDescriptionRequest;
+          return request;
         } catch (err) {
           if (err instanceof Boom.Boom) {
+            err.output.payload.data = err.data ?? undefined;
             return err;
           }
 
@@ -407,6 +410,7 @@ const plugin: Plugin<PluginOptions> = {
           return request as dto.PutReferenceResponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
+            err.output.payload.data = err.data ?? undefined;
             return err;
           }
 

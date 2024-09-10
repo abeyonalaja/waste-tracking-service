@@ -206,6 +206,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
     if (!response.success) {
       throw new Boom.Boom(response.error.message, {
         statusCode: response.error.statusCode,
+        data: response.error.data,
       });
     }
 
@@ -232,6 +233,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
     if (!response.success) {
       throw new Boom.Boom(response.error.message, {
         statusCode: response.error.statusCode,
+        data: response.error.data,
       });
     }
 
@@ -368,6 +370,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
     if (!response.success) {
       throw new Boom.Boom(response.error.message, {
         statusCode: response.error.statusCode,
+        data: response.error.data,
       });
     }
   }
@@ -485,6 +488,7 @@ export class AnnexViiServiceSubmissionBackend implements SubmissionBackend {
     if (!response.success) {
       throw new Boom.Boom(response.error.message, {
         statusCode: response.error.statusCode,
+        data: response.error.data,
       });
     }
   }

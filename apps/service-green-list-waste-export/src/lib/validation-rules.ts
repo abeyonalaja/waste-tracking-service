@@ -34,6 +34,7 @@ import {
   UkExitLocation,
   TransitCountriesFlattened,
   TransitCountries,
+  WasteQuantityData,
 } from '../model';
 
 import { common as commonValidation } from '@wts/util/shared-validation';
@@ -64,55 +65,21 @@ export function validateCustomerReferenceSection(
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: CustomerReference } {
-  const trimmedReference = value.reference.trim();
-  if (!trimmedReference) {
+  const validationResult = glwe.validationRules.validateReference(
+    value.reference,
+  );
+
+  if (!validationResult.valid) {
     return {
       valid: false,
-      value: [
-        {
-          field: 'CustomerReference',
-          message: validation.ReferenceValidationErrorMessages.empty,
-        },
-      ],
+      value: validationResult.errors.fieldFormatErrors,
     };
   }
 
-  if (trimmedReference.length === validation.ReferenceChar.min) {
-    return {
-      valid: false,
-      value: [
-        {
-          field: 'CustomerReference',
-          message: validation.ReferenceValidationErrorMessages.charTooFew,
-        },
-      ],
-    };
-  }
-
-  if (trimmedReference.length > validation.ReferenceChar.max) {
-    return {
-      valid: false,
-      value: [
-        {
-          field: 'CustomerReference',
-          message: validation.ReferenceValidationErrorMessages.charTooMany,
-        },
-      ],
-    };
-  }
-
-  if (!validation.referenceRegex.test(trimmedReference)) {
-    return {
-      valid: false,
-      value: [
-        {
-          field: 'CustomerReference',
-          message: validation.ReferenceValidationErrorMessages.invalid,
-        },
-      ],
-    };
-  }
-  return { valid: true, value: trimmedReference };
+  return {
+    valid: true,
+    value: validationResult.value,
+  };
 }
 
 export function validateWasteCodeSubSection(
@@ -410,17 +377,7 @@ export function validateWasteQuantitySection(
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: WasteQuantity } {
   const errors: FieldFormatError[] = [];
-  let quantity = {};
   if (
-    !value.wasteQuantityTonnes &&
-    !value.wasteQuantityCubicMetres &&
-    !value.wasteQuantityKilograms
-  ) {
-    errors.push({
-      field: 'WasteQuantity',
-      message: validation.WasteQuantityValidationErrorMessages.empty,
-    });
-  } else if (
     (value.wasteQuantityTonnes && value.wasteQuantityCubicMetres) ||
     (value.wasteQuantityTonnes && value.wasteQuantityKilograms) ||
     (value.wasteQuantityCubicMetres && value.wasteQuantityKilograms)
@@ -429,119 +386,65 @@ export function validateWasteQuantitySection(
       field: 'WasteQuantity',
       message: validation.WasteQuantityValidationErrorMessages.tooMany,
     });
-  } else {
-    if (value.wasteQuantityTonnes) {
-      if (!validation.wasteQuantityRegex.test(value.wasteQuantityTonnes)) {
-        errors.push({
-          field: 'WasteQuantity',
-          message: validation.WasteQuantityValidationErrorMessages.invalid,
-        });
-      } else {
-        const wasteQuantityTonnes = Number(
-          parseFloat(value.wasteQuantityTonnes).toFixed(2),
-        );
-        if (
-          !(
-            wasteQuantityTonnes >
-              validation.BulkWasteQuantityValue.greaterThan &&
-            wasteQuantityTonnes < validation.BulkWasteQuantityValue.lessThan
-          )
-        ) {
-          errors.push({
-            field: 'WasteQuantity',
-            message:
-              validation.BulkWasteQuantityValidationErrorMessages.invalid,
-          });
-        }
+  }
 
-        quantity = {
-          quantityType: 'Weight',
-          unit: 'Tonne',
-          value: wasteQuantityTonnes,
-        };
-      }
-    }
+  const quantityType =
+    value.wasteQuantityKilograms || value.wasteQuantityTonnes
+      ? 'Weight'
+      : 'Volume';
 
-    if (value.wasteQuantityCubicMetres) {
-      if (!validation.wasteQuantityRegex.test(value.wasteQuantityCubicMetres)) {
-        errors.push({
-          field: 'WasteQuantity',
-          message: validation.WasteQuantityValidationErrorMessages.invalid,
-        });
-      } else {
-        const wasteQuantityCubicMetres = Number(
-          parseFloat(value.wasteQuantityCubicMetres).toFixed(2),
-        );
-        if (
-          !(
-            wasteQuantityCubicMetres >
-              validation.BulkWasteQuantityValue.greaterThan &&
-            wasteQuantityCubicMetres <
-              validation.BulkWasteQuantityValue.lessThan
-          )
-        ) {
-          errors.push({
-            field: 'WasteQuantity',
-            message:
-              validation.BulkWasteQuantityValidationErrorMessages.invalid,
-          });
-        }
+  const unit = value.wasteQuantityKilograms
+    ? 'Kilogram'
+    : value.wasteQuantityTonnes
+      ? 'Tonne'
+      : 'Cubic Metre';
 
-        quantity = {
-          quantityType: 'Volume',
-          unit: 'Cubic Metre',
-          value: wasteQuantityCubicMetres,
-        };
-      }
-    }
+  let quantity: WasteQuantityData = {
+    quantityType: quantityType,
+    unit: unit,
+    value: 0,
+  };
 
-    if (value.wasteQuantityKilograms) {
-      if (!validation.wasteQuantityRegex.test(value.wasteQuantityKilograms)) {
-        errors.push({
-          field: 'WasteQuantity',
-          message: validation.WasteQuantityValidationErrorMessages.invalid,
-        });
-      } else {
-        const wasteQuantityKilograms = Number(
-          parseFloat(value.wasteQuantityKilograms).toFixed(2),
-        );
-        if (
-          !(
-            wasteQuantityKilograms >
-              validation.SmallWasteQuantityValue.greaterThan &&
-            wasteQuantityKilograms <=
-              validation.SmallWasteQuantityValue.lessThanOrEqual
-          )
-        ) {
-          errors.push({
-            field: 'WasteQuantity',
-            message:
-              validation.SmallWasteQuantityValidationErrorMessages.invalid,
-          });
-        }
+  if (errors.length === 0) {
+    const wasteQuantityValidationResult =
+      glwe.validationRules.validateWasteQuantity(
+        quantityType,
+        unit,
+        value.wasteQuantityKilograms ||
+          value.wasteQuantityTonnes ||
+          value.wasteQuantityCubicMetres,
+        'en',
+        'csv',
+      );
 
-        quantity = {
-          quantityType: 'Weight',
-          unit: 'Kilogram',
-          value: wasteQuantityKilograms,
-        };
-      }
+    if (!wasteQuantityValidationResult.valid) {
+      errors.push(...wasteQuantityValidationResult.errors.fieldFormatErrors);
+    } else {
+      quantity = wasteQuantityValidationResult.value;
     }
   }
-  let wasteQuantityType = '';
-  const quantityType = value.estimatedOrActualWasteQuantity
-    .replace(/\s/g, '')
-    .toLowerCase();
-  if (quantityType === 'actual') {
-    wasteQuantityType = 'ActualData';
-  } else if (quantityType === 'estimate') {
-    wasteQuantityType = 'EstimateData';
+
+  const wasteQuantityTypeValidationResult =
+    glwe.validationRules.validateWasteQuantityType(
+      value.estimatedOrActualWasteQuantity,
+    );
+  let wasteQuantityType: 'EstimateData' | 'ActualData' = 'EstimateData';
+
+  if (!wasteQuantityTypeValidationResult.valid) {
+    for (const error of wasteQuantityTypeValidationResult.errors) {
+      switch (error) {
+        case 'invalid':
+          errors.push({
+            field: 'WasteQuantity',
+            message: glwe.errorMessages.missingWasteQuantityType.en.csv,
+          });
+          break;
+      }
+    }
   } else {
-    errors.push({
-      field: 'WasteQuantity',
-      message: validation.WasteQuantityValidationErrorMessages.missingType,
-    });
+    wasteQuantityType = wasteQuantityTypeValidationResult.value;
   }
+
   if (errors.length > 0) {
     return {
       valid: false,
@@ -551,7 +454,7 @@ export function validateWasteQuantitySection(
     return {
       valid: true,
       value: {
-        type: wasteQuantityType as 'EstimateData' | 'ActualData',
+        type: wasteQuantityType,
         estimateData: wasteQuantityType === 'EstimateData' ? quantity : {},
         actualData: wasteQuantityType === 'ActualData' ? quantity : {},
       },
@@ -562,50 +465,24 @@ export function validateWasteQuantitySection(
 export function validateWasteCodeSubSectionAndQuantityCrossSection(
   wasteCodeSubSection: WasteDescription['wasteCode'],
   wasteQuantity: WasteQuantity,
-): { valid: false; value: InvalidAttributeCombinationError } | { valid: true } {
-  if (
-    wasteCodeSubSection.type !== 'NotApplicable' &&
-    (wasteQuantity.actualData.unit === 'Kilogram' ||
-      wasteQuantity.estimateData.unit === 'Kilogram')
-  ) {
+):
+  | { valid: false; value: InvalidAttributeCombinationError[] }
+  | { valid: true } {
+  const validationResult =
+    glwe.validationRules.validateWasteCodeSubSectionAndQuantityCrossSection(
+      wasteCodeSubSection,
+      wasteQuantity,
+      'en',
+      'csv',
+    );
+
+  if (!validationResult.valid) {
     return {
       valid: false,
-      value: {
-        fields: ['WasteDescription', 'WasteQuantity'],
-        message: validation.WasteQuantityValidationErrorMessages.laboratory,
-      },
+      value: validationResult.errors.invalidStructureErrors ?? [],
     };
   }
-  if (
-    wasteCodeSubSection.type === 'NotApplicable' &&
-    (wasteQuantity.type === 'EstimateData' ||
-      wasteQuantity.type === 'ActualData') &&
-    (wasteQuantity.estimateData?.unit === 'Cubic Metre' ||
-      wasteQuantity.actualData?.unit === 'Cubic Metre')
-  ) {
-    return {
-      valid: false,
-      value: {
-        fields: ['WasteDescription', 'WasteQuantity'],
-        message: validation.WasteQuantityValidationErrorMessages.smallNonKg,
-      },
-    };
-  }
-  if (
-    wasteCodeSubSection.type === 'NotApplicable' &&
-    (wasteQuantity.type === 'EstimateData' ||
-      wasteQuantity.type === 'ActualData') &&
-    (wasteQuantity.estimateData?.unit === 'Tonne' ||
-      wasteQuantity.actualData?.unit === 'Tonne')
-  ) {
-    return {
-      valid: false,
-      value: {
-        fields: ['WasteDescription', 'WasteQuantity'],
-        message: validation.WasteQuantityValidationErrorMessages.smallNonKg,
-      },
-    };
-  }
+
   return { valid: true };
 }
 

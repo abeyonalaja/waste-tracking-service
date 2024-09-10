@@ -203,18 +203,8 @@ describe('validateCustomerReferenceSection', () => {
     expect(response.value).toEqual([
       {
         field: 'CustomerReference',
-        message: validation.ReferenceValidationErrorMessages.empty,
-      },
-    ]);
-
-    response = validateCustomerReferenceSection({
-      reference: '1',
-    });
-    expect(response.valid).toEqual(false);
-    expect(response.value).toEqual([
-      {
-        field: 'CustomerReference',
-        message: validation.ReferenceValidationErrorMessages.charTooFew,
+        message:
+          commonValidation.commonErrorMessages.emptyReference[locale][context],
       },
     ]);
 
@@ -225,18 +215,24 @@ describe('validateCustomerReferenceSection', () => {
     expect(response.value).toEqual([
       {
         field: 'CustomerReference',
-        message: validation.ReferenceValidationErrorMessages.charTooMany,
+        message:
+          commonValidation.commonErrorMessages.charTooManyReference[locale][
+            context
+          ],
       },
     ]);
 
     response = validateCustomerReferenceSection({
-      reference: 'test-ref_',
+      reference: 'test-ref_+',
     });
     expect(response.valid).toEqual(false);
     expect(response.value).toEqual([
       {
         field: 'CustomerReference',
-        message: validation.ReferenceValidationErrorMessages.invalid,
+        message:
+          commonValidation.commonErrorMessages.invalidReference[locale][
+            context
+          ],
       },
     ]);
   });
@@ -2912,7 +2908,7 @@ describe('validateWasteQuantitySection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteQuantity',
-        message: validation.WasteQuantityValidationErrorMessages.empty,
+        message: glwe.errorMessages.emptyWasteQuantity[locale][context],
       },
     ]);
 
@@ -2968,7 +2964,7 @@ describe('validateWasteQuantitySection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteQuantity',
-        message: validation.WasteQuantityValidationErrorMessages.missingType,
+        message: glwe.errorMessages.missingWasteQuantityType[locale][context],
       },
     ]);
 
@@ -2982,7 +2978,7 @@ describe('validateWasteQuantitySection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteQuantity',
-        message: validation.WasteQuantityValidationErrorMessages.missingType,
+        message: glwe.errorMessages.missingWasteQuantityType[locale][context],
       },
     ]);
 
@@ -2996,7 +2992,7 @@ describe('validateWasteQuantitySection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteQuantity',
-        message: validation.WasteQuantityValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidWasteQuantity[locale][context],
       },
     ]);
 
@@ -3010,7 +3006,7 @@ describe('validateWasteQuantitySection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteQuantity',
-        message: validation.BulkWasteQuantityValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidBulkWasteQuantity[locale][context],
       },
     ]);
 
@@ -3024,7 +3020,7 @@ describe('validateWasteQuantitySection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteQuantity',
-        message: validation.WasteQuantityValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidWasteQuantity[locale][context],
       },
     ]);
 
@@ -3038,7 +3034,7 @@ describe('validateWasteQuantitySection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteQuantity',
-        message: validation.BulkWasteQuantityValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidBulkWasteQuantity[locale][context],
       },
     ]);
 
@@ -3052,7 +3048,7 @@ describe('validateWasteQuantitySection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteQuantity',
-        message: validation.WasteQuantityValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidWasteQuantity[locale][context],
       },
     ]);
 
@@ -3066,7 +3062,7 @@ describe('validateWasteQuantitySection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteQuantity',
-        message: validation.SmallWasteQuantityValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidSmallWasteQuantity[locale][context],
       },
     ]);
 
@@ -3080,11 +3076,11 @@ describe('validateWasteQuantitySection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteQuantity',
-        message: validation.WasteQuantityValidationErrorMessages.empty,
+        message: glwe.errorMessages.emptyWasteQuantity[locale][context],
       },
       {
         field: 'WasteQuantity',
-        message: validation.WasteQuantityValidationErrorMessages.missingType,
+        message: glwe.errorMessages.missingWasteQuantityType[locale][context],
       },
     ]);
 
@@ -3098,11 +3094,11 @@ describe('validateWasteQuantitySection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteQuantity',
-        message: validation.WasteQuantityValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidWasteQuantity[locale][context],
       },
       {
         field: 'WasteQuantity',
-        message: validation.WasteQuantityValidationErrorMessages.missingType,
+        message: glwe.errorMessages.missingWasteQuantityType[locale][context],
       },
     ]);
 
@@ -3116,11 +3112,11 @@ describe('validateWasteQuantitySection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteQuantity',
-        message: validation.WasteQuantityValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidWasteQuantity[locale][context],
       },
       {
         field: 'WasteQuantity',
-        message: validation.WasteQuantityValidationErrorMessages.missingType,
+        message: glwe.errorMessages.missingWasteQuantityType[locale][context],
       },
     ]);
 
@@ -3134,11 +3130,11 @@ describe('validateWasteQuantitySection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteQuantity',
-        message: validation.WasteQuantityValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidWasteQuantity[locale][context],
       },
       {
         field: 'WasteQuantity',
-        message: validation.WasteQuantityValidationErrorMessages.missingType,
+        message: glwe.errorMessages.missingWasteQuantityType[locale][context],
       },
     ]);
 
@@ -3156,7 +3152,7 @@ describe('validateWasteQuantitySection', () => {
       },
       {
         field: 'WasteQuantity',
-        message: validation.WasteQuantityValidationErrorMessages.missingType,
+        message: glwe.errorMessages.missingWasteQuantityType[locale][context],
       },
     ]);
 
@@ -3170,11 +3166,11 @@ describe('validateWasteQuantitySection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteQuantity',
-        message: validation.BulkWasteQuantityValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidBulkWasteQuantity[locale][context],
       },
       {
         field: 'WasteQuantity',
-        message: validation.WasteQuantityValidationErrorMessages.missingType,
+        message: glwe.errorMessages.missingWasteQuantityType[locale][context],
       },
     ]);
 
@@ -3188,11 +3184,11 @@ describe('validateWasteQuantitySection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteQuantity',
-        message: validation.BulkWasteQuantityValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidBulkWasteQuantity[locale][context],
       },
       {
         field: 'WasteQuantity',
-        message: validation.WasteQuantityValidationErrorMessages.missingType,
+        message: glwe.errorMessages.missingWasteQuantityType[locale][context],
       },
     ]);
 
@@ -3206,11 +3202,11 @@ describe('validateWasteQuantitySection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteQuantity',
-        message: validation.SmallWasteQuantityValidationErrorMessages.invalid,
+        message: glwe.errorMessages.invalidSmallWasteQuantity[locale][context],
       },
       {
         field: 'WasteQuantity',
-        message: validation.WasteQuantityValidationErrorMessages.missingType,
+        message: glwe.errorMessages.missingWasteQuantityType[locale][context],
       },
     ]);
   });
@@ -3290,10 +3286,12 @@ describe('validateWasteCodeSubSectionAndQuantityCrossSection', () => {
       return;
     }
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      fields: ['WasteDescription', 'WasteQuantity'],
-      message: validation.WasteQuantityValidationErrorMessages.laboratory,
-    });
+    expect(response.value).toEqual([
+      {
+        fields: ['WasteDescription', 'WasteQuantity'],
+        message: glwe.errorMessages.laboratoryWasteQuantity[locale][context],
+      },
+    ]);
 
     wasteCodeSubSection.type = 'OECD';
     response = validateWasteCodeSubSectionAndQuantityCrossSection(
@@ -3304,10 +3302,12 @@ describe('validateWasteCodeSubSectionAndQuantityCrossSection', () => {
       return;
     }
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      fields: ['WasteDescription', 'WasteQuantity'],
-      message: validation.WasteQuantityValidationErrorMessages.laboratory,
-    });
+    expect(response.value).toEqual([
+      {
+        fields: ['WasteDescription', 'WasteQuantity'],
+        message: glwe.errorMessages.laboratoryWasteQuantity[locale][context],
+      },
+    ]);
 
     wasteCodeSubSection.type = 'AnnexIIIA';
     response = validateWasteCodeSubSectionAndQuantityCrossSection(
@@ -3318,10 +3318,12 @@ describe('validateWasteCodeSubSectionAndQuantityCrossSection', () => {
       return;
     }
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      fields: ['WasteDescription', 'WasteQuantity'],
-      message: validation.WasteQuantityValidationErrorMessages.laboratory,
-    });
+    expect(response.value).toEqual([
+      {
+        fields: ['WasteDescription', 'WasteQuantity'],
+        message: glwe.errorMessages.laboratoryWasteQuantity[locale][context],
+      },
+    ]);
 
     wasteCodeSubSection.type = 'AnnexIIIB';
     response = validateWasteCodeSubSectionAndQuantityCrossSection(
@@ -3332,10 +3334,12 @@ describe('validateWasteCodeSubSectionAndQuantityCrossSection', () => {
       return;
     }
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      fields: ['WasteDescription', 'WasteQuantity'],
-      message: validation.WasteQuantityValidationErrorMessages.laboratory,
-    });
+    expect(response.value).toEqual([
+      {
+        fields: ['WasteDescription', 'WasteQuantity'],
+        message: glwe.errorMessages.laboratoryWasteQuantity[locale][context],
+      },
+    ]);
   });
 
   it('fails WasteCodeSubSectionAndQuantity cross section validation for NotApplicable wasteCode and Cubic Metre unit', () => {
@@ -3359,10 +3363,12 @@ describe('validateWasteCodeSubSectionAndQuantityCrossSection', () => {
       return;
     }
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      fields: ['WasteDescription', 'WasteQuantity'],
-      message: validation.WasteQuantityValidationErrorMessages.smallNonKg,
-    });
+    expect(response.value).toEqual([
+      {
+        fields: ['WasteDescription', 'WasteQuantity'],
+        message: glwe.errorMessages.smallNonKgwasteQuantity[locale][context],
+      },
+    ]);
   });
 
   it('fails WasteCodeSubSectionAndQuantity cross section validation for NotApplicable wasteCode and Tonne unit', () => {
@@ -3386,10 +3392,12 @@ describe('validateWasteCodeSubSectionAndQuantityCrossSection', () => {
       return;
     }
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      fields: ['WasteDescription', 'WasteQuantity'],
-      message: validation.WasteQuantityValidationErrorMessages.smallNonKg,
-    });
+    expect(response.value).toEqual([
+      {
+        fields: ['WasteDescription', 'WasteQuantity'],
+        message: glwe.errorMessages.smallNonKgwasteQuantity[locale][context],
+      },
+    ]);
   });
 });
 

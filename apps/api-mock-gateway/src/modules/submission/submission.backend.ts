@@ -268,11 +268,12 @@ export async function createSubmission(
   accountId: string,
   reference: CustomerReference,
 ): Promise<DraftSubmission> {
-  if (reference.length > validation.ReferenceChar.max) {
+  const referenceValidationResult =
+    glwe.validationRules.validateReference(reference);
+
+  if (!referenceValidationResult.valid) {
     return Promise.reject(
-      new BadRequestError(
-        `Supplied reference cannot exceed ${validation.ReferenceChar.max} characters`,
-      ),
+      new BadRequestError('Validation error', referenceValidationResult.errors),
     );
   }
 
@@ -312,11 +313,12 @@ export async function createSubmissionFromTemplate(
   accountId: string,
   reference: CustomerReference,
 ): Promise<DraftSubmission> {
-  if (reference.length > validation.ReferenceChar.max) {
+  const referenceValidationResult =
+    glwe.validationRules.validateReference(reference);
+
+  if (!referenceValidationResult.valid) {
     return Promise.reject(
-      new BadRequestError(
-        `Supplied reference cannot exceed ${validation.ReferenceChar.max} characters`,
-      ),
+      new BadRequestError('Validation error', referenceValidationResult.errors),
     );
   }
 
@@ -597,14 +599,44 @@ export async function setWasteQuantity(
   value: WasteQuantity | WasteQuantityData,
 ): Promise<void> {
   if (!submitted) {
+    const v = value as WasteQuantity;
+
+    if (
+      v.status === 'Started' ||
+      (v.status === 'Complete' && v.value?.type !== 'NotApplicable')
+    ) {
+      const wasteQuantity =
+        v.value?.type === 'ActualData'
+          ? v.value.actualData
+          : v.value?.type === 'EstimateData'
+            ? v.value.estimateData
+            : undefined;
+
+      if (wasteQuantity) {
+        const wasteQuantityValidationResult =
+          glwe.validationRules.validateWasteQuantity(
+            wasteQuantity.quantityType!,
+            wasteQuantity.unit!,
+            wasteQuantity.value,
+          );
+
+        if (!wasteQuantityValidationResult.valid) {
+          return Promise.reject(
+            new BadRequestError(
+              'Validation error',
+              wasteQuantityValidationResult.errors,
+            ),
+          );
+        }
+      }
+    }
+
     const submission = db.drafts.find(
       (s) => s.id == id && s.accountId == accountId,
     ) as DraftSubmission;
     if (submission === undefined) {
       return Promise.reject(new NotFoundError('Submission not found.'));
     }
-
-    const v = value as WasteQuantity;
 
     if (
       submission.wasteDescription.status !== 'NotStarted' &&
@@ -676,12 +708,54 @@ export async function setWasteQuantity(
       }
     }
 
+    if (
+      submission.wasteDescription.status !== 'NotStarted' &&
+      wasteQuantity.status !== 'NotStarted' &&
+      wasteQuantity.status !== 'CannotStart' &&
+      wasteQuantity.value?.type !== 'NotApplicable'
+    ) {
+      const wasteQuantityCrossSectionValidationResult =
+        glwe.validationRules.validateWasteCodeSubSectionAndQuantityCrossSection(
+          submission.wasteDescription.wasteCode,
+          wasteQuantity.value,
+        );
+
+      if (!wasteQuantityCrossSectionValidationResult.valid) {
+        return Promise.reject(
+          new BadRequestError(
+            'Validation error',
+            wasteQuantityCrossSectionValidationResult.errors,
+          ),
+        );
+      }
+    }
+
     submission.wasteQuantity = wasteQuantity;
 
     submission.submissionConfirmation = setSubmissionConfirmation(submission);
     submission.submissionDeclaration = setSubmissionDeclaration(submission);
     submission.submissionState.timestamp = new Date();
   } else {
+    const v = value as WasteQuantityData;
+
+    const wasteQuantity =
+      v.type === 'ActualData' ? v.actualData : v.estimateData;
+    const wasteQuantityValidationResult =
+      glwe.validationRules.validateWasteQuantity(
+        wasteQuantity.quantityType!,
+        wasteQuantity.unit!,
+        wasteQuantity.value,
+      );
+
+    if (!wasteQuantityValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation error',
+          wasteQuantityValidationResult.errors,
+        ),
+      );
+    }
+
     const submission = db.submissions.find(
       (s) => s.id == id && s.accountId == accountId,
     ) as Submission;
@@ -689,7 +763,6 @@ export async function setWasteQuantity(
       return Promise.reject(new NotFoundError('Submission not found.'));
     }
 
-    const v = value as WasteQuantityData;
     let volumeUnit: WasteQuantityData['actualData']['unit'] = 'Cubic Metre';
     let wasteUnit: WasteQuantityData['actualData']['unit'] = 'Tonne';
 
@@ -706,6 +779,21 @@ export async function setWasteQuantity(
       v.estimateData.quantityType === 'Volume'
         ? (v.estimateData.unit = volumeUnit)
         : (v.estimateData.unit = wasteUnit);
+    }
+
+    const wasteQuantityCrossSectionValidationResult =
+      glwe.validationRules.validateWasteCodeSubSectionAndQuantityCrossSection(
+        submission.wasteDescription.wasteCode,
+        v,
+      );
+
+    if (!wasteQuantityCrossSectionValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation error',
+          wasteQuantityCrossSectionValidationResult.errors,
+        ),
+      );
     }
 
     submission.wasteQuantity = v;
@@ -739,19 +827,20 @@ export async function setCustomerReference(
   { id, accountId }: SubmissionRef,
   reference: CustomerReference,
 ): Promise<void> {
+  const referenceValidationResult =
+    glwe.validationRules.validateReference(reference);
+
+  if (!referenceValidationResult.valid) {
+    return Promise.reject(
+      new BadRequestError('Validation error', referenceValidationResult.errors),
+    );
+  }
+
   const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId,
   );
   if (submission === undefined) {
     return Promise.reject(new NotFoundError('Submission not found.'));
-  }
-
-  if (reference.length > validation.ReferenceChar.max) {
-    return Promise.reject(
-      new BadRequestError(
-        `Supplied reference cannot exceed ${validation.ReferenceChar.max} characters`,
-      ),
-    );
   }
 
   submission.reference = reference;

@@ -18,38 +18,38 @@ export const errorMessages: ValidationErrorMessages = {
   },
   [codes.producerEmptyReference]: {
     en: {
-      csv: commonErrorMessages.emptyReference.en,
-      api: commonErrorMessages.emptyReference.en,
-      ui: commonErrorMessages.emptyReference.en,
+      csv: commonErrorMessages.emptyReference.en.csv,
+      api: commonErrorMessages.emptyReference.en.api,
+      ui: commonErrorMessages.emptyReference.en.ui,
     },
     cy: {
-      csv: commonErrorMessages.emptyReference.cy,
-      api: commonErrorMessages.emptyReference.cy,
-      ui: commonErrorMessages.emptyReference.cy,
+      csv: commonErrorMessages.emptyReference.cy.csv,
+      api: commonErrorMessages.emptyReference.cy.api,
+      ui: commonErrorMessages.emptyReference.cy.ui,
     },
   },
   [codes.producerCharTooManyReference]: {
     en: {
-      csv: commonErrorMessages.charTooManyReference.en,
-      api: commonErrorMessages.charTooManyReference.en,
-      ui: commonErrorMessages.charTooManyReference.en,
+      csv: commonErrorMessages.charTooManyReference.en.csv,
+      api: commonErrorMessages.charTooManyReference.en.api,
+      ui: commonErrorMessages.charTooManyReference.en.ui,
     },
     cy: {
-      csv: commonErrorMessages.charTooManyReference.cy,
-      api: commonErrorMessages.charTooManyReference.cy,
-      ui: commonErrorMessages.charTooManyReference.cy,
+      csv: commonErrorMessages.charTooManyReference.cy.csv,
+      api: commonErrorMessages.charTooManyReference.cy.api,
+      ui: commonErrorMessages.charTooManyReference.cy.ui,
     },
   },
   [codes.producerInvalidReference]: {
     en: {
-      csv: commonErrorMessages.invalidReference.en,
-      api: commonErrorMessages.invalidReference.en,
-      ui: commonErrorMessages.invalidReference.en,
+      csv: commonErrorMessages.invalidReference.en.csv,
+      api: commonErrorMessages.invalidReference.en.api,
+      ui: commonErrorMessages.invalidReference.en.ui,
     },
     cy: {
-      csv: commonErrorMessages.invalidReference.cy,
-      api: commonErrorMessages.invalidReference.cy,
-      ui: commonErrorMessages.invalidReference.cy,
+      csv: commonErrorMessages.invalidReference.cy.csv,
+      api: commonErrorMessages.invalidReference.cy.api,
+      ui: commonErrorMessages.invalidReference.cy.ui,
     },
   },
   [codes.producerEmptyOrganisationName]: {

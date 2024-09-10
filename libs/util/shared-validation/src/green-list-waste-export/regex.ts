@@ -1,5 +1,5 @@
 import { NationalCodeChar, UkExitLocationChar } from './constraints';
-import { commonRegex } from '../common';
+import { commonRegex, commonConstraints } from '../common';
 
 export const nationalCodeRegex = new RegExp(
   `^[${commonRegex.alphaNumeric}\\\\\\- ]{${NationalCodeChar.min},${NationalCodeChar.max}}$`,
@@ -13,4 +13,8 @@ export const faxInternationalRegex = phoneInternationalRegex;
 
 export const ukExitLocationRegex = new RegExp(
   `^[${commonRegex.alphaNumeric}\\-.,']{${UkExitLocationChar.min},${UkExitLocationChar.max}}$`,
+);
+
+export const wasteQuantityRegex = new RegExp(
+  `^[${commonRegex.numeric}]*(\\.[${commonRegex.numeric}]{${commonConstraints.DecimalPlacesChar.min},${commonConstraints.DecimalPlacesChar.max}})?$`,
 );

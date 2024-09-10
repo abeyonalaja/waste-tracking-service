@@ -833,7 +833,7 @@ describe(SubmissionController, () => {
         padIndex: 2,
         values: [
           {
-            reference: 'test-Ref',
+            reference: 'test-Ref+',
             baselAnnexIXCode: '',
             oecdCode: '',
             annexIIIACode: 'B1010;B1050;B9999',
@@ -999,7 +999,10 @@ describe(SubmissionController, () => {
             fieldFormatErrors: [
               {
                 field: 'CustomerReference',
-                message: validation.ReferenceValidationErrorMessages.invalid,
+                message:
+                  commonValidation.commonErrorMessages.invalidReference[locale][
+                    context
+                  ],
               },
               {
                 field: 'WasteDescription',
@@ -1015,7 +1018,7 @@ describe(SubmissionController, () => {
               {
                 field: 'WasteQuantity',
                 message:
-                  validation.WasteQuantityValidationErrorMessages.missingType,
+                  glwe.errorMessages.missingWasteQuantityType[locale][context],
               },
               {
                 field: 'ExporterDetail',
@@ -1215,7 +1218,7 @@ describe(SubmissionController, () => {
         padIndex: 2,
         values: [
           {
-            reference: 'test-Ref',
+            reference: 'test-Ref+',
             baselAnnexIXCode: '',
             oecdCode: '',
             annexIIIACode: 'B1010;B1050',
@@ -1378,14 +1381,17 @@ describe(SubmissionController, () => {
             fieldFormatErrors: [
               {
                 field: 'CustomerReference',
-                message: validation.ReferenceValidationErrorMessages.invalid,
+                message:
+                  commonValidation.commonErrorMessages.invalidReference[locale][
+                    context
+                  ],
               },
             ],
             invalidStructureErrors: [
               {
                 fields: ['WasteDescription', 'WasteQuantity'],
                 message:
-                  validation.WasteQuantityValidationErrorMessages.laboratory,
+                  glwe.errorMessages.laboratoryWasteQuantity[locale][context],
               },
               {
                 fields: ['ImporterDetail', 'TransitCountries'],
@@ -2164,7 +2170,7 @@ describe(SubmissionController, () => {
       type: 'ActualData',
       actualData: {
         quantityType: 'Weight',
-        value: faker.number.float(),
+        value: faker.number.float({ fractionDigits: 5 }),
         unit: 'Tonne',
       },
     } as WasteQuantity;
@@ -2173,7 +2179,7 @@ describe(SubmissionController, () => {
       type: 'EstimateData',
       estimateData: {
         quantityType: 'Weight',
-        value: faker.number.float(),
+        value: faker.number.float({ fractionDigits: 5 }),
         unit: 'Tonne',
       },
     } as WasteQuantity;
@@ -2220,7 +2226,7 @@ describe(SubmissionController, () => {
         actualData: {},
         estimateData: {
           quantityType: 'Weight',
-          value: faker.number.float(),
+          value: faker.number.float({ fractionDigits: 5 }),
           unit: 'Tonne',
         },
       };

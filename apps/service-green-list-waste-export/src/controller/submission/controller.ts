@@ -21,7 +21,7 @@ import {
   WasteCodeType,
 } from '@wts/api/reference-data';
 import { CosmosRepository } from '../../data';
-import { common as commonValidation } from '@wts/util/shared-validation';
+import { common as commonValidation, glwe } from '@wts/util/shared-validation';
 
 export type Handler<Request, Response> = (
   request: Request,
@@ -115,6 +115,23 @@ export default class SubmissionController {
     api.SetWasteQuantityResponse
   > = async ({ id, accountId, value }) => {
     try {
+      const wasteQuantity =
+        value.type === 'ActualData' ? value.actualData : value.estimateData;
+      const wasteQuantityValidationResult =
+        glwe.validationRules.validateWasteQuantity(
+          wasteQuantity.quantityType!,
+          wasteQuantity.unit!,
+          wasteQuantity.value,
+        );
+
+      if (!wasteQuantityValidationResult.valid) {
+        const boom = Boom.badRequest(
+          'Validation failed',
+          wasteQuantityValidationResult.errors,
+        );
+        return fromBoom(boom);
+      }
+
       const submission = (await this.repository.getRecord(
         submissionContainerName,
         id,
@@ -153,6 +170,20 @@ export default class SubmissionController {
         value.type === 'ActualData'
           ? { status: 'UpdatedWithActuals', timestamp: new Date() }
           : submission.submissionState;
+
+      const wasteQuantityCrossSectionValidationResult =
+        glwe.validationRules.validateWasteCodeSubSectionAndQuantityCrossSection(
+          submission.wasteDescription.wasteCode,
+          submission.wasteQuantity,
+        );
+
+      if (!wasteQuantityCrossSectionValidationResult.valid) {
+        const boom = Boom.badRequest(
+          'Validation failed',
+          wasteQuantityCrossSectionValidationResult.errors,
+        );
+        return fromBoom(boom);
+      }
 
       return success(
         await this.repository.saveRecord(
@@ -401,7 +432,7 @@ export default class SubmissionController {
               wasteQuantity.value,
             );
           if (!crossSection.valid) {
-            invalidStructureErrors.push(crossSection.value);
+            invalidStructureErrors.push(...crossSection.value);
           }
         }
 

@@ -112,12 +112,15 @@ export default class DraftController {
   createDraft: Handler<api.CreateDraftRequest, api.CreateDraftResponse> =
     async ({ accountId, reference }) => {
       try {
-        if (reference.length > validation.ReferenceChar.max) {
-          return fromBoom(
-            Boom.badRequest(
-              `Supplied reference cannot exceed ${validation.ReferenceChar.max} characters`,
-            ),
+        const referenceValidationResult =
+          glwe.validationRules.validateReference(reference);
+
+        if (!referenceValidationResult.valid) {
+          const boom = Boom.badRequest(
+            'Validation failed',
+            referenceValidationResult.errors,
           );
+          return fromBoom(boom);
         }
 
         const value: DraftSubmission = {
@@ -210,18 +213,22 @@ export default class DraftController {
     api.SetDraftCustomerReferenceResponse
   > = async ({ id, accountId, reference }) => {
     try {
+      const referenceValidationResult =
+        glwe.validationRules.validateReference(reference);
+
+      if (!referenceValidationResult.valid) {
+        const boom = Boom.badRequest(
+          'Validation failed',
+          referenceValidationResult.errors,
+        );
+        return fromBoom(boom);
+      }
+
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
         accountId,
       )) as DraftSubmission;
-      if (reference.length > validation.ReferenceChar.max) {
-        return fromBoom(
-          Boom.badRequest(
-            `Supplied reference cannot exceed ${validation.ReferenceChar.max} characters`,
-          ),
-        );
-      }
 
       draft.reference = reference;
 
@@ -476,6 +483,34 @@ export default class DraftController {
     api.SetDraftWasteQuantityResponse
   > = async ({ id, accountId, value }) => {
     try {
+      if (
+        value.status === 'Started' ||
+        (value.status === 'Complete' && value.value?.type !== 'NotApplicable')
+      ) {
+        const wasteQuantity =
+          value.value?.type === 'ActualData'
+            ? value.value.actualData
+            : value.value?.type === 'EstimateData'
+              ? value.value.estimateData
+              : undefined;
+
+        if (wasteQuantity) {
+          const wasteQuantityValidationResult =
+            glwe.validationRules.validateWasteQuantity(
+              wasteQuantity.quantityType!,
+              wasteQuantity.unit!,
+              wasteQuantity.value,
+            );
+
+          if (!wasteQuantityValidationResult.valid) {
+            const boom = Boom.badRequest(
+              'Validation failed',
+              wasteQuantityValidationResult.errors,
+            );
+            return fromBoom(boom);
+          }
+        }
+      }
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
@@ -557,6 +592,27 @@ export default class DraftController {
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
       draft.submissionState.timestamp = new Date();
+
+      if (
+        draft.wasteDescription.status !== 'NotStarted' &&
+        draft.wasteQuantity.status !== 'NotStarted' &&
+        draft.wasteQuantity.status !== 'CannotStart' &&
+        draft.wasteQuantity.value?.type !== 'NotApplicable'
+      ) {
+        const wasteQuantityCrossSectionValidationResult =
+          glwe.validationRules.validateWasteCodeSubSectionAndQuantityCrossSection(
+            draft.wasteDescription.wasteCode,
+            draft.wasteQuantity.value,
+          );
+
+        if (!wasteQuantityCrossSectionValidationResult.valid) {
+          const boom = Boom.badRequest(
+            'Validation failed',
+            wasteQuantityCrossSectionValidationResult.errors,
+          );
+          return fromBoom(boom);
+        }
+      }
 
       return success(
         await this.repository.saveRecord(

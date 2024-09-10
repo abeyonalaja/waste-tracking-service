@@ -21,6 +21,9 @@ import {
   validateCountry,
   validateCarrierMeansOfTransportDetails,
   validateCarrierMeansOfTransport,
+  validateWasteQuantityType,
+  validateWasteQuantity,
+  validateWasteCodeSubSectionAndQuantityCrossSection,
 } from './validation-rules';
 import { UkExitLocationChar } from './constraints';
 import * as errorMessages from './error-messages';
@@ -444,22 +447,20 @@ describe(validateWasteDecription, () => {
 });
 
 describe(validateCollectionDateType, () => {
-  it.each(['actual', 'estimate'])(
-    'should return valid for valid types (%s)',
-    (value) => {
-      const result = validateCollectionDateType(value);
-      expect(result.valid).toBe(true);
+  it.each([
+    ['actual', 'ActualDate'],
+    ['estimate', 'EstimateDate'],
+  ])('should return valid for valid types (%s, %s)', (value, expected) => {
+    const result = validateCollectionDateType(value);
+    expect(result.valid).toBe(true);
 
-      if (result.valid) {
-        expect(result.value).toEqual(
-          value === 'actual' ? 'ActualDate' : 'EstimateDate',
-        );
-      }
-    },
-  );
+    if (result.valid) {
+      expect(result.value).toBe(expected);
+    }
+  });
 
   it.each(['', '      ', 'abc'])(
-    'should return invalid for invalid vlues (%s)',
+    'should return invalid for invalid values (%s)',
     (value) => {
       const result = validateCollectionDateType(value);
       expect(result.valid).toBe(false);
@@ -2392,4 +2393,245 @@ describe(validateImporterDetailAndTransitCountriesCross, () => {
       });
     }
   });
+});
+
+describe(validateWasteQuantityType, () => {
+  it.each([
+    ['actual', 'ActualData'],
+    ['estimate', 'EstimateData'],
+  ])('should return valid for valid types (%s, %s)', (value, expected) => {
+    const result = validateWasteQuantityType(value);
+    expect(result.valid).toBe(true);
+
+    if (result.valid) {
+      expect(result.value).toBe(expected);
+    }
+  });
+
+  it.each(['', '      ', undefined, 'abc'])(
+    'should return invalid for invalid values (%s)',
+    () => {
+      const result = validateWasteQuantityType('actual');
+      expect(result.valid).toBe(true);
+
+      if (result.valid) {
+        expect(result.value).toBe('ActualData');
+      }
+    },
+  );
+});
+
+describe(validateWasteQuantity, () => {
+  it('passes WasteQuantity validation, given valid values', () => {
+    let result = validateWasteQuantity('Volume', 'Cubic Metre', 100);
+
+    expect(result.valid).toEqual(true);
+    result = validateWasteQuantity('Volume', 'Kilogram', '20');
+
+    expect(result.valid).toEqual(true);
+  });
+
+  it('fails WasteQuantity validation, given invalid values', () => {
+    let result = validateWasteQuantity('Volume', 'Cubic Metre', '');
+
+    expect(result.valid).toEqual(false);
+    if (!result.valid) {
+      expect(result.errors).toEqual({
+        fieldFormatErrors: [
+          {
+            field: 'WasteQuantity',
+            message: errorMessages.emptyWasteQuantity[locale][context],
+          },
+        ],
+      });
+    }
+
+    result = validateWasteQuantity('Volume', 'Kilogram', 'abc');
+
+    expect(result.valid).toEqual(false);
+    if (!result.valid) {
+      expect(result.errors).toEqual({
+        fieldFormatErrors: [
+          {
+            field: 'WasteQuantity',
+            message: errorMessages.invalidWasteQuantity[locale][context],
+          },
+        ],
+      });
+    }
+
+    result = validateWasteQuantity('Volume', 'Kilogram', 0);
+    expect(result.valid).toEqual(false);
+    if (!result.valid) {
+      expect(result.errors).toEqual({
+        fieldFormatErrors: [
+          {
+            field: 'WasteQuantity',
+            message: errorMessages.invalidSmallWasteQuantity[locale][context],
+          },
+        ],
+      });
+    }
+
+    result = validateWasteQuantity('Volume', 'Kilogram', 26);
+    expect(result.valid).toEqual(false);
+    if (!result.valid) {
+      expect(result.errors).toEqual({
+        fieldFormatErrors: [
+          {
+            field: 'WasteQuantity',
+            message: errorMessages.invalidSmallWasteQuantity[locale][context],
+          },
+        ],
+      });
+    }
+
+    result = validateWasteQuantity('Volume', 'Tonne', 1000000);
+    expect(result.valid).toEqual(false);
+    if (!result.valid) {
+      expect(result.errors).toEqual({
+        fieldFormatErrors: [
+          {
+            field: 'WasteQuantity',
+            message: errorMessages.invalidBulkWasteQuantity[locale][context],
+          },
+        ],
+      });
+    }
+
+    result = validateWasteQuantity('Volume', 'Tonne', 0);
+    expect(result.valid).toEqual(false);
+    if (!result.valid) {
+      expect(result.errors).toEqual({
+        fieldFormatErrors: [
+          {
+            field: 'WasteQuantity',
+            message: errorMessages.invalidBulkWasteQuantity[locale][context],
+          },
+        ],
+      });
+    }
+  });
+});
+
+describe(validateWasteCodeSubSectionAndQuantityCrossSection, () => {
+  it('passes validation given valid data', () => {
+    let result = validateWasteCodeSubSectionAndQuantityCrossSection(
+      {
+        type: 'BaselAnnexIX',
+      },
+      {
+        type: 'ActualData',
+        actualData: {
+          quantityType: 'Volume',
+          unit: 'Cubic Metre',
+          value: 100,
+        },
+      },
+    );
+    expect(result.valid).toEqual(true);
+
+    result = validateWasteCodeSubSectionAndQuantityCrossSection(
+      {
+        type: 'NotApplicable',
+      },
+      {
+        type: 'ActualData',
+        actualData: {
+          quantityType: 'Weight',
+          unit: 'Kilogram',
+          value: 20,
+        },
+      },
+    );
+    expect(result.valid).toEqual(true);
+  });
+
+  it('fails validation given invalid data, given large units are passed for code not applicable', () => {
+    let result = validateWasteCodeSubSectionAndQuantityCrossSection(
+      {
+        type: 'NotApplicable',
+      },
+      {
+        type: 'ActualData',
+        actualData: {
+          quantityType: 'Volume',
+          unit: 'Cubic Metre',
+          value: 100,
+        },
+      },
+    );
+
+    expect(result.valid).toEqual(false);
+    if (!result.valid) {
+      expect(result.errors).toEqual({
+        invalidStructureErrors: [
+          {
+            fields: ['WasteDescription', 'WasteQuantity'],
+            message: errorMessages.smallNonKgwasteQuantity[locale][context],
+          },
+        ],
+        fieldFormatErrors: [],
+      });
+    }
+
+    result = validateWasteCodeSubSectionAndQuantityCrossSection(
+      {
+        type: 'NotApplicable',
+      },
+      {
+        type: 'ActualData',
+        actualData: {
+          quantityType: 'Weight',
+          unit: 'Tonne',
+          value: 100,
+        },
+      },
+    );
+
+    expect(result.valid).toEqual(false);
+    if (!result.valid) {
+      expect(result.errors).toEqual({
+        invalidStructureErrors: [
+          {
+            fields: ['WasteDescription', 'WasteQuantity'],
+            message: errorMessages.smallNonKgwasteQuantity[locale][context],
+          },
+        ],
+        fieldFormatErrors: [],
+      });
+    }
+  });
+
+  it.each(['BaselAnnexIX', 'OECD', 'AnnexIIIA', 'AnnexIIIB'])(
+    'fails validation given invalid data, given small units are passed for non small code (%s)',
+    (code) => {
+      const result = validateWasteCodeSubSectionAndQuantityCrossSection(
+        {
+          type: code as 'BaselAnnexIX' | 'OECD' | 'AnnexIIIA' | 'AnnexIIIB',
+        },
+        {
+          type: 'ActualData',
+          actualData: {
+            quantityType: 'Weight',
+            unit: 'Kilogram',
+            value: 20,
+          },
+        },
+      );
+
+      expect(result.valid).toEqual(false);
+      if (!result.valid) {
+        expect(result.errors).toEqual({
+          invalidStructureErrors: [
+            {
+              fields: ['WasteDescription', 'WasteQuantity'],
+              message: errorMessages.laboratoryWasteQuantity[locale][context],
+            },
+          ],
+          fieldFormatErrors: [],
+        });
+      }
+    },
+  );
 });

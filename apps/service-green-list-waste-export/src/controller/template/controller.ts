@@ -1441,12 +1441,15 @@ export default class TemplateController {
     draft.CreateDraftResponse
   > = async ({ id, accountId, reference }) => {
     try {
-      if (reference.length > validation.ReferenceChar.max) {
-        return fromBoom(
-          Boom.badRequest(
-            `Supplied reference cannot exceed ${validation.ReferenceChar.max} characters`,
-          ),
+      const referenceValidationResult =
+        glwe.validationRules.validateReference(reference);
+
+      if (!referenceValidationResult.valid) {
+        const boom = Boom.badRequest(
+          'Validation failed',
+          referenceValidationResult.errors,
         );
+        return fromBoom(boom);
       }
 
       const template = (await this.repository.getRecord(

@@ -24,6 +24,7 @@ export type RecoveryFacilityDetails = Submission['recoveryFacilityDetail'];
 export type Carrier = api.submission.Carrier;
 export type RecoveryFacilityDetail = api.submission.RecoveryFacilityDetail;
 export type PartialSubmission = api.submission.PartialSubmission;
+export type WasteQuantityData = api.submission.WasteQuantityData;
 
 export type SubmissionState = api.submission.SubmissionState;
 

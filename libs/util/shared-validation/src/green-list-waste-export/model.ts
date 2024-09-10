@@ -14,3 +14,6 @@ export type Carrier = api.submission.Carrier;
 export type UkExitLocation = api.submission.UkExitLocation;
 
 export type TransitCountry = api.submission.TransitCountry;
+
+export type WasteQuantity = api.submission.WasteQuantity;
+export type WasteQuantityData = api.submission.WasteQuantityData;

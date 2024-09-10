@@ -12,8 +12,7 @@ import {
 } from '../../model';
 import DraftController from './controller';
 import { CosmosRepository } from '../../data';
-import { validation } from '@wts/api/green-list-waste-export';
-import { glwe } from '@wts/util/shared-validation';
+import { glwe, common } from '@wts/util/shared-validation';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -552,7 +551,7 @@ describe(DraftController, () => {
       mockRepository.getRecord.mockResolvedValue(draft);
 
       const customerReference = faker.string.sample(
-        validation.ReferenceChar.max + 1,
+        common.commonConstraints.ReferenceChar.max + 1,
       );
       const response = await subject.setDraftCustomerReference({
         id,

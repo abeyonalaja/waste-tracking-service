@@ -1,34 +1,8 @@
-import {
-  ReferenceChar,
-  BulkWasteQuantityValue,
-  SmallWasteQuantityValue,
-  FreeTextChar,
-} from './constraints';
-
-export const ReferenceValidationErrorMessages = {
-  empty: 'Enter a unique reference',
-  charTooFew: `Your unique reference must be more than ${ReferenceChar.min} character`,
-  charTooMany: `The unique reference must be ${ReferenceChar.max} characters or less`,
-  invalid: 'The reference must only include letters a to z, and numbers',
-};
-
-export const BulkWasteQuantityValidationErrorMessages = {
-  invalid: `The waste quantity must be between ${BulkWasteQuantityValue.greaterThan} and ${BulkWasteQuantityValue.lessThan}`,
-};
-
-export const SmallWasteQuantityValidationErrorMessages = {
-  invalid: `Enter a weight ${SmallWasteQuantityValue.lessThanOrEqual}kg or under`,
-};
+import { FreeTextChar } from './constraints';
 
 export const WasteQuantityValidationErrorMessages = {
-  empty: 'Enter quantity of waste',
-  invalid: 'Enter the weight using only numbers and a full stop',
   tooMany:
     'Only enter one of the following; waste quantity in tonnes, kilograms, or cubic metres',
-  missingType: "Enter either 'estimate' or 'actual' waste quantity",
-  laboratory:
-    'Only enter the weight as kilograms if you are sending unlisted waste to a laboratory',
-  smallNonKg: 'Unlisted weight can only be measured in kilograms',
 };
 
 export const ExporterDetailValidationErrorMessages = {

@@ -29,6 +29,7 @@ export type {
   WasteCode,
   WasteDescription,
   WasteQuantity,
+  WasteQuantityData,
   GetSubmissionsResponse,
   GetSubmissionRequest,
   GetSubmissionResponse,

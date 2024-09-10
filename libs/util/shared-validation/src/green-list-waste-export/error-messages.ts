@@ -5,15 +5,21 @@ import {
   EWCCodesLength,
   UkExitLocationChar,
   WasteDescriptionChar,
+  BulkWasteQuantityValue,
+  SmallWasteQuantityValue,
 } from './constraints';
 import { Section } from './dto';
 
 export const missingTypeCollectionDate = {
   en: {
+    ui: "Enter if this is an 'estimate' or 'actual' collection date",
     csv: "Enter if this is an 'estimate' or 'actual' collection date",
+    api: "Enter if this is an 'estimate' or 'actual' collection date",
   },
   cy: {
+    ui: "Nodwch os yw hwn yn ddyddiad casglu 'amcangyfrif' neu 'gwirioneddol'",
     csv: "Nodwch os yw hwn yn ddyddiad casglu 'amcangyfrif' neu 'gwirioneddol'",
+    api: "Nodwch os yw hwn yn ddyddiad casglu 'amcangyfrif' neu 'gwirioneddol'",
   },
 };
 
@@ -2169,5 +2175,96 @@ export const invalidRecoveryFacilityRecoveryFacilityDetailCrossSection = {
   cy: {
     csv: 'Peidiwch â nodi unrhyw fanylion cyfleuster adennill os ydych yn allforio gwastraff heb ei restru',
     api: 'Peidiwch â nodi unrhyw fanylion cyfleuster adennill os ydych yn allforio gwastraff heb ei restru',
+  },
+};
+
+export const emptyWasteQuantity = {
+  en: {
+    ui: 'Enter quantity of waste',
+    csv: 'Enter quantity of waste',
+    api: 'Enter quantity of waste',
+  },
+  cy: {
+    ui: 'Nodwch faint o wastraff',
+    csv: 'Nodwch faint o wastraff',
+    api: 'Nodwch faint o wastraff',
+  },
+};
+
+export const invalidWasteQuantity = {
+  en: {
+    ui: 'Enter the weight using only numbers and a full stop',
+    csv: 'Enter the weight using only numbers and a full stop',
+    api: 'Enter the weight using only numbers and a full stop',
+  },
+  cy: {
+    ui: 'Rhowch y pwysau gan ddefnyddio rhifau yn unig ac atalnod llawn',
+    csv: 'Rhowch y pwysau gan ddefnyddio rhifau yn unig ac atalnod llawn',
+    api: 'Rhowch y pwysau gan ddefnyddio rhifau yn unig ac atalnod llawn',
+  },
+};
+
+export const invalidBulkWasteQuantity = {
+  en: {
+    ui: `The waste quantity must be between ${BulkWasteQuantityValue.greaterThan} and ${BulkWasteQuantityValue.lessThan}`,
+    csv: `The waste quantity must be between ${BulkWasteQuantityValue.greaterThan} and ${BulkWasteQuantityValue.lessThan}`,
+    api: `The waste quantity must be between ${BulkWasteQuantityValue.greaterThan} and ${BulkWasteQuantityValue.lessThan}`,
+  },
+  cy: {
+    ui: `Rhaid i swm y gwastraff fod rhwng ${BulkWasteQuantityValue.greaterThan} a ${BulkWasteQuantityValue.lessThan}`,
+    csv: `Rhaid i swm y gwastraff fod rhwng ${BulkWasteQuantityValue.greaterThan} a ${BulkWasteQuantityValue.lessThan}`,
+    api: `Rhaid i swm y gwastraff fod rhwng ${BulkWasteQuantityValue.greaterThan} a ${BulkWasteQuantityValue.lessThan}`,
+  },
+};
+
+export const invalidSmallWasteQuantity = {
+  en: {
+    ui: `Enter a weight ${SmallWasteQuantityValue.lessThanOrEqual}kg or under`,
+    csv: `Enter a weight ${SmallWasteQuantityValue.lessThanOrEqual}kg or under`,
+    api: `Enter a weight ${SmallWasteQuantityValue.lessThanOrEqual}kg or under`,
+  },
+  cy: {
+    ui: `Rhowch bwysau ${SmallWasteQuantityValue.lessThanOrEqual}kg neu lai`,
+    csv: `Rhowch bwysau ${SmallWasteQuantityValue.lessThanOrEqual}kg neu lai`,
+    api: `Rhowch bwysau ${SmallWasteQuantityValue.lessThanOrEqual}kg neu lai`,
+  },
+};
+
+export const missingWasteQuantityType = {
+  en: {
+    ui: "Enter either 'estimate' or 'actual' waste quantity",
+    csv: "Enter either 'estimate' or 'actual' waste quantity",
+    api: "Enter either 'estimate' or 'actual' waste quantity",
+  },
+  cy: {
+    ui: "Nodwch naill ai swm gwastraff 'amcangyfrif' neu 'gwirioneddol'",
+    csv: "Nodwch naill ai swm gwastraff 'amcangyfrif' neu 'gwirioneddol'",
+    api: "Nodwch naill ai swm gwastraff 'amcangyfrif' neu 'gwirioneddol'",
+  },
+};
+
+export const laboratoryWasteQuantity = {
+  en: {
+    ui: 'Only enter the weight as kilograms if you are sending unlisted waste to a laboratory',
+    csv: 'Only enter the weight as kilograms if you are sending unlisted waste to a laboratory',
+    api: 'Only enter the weight as kilograms if you are sending unlisted waste to a laboratory',
+  },
+  cy: {
+    ui: 'Rhowch y pwysau fel cilogramau dim ond os ydych yn anfon gwastraff heb ei restru i labordy',
+    csv: 'Rhowch y pwysau fel cilogramau dim ond os ydych yn anfon gwastraff heb ei restru i labordy',
+    api: 'Rhowch y pwysau fel cilogramau dim ond os ydych yn anfon gwastraff heb ei restru i labordy',
+  },
+};
+
+export const smallNonKgwasteQuantity = {
+  en: {
+    ui: 'Unlisted weight can only be measured in kilograms',
+    csv: 'Unlisted weight can only be measured in kilograms',
+    api: 'Unlisted weight can only be measured in kilograms',
+  },
+  cy: {
+    ui: 'Dim ond mewn cilogramau y gellir mesur pwysau heb ei restru',
+    csv: 'Dim ond mewn cilogramau y gellir mesur pwysau heb ei restru',
+    api: 'Dim ond mewn cilogramau y gellir mesur pwysau heb ei restru',
   },
 };

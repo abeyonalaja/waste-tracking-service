@@ -6,18 +6,42 @@ export const defaultErrorMessage = {
 };
 
 export const emptyReference = {
-  en: 'Enter a unique reference',
-  cy: 'Rhowch gyfeirnod unigryw',
+  en: {
+    ui: 'Enter a unique reference',
+    csv: 'Enter a unique reference',
+    api: 'Enter a unique reference',
+  },
+  cy: {
+    ui: 'Rhowch gyfeirnod unigryw',
+    csv: 'Rhowch gyfeirnod unigryw',
+    api: 'Rhowch gyfeirnod unigryw',
+  },
 };
 
 export const charTooManyReference = {
-  en: `The unique reference must be ${commonConstraints.ReferenceChar.max} characters or less`,
-  cy: `Rhaid i'r cyfeirnod unigryw fod yn ${commonConstraints.ReferenceChar.max} nod neu lai`,
+  en: {
+    ui: `The unique reference must be ${commonConstraints.ReferenceChar.max} characters or less`,
+    csv: `The unique reference must be ${commonConstraints.ReferenceChar.max} characters or less`,
+    api: `The unique reference must be ${commonConstraints.ReferenceChar.max} characters or less`,
+  },
+  cy: {
+    ui: `Rhaid i'r cyfeirnod unigryw fod yn ${commonConstraints.ReferenceChar.max} nod neu lai`,
+    csv: `Rhaid i'r cyfeirnod unigryw fod yn ${commonConstraints.ReferenceChar.max} nod neu lai`,
+    api: `Rhaid i'r cyfeirnod unigryw fod yn ${commonConstraints.ReferenceChar.max} nod neu lai`,
+  },
 };
 
 export const invalidReference = {
-  en: 'The unique reference can only contain letters, numbers, hyphens, slashes, underscores and spaces',
-  cy: 'Dim ond llythrennau, rhifau, cysylltnodau, sleisys, tanlinellu a bylchau y gall y cyfeirnod unigryw eu cynnwys',
+  en: {
+    ui: 'The unique reference can only contain letters, numbers, hyphens, slashes, underscores and spaces',
+    csv: 'The unique reference can only contain letters, numbers, hyphens, slashes, underscores and spaces',
+    api: 'The unique reference can only contain letters, numbers, hyphens, slashes, underscores and spaces',
+  },
+  cy: {
+    ui: 'Dim ond llythrennau, rhifau, cysylltnodau, sleisys, tanlinellu a bylchau y gall y cyfeirnod unigryw eu cynnwys',
+    csv: 'Dim ond llythrennau, rhifau, cysylltnodau, sleisys, tanlinellu a bylchau y gall y cyfeirnod unigryw eu cynnwys',
+    api: 'Dim ond llythrennau, rhifau, cysylltnodau, sleisys, tanlinellu a bylchau y gall y cyfeirnod unigryw eu cynnwys',
+  },
 };
 
 export const emptyOrganisationName = {
