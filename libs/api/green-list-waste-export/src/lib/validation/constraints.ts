@@ -22,11 +22,6 @@ export const FreeTextChar = {
   max: 250,
 };
 
-export const CarrierTransportDescriptionChar = {
-  min: 1,
-  max: 200,
-};
-
 export const TemplateNameChar = {
   min: 1,
   max: 50,
@@ -34,11 +29,6 @@ export const TemplateNameChar = {
 
 export const TemplateDescriptionChar = {
   max: 100,
-};
-
-export const CarrierLength = {
-  min: 1,
-  max: 5,
 };
 
 export const InterimSiteLength = {

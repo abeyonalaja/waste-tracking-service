@@ -272,19 +272,6 @@ export function validatePostcode(
     const errors: FieldFormatError[] = [];
     result.errors.forEach((e) => {
       switch (e) {
-        case 'empty':
-          errors.push({
-            field: (section + ' postcode') as Field,
-            code: getSharedErrorCode(errorCodes.emptyPostcodeBase, section),
-            message: message
-              ? getErrorMessage(
-                  errorCodes.emptyPostcodeBase,
-                  message.locale,
-                  message.context,
-                )
-              : undefined,
-          });
-          break;
         case 'invalid':
           errors.push({
             field: (section + ' postcode') as Field,
@@ -334,12 +321,12 @@ export function validatePostcode(
   };
 }
 
-export function validateTownCity(
+export function validateTownOrCity(
   townCity: string | undefined,
   section: Section,
   message?: ErrorMessage,
 ): ValidationResult<string> {
-  const result = commonValidationRules.validateTownCity(townCity);
+  const result = commonValidationRules.validateTownOrCity(townCity);
   if (!result.valid) {
     const errors: FieldFormatError[] = [];
     result.errors.forEach((e) => {
@@ -491,7 +478,7 @@ export function validateAddressDetails(
       errors.push(...addressLine2.errors);
     }
 
-    const townCity = validateTownCity(value.townCity, section, message);
+    const townCity = validateTownOrCity(value.townCity, section, message);
     if (townCity.valid) {
       address.townCity = townCity.value;
     } else {
@@ -567,7 +554,7 @@ export function validateAddressDetails(
     }
 
     if (value.townCity) {
-      const townCity = validateTownCity(value.townCity, section, message);
+      const townCity = validateTownOrCity(value.townCity, section, message);
       if (townCity.valid) {
         address.townCity = townCity.value;
       } else {

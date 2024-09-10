@@ -2,6 +2,8 @@ import {
   Context,
   Locale,
   ValidationResult as commonValidationResult,
+  commonValidationRules,
+  commonConstraints,
 } from '../common';
 import {
   UkExitLocation,
@@ -11,12 +13,29 @@ import {
   Country,
   ImporterDetail,
   TransitCountry,
+  Carrier,
 } from './model';
 import * as constraints from './constraints';
 import * as regex from './regex';
 import * as errorMessages from './error-messages';
-import { ValidationResult } from './dto';
-import { UkExitLocationChar } from './constraints';
+import {
+  FieldFormatError,
+  InvalidAttributeCombinationError,
+  Section,
+  ValidationResult,
+} from './dto';
+import {
+  CarrierTransportDescriptionChar,
+  UkExitLocationChar,
+} from './constraints';
+
+const carrierMeansOfTransport = [
+  'Road',
+  'Rail',
+  'Sea',
+  'Air',
+  'InlandWaterways',
+];
 
 export function validateWasteCode(
   value: string,
@@ -47,7 +66,7 @@ export function validateWasteCode(
         ) {
           return {
             valid: false,
-            error: {
+            errors: {
               fieldFormatErrors: [
                 {
                   field: 'WasteDescription',
@@ -77,7 +96,7 @@ export function validateWasteCode(
     if (filteredWasteCodeList.length !== 1) {
       return {
         valid: false,
-        error: {
+        errors: {
           fieldFormatErrors: [
             {
               field: 'WasteDescription',
@@ -113,7 +132,7 @@ export function validateEwcCodes(
   if (values.length === 0) {
     return {
       valid: false,
-      error: {
+      errors: {
         fieldFormatErrors: [
           {
             field: 'WasteDescription',
@@ -126,7 +145,7 @@ export function validateEwcCodes(
     if (values.length > constraints.EWCCodesLength.max) {
       return {
         valid: false,
-        error: {
+        errors: {
           fieldFormatErrors: [
             {
               field: 'WasteDescription',
@@ -145,7 +164,7 @@ export function validateEwcCodes(
     ) {
       return {
         valid: false,
-        error: {
+        errors: {
           fieldFormatErrors: [
             {
               field: 'WasteDescription',
@@ -179,7 +198,7 @@ export function validateNationalCode(
     if (!regex.nationalCodeRegex.test(value)) {
       return {
         valid: false,
-        error: {
+        errors: {
           fieldFormatErrors: [
             {
               field: 'WasteDescription',
@@ -207,7 +226,7 @@ export function validateWasteDecription(
   if (!value) {
     return {
       valid: false,
-      error: {
+      errors: {
         fieldFormatErrors: [
           {
             field: 'WasteDescription',
@@ -222,7 +241,7 @@ export function validateWasteDecription(
   if (value.length < constraints.WasteDescriptionChar.min) {
     return {
       valid: false,
-      error: {
+      errors: {
         fieldFormatErrors: [
           {
             field: 'WasteDescription',
@@ -239,7 +258,7 @@ export function validateWasteDecription(
   if (value.length > constraints.WasteDescriptionChar.max) {
     return {
       valid: false,
-      error: {
+      errors: {
         fieldFormatErrors: [
           {
             field: 'WasteDescription',
@@ -278,6 +297,694 @@ export function validateCollectionDateType(
   };
 }
 
+export function validateOrganisationName(
+  organisationName: string | undefined,
+  section: Section,
+  locale: Locale = 'en',
+  context: Context = 'api',
+  index?: number,
+  recoveryFacilityType?: 'Laboratory' | 'InterimSite' | 'RecoveryFacility',
+): ValidationResult<string> {
+  const result =
+    commonValidationRules.validateOrganisationName(organisationName);
+  if (!result.valid) {
+    const fieldFormatErrors: FieldFormatError[] = [];
+    result.errors.forEach((e) => {
+      switch (e) {
+        case 'empty':
+          fieldFormatErrors.push({
+            field: section,
+            message: errorMessages.emptyOrganisationName(
+              section,
+              index,
+              recoveryFacilityType,
+            )[locale][context],
+          });
+          break;
+        case 'charTooMany':
+          fieldFormatErrors.push({
+            field: section,
+            message: errorMessages.charTooManyOrganisationName(
+              section,
+              index,
+              recoveryFacilityType,
+            )[locale][context],
+          });
+          break;
+        default:
+          break;
+      }
+    });
+
+    return {
+      valid: false,
+      errors: { fieldFormatErrors },
+    };
+  }
+
+  return {
+    valid: true,
+    value: result.value,
+  };
+}
+
+export function validateAddress(
+  address: string | undefined,
+  section: Exclude<Section, 'ExporterDetail' | 'CollectionDetail'>,
+  locale: Locale = 'en',
+  context: Context = 'api',
+  index?: number,
+  recoveryFacilityType?: 'Laboratory' | 'InterimSite' | 'RecoveryFacility',
+): ValidationResult<string> {
+  const trimmedAddress = address?.trim();
+  if (!trimmedAddress) {
+    return {
+      valid: false,
+      errors: {
+        fieldFormatErrors: [
+          {
+            field: section,
+            message: errorMessages.emptyAddress(
+              section,
+              index,
+              recoveryFacilityType,
+            )[locale][context],
+          },
+        ],
+      },
+    };
+  } else {
+    if (trimmedAddress.length > commonConstraints.FreeTextChar.max) {
+      return {
+        valid: false,
+        errors: {
+          fieldFormatErrors: [
+            {
+              field: section,
+              message: errorMessages.charTooManyAddress(
+                section,
+                index,
+                recoveryFacilityType,
+              )[locale][context],
+            },
+          ],
+        },
+      };
+    }
+  }
+
+  return {
+    valid: true,
+    value: trimmedAddress,
+  };
+}
+
+export function validateAddressLine1(
+  addressLine1: string | undefined,
+  section: Exclude<
+    Section,
+    'ImporterDetail' | 'Carriers' | 'RecoveryFacilityDetail'
+  >,
+  locale: Locale = 'en',
+  context: Context = 'api',
+): ValidationResult<string> {
+  const result = commonValidationRules.validateAddressLine1(addressLine1);
+  if (!result.valid) {
+    const fieldFormatErrors: FieldFormatError[] = [];
+    result.errors.forEach((e) => {
+      switch (e) {
+        case 'empty':
+          fieldFormatErrors.push({
+            field: section,
+            message: errorMessages.emptyAddressLine1(section)[locale][context],
+          });
+          break;
+        case 'charTooMany':
+          fieldFormatErrors.push({
+            field: section,
+            message:
+              errorMessages.charTooManyAddressLine1(section)[locale][context],
+          });
+          break;
+        default:
+          break;
+      }
+    });
+
+    return {
+      valid: false,
+      errors: { fieldFormatErrors },
+    };
+  }
+
+  return {
+    valid: true,
+    value: result.value,
+  };
+}
+
+export function validateAddressLine2(
+  addressLine2: string | undefined,
+  section: Exclude<
+    Section,
+    'ImporterDetail' | 'Carriers' | 'RecoveryFacilityDetail'
+  >,
+  locale: Locale = 'en',
+  context: Context = 'api',
+): ValidationResult<string | undefined> {
+  const result = commonValidationRules.validateAddressLine2(addressLine2);
+  if (!result.valid) {
+    const fieldFormatErrors: FieldFormatError[] = [];
+    result.errors.forEach((e) => {
+      switch (e) {
+        case 'charTooMany':
+          fieldFormatErrors.push({
+            field: section,
+            message:
+              errorMessages.charTooManyAddressLine2(section)[locale][context],
+          });
+          break;
+        default:
+          break;
+      }
+    });
+
+    return {
+      valid: false,
+      errors: { fieldFormatErrors },
+    };
+  }
+
+  return {
+    valid: true,
+    value: result.value,
+  };
+}
+
+export function validatePostcode(
+  postcode: string | undefined,
+  section: Exclude<
+    Section,
+    'ImporterDetail' | 'Carriers' | 'RecoveryFacilityDetail'
+  >,
+  locale: Locale = 'en',
+  context: Context = 'api',
+): ValidationResult<string | undefined> {
+  const result = commonValidationRules.validatePostcode(postcode);
+  if (!result.valid) {
+    const fieldFormatErrors: FieldFormatError[] = [];
+    result.errors.forEach((e) => {
+      switch (e) {
+        case 'invalid':
+          fieldFormatErrors.push({
+            field: section,
+            message: errorMessages.invalidPostcode(section)[locale][context],
+          });
+          break;
+        default:
+          break;
+      }
+    });
+
+    return {
+      valid: false,
+      errors: { fieldFormatErrors },
+    };
+  }
+
+  return {
+    valid: true,
+    value: result.value,
+  };
+}
+
+export function validateTownOrCity(
+  townOrCity: string | undefined,
+  section: Exclude<
+    Section,
+    'ImporterDetail' | 'Carriers' | 'RecoveryFacilityDetail'
+  >,
+  locale: Locale = 'en',
+  context: Context = 'api',
+): ValidationResult<string> {
+  const result = commonValidationRules.validateTownOrCity(townOrCity);
+  if (!result.valid) {
+    const fieldFormatErrors: FieldFormatError[] = [];
+    result.errors.forEach((e) => {
+      switch (e) {
+        case 'empty':
+          fieldFormatErrors.push({
+            field: section,
+            message: errorMessages.emptyTownOrCity(section)[locale][context],
+          });
+          break;
+        case 'charTooMany':
+          fieldFormatErrors.push({
+            field: section,
+            message:
+              errorMessages.charTooManyTownOrCity(section)[locale][context],
+          });
+          break;
+        default:
+          break;
+      }
+    });
+
+    return {
+      valid: false,
+      errors: { fieldFormatErrors },
+    };
+  }
+
+  return {
+    valid: true,
+    value: result.value,
+  };
+}
+
+function validateCountryInternational(
+  countryList: Country[],
+  country?: string,
+): commonValidationResult<string> {
+  const trimmedCountry = country?.trim();
+  if (!trimmedCountry) {
+    return {
+      valid: false,
+      errors: ['empty'],
+    };
+  }
+
+  const filteredCountryList = countryList.filter((c) =>
+    c.name.toUpperCase().includes(trimmedCountry.toUpperCase()),
+  );
+  if (filteredCountryList.length !== 1) {
+    return {
+      valid: false,
+      errors: ['invalid'],
+    };
+  } else {
+    country = filteredCountryList[0].name;
+  }
+
+  return {
+    valid: true,
+    value: country,
+  };
+}
+
+export function validateCountry(
+  country: string | undefined,
+  section: Section,
+  locale: Locale = 'en',
+  context: Context = 'api',
+  countryList?: Country[],
+  index?: number,
+  recoveryFacilityType?: 'Laboratory' | 'InterimSite' | 'RecoveryFacility',
+): ValidationResult<string> {
+  let result: commonValidationResult<string>;
+  if (section === 'ExporterDetail' || section === 'CollectionDetail') {
+    result = commonValidationRules.validateCountry(country);
+  } else {
+    result = validateCountryInternational(countryList as Country[], country);
+  }
+
+  if (!result.valid) {
+    const fieldFormatErrors: FieldFormatError[] = [];
+    result.errors.forEach((e) => {
+      switch (e) {
+        case 'empty':
+          fieldFormatErrors.push({
+            field: section,
+            message: errorMessages.emptyCountry(
+              section,
+              index,
+              recoveryFacilityType,
+            )[locale][context],
+          });
+          break;
+        case 'invalid':
+          fieldFormatErrors.push({
+            field: section,
+            message: errorMessages.invalidCountry(
+              section,
+              index,
+              recoveryFacilityType,
+            )[locale][context],
+          });
+          break;
+        default:
+          break;
+      }
+    });
+
+    return {
+      valid: false,
+      errors: { fieldFormatErrors },
+    };
+  }
+
+  return {
+    valid: true,
+    value: result.value,
+  };
+}
+
+export function validateFullName(
+  fullName: string | undefined,
+  section: Section,
+  locale: Locale = 'en',
+  context: Context = 'api',
+  index?: number,
+  recoveryFacilityType?: 'Laboratory' | 'InterimSite' | 'RecoveryFacility',
+): ValidationResult<string> {
+  const result = commonValidationRules.validateFullName(fullName);
+  if (!result.valid) {
+    const fieldFormatErrors: FieldFormatError[] = [];
+    result.errors.forEach((e) => {
+      switch (e) {
+        case 'empty':
+          fieldFormatErrors.push({
+            field: section,
+            message: errorMessages.emptyContactFullName(
+              section,
+              index,
+              recoveryFacilityType,
+            )[locale][context],
+          });
+          break;
+        case 'charTooMany':
+          fieldFormatErrors.push({
+            field: section,
+            message: errorMessages.charTooManyContactFullName(
+              section,
+              index,
+              recoveryFacilityType,
+            )[locale][context],
+          });
+          break;
+        default:
+          break;
+      }
+    });
+
+    return {
+      valid: false,
+      errors: { fieldFormatErrors },
+    };
+  }
+
+  return {
+    valid: true,
+    value: result.value,
+  };
+}
+
+export function validateEmailAddress(
+  emailAddress: string | undefined,
+  section: Section,
+  locale: Locale = 'en',
+  context: Context = 'api',
+  index?: number,
+  recoveryFacilityType?: 'Laboratory' | 'InterimSite' | 'RecoveryFacility',
+): ValidationResult<string> {
+  const result = commonValidationRules.validateEmailAddress(emailAddress);
+  if (!result.valid) {
+    const fieldFormatErrors: FieldFormatError[] = [];
+    result.errors.forEach((e) => {
+      switch (e) {
+        case 'empty':
+          fieldFormatErrors.push({
+            field: section,
+            message: errorMessages.emptyEmail(
+              section,
+              index,
+              recoveryFacilityType,
+            )[locale][context],
+          });
+          break;
+        case 'charTooMany':
+          fieldFormatErrors.push({
+            field: section,
+            message: errorMessages.charTooManyEmail(
+              section,
+              index,
+              recoveryFacilityType,
+            )[locale][context],
+          });
+          break;
+        case 'invalid':
+          fieldFormatErrors.push({
+            field: section,
+            message: errorMessages.invalidEmail(
+              section,
+              index,
+              recoveryFacilityType,
+            )[locale][context],
+          });
+          break;
+        default:
+          break;
+      }
+    });
+
+    return {
+      valid: false,
+      errors: { fieldFormatErrors },
+    };
+  }
+
+  return {
+    valid: true,
+    value: result.value,
+  };
+}
+
+function validatePhoneNumberInternational(
+  phoneNumber?: string,
+): commonValidationResult<string> {
+  const trimmedPhoneNumber = phoneNumber?.trim();
+  if (!trimmedPhoneNumber) {
+    return {
+      valid: false,
+      errors: ['empty'],
+    };
+  }
+
+  if (!regex.phoneInternationalRegex.test(trimmedPhoneNumber)) {
+    return {
+      valid: false,
+      errors: ['invalid'],
+    };
+  }
+
+  return {
+    valid: true,
+    value: trimmedPhoneNumber,
+  };
+}
+
+export function validatePhoneNumber(
+  phoneNumber: string | undefined,
+  section: Section,
+  locale: Locale = 'en',
+  context: Context = 'api',
+  index?: number,
+  recoveryFacilityType?: 'Laboratory' | 'InterimSite' | 'RecoveryFacility',
+): ValidationResult<string> {
+  let result: commonValidationResult<string>;
+  if (section === 'ExporterDetail' || section === 'CollectionDetail') {
+    result = commonValidationRules.validatePhoneNumber(phoneNumber);
+  } else {
+    result = validatePhoneNumberInternational(phoneNumber);
+  }
+
+  if (!result.valid) {
+    const fieldFormatErrors: FieldFormatError[] = [];
+    result.errors.forEach((e) => {
+      switch (e) {
+        case 'empty':
+          fieldFormatErrors.push({
+            field: section,
+            message: errorMessages.emptyPhone(
+              section,
+              index,
+              recoveryFacilityType,
+            )[locale][context],
+          });
+          break;
+        case 'invalid':
+          fieldFormatErrors.push({
+            field: section,
+            message: errorMessages.invalidPhone(
+              section,
+              index,
+              recoveryFacilityType,
+            )[locale][context],
+          });
+          break;
+        default:
+          break;
+      }
+    });
+
+    return {
+      valid: false,
+      errors: { fieldFormatErrors },
+    };
+  }
+
+  return {
+    valid: true,
+    value: result.value,
+  };
+}
+
+function validateFaxNumberInternational(
+  faxNumber: string | undefined,
+): commonValidationResult<string | undefined> {
+  const trimmedFaxNumber = faxNumber?.trim();
+  if (trimmedFaxNumber && !regex.faxInternationalRegex.test(trimmedFaxNumber)) {
+    return {
+      valid: false,
+      errors: ['invalid'],
+    };
+  }
+
+  return {
+    valid: true,
+    value: !trimmedFaxNumber ? undefined : trimmedFaxNumber,
+  };
+}
+
+export function validateFaxNumber(
+  faxNumber: string | undefined,
+  section: Section,
+  locale: Locale = 'en',
+  context: Context = 'api',
+  index?: number,
+  recoveryFacilityType?: 'Laboratory' | 'InterimSite' | 'RecoveryFacility',
+): ValidationResult<string | undefined> {
+  let result: commonValidationResult<string | undefined>;
+  if (section === 'ExporterDetail' || section === 'CollectionDetail') {
+    result = commonValidationRules.validateFaxNumber(faxNumber);
+  } else {
+    result = validateFaxNumberInternational(faxNumber);
+  }
+
+  if (!result.valid) {
+    const fieldFormatErrors: FieldFormatError[] = [];
+    result.errors.forEach((e) => {
+      switch (e) {
+        case 'invalid':
+          fieldFormatErrors.push({
+            field: section,
+            message: errorMessages.invalidFax(
+              section,
+              index,
+              recoveryFacilityType,
+            )[locale][context],
+          });
+          break;
+        default:
+          break;
+      }
+    });
+
+    return {
+      valid: false,
+      errors: { fieldFormatErrors },
+    };
+  }
+
+  return {
+    valid: true,
+    value: result.value,
+  };
+}
+
+export function validateCarrierMeansOfTransport(
+  value: string,
+  locale: Locale = 'en',
+  context: Exclude<Context, 'ui' | 'api'> = 'csv',
+  index?: number,
+): ValidationResult<'Road' | 'Rail' | 'Sea' | 'Air' | 'InlandWaterways'> {
+  if (!value || !value.trim()) {
+    return {
+      valid: false,
+      errors: {
+        fieldFormatErrors: [
+          {
+            field: 'Carriers',
+            message: errorMessages.CarrierValidationErrorMessages(
+              locale,
+              context,
+              index,
+            ).emptyTransport,
+          },
+        ],
+      },
+    };
+  } else {
+    value =
+      value !== 'InlandWaterways'
+        ? commonValidationRules.titleCase(value).replace(/\s/g, '')
+        : value;
+    if (!carrierMeansOfTransport.includes(value)) {
+      return {
+        valid: false,
+        errors: {
+          fieldFormatErrors: [
+            {
+              field: 'Carriers',
+              message: errorMessages.CarrierValidationErrorMessages(
+                locale,
+                context,
+                index,
+              ).emptyTransport,
+            },
+          ],
+        },
+      };
+    }
+
+    return {
+      valid: true,
+      value: value as 'Road' | 'Rail' | 'Sea' | 'Air' | 'InlandWaterways',
+    };
+  }
+}
+
+export function validateCarrierMeansOfTransportDetails(
+  locale: Locale = 'en',
+  context: Exclude<Context, 'ui'> = 'api',
+  value?: string,
+  index?: number,
+): ValidationResult<string | undefined> {
+  value = value?.trim();
+  if (value && value.length > CarrierTransportDescriptionChar.max) {
+    return {
+      valid: false,
+      errors: {
+        fieldFormatErrors: [
+          {
+            field: 'Carriers',
+            message: errorMessages.CarrierValidationErrorMessages(
+              locale,
+              context,
+              index,
+            ).charTooManyTransportDescription,
+          },
+        ],
+      },
+    };
+  }
+
+  return {
+    valid: true,
+    value: !value ? undefined : value,
+  };
+}
+
 export function validateUkExitLocation(
   value?: string,
   locale: Locale = 'en',
@@ -290,14 +997,11 @@ export function validateUkExitLocation(
     if (value.length > UkExitLocationChar.max) {
       return {
         valid: false,
-        error: {
+        errors: {
           fieldFormatErrors: [
             {
               field: 'UkExitLocation',
-              message:
-                errorMessages.charTooManyUkExitLocation[locale][
-                  context as Exclude<Context, 'ui'>
-                ],
+              message: errorMessages.charTooManyUkExitLocation[locale][context],
             },
           ],
         },
@@ -307,7 +1011,7 @@ export function validateUkExitLocation(
     if (!regex.ukExitLocationRegex.test(value)) {
       return {
         valid: false,
-        error: {
+        errors: {
           fieldFormatErrors: [
             {
               field: 'UkExitLocation',
@@ -331,24 +1035,22 @@ export function validateUkExitLocation(
 }
 
 export function validateTransitCountries(
+  values: string[],
   countryList: Country[],
-  value?: string,
   locale: Locale = 'en',
   context: Context = 'api',
 ): ValidationResult<TransitCountry[]> {
   const countries: string[] = [];
-  value = value?.trim();
-  if (value) {
-    const countryArr = [...new Set(value.trim().toUpperCase().split(';'))];
-
-    for (let i = 0; i < countryArr.length; i++) {
+  if (values.length > 0) {
+    values = [...new Set(values.map((v) => v.toUpperCase().trim()))];
+    for (let i = 0; i < values.length; i++) {
       const filteredCountryList = countryList.filter((v) =>
-        v.name.toUpperCase().includes(countryArr[i].trim()),
+        v.name.toUpperCase().includes(values[i]),
       );
       if (filteredCountryList.length !== 1) {
         return {
           valid: false,
-          error: {
+          errors: {
             fieldFormatErrors: [
               {
                 field: 'TransitCountries',
@@ -369,7 +1071,7 @@ export function validateImporterDetailAndTransitCountriesCross(
   importerDetail: ImporterDetail | Partial<ImporterDetail>,
   transitCountries: TransitCountry[],
   locale: Locale = 'en',
-  context: Context = 'csv',
+  context: Context = 'api',
 ): ValidationResult<undefined> {
   if (
     transitCountries.some(
@@ -378,19 +1080,19 @@ export function validateImporterDetailAndTransitCountriesCross(
   ) {
     return {
       valid: false,
-      error: {
+      errors: {
         invalidStructureErrors: [
           {
             fields: ['ImporterDetail', 'TransitCountries'],
             message:
-              errorMessages.importerDetailsInvalidCrossSectionTransitCountry[
+              errorMessages.importerDetailInvalidCrossSectionTransitCountries[
                 locale
               ][context],
           },
           {
             fields: ['ImporterDetail', 'TransitCountries'],
             message:
-              errorMessages.transitCountriesInvalidCrossSectionTransitCountry[
+              errorMessages.transitCountriesInvalidCrossSectionImporterDetail[
                 locale
               ][context],
           },
@@ -399,5 +1101,58 @@ export function validateImporterDetailAndTransitCountriesCross(
       },
     };
   }
+
+  return { valid: true, value: undefined };
+}
+
+export function validateWasteCodeSubSectionAndCarriersCrossSection(
+  wasteCodeSubSection: WasteDescription['wasteCode'],
+  carrierTransportDetails: Carrier['transportDetails'][],
+  locale: Locale = 'en',
+  context: Exclude<Context, 'ui'> = 'api',
+): ValidationResult<undefined> {
+  if (
+    wasteCodeSubSection.type === 'NotApplicable' &&
+    carrierTransportDetails.length > 0
+  ) {
+    const errors: InvalidAttributeCombinationError[] = [];
+    const meansOfTransportProvided = Object.values(
+      carrierTransportDetails,
+    ).some((el) => el?.type.trim() !== undefined && el?.type.trim() !== '');
+    if (meansOfTransportProvided) {
+      errors.push({
+        fields: ['WasteDescription', 'Carriers'],
+        message:
+          errorMessages.invalidTransportCarriersCrossSection[locale][context],
+      });
+    }
+
+    const meansOfTransportDescriptionProvided = Object.values(
+      carrierTransportDetails,
+    ).some(
+      (el) =>
+        el?.description?.trim() !== undefined && el?.description?.trim() !== '',
+    );
+    if (meansOfTransportDescriptionProvided) {
+      errors.push({
+        fields: ['WasteDescription', 'Carriers'],
+        message:
+          errorMessages.invalidTransportDescriptionCarriersCrossSection[locale][
+            context
+          ],
+      });
+    }
+
+    if (errors.length > 0) {
+      return {
+        valid: false,
+        errors: {
+          invalidStructureErrors: errors,
+          fieldFormatErrors: [],
+        },
+      };
+    }
+  }
+
   return { valid: true, value: undefined };
 }

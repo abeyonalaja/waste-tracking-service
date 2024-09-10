@@ -2,6 +2,7 @@ export type {
   Field,
   FieldFormatError,
   InvalidAttributeCombinationError,
+  Section,
   ValidationResult,
 } from './dto';
 

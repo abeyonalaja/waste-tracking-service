@@ -200,37 +200,45 @@ describe('validateCustomerReferenceSection', () => {
       reference: '',
     });
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'CustomerReference',
-      message: validation.ReferenceValidationErrorMessages.empty,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'CustomerReference',
+        message: validation.ReferenceValidationErrorMessages.empty,
+      },
+    ]);
 
     response = validateCustomerReferenceSection({
       reference: '1',
     });
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'CustomerReference',
-      message: validation.ReferenceValidationErrorMessages.charTooFew,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'CustomerReference',
+        message: validation.ReferenceValidationErrorMessages.charTooFew,
+      },
+    ]);
 
     response = validateCustomerReferenceSection({
       reference: faker.string.sample(120),
     });
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'CustomerReference',
-      message: validation.ReferenceValidationErrorMessages.charTooMany,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'CustomerReference',
+        message: validation.ReferenceValidationErrorMessages.charTooMany,
+      },
+    ]);
 
     response = validateCustomerReferenceSection({
       reference: 'test-ref_',
     });
     expect(response.valid).toEqual(false);
-    expect(response.value).toEqual({
-      field: 'CustomerReference',
-      message: validation.ReferenceValidationErrorMessages.invalid,
-    });
+    expect(response.value).toEqual([
+      {
+        field: 'CustomerReference',
+        message: validation.ReferenceValidationErrorMessages.invalid,
+      },
+    ]);
   });
 });
 
@@ -4115,11 +4123,11 @@ describe('validateCarriersSection', () => {
   });
 
   const firstCarrierErrorMessages =
-    validation.CarrierValidationErrorMessages(1);
+    glwe.errorMessages.CarrierValidationErrorMessages(locale, context, 1);
   const secondCarrierErrorMessages =
-    validation.CarrierValidationErrorMessages(2);
+    glwe.errorMessages.CarrierValidationErrorMessages(locale, context, 2);
   const thirdCarrierErrorMessages =
-    validation.CarrierValidationErrorMessages(3);
+    glwe.errorMessages.CarrierValidationErrorMessages(locale, context, 3);
 
   it('fails Carriers section validation', async () => {
     let response = validateCarriersSection(
@@ -4622,14 +4630,16 @@ describe('validateWasteCodeSubSectionAndCarriersCrossSection', () => {
       {
         fields: ['WasteDescription', 'Carriers'],
         message:
-          validation.CarriersCrossSectionValidationErrorMessages
-            .invalidTransport,
+          glwe.errorMessages.invalidTransportCarriersCrossSection[locale][
+            context
+          ],
       },
       {
         fields: ['WasteDescription', 'Carriers'],
         message:
-          validation.CarriersCrossSectionValidationErrorMessages
-            .invalidTransportDescription,
+          glwe.errorMessages.invalidTransportDescriptionCarriersCrossSection[
+            locale
+          ][context],
       },
     ]);
   });
@@ -5065,14 +5075,14 @@ describe('validateImporterDetailAndTransitCountriesCrossSection', () => {
       {
         fields: ['ImporterDetail', 'TransitCountries'],
         message:
-          glwe.errorMessages.importerDetailsInvalidCrossSectionTransitCountry[
+          glwe.errorMessages.importerDetailInvalidCrossSectionTransitCountries[
             locale
           ][context],
       },
       {
         fields: ['ImporterDetail', 'TransitCountries'],
         message:
-          glwe.errorMessages.transitCountriesInvalidCrossSectionTransitCountry[
+          glwe.errorMessages.transitCountriesInvalidCrossSectionImporterDetail[
             locale
           ][context],
       },

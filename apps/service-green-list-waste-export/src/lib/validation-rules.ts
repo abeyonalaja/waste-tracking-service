@@ -56,60 +56,60 @@ const fourNationsCountries = [
   'Northern Ireland',
 ];
 
-const carrierMeansOfTransport = [
-  'Road',
-  'Rail',
-  'Sea',
-  'Air',
-  'InlandWaterways',
-];
-
 const locale = 'en';
 const context = 'csv';
 
 export function validateCustomerReferenceSection(
   value: CustomerReferenceFlattened,
 ):
-  | { valid: false; value: FieldFormatError }
+  | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: CustomerReference } {
   const trimmedReference = value.reference.trim();
   if (!trimmedReference) {
     return {
       valid: false,
-      value: {
-        field: 'CustomerReference',
-        message: validation.ReferenceValidationErrorMessages.empty,
-      },
+      value: [
+        {
+          field: 'CustomerReference',
+          message: validation.ReferenceValidationErrorMessages.empty,
+        },
+      ],
     };
   }
 
   if (trimmedReference.length === validation.ReferenceChar.min) {
     return {
       valid: false,
-      value: {
-        field: 'CustomerReference',
-        message: validation.ReferenceValidationErrorMessages.charTooFew,
-      },
+      value: [
+        {
+          field: 'CustomerReference',
+          message: validation.ReferenceValidationErrorMessages.charTooFew,
+        },
+      ],
     };
   }
 
   if (trimmedReference.length > validation.ReferenceChar.max) {
     return {
       valid: false,
-      value: {
-        field: 'CustomerReference',
-        message: validation.ReferenceValidationErrorMessages.charTooMany,
-      },
+      value: [
+        {
+          field: 'CustomerReference',
+          message: validation.ReferenceValidationErrorMessages.charTooMany,
+        },
+      ],
     };
   }
 
   if (!validation.referenceRegex.test(trimmedReference)) {
     return {
       valid: false,
-      value: {
-        field: 'CustomerReference',
-        message: validation.ReferenceValidationErrorMessages.invalid,
-      },
+      value: [
+        {
+          field: 'CustomerReference',
+          message: validation.ReferenceValidationErrorMessages.invalid,
+        },
+      ],
     };
   }
   return { valid: true, value: trimmedReference };
@@ -189,7 +189,7 @@ export function validateWasteCodeSubSection(
     if (!wasteCodeValidationResult.valid) {
       return {
         valid: false,
-        value: wasteCodeValidationResult.error.fieldFormatErrors,
+        value: wasteCodeValidationResult.errors.fieldFormatErrors,
       };
     } else {
       wasteCode = wasteCodeValidationResult.value;
@@ -208,7 +208,7 @@ export function validateWasteCodeSubSection(
     if (!wasteCodeValidationResult.valid) {
       return {
         valid: false,
-        value: wasteCodeValidationResult.error.fieldFormatErrors,
+        value: wasteCodeValidationResult.errors.fieldFormatErrors,
       };
     } else {
       wasteCode = wasteCodeValidationResult.value;
@@ -227,7 +227,7 @@ export function validateWasteCodeSubSection(
     if (!wasteCodeValidationResult.valid) {
       return {
         valid: false,
-        value: wasteCodeValidationResult.error.fieldFormatErrors,
+        value: wasteCodeValidationResult.errors.fieldFormatErrors,
       };
     } else {
       wasteCode = wasteCodeValidationResult.value;
@@ -246,7 +246,7 @@ export function validateWasteCodeSubSection(
     if (!wasteCodeValidationResult.valid) {
       return {
         valid: false,
-        value: wasteCodeValidationResult.error.fieldFormatErrors,
+        value: wasteCodeValidationResult.errors.fieldFormatErrors,
       };
     } else {
       wasteCode = wasteCodeValidationResult.value;
@@ -301,7 +301,7 @@ export function validateWasteDescriptionSubSection(
     );
 
     if (!ewcCodesValidationResult.valid) {
-      errors.push(...ewcCodesValidationResult.error.fieldFormatErrors);
+      errors.push(...ewcCodesValidationResult.errors.fieldFormatErrors);
     } else {
       ewcCodes = ewcCodesValidationResult.value;
     }
@@ -315,7 +315,7 @@ export function validateWasteDescriptionSubSection(
       context,
     );
   if (!nationalCodeValidationResult.valid) {
-    errors.push(...nationalCodeValidationResult.error.fieldFormatErrors);
+    errors.push(...nationalCodeValidationResult.errors.fieldFormatErrors);
   } else {
     nationalCode = nationalCodeValidationResult.value;
   }
@@ -327,7 +327,7 @@ export function validateWasteDescriptionSubSection(
       context,
     );
   if (!descriptionValidationResult.valid) {
-    errors.push(...descriptionValidationResult.error.fieldFormatErrors);
+    errors.push(...descriptionValidationResult.errors.fieldFormatErrors);
   } else {
     value.wasteDescription = descriptionValidationResult.value;
   }
@@ -695,7 +695,7 @@ export function validateExporterDetailSection(
 
   if (
     value.exporterPostcode &&
-    !validation.postcodeRegex.test(value.exporterPostcode)
+    !commonValidation.commonRegex.postcodeRegex.test(value.exporterPostcode)
   ) {
     errors.push({
       field: 'ExporterDetail',
@@ -728,7 +728,11 @@ export function validateExporterDetailSection(
       message: validation.ExporterDetailValidationErrorMessages.emptyPhone,
     });
   } else {
-    if (!validation.phoneRegex.test(reformattedExporterContactPhoneNumber)) {
+    if (
+      !commonValidation.commonRegex.phoneRegex.test(
+        reformattedExporterContactPhoneNumber,
+      )
+    ) {
       errors.push({
         field: 'ExporterDetail',
         message: validation.ExporterDetailValidationErrorMessages.invalidPhone,
@@ -742,7 +746,7 @@ export function validateExporterDetailSection(
   );
   if (
     reformattedExporterFaxNumber &&
-    !validation.faxRegex.test(reformattedExporterFaxNumber)
+    !commonValidation.commonRegex.faxRegex.test(reformattedExporterFaxNumber)
   ) {
     errors.push({
       field: 'ExporterDetail',
@@ -763,7 +767,11 @@ export function validateExporterDetailSection(
           validation.ExporterDetailValidationErrorMessages.charTooManyEmail,
       });
     } else {
-      if (!validation.emailRegex.test(value.exporterEmailAddress)) {
+      if (
+        !commonValidation.commonRegex.emailRegex.test(
+          value.exporterEmailAddress,
+        )
+      ) {
         errors.push({
           field: 'ExporterDetail',
           message:
@@ -893,7 +901,7 @@ export function validateImporterDetailSection(
     });
   } else {
     if (
-      !validation.phoneInternationalRegex.test(
+      !glwe.regex.phoneInternationalRegex.test(
         reformattedImporterContactPhoneNumber,
       )
     ) {
@@ -910,7 +918,7 @@ export function validateImporterDetailSection(
   );
   if (
     reformattedImporterFaxNumber &&
-    !validation.faxInternationalRegex.test(reformattedImporterFaxNumber)
+    !glwe.regex.faxInternationalRegex.test(reformattedImporterFaxNumber)
   ) {
     errors.push({
       field: 'ImporterDetail',
@@ -931,7 +939,11 @@ export function validateImporterDetailSection(
           validation.ImporterDetailValidationErrorMessages.charTooManyEmail,
       });
     } else {
-      if (!validation.emailRegex.test(value.importerEmailAddress)) {
+      if (
+        !commonValidation.commonRegex.emailRegex.test(
+          value.importerEmailAddress,
+        )
+      ) {
         errors.push({
           field: 'ImporterDetail',
           message:
@@ -1067,6 +1079,7 @@ export function validateCarriersSection(
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: Carrier[] } {
+  const section = 'Carriers';
   const carriersArr = [
     {
       carrierOrganisationName: value.firstCarrierOrganisationName,
@@ -1149,165 +1162,154 @@ export function validateCarriersSection(
     }
 
     let errorCount = 0;
-    const errorMessages = validation.CarrierValidationErrorMessages(index);
 
-    if (!c.carrierOrganisationName || !c.carrierOrganisationName.trim()) {
-      errorCount += 1;
-      errors.push({
-        field: 'Carriers',
-        message: errorMessages.emptyOrganisationName,
-      });
-    } else {
-      if (c.carrierOrganisationName.length > validation.FreeTextChar.max) {
-        errorCount += 1;
-        errors.push({
-          field: 'Carriers',
-          message: errorMessages.charTooManyOrganisationName,
-        });
-      }
-    }
-
-    if (!c.carrierAddress || !c.carrierAddress.trim()) {
-      errorCount += 1;
-      errors.push({
-        field: 'Carriers',
-        message: errorMessages.emptyAddress,
-      });
-    } else {
-      if (c.carrierAddress.length > validation.FreeTextChar.max) {
-        errorCount += 1;
-        errors.push({
-          field: 'Carriers',
-          message: errorMessages.charTooManyAddress,
-        });
-      }
-    }
-
-    if (!c.carrierCountry) {
-      errorCount += 1;
-      errors.push({
-        field: 'Carriers',
-        message: errorMessages.emptyCountry,
-      });
-    } else {
-      const filteredCountryList = countryIncludingUkList.filter((country) =>
-        country.name.toUpperCase().includes(c.carrierCountry.toUpperCase()),
+    const organisationNameValidationResult =
+      glwe.validationRules.validateOrganisationName(
+        c.carrierOrganisationName,
+        section,
+        locale,
+        context,
+        index,
       );
-      if (filteredCountryList.length !== 1) {
-        errorCount += 1;
-        errors.push({
-          field: 'Carriers',
-          message: errorMessages.invalidCountry,
-        });
-      } else {
-        c.carrierCountry = filteredCountryList[0].name;
-      }
-    }
 
-    if (!c.carrierContactFullName || !c.carrierContactFullName.trim()) {
-      errorCount += 1;
-      errors.push({
-        field: 'Carriers',
-        message: errorMessages.emptyContactFullName,
-      });
+    if (!organisationNameValidationResult.valid) {
+      errorCount +=
+        organisationNameValidationResult.errors.fieldFormatErrors.length;
+      errors.push(...organisationNameValidationResult.errors.fieldFormatErrors);
     } else {
-      if (c.carrierContactFullName.length > validation.FreeTextChar.max) {
-        errorCount += 1;
-        errors.push({
-          field: 'Carriers',
-          message: errorMessages.charTooManyContactFullName,
-        });
-      }
+      c.carrierOrganisationName = organisationNameValidationResult.value;
     }
 
-    const reformattedCarrierContactPhoneNumber =
-      c.carrierContactPhoneNumber.replace(/'/g, '');
-    if (!reformattedCarrierContactPhoneNumber) {
-      errorCount += 1;
-      errors.push({
-        field: 'Carriers',
-        message: errorMessages.emptyPhone,
-      });
+    const addressValidationResult = glwe.validationRules.validateAddress(
+      c.carrierAddress,
+      section,
+      locale,
+      context,
+      index,
+    );
+
+    if (!addressValidationResult.valid) {
+      errorCount += addressValidationResult.errors.fieldFormatErrors.length;
+      errors.push(...addressValidationResult.errors.fieldFormatErrors);
     } else {
-      if (
-        !validation.phoneInternationalRegex.test(
-          reformattedCarrierContactPhoneNumber,
-        )
-      ) {
-        errorCount += 1;
-        errors.push({
-          field: 'Carriers',
-          message: errorMessages.invalidPhone,
-        });
-      }
+      c.carrierAddress = addressValidationResult.value;
     }
 
-    const reformattedCarrierFaxNumber = c.carrierFaxNumber.replace(/'/g, '');
-    if (
-      reformattedCarrierFaxNumber &&
-      !validation.faxInternationalRegex.test(reformattedCarrierFaxNumber)
-    ) {
-      errorCount += 1;
-      errors.push({
-        field: 'Carriers',
-        message: errorMessages.invalidFax,
-      });
-    }
+    const countryValidationResult = glwe.validationRules.validateCountry(
+      c.carrierCountry,
+      section,
+      locale,
+      context,
+      countryIncludingUkList,
+      index,
+    );
 
-    if (!c.carrierEmailAddress) {
-      errorCount += 1;
-      errors.push({
-        field: 'Carriers',
-        message: errorMessages.emptyEmail,
-      });
+    if (!countryValidationResult.valid) {
+      errorCount += countryValidationResult.errors.fieldFormatErrors.length;
+      errors.push(...countryValidationResult.errors.fieldFormatErrors);
     } else {
-      if (c.carrierEmailAddress.length > validation.FreeTextChar.max) {
-        errorCount += 1;
-        errors.push({
-          field: 'Carriers',
-          message: errorMessages.charTooManyEmail,
-        });
-      } else {
-        if (!validation.emailRegex.test(c.carrierEmailAddress)) {
-          errorCount += 1;
-          errors.push({
-            field: 'Carriers',
-            message: errorMessages.invalidEmail,
-          });
-        }
-      }
+      c.carrierCountry = countryValidationResult.value;
+    }
+
+    const contactFullNameValidationResult =
+      glwe.validationRules.validateFullName(
+        c.carrierContactFullName,
+        section,
+        locale,
+        context,
+        index,
+      );
+
+    if (!contactFullNameValidationResult.valid) {
+      errorCount +=
+        contactFullNameValidationResult.errors.fieldFormatErrors.length;
+      errors.push(...contactFullNameValidationResult.errors.fieldFormatErrors);
+    } else {
+      c.carrierContactFullName = contactFullNameValidationResult.value;
+    }
+
+    const phoneValidationResult = glwe.validationRules.validatePhoneNumber(
+      c.carrierContactPhoneNumber.replace(/'/g, ''),
+      section,
+      locale,
+      context,
+      index,
+    );
+
+    if (!phoneValidationResult.valid) {
+      errorCount += phoneValidationResult.errors.fieldFormatErrors.length;
+      errors.push(...phoneValidationResult.errors.fieldFormatErrors);
+    } else {
+      c.carrierContactPhoneNumber = phoneValidationResult.value;
+    }
+
+    const faxValidationResult = glwe.validationRules.validateFaxNumber(
+      c.carrierFaxNumber.replace(/'/g, ''),
+      section,
+      locale,
+      context,
+      index,
+    );
+
+    if (!faxValidationResult.valid) {
+      errorCount += faxValidationResult.errors.fieldFormatErrors.length;
+      errors.push(...faxValidationResult.errors.fieldFormatErrors);
+    } else {
+      c.carrierFaxNumber = faxValidationResult.value ?? '';
+    }
+
+    const emailValidationResult = glwe.validationRules.validateEmailAddress(
+      c.carrierEmailAddress,
+      section,
+      locale,
+      context,
+      index,
+    );
+
+    if (!emailValidationResult.valid) {
+      errorCount += emailValidationResult.errors.fieldFormatErrors.length;
+      errors.push(...emailValidationResult.errors.fieldFormatErrors);
+    } else {
+      c.carrierEmailAddress = emailValidationResult.value;
     }
 
     if (transport) {
-      if (!c.carrierMeansOfTransport || !c.carrierMeansOfTransport.trim()) {
-        errorCount += 1;
-        errors.push({
-          field: 'Carriers',
-          message: errorMessages.emptyTransport,
-        });
-      } else {
-        c.carrierMeansOfTransport = titleCase(
+      const meansOfTransportValidationResult =
+        glwe.validationRules.validateCarrierMeansOfTransport(
           c.carrierMeansOfTransport,
-        ).replace(/\s/g, '');
-        if (!carrierMeansOfTransport.includes(c.carrierMeansOfTransport)) {
-          errorCount += 1;
-          errors.push({
-            field: 'Carriers',
-            message: errorMessages.emptyTransport,
-          });
-        }
+          locale,
+          context,
+          index,
+        );
+
+      if (!meansOfTransportValidationResult.valid) {
+        errorCount +=
+          meansOfTransportValidationResult.errors.fieldFormatErrors.length;
+        errors.push(
+          ...meansOfTransportValidationResult.errors.fieldFormatErrors,
+        );
+      } else {
+        c.carrierMeansOfTransport = meansOfTransportValidationResult.value;
       }
 
-      if (
-        c.carrierMeansOfTransportDetails &&
-        c.carrierMeansOfTransportDetails.length >
-          validation.CarrierTransportDescriptionChar.max
-      ) {
-        errorCount += 1;
-        errors.push({
-          field: 'Carriers',
-          message: errorMessages.charTooManyTransportDescription,
-        });
+      const meansOfTransportDetailsValidationResult =
+        glwe.validationRules.validateCarrierMeansOfTransportDetails(
+          locale,
+          context,
+          c.carrierMeansOfTransportDetails,
+          index,
+        );
+
+      if (!meansOfTransportDetailsValidationResult.valid) {
+        errorCount +=
+          meansOfTransportDetailsValidationResult.errors.fieldFormatErrors
+            .length;
+        errors.push(
+          ...meansOfTransportDetailsValidationResult.errors.fieldFormatErrors,
+        );
+      } else {
+        c.carrierMeansOfTransportDetails =
+          meansOfTransportDetailsValidationResult.value ?? '';
       }
     }
 
@@ -1321,10 +1323,8 @@ export function validateCarriersSection(
         contactDetails: {
           fullName: c.carrierContactFullName,
           emailAddress: c.carrierEmailAddress,
-          phoneNumber: reformattedCarrierContactPhoneNumber,
-          faxNumber: !reformattedCarrierFaxNumber
-            ? undefined
-            : reformattedCarrierFaxNumber,
+          phoneNumber: c.carrierContactPhoneNumber,
+          faxNumber: !c.carrierFaxNumber ? undefined : c.carrierFaxNumber,
         },
         transportDetails: !transport
           ? undefined
@@ -1362,44 +1362,66 @@ export function validateWasteCodeSubSectionAndCarriersCrossSection(
 ):
   | { valid: false; value: InvalidAttributeCombinationError[] }
   | { valid: true } {
-  if (wasteCodeSubSection.type === 'NotApplicable') {
-    const errors: InvalidAttributeCombinationError[] = [];
-    if (
-      carriers.firstCarrierMeansOfTransport?.trim() ||
-      carriers.secondCarrierMeansOfTransport?.trim() ||
-      carriers.thirdCarrierMeansOfTransport?.trim() ||
-      carriers.fourthCarrierMeansOfTransport?.trim() ||
-      carriers.fifthCarrierMeansOfTransport?.trim()
-    ) {
-      errors.push({
-        fields: ['WasteDescription', 'Carriers'],
-        message:
-          validation.CarriersCrossSectionValidationErrorMessages
-            .invalidTransport,
-      });
-    }
+  const transportValidationResult =
+    glwe.validationRules.validateWasteCodeSubSectionAndCarriersCrossSection(
+      wasteCodeSubSection,
+      [
+        {
+          type: carriers.firstCarrierMeansOfTransport as
+            | 'Road'
+            | 'Air'
+            | 'Sea'
+            | 'Rail'
+            | 'InlandWaterways',
+          description: carriers.firstCarrierMeansOfTransportDetails,
+        },
+        {
+          type: carriers.secondCarrierMeansOfTransport as
+            | 'Road'
+            | 'Air'
+            | 'Sea'
+            | 'Rail'
+            | 'InlandWaterways',
+          description: carriers.secondCarrierMeansOfTransportDetails,
+        },
+        {
+          type: carriers.thirdCarrierMeansOfTransport as
+            | 'Road'
+            | 'Air'
+            | 'Sea'
+            | 'Rail'
+            | 'InlandWaterways',
+          description: carriers.thirdCarrierMeansOfTransportDetails,
+        },
+        {
+          type: carriers.fourthCarrierMeansOfTransport as
+            | 'Road'
+            | 'Air'
+            | 'Sea'
+            | 'Rail'
+            | 'InlandWaterways',
+          description: carriers.fourthCarrierMeansOfTransportDetails,
+        },
+        {
+          type: carriers.fifthCarrierMeansOfTransport as
+            | 'Road'
+            | 'Air'
+            | 'Sea'
+            | 'Rail'
+            | 'InlandWaterways',
+          description: carriers.fifthCarrierMeansOfTransportDetails,
+        },
+      ],
+    );
 
-    if (
-      carriers.firstCarrierMeansOfTransportDetails?.trim() ||
-      carriers.secondCarrierMeansOfTransportDetails?.trim() ||
-      carriers.thirdCarrierMeansOfTransportDetails?.trim() ||
-      carriers.fourthCarrierMeansOfTransportDetails?.trim() ||
-      carriers.fifthCarrierMeansOfTransportDetails?.trim()
-    ) {
-      errors.push({
-        fields: ['WasteDescription', 'Carriers'],
-        message:
-          validation.CarriersCrossSectionValidationErrorMessages
-            .invalidTransportDescription,
-      });
-    }
-
-    if (errors.length > 0) {
-      return {
-        valid: false,
-        value: errors,
-      };
-    }
+  if (
+    !transportValidationResult.valid &&
+    transportValidationResult.errors.invalidStructureErrors
+  ) {
+    return {
+      valid: false,
+      value: transportValidationResult.errors.invalidStructureErrors,
+    };
   }
 
   return {
@@ -1505,7 +1527,9 @@ export function validateCollectionDetailSection(
 
   if (
     value.wasteCollectionPostcode &&
-    !validation.postcodeRegex.test(value.wasteCollectionPostcode)
+    !commonValidation.commonRegex.postcodeRegex.test(
+      value.wasteCollectionPostcode,
+    )
   ) {
     errors.push({
       field: 'CollectionDetail',
@@ -1545,7 +1569,9 @@ export function validateCollectionDetailSection(
     });
   } else {
     if (
-      !validation.phoneRegex.test(reformattedwasteCollectionContactPhoneNumber)
+      !commonValidation.commonRegex.phoneRegex.test(
+        reformattedwasteCollectionContactPhoneNumber,
+      )
     ) {
       errors.push({
         field: 'CollectionDetail',
@@ -1559,7 +1585,9 @@ export function validateCollectionDetailSection(
     value.wasteCollectionFaxNumber.replace(/'/g, '');
   if (
     reformattedwasteCollectionFaxNumber &&
-    !validation.faxRegex.test(reformattedwasteCollectionFaxNumber)
+    !commonValidation.commonRegex.faxRegex.test(
+      reformattedwasteCollectionFaxNumber,
+    )
   ) {
     errors.push({
       field: 'CollectionDetail',
@@ -1582,7 +1610,11 @@ export function validateCollectionDetailSection(
           validation.CollectionDetailValidationErrorMessages.charTooManyEmail,
       });
     } else {
-      if (!validation.emailRegex.test(value.wasteCollectionEmailAddress)) {
+      if (
+        !commonValidation.commonRegex.emailRegex.test(
+          value.wasteCollectionEmailAddress,
+        )
+      ) {
         errors.push({
           field: 'CollectionDetail',
           message:
@@ -1641,7 +1673,7 @@ export function validateUkExitLocationSection(
   if (!ukExitLocationValidationResult.valid) {
     return {
       valid: false,
-      value: ukExitLocationValidationResult.error.fieldFormatErrors,
+      value: ukExitLocationValidationResult.errors.fieldFormatErrors,
     };
   }
 
@@ -1659,8 +1691,10 @@ export function validateTransitCountriesSection(
   | { valid: true; value: TransitCountries } {
   const transitCountriesValidationResult =
     glwe.validationRules.validateTransitCountries(
+      value.transitCountries && value.transitCountries.trim()
+        ? [...new Set(value.transitCountries.trim().toUpperCase().split(';'))]
+        : [],
       countryList,
-      value.transitCountries,
       locale,
       context,
     );
@@ -1668,7 +1702,7 @@ export function validateTransitCountriesSection(
   if (!transitCountriesValidationResult.valid) {
     return {
       valid: false,
-      value: transitCountriesValidationResult.error.fieldFormatErrors,
+      value: transitCountriesValidationResult.errors.fieldFormatErrors,
     };
   }
 
@@ -1694,11 +1728,12 @@ export function validateImporterDetailAndTransitCountriesCrossSection(
 
   if (
     !transitCountriesCrossValidationResult.valid &&
-    transitCountriesCrossValidationResult.error.invalidStructureErrors
+    transitCountriesCrossValidationResult.errors.invalidStructureErrors
   ) {
     return {
       valid: false,
-      value: transitCountriesCrossValidationResult.error.invalidStructureErrors,
+      value:
+        transitCountriesCrossValidationResult.errors.invalidStructureErrors,
     };
   }
 
@@ -1828,7 +1863,7 @@ function validateRecoveryFacilityEntry(
         message: errorMessages.emptyPhone,
       });
     } else {
-      if (!validation.phoneInternationalRegex.test(v.contactPhoneNumber)) {
+      if (!glwe.regex.phoneInternationalRegex.test(v.contactPhoneNumber)) {
         errorCount += 1;
         errors.push({
           field: 'RecoveryFacilityDetail',
@@ -1838,7 +1873,7 @@ function validateRecoveryFacilityEntry(
     }
 
     v.faxNumber = v.faxNumber.replace(/'/g, '');
-    if (v.faxNumber && !validation.faxInternationalRegex.test(v.faxNumber)) {
+    if (v.faxNumber && !glwe.regex.faxInternationalRegex.test(v.faxNumber)) {
       errorCount += 1;
       errors.push({
         field: 'RecoveryFacilityDetail',
@@ -1860,7 +1895,7 @@ function validateRecoveryFacilityEntry(
           message: errorMessages.charTooManyEmail,
         });
       } else {
-        if (!validation.emailRegex.test(v.emailAddress)) {
+        if (!commonValidation.commonRegex.emailRegex.test(v.emailAddress)) {
           errorCount += 1;
           errors.push({
             field: 'RecoveryFacilityDetail',

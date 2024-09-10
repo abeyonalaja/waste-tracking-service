@@ -4,7 +4,6 @@ import {
   draft as api,
   validation,
 } from '@wts/api/green-list-waste-export';
-
 import { fromBoom, success } from '@wts/util/invocation';
 import { v4 as uuidv4 } from 'uuid';
 import { Logger } from 'winston';
@@ -39,6 +38,9 @@ export type Handler<Request, Response> = (
   request: Request,
 ) => Promise<Response>;
 
+const locale = 'en';
+const context = 'api';
+
 const draftContainerName = 'drafts';
 const submissionContainerName = 'submissions';
 
@@ -48,6 +50,7 @@ export default class DraftController {
     private wasteCodeList: WasteCodeType[],
     private ewcCodeList: WasteCode[],
     private countryList: Country[],
+    private countryIncludingUkList: Country[],
     private logger: Logger,
   ) {}
 
@@ -286,7 +289,7 @@ export default class DraftController {
               );
             if (!wasteCodeValidationResult.valid) {
               errors.fieldFormatErrors.push(
-                ...wasteCodeValidationResult.error.fieldFormatErrors,
+                ...wasteCodeValidationResult.errors.fieldFormatErrors,
               );
             } else {
               value.wasteCode = wasteCodeValidationResult.value;
@@ -304,7 +307,7 @@ export default class DraftController {
 
             if (!wasteCodeValidationResult.valid) {
               errors.fieldFormatErrors.push(
-                ...wasteCodeValidationResult.error.fieldFormatErrors,
+                ...wasteCodeValidationResult.errors.fieldFormatErrors,
               );
             } else {
               value.wasteCode = wasteCodeValidationResult.value;
@@ -325,7 +328,7 @@ export default class DraftController {
 
           if (!ewcCodesValidationResult.valid) {
             errors.fieldFormatErrors.push(
-              ...ewcCodesValidationResult.error.fieldFormatErrors,
+              ...ewcCodesValidationResult.errors.fieldFormatErrors,
             );
           } else {
             value.ewcCodes = ewcCodesValidationResult.value;
@@ -342,7 +345,7 @@ export default class DraftController {
 
           if (!nationalCodeValidationResult.valid) {
             errors.fieldFormatErrors.push(
-              ...nationalCodeValidationResult.error.fieldFormatErrors,
+              ...nationalCodeValidationResult.errors.fieldFormatErrors,
             );
           } else {
             value.nationalCode = nationalCodeValidationResult.value;
@@ -355,7 +358,7 @@ export default class DraftController {
 
           if (!descriptionValidationResult.valid) {
             errors.fieldFormatErrors.push(
-              ...descriptionValidationResult.error.fieldFormatErrors,
+              ...descriptionValidationResult.errors.fieldFormatErrors,
             );
           } else {
             value.description = descriptionValidationResult.value;
@@ -670,7 +673,7 @@ export default class DraftController {
         if (!transitCountriesCrossValidationResult.valid) {
           const boom = Boom.badRequest(
             'Validation failed',
-            transitCountriesCrossValidationResult.error,
+            transitCountriesCrossValidationResult.errors,
           );
           return fromBoom(boom);
         }
@@ -898,10 +901,12 @@ export default class DraftController {
       }
 
       if (draft.carriers.status !== 'NotStarted') {
-        if (draft.carriers.values.length === validation.CarrierLength.max) {
+        if (
+          draft.carriers.values.length === glwe.constraints.CarrierLength.max
+        ) {
           return fromBoom(
             Boom.badRequest(
-              `Cannot add more than ${validation.CarrierLength.max} carriers`,
+              `Cannot add more than ${glwe.constraints.CarrierLength.max} carriers`,
             ),
           );
         }
@@ -965,6 +970,164 @@ export default class DraftController {
     api.SetDraftCarriersResponse
   > = async ({ id, accountId, carrierId, value }) => {
     try {
+      if (value.status !== 'NotStarted') {
+        const errors = {
+          fieldFormatErrors: [] as FieldFormatError[],
+        };
+        let index = 0;
+        value.values.forEach((v) => {
+          const section = 'Carriers';
+          index += 1;
+          if (v.addressDetails) {
+            const organisationNameValidationResult =
+              glwe.validationRules.validateOrganisationName(
+                v.addressDetails.organisationName,
+                section,
+                locale,
+                context,
+                index,
+              );
+
+            if (!organisationNameValidationResult.valid) {
+              errors.fieldFormatErrors.push(
+                ...organisationNameValidationResult.errors.fieldFormatErrors,
+              );
+            } else {
+              v.addressDetails.organisationName =
+                organisationNameValidationResult.value;
+            }
+
+            const addressValidationResult =
+              glwe.validationRules.validateAddress(
+                v.addressDetails.address,
+                section,
+                locale,
+                context,
+                index,
+              );
+
+            if (!addressValidationResult.valid) {
+              errors.fieldFormatErrors.push(
+                ...addressValidationResult.errors.fieldFormatErrors,
+              );
+            } else {
+              v.addressDetails.address = addressValidationResult.value;
+            }
+
+            const countryValidationResult =
+              glwe.validationRules.validateCountry(
+                v.addressDetails.country,
+                section,
+                locale,
+                context,
+                this.countryIncludingUkList,
+                index,
+              );
+
+            if (!countryValidationResult.valid) {
+              errors.fieldFormatErrors.push(
+                ...countryValidationResult.errors.fieldFormatErrors,
+              );
+            } else {
+              v.addressDetails.country = countryValidationResult.value;
+            }
+          }
+
+          if (v.contactDetails) {
+            const contactFullNameValidationResult =
+              glwe.validationRules.validateFullName(
+                v.contactDetails.fullName,
+                section,
+                locale,
+                context,
+                index,
+              );
+
+            if (!contactFullNameValidationResult.valid) {
+              errors.fieldFormatErrors.push(
+                ...contactFullNameValidationResult.errors.fieldFormatErrors,
+              );
+            } else {
+              v.contactDetails.fullName = contactFullNameValidationResult.value;
+            }
+
+            const phoneValidationResult =
+              glwe.validationRules.validatePhoneNumber(
+                v.contactDetails.phoneNumber,
+                section,
+                locale,
+                context,
+                index,
+              );
+
+            if (!phoneValidationResult.valid) {
+              errors.fieldFormatErrors.push(
+                ...phoneValidationResult.errors.fieldFormatErrors,
+              );
+            } else {
+              v.contactDetails.phoneNumber = phoneValidationResult.value;
+            }
+
+            const faxValidationResult = glwe.validationRules.validateFaxNumber(
+              v.contactDetails.faxNumber,
+              section,
+              locale,
+              context,
+              index,
+            );
+
+            if (!faxValidationResult.valid) {
+              errors.fieldFormatErrors.push(
+                ...faxValidationResult.errors.fieldFormatErrors,
+              );
+            } else {
+              v.contactDetails.faxNumber = faxValidationResult.value;
+            }
+
+            const emailValidationResult =
+              glwe.validationRules.validateEmailAddress(
+                v.contactDetails.emailAddress,
+                section,
+                locale,
+                context,
+                index,
+              );
+
+            if (!emailValidationResult.valid) {
+              errors.fieldFormatErrors.push(
+                ...emailValidationResult.errors.fieldFormatErrors,
+              );
+            } else {
+              v.contactDetails.emailAddress = emailValidationResult.value;
+            }
+          }
+
+          if (value.transport && v.transportDetails) {
+            const meansOfTransportDetailsValidationResult =
+              glwe.validationRules.validateCarrierMeansOfTransportDetails(
+                locale,
+                context,
+                v.transportDetails.description,
+                index,
+              );
+
+            if (!meansOfTransportDetailsValidationResult.valid) {
+              errors.fieldFormatErrors.push(
+                ...meansOfTransportDetailsValidationResult.errors
+                  .fieldFormatErrors,
+              );
+            } else {
+              v.transportDetails.description =
+                meansOfTransportDetailsValidationResult.value;
+            }
+          }
+        });
+
+        if (errors.fieldFormatErrors.length > 0) {
+          return fromBoom(Boom.badRequest('Validation failed', errors));
+        }
+      }
+
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
@@ -976,6 +1139,30 @@ export default class DraftController {
 
       if (draft.carriers.status === 'NotStarted') {
         return fromBoom(Boom.notFound());
+      }
+
+      if (
+        draft.wasteDescription.status !== 'NotStarted' &&
+        draft.wasteDescription.wasteCode &&
+        value.status !== 'NotStarted'
+      ) {
+        const transportValidationResult =
+          glwe.validationRules.validateWasteCodeSubSectionAndCarriersCrossSection(
+            draft.wasteDescription.wasteCode,
+            value.values.map((v) => v.transportDetails),
+          );
+
+        if (!transportValidationResult.valid) {
+          return fromBoom(
+            Boom.badRequest(
+              'Validation failed',
+              transportValidationResult.errors,
+            ),
+          );
+        } else {
+          value.transport =
+            draft.wasteDescription.wasteCode.type !== 'NotApplicable';
+        }
       }
 
       if (value.status === 'NotStarted') {
@@ -1161,7 +1348,7 @@ export default class DraftController {
     api.SetDraftUkExitLocationResponse
   > = async ({ id, accountId, value }) => {
     try {
-      if (value.status === 'Complete') {
+      if (value.status !== 'NotStarted') {
         const ukExitLocationValidationResult =
           glwe.validationRules.validateUkExitLocation(
             'value' in value.exitLocation &&
@@ -1169,12 +1356,16 @@ export default class DraftController {
               ? value.exitLocation.value
               : undefined,
           );
+
         if (!ukExitLocationValidationResult.valid) {
-          const boom = Boom.badRequest(
-            'Validation failed',
-            ukExitLocationValidationResult.error,
+          return fromBoom(
+            Boom.badRequest(
+              'Validation failed',
+              ukExitLocationValidationResult.errors,
+            ),
           );
-          return fromBoom(boom);
+        } else {
+          value.exitLocation = ukExitLocationValidationResult.value;
         }
       }
 
@@ -1183,8 +1374,8 @@ export default class DraftController {
         id,
         accountId,
       )) as DraftSubmission;
-      draft.ukExitLocation = value;
 
+      draft.ukExitLocation = value;
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
       draft.submissionState.timestamp = new Date();
@@ -1231,20 +1422,25 @@ export default class DraftController {
     api.SetDraftTransitCountriesResponse
   > = async ({ id, accountId, value }) => {
     try {
-      if (value.status === 'Started' || value.status === 'Complete') {
+      if (value.status !== 'NotStarted') {
         const transitCountriesValidationResult =
           glwe.validationRules.validateTransitCountries(
+            value.values,
             this.countryList,
-            value.values.toString().replace(/,/g, ';'),
           );
+
         if (!transitCountriesValidationResult.valid) {
-          const boom = Boom.badRequest(
-            'Validation failed',
-            transitCountriesValidationResult.error,
+          return fromBoom(
+            Boom.badRequest(
+              'Validation failed',
+              transitCountriesValidationResult.errors,
+            ),
           );
-          return fromBoom(boom);
+        } else {
+          value.values = transitCountriesValidationResult.value;
         }
       }
+
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
@@ -1252,21 +1448,22 @@ export default class DraftController {
       )) as DraftSubmission;
 
       if (
-        (draft.importerDetail.status === 'Started' ||
-          draft.importerDetail.status === 'Complete') &&
-        (value.status === 'Started' || value.status === 'Complete')
+        draft.importerDetail.status !== 'NotStarted' &&
+        value.status !== 'NotStarted'
       ) {
         const transitCountriesCrossValidationResult =
           glwe.validationRules.validateImporterDetailAndTransitCountriesCross(
             draft.importerDetail,
             value.values,
           );
+
         if (!transitCountriesCrossValidationResult.valid) {
-          const boom = Boom.badRequest(
-            'Validation failed',
-            transitCountriesCrossValidationResult.error,
+          return fromBoom(
+            Boom.badRequest(
+              'Validation failed',
+              transitCountriesCrossValidationResult.errors,
+            ),
           );
-          return fromBoom(boom);
         }
       }
 

@@ -353,7 +353,7 @@ export default class SubmissionController {
         });
         const fieldFormatErrors: FieldFormatError[] = [];
         if (!reference.valid) {
-          fieldFormatErrors.push(reference.value);
+          fieldFormatErrors.push(...reference.value);
         }
 
         const wasteCodeSubSection = validationRules.validateWasteCodeSubSection(

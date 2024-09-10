@@ -1,3 +1,10 @@
+export type Section =
+  | 'ExporterDetail'
+  | 'ImporterDetail'
+  | 'Carriers'
+  | 'CollectionDetail'
+  | 'RecoveryFacilityDetail';
+
 export type Field =
   | 'CustomerReference'
   | 'WasteDescription'
@@ -21,7 +28,7 @@ export interface InvalidAttributeCombinationError {
   message: string;
 }
 
-export interface Error {
+export interface Errors {
   fieldFormatErrors: FieldFormatError[];
   invalidStructureErrors?: InvalidAttributeCombinationError[];
 }
@@ -35,7 +42,7 @@ export type ValidationResult<T> =
   | {
       valid: false;
       accountId?: string;
-      error: Error;
+      errors: Errors;
     };
 
 export type uiValidationResult = ValidationResult<string | undefined> & {

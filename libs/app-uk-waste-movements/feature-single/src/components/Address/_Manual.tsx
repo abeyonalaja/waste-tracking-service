@@ -81,7 +81,7 @@ export function Manual({
     );
     const townCityValidationResult = ukwmValidation.uiSharedValidation(
       formValues.townCity,
-      ukwmValidation.validationRules.validateTownCity,
+      ukwmValidation.validationRules.validateTownOrCity,
       '#townCity',
       section,
       locale,

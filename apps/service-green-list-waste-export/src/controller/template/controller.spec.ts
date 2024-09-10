@@ -19,6 +19,7 @@ import {
 import TemplateController from './controller';
 import { CosmosRepository } from '../../data';
 import { v4 as uuidv4 } from 'uuid';
+import { glwe } from '@wts/util/shared-validation';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -38,6 +39,9 @@ const mockRepository = {
   deleteRecord: jest.fn<CosmosRepository['deleteRecord']>(),
   getTotalNumber: jest.fn<CosmosRepository['getTotalNumber']>(),
 };
+
+const locale = 'en';
+const context = 'api';
 
 const wasteCodes = [
   {
@@ -144,16 +148,36 @@ const countries = [
   {
     name: 'Åland Islands [AX]',
   },
+];
+
+const countriesIncludingUk = [
   {
-    name: 'Albania [AB]',
+    name: 'Afghanistan [AF]',
+  },
+  {
+    name: 'France [FR]',
+  },
+  {
+    name: 'Belgium [BE]',
+  },
+  {
+    name: 'Burkina Faso [BF]',
+  },
+  {
+    name: 'Åland Islands [AX]',
+  },
+  {
+    name: 'United Kingdom (England) [GB-ENG]',
   },
 ];
+
 describe(TemplateController, () => {
   const subject = new TemplateController(
     mockRepository as unknown as CosmosRepository,
     wasteCodes,
     ewcCodes,
     countries,
+    countriesIncludingUk,
     new winston.Logger(),
   );
   const timestamp = new Date();
@@ -2309,7 +2333,7 @@ describe(TemplateController, () => {
     it('returns an error if the maximum number of carriers has been reached', async () => {
       template.carriers = { status: 'Started', transport: true, values: [] };
 
-      for (let i = 0; i < validation.CarrierLength.max; i++) {
+      for (let i = 0; i < glwe.constraints.CarrierLength.max; i++) {
         if (template.carriers.status !== 'Started') {
           return;
         }
@@ -2372,15 +2396,14 @@ describe(TemplateController, () => {
               type: 'Road',
             },
             addressDetails: {
-              address: faker.string.sample(),
-              country: 'Albania [AB]',
-              organisationName: faker.string.sample(),
+              address: 'test address',
+              country: 'France [FR]',
+              organisationName: 'test org',
             },
             contactDetails: {
-              emailAddress: faker.string.sample(),
-              faxNumber: faker.string.sample(),
-              fullName: faker.string.sample(),
-              phoneNumber: faker.string.sample(),
+              emailAddress: 'test@test.com',
+              fullName: 'Full Name',
+              phoneNumber: '003478888888888',
             },
             id: carrierId,
           },
@@ -2408,15 +2431,14 @@ describe(TemplateController, () => {
                 type: 'Road',
               },
               addressDetails: {
-                address: faker.string.sample(),
-                country: 'Albania [AB]',
-                organisationName: faker.string.sample(),
+                address: 'test address',
+                country: 'France [FR]',
+                organisationName: 'test org',
               },
               contactDetails: {
-                emailAddress: faker.string.sample(),
-                faxNumber: faker.string.sample(),
-                fullName: faker.string.sample(),
-                phoneNumber: faker.string.sample(),
+                emailAddress: 'test@test.com',
+                fullName: 'Full Name',
+                phoneNumber: '003478888888888',
               },
               id: carrierId,
             },
@@ -2448,15 +2470,14 @@ describe(TemplateController, () => {
               type: 'Road',
             },
             addressDetails: {
-              address: faker.string.sample(),
-              country: 'Albania [AB]',
-              organisationName: faker.string.sample(),
+              address: 'test address',
+              country: 'France [FR]',
+              organisationName: 'test org',
             },
             contactDetails: {
-              emailAddress: faker.string.sample(),
-              faxNumber: faker.string.sample(),
-              fullName: faker.string.sample(),
-              phoneNumber: faker.string.sample(),
+              emailAddress: 'test@test.com',
+              fullName: 'Full Name',
+              phoneNumber: '003478888888888',
             },
             id: carrierId,
           },
@@ -2483,7 +2504,106 @@ describe(TemplateController, () => {
       expect(template.carriers).toEqual(carrierDetails);
     });
 
-    it('returns an error if the template carriers have not been started', async () => {
+    it('forwards validation errors', async () => {
+      const carriers = {
+        status: 'Complete',
+        transport: false,
+        values: [
+          {
+            addressDetails: {
+              address: faker.string.sample(251),
+              country: 'test',
+              organisationName: faker.string.sample(251),
+            },
+            contactDetails: {
+              emailAddress: faker.string.sample(251),
+              faxNumber: 'test',
+              fullName: '',
+              phoneNumber: 'test',
+            },
+            id: carrierId,
+          },
+        ],
+      } as DraftCarriers;
+
+      mockRepository.getRecord.mockResolvedValue(template);
+
+      const response = await subject.setTemplateCarriers({
+        id,
+        accountId,
+        carrierId,
+        value: carriers,
+      });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(response.error.statusCode).toBe(400);
+      expect(response.error.data).toEqual({
+        fieldFormatErrors: [
+          {
+            field: 'Carriers',
+            message: glwe.errorMessages.CarrierValidationErrorMessages(
+              locale,
+              context,
+              1,
+            ).charTooManyOrganisationName,
+          },
+          {
+            field: 'Carriers',
+            message: glwe.errorMessages.CarrierValidationErrorMessages(
+              locale,
+              context,
+              1,
+            ).charTooManyAddress,
+          },
+          {
+            field: 'Carriers',
+            message: glwe.errorMessages.CarrierValidationErrorMessages(
+              locale,
+              context,
+              1,
+            ).invalidCountry,
+          },
+          {
+            field: 'Carriers',
+            message: glwe.errorMessages.CarrierValidationErrorMessages(
+              locale,
+              context,
+              1,
+            ).emptyContactFullName,
+          },
+          {
+            field: 'Carriers',
+            message: glwe.errorMessages.CarrierValidationErrorMessages(
+              locale,
+              context,
+              1,
+            ).invalidPhone,
+          },
+          {
+            field: 'Carriers',
+            message: glwe.errorMessages.CarrierValidationErrorMessages(
+              locale,
+              context,
+              1,
+            ).invalidFax,
+          },
+          {
+            field: 'Carriers',
+            message: glwe.errorMessages.CarrierValidationErrorMessages(
+              locale,
+              context,
+              1,
+            ).charTooManyEmail,
+          },
+        ],
+      });
+    });
+
+    it('returns an error when the carrier status is "NotStarted"', async () => {
       template.carriers.status = 'NotStarted';
       mockRepository.getRecord.mockResolvedValue(template);
 
@@ -2500,15 +2620,14 @@ describe(TemplateController, () => {
                 type: 'Road',
               },
               addressDetails: {
-                address: faker.string.sample(),
-                country: 'Albania [AB]',
-                organisationName: faker.string.sample(),
+                address: 'test address',
+                country: 'France [FR]',
+                organisationName: 'test org',
               },
               contactDetails: {
-                emailAddress: faker.string.sample(),
-                faxNumber: faker.string.sample(),
-                fullName: faker.string.sample(),
-                phoneNumber: faker.string.sample(),
+                emailAddress: 'test@test.com',
+                fullName: 'Full Name',
+                phoneNumber: '003478888888888',
               },
               id: carrierId,
             },
@@ -2537,11 +2656,15 @@ describe(TemplateController, () => {
               transportDetails: {
                 type: 'Road',
               },
+              addressDetails: {
+                address: 'test address',
+                country: 'France [FR]',
+                organisationName: 'test org',
+              },
               contactDetails: {
-                emailAddress: faker.string.sample(),
-                faxNumber: faker.string.sample(),
-                fullName: faker.string.sample(),
-                phoneNumber: faker.string.sample(),
+                emailAddress: 'test@test.com',
+                fullName: 'Full Name',
+                phoneNumber: '003478888888888',
               },
               id: faker.string.uuid(),
             },
@@ -2555,6 +2678,112 @@ describe(TemplateController, () => {
       }
 
       expect(response.error.statusCode).toBe(404);
+    });
+
+    it('forwards cross-sectional validation errors', async () => {
+      const template: Template = {
+        id,
+        templateDetails: {
+          name: 'name',
+          description: 'description',
+          created: timestamp,
+          lastModified: timestamp,
+        },
+        wasteDescription: {
+          status: 'Started',
+          wasteCode: {
+            type: 'NotApplicable',
+          },
+        },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        carriers: {
+          status: 'Started',
+          transport: true,
+          values: [
+            {
+              transportDetails: {
+                type: 'Road',
+              },
+              addressDetails: {
+                address: 'test address',
+                country: 'France [FR]',
+                organisationName: 'test org',
+              },
+              contactDetails: {
+                emailAddress: 'test@test.com',
+                fullName: 'Full Name',
+                phoneNumber: '003478888888888',
+              },
+              id: carrierId,
+            },
+          ],
+        },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: { status: 'CannotStart' },
+      };
+      const carriers = {
+        status: 'Complete',
+        transport: true,
+        values: [
+          {
+            transportDetails: {
+              type: 'Rail',
+              description: 'desc',
+            },
+            addressDetails: {
+              address: 'test address',
+              country: 'France [FR]',
+              organisationName: 'test org',
+            },
+            contactDetails: {
+              emailAddress: 'test@test.com',
+              faxNumber: '003478888888877',
+              fullName: 'test test',
+              phoneNumber: '003478888888888',
+            },
+            id: carrierId,
+          },
+        ],
+      } as DraftCarriers;
+
+      mockRepository.getRecord.mockResolvedValue(template);
+
+      const response = await subject.setTemplateCarriers({
+        id,
+        accountId,
+        carrierId,
+        value: carriers,
+      });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(response.error.statusCode).toBe(400);
+      expect(response.error.data).toEqual({
+        fieldFormatErrors: [],
+        invalidStructureErrors: [
+          {
+            fields: ['WasteDescription', 'Carriers'],
+            message:
+              glwe.errorMessages.invalidTransportCarriersCrossSection[locale][
+                context
+              ],
+          },
+          {
+            fields: ['WasteDescription', 'Carriers'],
+            message:
+              glwe.errorMessages
+                .invalidTransportDescriptionCarriersCrossSection[locale][
+                context
+              ],
+          },
+        ],
+      });
     });
   });
 
@@ -2582,15 +2811,14 @@ describe(TemplateController, () => {
               type: 'Road',
             },
             addressDetails: {
-              address: faker.string.sample(),
-              country: 'Albania [AB]',
-              organisationName: faker.string.sample(),
+              address: 'test address',
+              country: 'France [FR]',
+              organisationName: 'test org',
             },
             contactDetails: {
-              emailAddress: faker.string.sample(),
-              faxNumber: faker.string.sample(),
-              fullName: faker.string.sample(),
-              phoneNumber: faker.string.sample(),
+              emailAddress: 'test@test.com',
+              fullName: 'Full Name',
+              phoneNumber: '003478888888888',
             },
             id: carrierId,
           },
@@ -3106,7 +3334,7 @@ describe(TemplateController, () => {
 
     const transitCountries = {
       status: 'Complete',
-      values: ['Albania [AB]', 'France [FR]'],
+      values: ['France [FR]', 'Belgium [BE]'],
     } as DraftTransitCountries;
 
     it('forwards thrown Boom errors', async () => {

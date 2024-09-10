@@ -13,6 +13,7 @@ import {
 import DraftController from './controller';
 import { CosmosRepository } from '../../data';
 import { validation } from '@wts/api/green-list-waste-export';
+import { glwe } from '@wts/util/shared-validation';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -30,6 +31,9 @@ const mockRepository = {
   deleteRecord: jest.fn<CosmosRepository['deleteRecord']>(),
   getTotalNumber: jest.fn<CosmosRepository['getTotalNumber']>(),
 };
+
+const locale = 'en';
+const context = 'api';
 
 const wasteCodes = [
   {
@@ -136,11 +140,26 @@ const countries = [
   {
     name: 'Åland Islands [AX]',
   },
+];
+
+const countriesIncludingUk = [
   {
-    name: 'United Kingdom (Northern Ireland) [GB-NIR]',
+    name: 'Afghanistan [AF]',
   },
   {
-    name: 'United Kingdom (Wales) [GB-WLS]',
+    name: 'France [FR]',
+  },
+  {
+    name: 'Belgium [BE]',
+  },
+  {
+    name: 'Burkina Faso [BF]',
+  },
+  {
+    name: 'Åland Islands [AX]',
+  },
+  {
+    name: 'United Kingdom (England) [GB-ENG]',
   },
 ];
 
@@ -150,6 +169,7 @@ describe(DraftController, () => {
     wasteCodes,
     ewcCodes,
     countries,
+    countriesIncludingUk,
     new winston.Logger(),
   );
 
@@ -1938,10 +1958,16 @@ describe(DraftController, () => {
     const accountId = faker.string.uuid();
     const carrierId = faker.string.uuid();
     const timestamp = new Date();
-    const draft = {
+    const draft: DraftSubmission = {
       id,
       reference: 'abc',
-      wasteDescription: { status: 'NotStarted' },
+      wasteDescription: {
+        status: 'Started',
+        wasteCode: {
+          type: 'BaselAnnexIX',
+          code: 'B1010',
+        },
+      },
       wasteQuantity: { status: 'NotStarted' },
       exporterDetail: { status: 'NotStarted' },
       importerDetail: { status: 'NotStarted' },
@@ -1965,7 +1991,7 @@ describe(DraftController, () => {
         status: 'InProgress',
         timestamp: timestamp,
       },
-    } as DraftSubmission;
+    };
 
     it('forwards thrown Boom errors', async () => {
       mockRepository.getRecord.mockRejectedValue(Boom.teapot());
@@ -1984,14 +2010,13 @@ describe(DraftController, () => {
               },
               addressDetails: {
                 address: 'test address',
-                country: 'Albania [AB]',
+                country: 'France [FR]',
                 organisationName: 'test org',
               },
               contactDetails: {
-                emailAddress: '',
-                faxNumber: '',
-                fullName: '',
-                phoneNumber: '',
+                emailAddress: 'test@test.com',
+                fullName: 'Full Name',
+                phoneNumber: '003478888888888',
               },
               id: carrierId,
             },
@@ -2023,14 +2048,14 @@ describe(DraftController, () => {
             },
             addressDetails: {
               address: 'test address',
-              country: 'Albania [AB]',
+              country: 'France [FR]',
               organisationName: 'test org',
             },
             contactDetails: {
               emailAddress: 'test@test.com',
-              faxNumber: '01234567890',
+              faxNumber: '003478888888877',
               fullName: 'test test',
-              phoneNumber: '01234567890',
+              phoneNumber: '003478888888888',
             },
             id: carrierId,
           },
@@ -2050,6 +2075,105 @@ describe(DraftController, () => {
       expect(draft.carriers).toStrictEqual(carriers);
     });
 
+    it('forwards validation errors', async () => {
+      const carriers = {
+        status: 'Complete',
+        transport: false,
+        values: [
+          {
+            addressDetails: {
+              address: faker.string.sample(251),
+              country: 'test',
+              organisationName: faker.string.sample(251),
+            },
+            contactDetails: {
+              emailAddress: faker.string.sample(251),
+              faxNumber: 'test',
+              fullName: '',
+              phoneNumber: 'test',
+            },
+            id: carrierId,
+          },
+        ],
+      } as DraftCarriers;
+
+      mockRepository.getRecord.mockResolvedValue(draft);
+
+      const response = await subject.setDraftCarriers({
+        id,
+        accountId,
+        carrierId,
+        value: carriers,
+      });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(response.error.statusCode).toBe(400);
+      expect(response.error.data).toEqual({
+        fieldFormatErrors: [
+          {
+            field: 'Carriers',
+            message: glwe.errorMessages.CarrierValidationErrorMessages(
+              locale,
+              context,
+              1,
+            ).charTooManyOrganisationName,
+          },
+          {
+            field: 'Carriers',
+            message: glwe.errorMessages.CarrierValidationErrorMessages(
+              locale,
+              context,
+              1,
+            ).charTooManyAddress,
+          },
+          {
+            field: 'Carriers',
+            message: glwe.errorMessages.CarrierValidationErrorMessages(
+              locale,
+              context,
+              1,
+            ).invalidCountry,
+          },
+          {
+            field: 'Carriers',
+            message: glwe.errorMessages.CarrierValidationErrorMessages(
+              locale,
+              context,
+              1,
+            ).emptyContactFullName,
+          },
+          {
+            field: 'Carriers',
+            message: glwe.errorMessages.CarrierValidationErrorMessages(
+              locale,
+              context,
+              1,
+            ).invalidPhone,
+          },
+          {
+            field: 'Carriers',
+            message: glwe.errorMessages.CarrierValidationErrorMessages(
+              locale,
+              context,
+              1,
+            ).invalidFax,
+          },
+          {
+            field: 'Carriers',
+            message: glwe.errorMessages.CarrierValidationErrorMessages(
+              locale,
+              context,
+              1,
+            ).charTooManyEmail,
+          },
+        ],
+      });
+    });
+
     it('returns an error when the carrier status is "NotStarted"', async () => {
       draft.carriers.status = 'NotStarted';
 
@@ -2063,14 +2187,14 @@ describe(DraftController, () => {
             },
             addressDetails: {
               address: 'test address',
-              country: 'Albania [AB]',
+              country: 'France [FR]',
               organisationName: 'test org',
             },
             contactDetails: {
               emailAddress: 'test@test.com',
-              faxNumber: '01234567890',
+              faxNumber: '003478888888877',
               fullName: 'test test',
-              phoneNumber: '01234567890',
+              phoneNumber: '003478888888888',
             },
             id: carrierId,
           },
@@ -2091,6 +2215,139 @@ describe(DraftController, () => {
         return;
       }
       expect(response.error.statusCode).toBe(404);
+    });
+
+    it('returns an error if the carrier id does not exist', async () => {
+      const response = await subject.setDraftCarriers({
+        id,
+        accountId,
+        carrierId: faker.string.uuid(),
+        value: {
+          status: 'Started',
+          transport: true,
+          values: [
+            {
+              transportDetails: {
+                type: 'Road',
+              },
+              addressDetails: {
+                address: 'test address',
+                country: 'France [FR]',
+                organisationName: 'test org',
+              },
+              contactDetails: {
+                emailAddress: 'test@test.com',
+                fullName: 'Full Name',
+                phoneNumber: '003478888888888',
+              },
+              id: faker.string.uuid(),
+            },
+          ],
+        },
+      });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(response.error.statusCode).toBe(404);
+    });
+
+    it('forwards cross-sectional validation errors', async () => {
+      const draft: DraftSubmission = {
+        id,
+        reference: 'abc',
+        wasteDescription: {
+          status: 'Started',
+          wasteCode: {
+            type: 'NotApplicable',
+          },
+        },
+        wasteQuantity: { status: 'NotStarted' },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        collectionDate: { status: 'NotStarted' },
+        carriers: {
+          status: 'Started',
+          transport: true,
+          values: [
+            {
+              id: carrierId,
+            },
+          ],
+        },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: { status: 'NotStarted' },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: timestamp,
+        },
+      };
+      const carriers = {
+        status: 'Complete',
+        transport: false,
+        values: [
+          {
+            transportDetails: {
+              type: 'Rail',
+              description: 'desc',
+            },
+            addressDetails: {
+              address: 'test address',
+              country: 'France [FR]',
+              organisationName: 'test org',
+            },
+            contactDetails: {
+              emailAddress: 'test@test.com',
+              faxNumber: '003478888888877',
+              fullName: 'test test',
+              phoneNumber: '003478888888888',
+            },
+            id: carrierId,
+          },
+        ],
+      } as DraftCarriers;
+
+      mockRepository.getRecord.mockResolvedValue(draft);
+
+      const response = await subject.setDraftCarriers({
+        id,
+        accountId,
+        carrierId,
+        value: carriers,
+      });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(response.error.statusCode).toBe(400);
+      expect(response.error.data).toEqual({
+        fieldFormatErrors: [],
+        invalidStructureErrors: [
+          {
+            fields: ['WasteDescription', 'Carriers'],
+            message:
+              glwe.errorMessages.invalidTransportCarriersCrossSection[locale][
+                context
+              ],
+          },
+          {
+            fields: ['WasteDescription', 'Carriers'],
+            message:
+              glwe.errorMessages
+                .invalidTransportDescriptionCarriersCrossSection[locale][
+                context
+              ],
+          },
+        ],
+      });
     });
   });
 
@@ -2777,10 +3034,7 @@ describe(DraftController, () => {
         accountId,
         value: {
           status: 'Complete',
-          values: [
-            'United Kingdom (Northern Ireland) [GB-NIR]',
-            'United Kingdom (Wales) [GB-WLS]',
-          ],
+          values: ['France [FR]', 'Belgium [BE]'],
         },
       });
 

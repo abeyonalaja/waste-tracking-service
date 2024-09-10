@@ -115,6 +115,7 @@ async function init() {
     wasteCodesResponse.value,
     ewcCodesResponse.value,
     countriesResponse.value,
+    countriesIncludingUkResponse.value,
     logger,
   );
   const templateController = new template.TemplateController(
@@ -122,6 +123,7 @@ async function init() {
     wasteCodesResponse.value,
     ewcCodesResponse.value,
     countriesResponse.value,
+    countriesIncludingUkResponse.value,
     logger,
   );
 

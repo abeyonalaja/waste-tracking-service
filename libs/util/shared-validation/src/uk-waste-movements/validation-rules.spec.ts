@@ -7,7 +7,7 @@ import {
   validateCountry,
   validateOrganisationName,
   validatePostcode,
-  validateTownCity,
+  validateTownOrCity,
   validateAddressDetails,
   validateEmailAddress,
   validateFaxNumber,
@@ -302,7 +302,7 @@ describe('Address line 2 validation', () => {
 describe('Town or city validation', () => {
   it('should return valid true when town or city is valid', () => {
     const townOrCity = faker.string.sample(10);
-    const result = validateTownCity(townOrCity, 'Producer', {
+    const result = validateTownOrCity(townOrCity, 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -314,7 +314,7 @@ describe('Town or city validation', () => {
   });
 
   it('truncates trailing spaces', () => {
-    const result = validateTownCity('  a   ', 'Producer', {
+    const result = validateTownOrCity('  a   ', 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -327,7 +327,7 @@ describe('Town or city validation', () => {
 
   it('should return an error when the town or city is too long', () => {
     const townOrCity = faker.string.sample(251);
-    const result = validateTownCity(townOrCity, 'Producer', {
+    const result = validateTownOrCity(townOrCity, 'Producer', {
       locale: 'en',
       context: 'ui',
     });
@@ -344,7 +344,7 @@ describe('Town or city validation', () => {
 
   it('should return an error when the town or city is too long', () => {
     const townOrCity = faker.string.sample(251);
-    const result = validateTownCity(townOrCity, 'Waste collection', {
+    const result = validateTownOrCity(townOrCity, 'Waste collection', {
       locale: 'en',
       context: 'ui',
     });
@@ -497,9 +497,9 @@ describe('Postcode validation', () => {
     expect(result.valid).toBe(false);
     if ('errors' in result) {
       expect(result.errors[0]).toEqual({
-        code: 11101,
+        code: 11010,
         field: 'Producer postcode',
-        message: 'Enter a postcode',
+        message: 'Enter a valid postcode',
       });
     }
   });
@@ -513,9 +513,9 @@ describe('Postcode validation', () => {
     expect(result.valid).toBe(false);
     if ('errors' in result) {
       expect(result.errors[0]).toEqual({
-        code: 12101,
+        code: 12010,
         field: 'Waste collection postcode',
-        message: 'Enter a postcode',
+        message: 'Enter a valid postcode',
       });
     }
   });
@@ -529,9 +529,9 @@ describe('Postcode validation', () => {
     expect(result.valid).toBe(false);
     if ('errors' in result) {
       expect(result.errors[0]).toEqual({
-        code: 15101,
+        code: 15010,
         field: 'Carrier postcode',
-        message: 'Enter a postcode',
+        message: 'Enter a valid postcode',
       });
     }
   });

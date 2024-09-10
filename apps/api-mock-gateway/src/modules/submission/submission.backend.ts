@@ -43,7 +43,10 @@ import {
 } from '../../lib/util';
 import { validation } from '@wts/api/green-list-waste-export';
 import { common as commonValidation, glwe } from '@wts/util/shared-validation';
-import { listCountries } from '../reference-data/reference-data.backend';
+
+const locale = 'en';
+const context = 'api';
+
 export interface SubmissionRef {
   id: string;
   accountId: string;
@@ -429,7 +432,7 @@ export async function setWasteDescription(
           );
         if (!wasteCodeValidationResult.valid) {
           errors.fieldFormatErrors.push(
-            ...wasteCodeValidationResult.error.fieldFormatErrors,
+            ...wasteCodeValidationResult.errors.fieldFormatErrors,
           );
         } else {
           value.wasteCode = wasteCodeValidationResult.value;
@@ -447,7 +450,7 @@ export async function setWasteDescription(
 
         if (!wasteCodeValidationResult.valid) {
           errors.fieldFormatErrors.push(
-            ...wasteCodeValidationResult.error.fieldFormatErrors,
+            ...wasteCodeValidationResult.errors.fieldFormatErrors,
           );
         } else {
           value.wasteCode = wasteCodeValidationResult.value;
@@ -467,7 +470,7 @@ export async function setWasteDescription(
 
       if (!ewcCodesValidationResult.valid) {
         errors.fieldFormatErrors.push(
-          ...ewcCodesValidationResult.error.fieldFormatErrors,
+          ...ewcCodesValidationResult.errors.fieldFormatErrors,
         );
       } else {
         value.ewcCodes = ewcCodesValidationResult.value;
@@ -484,7 +487,7 @@ export async function setWasteDescription(
 
       if (!nationalCodeValidationResult.valid) {
         errors.fieldFormatErrors.push(
-          ...nationalCodeValidationResult.error.fieldFormatErrors,
+          ...nationalCodeValidationResult.errors.fieldFormatErrors,
         );
       } else {
         value.nationalCode = nationalCodeValidationResult.value;
@@ -497,7 +500,7 @@ export async function setWasteDescription(
 
       if (!descriptionValidationResult.valid) {
         errors.fieldFormatErrors.push(
-          ...descriptionValidationResult.error.fieldFormatErrors,
+          ...descriptionValidationResult.errors.fieldFormatErrors,
         );
       } else {
         value.description = descriptionValidationResult.value;
@@ -833,7 +836,7 @@ export async function setImporterDetail(
       return Promise.reject(
         new BadRequestError(
           'Validation error',
-          transitCountriesCrossValidationResult.error,
+          transitCountriesCrossValidationResult.errors,
         ),
       );
     }
@@ -1020,10 +1023,12 @@ export async function createCarriers(
   }
 
   if (submission.carriers.status !== 'NotStarted') {
-    if (submission.carriers.values.length === validation.CarrierLength.max) {
+    if (
+      submission.carriers.values.length === glwe.constraints.CarrierLength.max
+    ) {
       return Promise.reject(
         new BadRequestError(
-          `Cannot add more than ${validation.CarrierLength.max} carriers`,
+          `Cannot add more than ${glwe.constraints.CarrierLength.max} carriers`,
         ),
       );
     }
@@ -1111,6 +1116,159 @@ export async function setCarriers(
   carrierId: string,
   value: Carriers,
 ): Promise<void> {
+  if (value.status !== 'NotStarted') {
+    const errors = {
+      fieldFormatErrors: [] as validation.FieldFormatError[],
+    };
+    let index = 0;
+    value.values.forEach((v) => {
+      const section = 'Carriers';
+      index += 1;
+      if (v.addressDetails) {
+        const organisationNameValidationResult =
+          glwe.validationRules.validateOrganisationName(
+            v.addressDetails.organisationName,
+            section,
+            locale,
+            context,
+            index,
+          );
+
+        if (!organisationNameValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...organisationNameValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.addressDetails.organisationName =
+            organisationNameValidationResult.value;
+        }
+
+        const addressValidationResult = glwe.validationRules.validateAddress(
+          v.addressDetails.address,
+          section,
+          locale,
+          context,
+          index,
+        );
+
+        if (!addressValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...addressValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.addressDetails.address = addressValidationResult.value;
+        }
+
+        const countryValidationResult = glwe.validationRules.validateCountry(
+          v.addressDetails.country,
+          section,
+          locale,
+          context,
+          db.countriesIncludingUk,
+          index,
+        );
+
+        if (!countryValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...countryValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.addressDetails.country = countryValidationResult.value;
+        }
+      }
+
+      if (v.contactDetails) {
+        const contactFullNameValidationResult =
+          glwe.validationRules.validateFullName(
+            v.contactDetails.fullName,
+            section,
+            locale,
+            context,
+            index,
+          );
+
+        if (!contactFullNameValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...contactFullNameValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.contactDetails.fullName = contactFullNameValidationResult.value;
+        }
+
+        const phoneValidationResult = glwe.validationRules.validatePhoneNumber(
+          v.contactDetails.phoneNumber,
+          section,
+          locale,
+          context,
+          index,
+        );
+
+        if (!phoneValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...phoneValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.contactDetails.phoneNumber = phoneValidationResult.value;
+        }
+
+        const faxValidationResult = glwe.validationRules.validateFaxNumber(
+          v.contactDetails.faxNumber,
+          section,
+          locale,
+          context,
+          index,
+        );
+
+        if (!faxValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...faxValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.contactDetails.faxNumber = faxValidationResult.value;
+        }
+
+        const emailValidationResult = glwe.validationRules.validateEmailAddress(
+          v.contactDetails.emailAddress,
+          section,
+          locale,
+          context,
+          index,
+        );
+
+        if (!emailValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...emailValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.contactDetails.emailAddress = emailValidationResult.value;
+        }
+      }
+
+      if (value.transport && v.transportDetails) {
+        const meansOfTransportDetailsValidationResult =
+          glwe.validationRules.validateCarrierMeansOfTransportDetails(
+            locale,
+            context,
+            v.transportDetails.description,
+            index,
+          );
+
+        if (!meansOfTransportDetailsValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...meansOfTransportDetailsValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.transportDetails.description =
+            meansOfTransportDetailsValidationResult.value;
+        }
+      }
+    });
+
+    if (errors.fieldFormatErrors.length > 0) {
+      return Promise.reject(new BadRequestError('Validation failed', errors));
+    }
+  }
+
   const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId,
   );
@@ -1120,6 +1278,30 @@ export async function setCarriers(
 
   if (submission.carriers.status === 'NotStarted') {
     return Promise.reject(new BadRequestError('Carriers NotStarted.'));
+  }
+
+  if (
+    submission.wasteDescription.status !== 'NotStarted' &&
+    submission.wasteDescription.wasteCode &&
+    value.status !== 'NotStarted'
+  ) {
+    const transportValidationResult =
+      glwe.validationRules.validateWasteCodeSubSectionAndCarriersCrossSection(
+        submission.wasteDescription.wasteCode,
+        value.values.map((v) => v.transportDetails),
+      );
+
+    if (!transportValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation failed',
+          transportValidationResult.errors,
+        ),
+      );
+    } else {
+      value.transport =
+        submission.wasteDescription.wasteCode.type !== 'NotApplicable';
+    }
   }
 
   if (value.status === 'NotStarted') {
@@ -1260,7 +1442,7 @@ export async function setExitLocation(
       return Promise.reject(
         new BadRequestError(
           'Validation error',
-          uKExitLocationValidationResult.error,
+          uKExitLocationValidationResult.errors,
         ),
       );
     }
@@ -1299,18 +1481,14 @@ export async function setTransitCountries(
   { id, accountId }: SubmissionRef,
   value: TransitCountries,
 ): Promise<void> {
-  const countryList = await listCountries(db, false);
   if (value.status === 'Started' || value.status === 'Complete') {
     const transitCountriesValidationResult =
-      glwe.validationRules.validateTransitCountries(
-        countryList,
-        value.values.toString().replace(/,/g, ';'),
-      );
+      glwe.validationRules.validateTransitCountries(value.values, db.countries);
     if (!transitCountriesValidationResult.valid) {
       return Promise.reject(
         new BadRequestError(
           'Validation error',
-          transitCountriesValidationResult.error,
+          transitCountriesValidationResult.errors,
         ),
       );
     }
@@ -1337,7 +1515,7 @@ export async function setTransitCountries(
       return Promise.reject(
         new BadRequestError(
           'Validation error',
-          transitCountriesCrossValidationResult.error,
+          transitCountriesCrossValidationResult.errors,
         ),
       );
     }

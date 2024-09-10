@@ -13,7 +13,7 @@ import {
   validatePhoneNumber,
   validatePostcode,
   validateReference,
-  validateTownCity,
+  validateTownOrCity,
 } from './validation-rules';
 import { ReferenceChar, FreeTextChar } from './constraints';
 
@@ -245,7 +245,7 @@ describe('validatePostcode', () => {
     (value) => {
       const result = validatePostcode(value);
 
-      expect(result.valid).toEqual(false);
+      expect(result.valid).toEqual(true);
       if ('value' in result) {
         expect(result.value).toBeUndefined();
       }
@@ -266,11 +266,11 @@ describe('validatePostcode', () => {
   );
 });
 
-describe('validateTownCity', () => {
+describe('validateTownOrCity', () => {
   it.each(['  test123', 'test345  ', '  test  '])(
     'should return trimmed value if supplied in correct format (%s)',
     (value) => {
-      const result = validateTownCity(value);
+      const result = validateTownOrCity(value);
 
       expect(result.valid).toEqual(true);
       if ('value' in result) {
@@ -282,7 +282,7 @@ describe('validateTownCity', () => {
   it.each(['', undefined, '  '])(
     'should return empty error if no value is supplied (%s)',
     (value) => {
-      const result = validateTownCity(value);
+      const result = validateTownOrCity(value);
 
       expect(result.valid).toEqual(false);
       if ('errors' in result) {
@@ -293,7 +293,7 @@ describe('validateTownCity', () => {
   );
 
   it('should return charTooMany error if supplied value length is greater than max allowed', () => {
-    const result = validateTownCity(
+    const result = validateTownOrCity(
       faker.string.sample(Number(FreeTextChar.max + 1)),
     );
 

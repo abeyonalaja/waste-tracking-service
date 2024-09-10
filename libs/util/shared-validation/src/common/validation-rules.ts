@@ -119,12 +119,6 @@ export function validatePostcode(
   postcode?: string,
 ): ValidationResult<string | undefined> {
   const trimmedPostcode = postcode?.trim();
-  if (!trimmedPostcode) {
-    return {
-      valid: false,
-      errors: ['empty'],
-    };
-  }
   if (trimmedPostcode && !commonRegex.postcodeRegex.test(trimmedPostcode)) {
     return {
       valid: false,
@@ -138,7 +132,9 @@ export function validatePostcode(
   };
 }
 
-export function validateTownCity(townCity?: string): ValidationResult<string> {
+export function validateTownOrCity(
+  townCity?: string,
+): ValidationResult<string> {
   const trimmedTownCity = townCity?.trim();
   if (!trimmedTownCity) {
     return {

@@ -867,11 +867,11 @@ describe(SubmissionController, () => {
             estimatedOrActualCollectionDate: 'type',
             firstCarrierOrganisationName: '     ',
             firstCarrierAddress: '     ',
-            firstCarrierCountry: '     ',
+            firstCarrierCountry: 'test',
             firstCarrierContactFullName: '     ',
-            firstCarrierContactPhoneNumber: '     ',
-            firstCarrierFaxNumber: '     ',
-            firstCarrierEmailAddress: '     ',
+            firstCarrierContactPhoneNumber: 'test',
+            firstCarrierFaxNumber: 'test',
+            firstCarrierEmailAddress: 'test',
             firstCarrierMeansOfTransport: '     ',
             firstCarrierMeansOfTransportDetails: '     ',
             secondCarrierOrganisationName: '',
@@ -987,7 +987,8 @@ describe(SubmissionController, () => {
         return;
       }
 
-      const carrierErrorMessages = validation.CarrierValidationErrorMessages(1);
+      const carrierErrorMessages =
+        glwe.errorMessages.CarrierValidationErrorMessages(locale, context, 1);
 
       expect(response.value).toEqual({
         valid: false,
@@ -1390,7 +1391,7 @@ describe(SubmissionController, () => {
                 fields: ['ImporterDetail', 'TransitCountries'],
                 message:
                   glwe.errorMessages
-                    .importerDetailsInvalidCrossSectionTransitCountry[locale][
+                    .importerDetailInvalidCrossSectionTransitCountries[locale][
                     context
                   ],
               },
@@ -1398,7 +1399,7 @@ describe(SubmissionController, () => {
                 fields: ['ImporterDetail', 'TransitCountries'],
                 message:
                   glwe.errorMessages
-                    .transitCountriesInvalidCrossSectionTransitCountry[locale][
+                    .transitCountriesInvalidCrossSectionImporterDetail[locale][
                     context
                   ],
               },

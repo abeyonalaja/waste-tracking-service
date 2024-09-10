@@ -3,7 +3,6 @@ import {
   BulkWasteQuantityValue,
   SmallWasteQuantityValue,
   FreeTextChar,
-  CarrierTransportDescriptionChar,
 } from './constraints';
 
 export const ReferenceValidationErrorMessages = {
@@ -69,77 +68,6 @@ export const ImporterDetailValidationErrorMessages = {
   emptyEmail: 'Enter importer email address',
   invalidEmail: 'Enter a real email address for the importer',
   charTooManyEmail: `The importer email address must be less than ${FreeTextChar.max} characters`,
-};
-
-interface CarrierErrorMessages {
-  emptyOrganisationName: string;
-  charTooManyOrganisationName: string;
-  emptyAddress: string;
-  charTooManyAddress: string;
-  emptyCountry: string;
-  invalidCountry: string;
-  emptyContactFullName: string;
-  charTooManyContactFullName: string;
-  emptyPhone: string;
-  invalidPhone: string;
-  invalidFax: string;
-  emptyEmail: string;
-  charTooManyEmail: string;
-  invalidEmail: string;
-  emptyTransport: string;
-  charTooManyTransportDescription: string;
-}
-
-export const CarrierValidationErrorMessages: (
-  carrierNumber: number,
-) => CarrierErrorMessages = (carrierNumber) => {
-  let carrierStr = '';
-  switch (carrierNumber) {
-    case 1:
-      carrierStr = 'first';
-      break;
-    case 2:
-      carrierStr = 'second';
-      break;
-    case 3:
-      carrierStr = 'third';
-      break;
-    case 4:
-      carrierStr = 'fourth';
-      break;
-    case 5:
-      carrierStr = 'fifth';
-      break;
-    default:
-      carrierStr = 'first';
-      break;
-  }
-
-  return {
-    emptyOrganisationName: `Enter the ${carrierStr} carrier organisation name`,
-    charTooManyOrganisationName: `The ${carrierStr} carrier organisation name must be less than ${FreeTextChar.max} characters`,
-    emptyAddress: `Enter the ${carrierStr} carrier address`,
-    charTooManyAddress: `The ${carrierStr} carrier address must be less than ${FreeTextChar.max} characters`,
-    emptyCountry: `Enter the ${carrierStr} carrier country`,
-    invalidCountry: `Enter the ${carrierStr} carrier country in full`,
-    emptyContactFullName: `Enter full name of ${carrierStr} carrier contact`,
-    charTooManyContactFullName: `The ${carrierStr} carrier contact full name must be less than ${FreeTextChar.max} characters`,
-    emptyPhone: `Enter ${carrierStr} carrier contact phone number`,
-    invalidPhone: `Enter a real phone number for the ${carrierStr} carrier`,
-    invalidFax: `Enter a real fax number for the ${carrierStr} carrier`,
-    emptyEmail: `Enter ${carrierStr} carrier email address`,
-    invalidEmail: `Enter a real email address for the ${carrierStr} carrier`,
-    charTooManyEmail: `The ${carrierStr} carrier email address must be less than ${FreeTextChar.max} characters`,
-    emptyTransport: `Enter ${carrierStr} carrier means of transport`,
-    charTooManyTransportDescription: `The ${carrierStr} carrier transport details must be less than ${CarrierTransportDescriptionChar.max} characters`,
-  };
-};
-
-export const CarriersCrossSectionValidationErrorMessages = {
-  invalidTransport:
-    'Do not enter any carrier means of transport if you are exporting unlisted waste',
-  invalidTransportDescription:
-    'Do not enter any carrier means of transport details if you are exporting unlisted waste',
 };
 
 export const CollectionDetailValidationErrorMessages = {
