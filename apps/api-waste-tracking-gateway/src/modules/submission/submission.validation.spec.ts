@@ -42,7 +42,7 @@ describe('validatePutReferenceRequest', () => {
 
   it('Rejects invalid values', () => {
     expect(validate(faker.number.int())).toBe(false);
-    expect(validate(faker.datatype.array())).toBe(false);
+    expect(validate([])).toBe(false);
     expect(validate({})).toBe(false);
     expect(validate({ reference: faker.string.sample(10) })).toBe(false);
     expect(validate(undefined)).toBe(false);
@@ -194,7 +194,7 @@ describe('validatePutDraftWasteQuantityRequest', () => {
           type: 'ActualData',
           actualData: {
             quantityType: 'Weight',
-            value: faker.number.float({ precision: 0.01 }),
+            value: faker.number.float({ multipleOf: 0.01 }),
           },
           estimateData: {},
         },
@@ -208,7 +208,7 @@ describe('validatePutDraftWasteQuantityRequest', () => {
           type: 'ActualData',
           actualData: {
             quantityType: 'Weight',
-            value: faker.number.float({ precision: 0.01 }),
+            value: faker.number.float({ multipleOf: 0.01 }),
           },
           estimateData: {},
         },
@@ -260,7 +260,7 @@ describe('validatePutSubmissionWasteQuantityRequest', () => {
         type: 'ActualData',
         actualData: {
           quantityType: 'Weight',
-          value: faker.number.float({ precision: 0.01 }),
+          value: faker.number.float({ multipleOf: 0.01 }),
         },
         estimateData: {},
       }),
@@ -271,11 +271,11 @@ describe('validatePutSubmissionWasteQuantityRequest', () => {
         type: 'EstimateData',
         actualData: {
           quantityType: 'Weight',
-          value: faker.number.float({ precision: 0.01 }),
+          value: faker.number.float({ multipleOf: 0.01 }),
         },
         estimateData: {
           quantityType: 'Weight',
-          value: faker.number.float({ precision: 0.01 }),
+          value: faker.number.float({ multipleOf: 0.01 }),
         },
       }),
     ).toBe(true);

@@ -52,23 +52,34 @@ const addressClient = new BoomiAddressClient(
 
 const addressController = new AddressController(addressClient, logger);
 
-await server.invoker.listen(
-  api.getAddressByPostcode.name,
-  async ({ body }) => {
-    if (body === undefined) {
-      return fromBoom(Boom.badRequest('Missing body'));
-    }
+async function init() {
+  try {
+    await server.invoker.listen(
+      api.getAddressByPostcode.name,
+      async ({ body }) => {
+        if (body === undefined) {
+          return fromBoom(Boom.badRequest('Missing body'));
+        }
 
-    const request = parse.getAddressByPostcodeRequest(body);
-    if (request === undefined) {
-      return fromBoom(Boom.badRequest());
-    }
+        const request = parse.getAddressByPostcodeRequest(body);
+        if (request === undefined) {
+          return fromBoom(Boom.badRequest());
+        }
 
-    return await addressController.getAddressByPostcode(request);
-  },
-  {
-    method: HttpMethod.POST,
-  },
-);
+        return await addressController.getAddressByPostcode(request);
+      },
+      {
+        method: HttpMethod.POST,
+      },
+    );
 
-await server.start();
+    await server.start();
+  } catch (error) {
+    console.log('Error occurred while starting the service.');
+    logger.info('Error occurred while starting the service.');
+    console.error(error);
+    logger.error(error);
+  }
+}
+
+init();

@@ -92,441 +92,455 @@ const batchController = new BatchController(
 );
 const csvValidator = new CsvValidator(logger);
 
-await server.invoker.listen(
-  api.addContentToBatch.name,
-  async ({ body, headers }) => {
-    if (body === undefined) {
-      return fromBoom(Boom.badRequest('Missing body'));
-    }
-
-    const request = JSON.parse(body) as api.AddContentToBatchRequest;
-    if (!validate.addContentToBatchRequest(request)) {
-      return fromBoom(Boom.badRequest());
-    }
-
-    const response = await batchController.addContentToBatch(request);
-    if (!response.success) {
-      return response;
-    }
-
-    try {
-      const task: ContentProcessingTask = {
-        batchId: response.value.batchId,
-        accountId: request.accountId,
-        content: request.content,
-      };
-      const cloudEvent = new CloudEvent({
-        specversion: '1.0',
-        type: `${appId}.event.sent.ContentToBeProcessed`,
-        source: `${appId}.${api.addContentToBatch.name}`,
-        id: uuidv4(),
-        time: new Date().toJSON(),
-        datacontenttype: 'application/cloudevents+json',
-        data: task,
-        pubsubname: process.env['SERVICE_BUS_HOST_NAME'],
-        queue: tasksQueueName,
-        traceparent: headers?.traceparent || '',
-        tracestate: headers?.tracestate || '',
-      });
-      const messages = [
-        {
-          body: HTTP.structured(cloudEvent),
-        },
-      ];
-      const sender = serviceBusClient.createSender(tasksQueueName);
-      let batch = await sender.createMessageBatch();
-      for (const message of messages) {
-        if (!batch.tryAddMessage(message)) {
-          await sender.sendMessages(batch);
-          batch = await sender.createMessageBatch();
-          if (!batch.tryAddMessage(message)) {
-            const message = 'Message too big to fit in a batch';
-            logger.error(message);
-            throw Boom.internal(message);
-          }
+async function init() {
+  try {
+    await server.invoker.listen(
+      api.addContentToBatch.name,
+      async ({ body, headers }) => {
+        if (body === undefined) {
+          return fromBoom(Boom.badRequest('Missing body'));
         }
-      }
 
-      await sender.sendMessages(batch);
-      logger.info(`Sent a batch of messages to the queue: ${tasksQueueName}`);
-      await sender.close();
-    } catch (err) {
-      logger.error('Error publishing work item', { error: err });
-      return fromBoom(Boom.internal());
-    }
-
-    return response;
-  },
-  {
-    method: HttpMethod.POST,
-  },
-);
-
-await server.invoker.listen(
-  api.getBatch.name,
-  async ({ body }) => {
-    if (body === undefined) {
-      return fromBoom(Boom.badRequest('Missing body'));
-    }
-
-    const request = parse.getBatchRequest(body);
-    if (request === undefined) {
-      return fromBoom(Boom.badRequest());
-    }
-
-    return await batchController.getBatch(request);
-  },
-  { method: HttpMethod.POST },
-);
-
-await server.invoker.listen(
-  api.updateBatch.name,
-  async ({ body, headers }) => {
-    if (body === undefined) {
-      return fromBoom(Boom.badRequest('Missing body'));
-    }
-
-    const request = parse.updateBatchRequest(body);
-    if (request === undefined) {
-      return fromBoom(Boom.badRequest());
-    }
-
-    const response = await batchController.updateBatch(request);
-    if (!response.success) {
-      return response;
-    }
-
-    try {
-      const task: ContentSubmissionTask = {
-        batchId: request.id,
-        accountId: request.accountId,
-      };
-      const cloudEvent = new CloudEvent({
-        specversion: '1.0',
-        type: `${appId}.event.sent.ContentToBeSubmitted`,
-        source: `${appId}.${api.addContentToBatch.name}`,
-        id: uuidv4(),
-        time: new Date().toJSON(),
-        datacontenttype: 'application/cloudevents+json',
-        data: task,
-        pubsubname: process.env['SERVICE_BUS_HOST_NAME'],
-        queue: submissionsQueueName,
-        traceparent: headers?.traceparent || '',
-        tracestate: headers?.tracestate || '',
-      });
-      const messages = [
-        {
-          body: HTTP.structured(cloudEvent),
-        },
-      ];
-      const sender = serviceBusClient.createSender(submissionsQueueName);
-      let batch = await sender.createMessageBatch();
-      for (const message of messages) {
-        if (!batch.tryAddMessage(message)) {
-          await sender.sendMessages(batch);
-          batch = await sender.createMessageBatch();
-          if (!batch.tryAddMessage(message)) {
-            const message = 'Message too big to fit in a batch';
-            logger.error(message);
-            throw Boom.internal(message);
-          }
+        const request = JSON.parse(body) as api.AddContentToBatchRequest;
+        if (!validate.addContentToBatchRequest(request)) {
+          return fromBoom(Boom.badRequest());
         }
-      }
 
-      await sender.sendMessages(batch);
-      logger.info(
-        `Sent a batch of messages to the queue: ${submissionsQueueName}`,
-      );
-      await sender.close();
-    } catch (err) {
-      logger.error('Error publishing work item', { error: err });
-      return fromBoom(Boom.internal());
-    }
-
-    return response;
-  },
-  { method: HttpMethod.POST },
-);
-
-await server.invoker.listen(
-  api.getBatchContent.name,
-  async ({ body }) => {
-    if (body === undefined) {
-      return fromBoom(Boom.badRequest('Missing body'));
-    }
-
-    const request = parse.getBatchContentRequest(body);
-    if (request === undefined) {
-      return fromBoom(Boom.badRequest());
-    }
-
-    return await batchController.getBatchContent(request);
-  },
-  { method: HttpMethod.POST },
-);
-
-await server.start();
-
-const execute = true;
-while (execute) {
-  const receiver = serviceBusClient.createReceiver(tasksQueueName);
-  const subscription = receiver.subscribe({
-    processMessage: async (brokeredMessage) => {
-      if (HTTP.isEvent(brokeredMessage.body)) {
-        const body = JSON.parse(
-          brokeredMessage.body.body,
-        ) as ContentToBeProcessedTask;
-
-        if (!taskValidate.receiveContentToBeProcessedTask(body)) {
-          const message = `Data validation failed for queue message ID: ${brokeredMessage.messageId}`;
-          logger.error(message);
-          throw Boom.internal(message);
+        const response = await batchController.addContentToBatch(request);
+        if (!response.success) {
+          return response;
         }
 
         try {
-          const records = await csvValidator.validateBatch(
-            body.data as ContentProcessingTask,
-          );
-          if (!records.success) {
-            if (records.error.statusCode !== 400) {
-              throw new Boom.Boom(records.error.message, {
-                statusCode: records.error.statusCode,
-              });
-            }
-            const value: BulkSubmission = {
-              id: body.data.batchId,
-              state: {
-                status: 'FailedCsvValidation',
-                timestamp: new Date(),
-                error: records.error.message,
-              },
-            };
-            await repository.saveBatch(value, body.data.accountId);
-          } else {
-            const submissions: Omit<submission.PartialSubmission, 'id'>[] = [];
-            const rowErrors: api.BulkSubmissionValidationRowError[] = [];
-
-            let response: submission.ValidateSubmissionsResponse;
-            try {
-              response = await daprAnnexViiClient.validateSubmissions({
-                accountId: body.data.accountId,
-                padIndex: 2,
-                values: records.value.rows,
-              });
-            } catch (err) {
-              logger.error(
-                `Error receiving response from ${annexViiAppId} service`,
-                { error: err },
-              );
-              throw Boom.internal();
-            }
-
-            if (!response.success) {
-              throw new Boom.Boom(response.error.message, {
-                statusCode: response.error.statusCode,
-              });
-            }
-
-            if (!response.value.valid) {
-              response.value.values.map((v) =>
-                rowErrors.push({
-                  rowNumber: v.index,
-                  errorAmount:
-                    v.fieldFormatErrors.length +
-                    v.invalidStructureErrors.length,
-                  errorDetails: v.fieldFormatErrors
-                    .map((f) => f.message)
-                    .concat(v.invalidStructureErrors.map((i) => i.message)),
-                }),
-              );
-            } else {
-              submissions.push(...response.value.values);
-            }
-
-            const value: BulkSubmission =
-              rowErrors.length > 0
-                ? {
-                    id: body.data.batchId,
-                    state: {
-                      status: 'FailedValidation',
-                      timestamp: new Date(),
-                      rowErrors: rowErrors,
-                      columnErrors: [],
-                    },
-                  }
-                : {
-                    id: body.data.batchId,
-                    state: {
-                      status: 'PassedValidation',
-                      timestamp: new Date(),
-                      hasEstimates: submissions.some(
-                        (s) =>
-                          s.wasteQuantity.type === 'EstimateData' ||
-                          s.collectionDate.type === 'EstimateDate',
-                      ),
-                      submissions: submissions,
-                    },
-                  };
-
-            await repository.saveBatch(value, body.data.accountId);
-          }
-        } catch (error) {
-          if (error instanceof Boom.Boom) {
-            logger.error('Error processing task from queue', {
-              batchId: body.data.batchId,
-              accountId: body.data.accountId,
-              error: error,
-            });
-          } else {
-            logger.error('Unknown error', {
-              batchId: body.data.batchId,
-              accountId: body.data.accountId,
-              error: error,
-            });
-          }
-        }
-      }
-    },
-
-    processError: async (args: ProcessErrorArgs) => {
-      logger.error(
-        `Error from source ${args.errorSource} occurred: `,
-        args.error,
-      );
-      if (isServiceBusError(args.error)) {
-        switch (args.error.code) {
-          case 'MessagingEntityDisabled':
-          case 'MessagingEntityNotFound':
-          case 'UnauthorizedAccess':
-            logger.error(
-              `An unrecoverable error occurred. Stopping processing. ${args.error.code}`,
-              args.error,
-            );
-            await subscription.close();
-            break;
-          case 'MessageLockLost':
-            logger.error(`Message lock lost for message`, args.error);
-            break;
-          case 'ServiceBusy':
-            await delay(1000);
-            break;
-        }
-      }
-    },
-  });
-
-  await delay(20000);
-  await receiver.close();
-
-  const submissionsReceiver =
-    serviceBusClient.createReceiver(submissionsQueueName);
-  const submissionsSubscription = submissionsReceiver.subscribe({
-    processMessage: async (brokeredMessage) => {
-      if (HTTP.isEvent(brokeredMessage.body)) {
-        const body = JSON.parse(
-          brokeredMessage.body.body,
-        ) as ContentToBeSubmittedTask;
-
-        try {
-          const batchData = await repository.getBatch(
-            body.data.batchId,
-            body.data.accountId,
-          );
-          if (batchData.state.status !== 'Submitting') {
-            const message = `The fetched batch ${batchData.id} does not have the correct status. Status expected: 'Submitting'. Status received: '${batchData.state.status}'.`;
-            logger.error(message);
-            throw Boom.internal(message);
-          }
-
-          let response: submission.CreateSubmissionsResponse;
-          try {
-            response = await daprAnnexViiClient.createSubmissions({
-              id: body.data.batchId,
-              accountId: body.data.accountId,
-              values: batchData.state.submissions,
-            });
-          } catch (err) {
-            logger.error(
-              `Error receiving response from ${annexViiAppId} service`,
-              { error: err },
-            );
-            throw Boom.internal();
-          }
-
-          if (!response.success) {
-            throw new Boom.Boom(response.error.message, {
-              statusCode: response.error.statusCode,
-            });
-          }
-
-          const value: BulkSubmission = {
-            id: body.data.batchId,
-            state: {
-              status: 'Submitted',
-              timestamp: new Date(),
-              hasEstimates: batchData.state.hasEstimates,
-              transactionId: batchData.state.transactionId,
-              submissions: response.value.map((s) => {
-                return {
-                  id: s.id,
-                  submissionDeclaration: s.submissionDeclaration,
-                  hasEstimates:
-                    s.submissionState.status == 'SubmittedWithEstimates'
-                      ? true
-                      : false,
-                  collectionDate: s.collectionDate,
-                  wasteDescription: s.wasteDescription,
-                  reference: s.reference,
-                };
-              }),
-            },
+          const task: ContentProcessingTask = {
+            batchId: response.value.batchId,
+            accountId: request.accountId,
+            content: request.content,
           };
-          await repository.saveBatch(value, body.data.accountId);
-        } catch (error) {
-          if (error instanceof Boom.Boom) {
-            logger.error('Error processing task from queue', {
-              batchId: body.data.batchId,
-              accountId: body.data.accountId,
-              error: error,
-            });
-          } else {
-            logger.error('Unknown error', {
-              batchId: body.data.batchId,
-              accountId: body.data.accountId,
-              error: error,
-            });
+          const cloudEvent = new CloudEvent({
+            specversion: '1.0',
+            type: `${appId}.event.sent.ContentToBeProcessed`,
+            source: `${appId}.${api.addContentToBatch.name}`,
+            id: uuidv4(),
+            time: new Date().toJSON(),
+            datacontenttype: 'application/cloudevents+json',
+            data: task,
+            pubsubname: process.env['SERVICE_BUS_HOST_NAME'],
+            queue: tasksQueueName,
+            traceparent: headers?.traceparent || '',
+            tracestate: headers?.tracestate || '',
+          });
+          const messages = [
+            {
+              body: HTTP.structured(cloudEvent),
+            },
+          ];
+          const sender = serviceBusClient.createSender(tasksQueueName);
+          let batch = await sender.createMessageBatch();
+          for (const message of messages) {
+            if (!batch.tryAddMessage(message)) {
+              await sender.sendMessages(batch);
+              batch = await sender.createMessageBatch();
+              if (!batch.tryAddMessage(message)) {
+                const message = 'Message too big to fit in a batch';
+                logger.error(message);
+                throw Boom.internal(message);
+              }
+            }
           }
-        }
-      }
-    },
 
-    processError: async (args: ProcessErrorArgs) => {
-      logger.error(
-        `Error from source ${args.errorSource} occurred: `,
-        args.error,
-      );
-      if (isServiceBusError(args.error)) {
-        switch (args.error.code) {
-          case 'MessagingEntityDisabled':
-          case 'MessagingEntityNotFound':
-          case 'UnauthorizedAccess':
-            logger.error(
-              `An unrecoverable error occurred. Stopping processing. ${args.error.code}`,
-              args.error,
-            );
-            await submissionsSubscription.close();
-            break;
-          case 'MessageLockLost':
-            logger.error(`Message lock lost for message`, args.error);
-            break;
-          case 'ServiceBusy':
-            await delay(1000);
-            break;
+          await sender.sendMessages(batch);
+          logger.info(
+            `Sent a batch of messages to the queue: ${tasksQueueName}`,
+          );
+          await sender.close();
+        } catch (err) {
+          logger.error('Error publishing work item', { error: err });
+          return fromBoom(Boom.internal());
         }
-      }
-    },
-  });
 
-  await delay(20000);
-  await submissionsReceiver.close();
+        return response;
+      },
+      {
+        method: HttpMethod.POST,
+      },
+    );
+
+    await server.invoker.listen(
+      api.getBatch.name,
+      async ({ body }) => {
+        if (body === undefined) {
+          return fromBoom(Boom.badRequest('Missing body'));
+        }
+
+        const request = parse.getBatchRequest(body);
+        if (request === undefined) {
+          return fromBoom(Boom.badRequest());
+        }
+
+        return await batchController.getBatch(request);
+      },
+      { method: HttpMethod.POST },
+    );
+
+    await server.invoker.listen(
+      api.updateBatch.name,
+      async ({ body, headers }) => {
+        if (body === undefined) {
+          return fromBoom(Boom.badRequest('Missing body'));
+        }
+
+        const request = parse.updateBatchRequest(body);
+        if (request === undefined) {
+          return fromBoom(Boom.badRequest());
+        }
+
+        const response = await batchController.updateBatch(request);
+        if (!response.success) {
+          return response;
+        }
+
+        try {
+          const task: ContentSubmissionTask = {
+            batchId: request.id,
+            accountId: request.accountId,
+          };
+          const cloudEvent = new CloudEvent({
+            specversion: '1.0',
+            type: `${appId}.event.sent.ContentToBeSubmitted`,
+            source: `${appId}.${api.addContentToBatch.name}`,
+            id: uuidv4(),
+            time: new Date().toJSON(),
+            datacontenttype: 'application/cloudevents+json',
+            data: task,
+            pubsubname: process.env['SERVICE_BUS_HOST_NAME'],
+            queue: submissionsQueueName,
+            traceparent: headers?.traceparent || '',
+            tracestate: headers?.tracestate || '',
+          });
+          const messages = [
+            {
+              body: HTTP.structured(cloudEvent),
+            },
+          ];
+          const sender = serviceBusClient.createSender(submissionsQueueName);
+          let batch = await sender.createMessageBatch();
+          for (const message of messages) {
+            if (!batch.tryAddMessage(message)) {
+              await sender.sendMessages(batch);
+              batch = await sender.createMessageBatch();
+              if (!batch.tryAddMessage(message)) {
+                const message = 'Message too big to fit in a batch';
+                logger.error(message);
+                throw Boom.internal(message);
+              }
+            }
+          }
+
+          await sender.sendMessages(batch);
+          logger.info(
+            `Sent a batch of messages to the queue: ${submissionsQueueName}`,
+          );
+          await sender.close();
+        } catch (err) {
+          logger.error('Error publishing work item', { error: err });
+          return fromBoom(Boom.internal());
+        }
+
+        return response;
+      },
+      { method: HttpMethod.POST },
+    );
+
+    await server.invoker.listen(
+      api.getBatchContent.name,
+      async ({ body }) => {
+        if (body === undefined) {
+          return fromBoom(Boom.badRequest('Missing body'));
+        }
+
+        const request = parse.getBatchContentRequest(body);
+        if (request === undefined) {
+          return fromBoom(Boom.badRequest());
+        }
+
+        return await batchController.getBatchContent(request);
+      },
+      { method: HttpMethod.POST },
+    );
+
+    await server.start();
+
+    const execute = true;
+    while (execute) {
+      const receiver = serviceBusClient.createReceiver(tasksQueueName);
+      const subscription = receiver.subscribe({
+        processMessage: async (brokeredMessage) => {
+          if (HTTP.isEvent(brokeredMessage.body)) {
+            const body = JSON.parse(
+              brokeredMessage.body.body,
+            ) as ContentToBeProcessedTask;
+
+            if (!taskValidate.receiveContentToBeProcessedTask(body)) {
+              const message = `Data validation failed for queue message ID: ${brokeredMessage.messageId}`;
+              logger.error(message);
+              throw Boom.internal(message);
+            }
+
+            try {
+              const records = await csvValidator.validateBatch(
+                body.data as ContentProcessingTask,
+              );
+              if (!records.success) {
+                if (records.error.statusCode !== 400) {
+                  throw new Boom.Boom(records.error.message, {
+                    statusCode: records.error.statusCode,
+                  });
+                }
+                const value: BulkSubmission = {
+                  id: body.data.batchId,
+                  state: {
+                    status: 'FailedCsvValidation',
+                    timestamp: new Date(),
+                    error: records.error.message,
+                  },
+                };
+                await repository.saveBatch(value, body.data.accountId);
+              } else {
+                const submissions: Omit<submission.PartialSubmission, 'id'>[] =
+                  [];
+                const rowErrors: api.BulkSubmissionValidationRowError[] = [];
+
+                let response: submission.ValidateSubmissionsResponse;
+                try {
+                  response = await daprAnnexViiClient.validateSubmissions({
+                    accountId: body.data.accountId,
+                    padIndex: 2,
+                    values: records.value.rows,
+                  });
+                } catch (err) {
+                  logger.error(
+                    `Error receiving response from ${annexViiAppId} service`,
+                    { error: err },
+                  );
+                  throw Boom.internal();
+                }
+
+                if (!response.success) {
+                  throw new Boom.Boom(response.error.message, {
+                    statusCode: response.error.statusCode,
+                  });
+                }
+
+                if (!response.value.valid) {
+                  response.value.values.map((v) =>
+                    rowErrors.push({
+                      rowNumber: v.index,
+                      errorAmount:
+                        v.fieldFormatErrors.length +
+                        v.invalidStructureErrors.length,
+                      errorDetails: v.fieldFormatErrors
+                        .map((f) => f.message)
+                        .concat(v.invalidStructureErrors.map((i) => i.message)),
+                    }),
+                  );
+                } else {
+                  submissions.push(...response.value.values);
+                }
+
+                const value: BulkSubmission =
+                  rowErrors.length > 0
+                    ? {
+                        id: body.data.batchId,
+                        state: {
+                          status: 'FailedValidation',
+                          timestamp: new Date(),
+                          rowErrors: rowErrors,
+                          columnErrors: [],
+                        },
+                      }
+                    : {
+                        id: body.data.batchId,
+                        state: {
+                          status: 'PassedValidation',
+                          timestamp: new Date(),
+                          hasEstimates: submissions.some(
+                            (s) =>
+                              s.wasteQuantity.type === 'EstimateData' ||
+                              s.collectionDate.type === 'EstimateDate',
+                          ),
+                          submissions: submissions,
+                        },
+                      };
+
+                await repository.saveBatch(value, body.data.accountId);
+              }
+            } catch (error) {
+              if (error instanceof Boom.Boom) {
+                logger.error('Error processing task from queue', {
+                  batchId: body.data.batchId,
+                  accountId: body.data.accountId,
+                  error: error,
+                });
+              } else {
+                logger.error('Unknown error', {
+                  batchId: body.data.batchId,
+                  accountId: body.data.accountId,
+                  error: error,
+                });
+              }
+            }
+          }
+        },
+
+        processError: async (args: ProcessErrorArgs) => {
+          logger.error(
+            `Error from source ${args.errorSource} occurred: `,
+            args.error,
+          );
+          if (isServiceBusError(args.error)) {
+            switch (args.error.code) {
+              case 'MessagingEntityDisabled':
+              case 'MessagingEntityNotFound':
+              case 'UnauthorizedAccess':
+                logger.error(
+                  `An unrecoverable error occurred. Stopping processing. ${args.error.code}`,
+                  args.error,
+                );
+                await subscription.close();
+                break;
+              case 'MessageLockLost':
+                logger.error(`Message lock lost for message`, args.error);
+                break;
+              case 'ServiceBusy':
+                await delay(1000);
+                break;
+            }
+          }
+        },
+      });
+
+      await delay(20000);
+      await receiver.close();
+
+      const submissionsReceiver =
+        serviceBusClient.createReceiver(submissionsQueueName);
+      const submissionsSubscription = submissionsReceiver.subscribe({
+        processMessage: async (brokeredMessage) => {
+          if (HTTP.isEvent(brokeredMessage.body)) {
+            const body = JSON.parse(
+              brokeredMessage.body.body,
+            ) as ContentToBeSubmittedTask;
+
+            try {
+              const batchData = await repository.getBatch(
+                body.data.batchId,
+                body.data.accountId,
+              );
+              if (batchData.state.status !== 'Submitting') {
+                const message = `The fetched batch ${batchData.id} does not have the correct status. Status expected: 'Submitting'. Status received: '${batchData.state.status}'.`;
+                logger.error(message);
+                throw Boom.internal(message);
+              }
+
+              let response: submission.CreateSubmissionsResponse;
+              try {
+                response = await daprAnnexViiClient.createSubmissions({
+                  id: body.data.batchId,
+                  accountId: body.data.accountId,
+                  values: batchData.state.submissions,
+                });
+              } catch (err) {
+                logger.error(
+                  `Error receiving response from ${annexViiAppId} service`,
+                  { error: err },
+                );
+                throw Boom.internal();
+              }
+
+              if (!response.success) {
+                throw new Boom.Boom(response.error.message, {
+                  statusCode: response.error.statusCode,
+                });
+              }
+
+              const value: BulkSubmission = {
+                id: body.data.batchId,
+                state: {
+                  status: 'Submitted',
+                  timestamp: new Date(),
+                  hasEstimates: batchData.state.hasEstimates,
+                  transactionId: batchData.state.transactionId,
+                  submissions: response.value.map((s) => {
+                    return {
+                      id: s.id,
+                      submissionDeclaration: s.submissionDeclaration,
+                      hasEstimates:
+                        s.submissionState.status == 'SubmittedWithEstimates'
+                          ? true
+                          : false,
+                      collectionDate: s.collectionDate,
+                      wasteDescription: s.wasteDescription,
+                      reference: s.reference,
+                    };
+                  }),
+                },
+              };
+              await repository.saveBatch(value, body.data.accountId);
+            } catch (error) {
+              if (error instanceof Boom.Boom) {
+                logger.error('Error processing task from queue', {
+                  batchId: body.data.batchId,
+                  accountId: body.data.accountId,
+                  error: error,
+                });
+              } else {
+                logger.error('Unknown error', {
+                  batchId: body.data.batchId,
+                  accountId: body.data.accountId,
+                  error: error,
+                });
+              }
+            }
+          }
+        },
+
+        processError: async (args: ProcessErrorArgs) => {
+          logger.error(
+            `Error from source ${args.errorSource} occurred: `,
+            args.error,
+          );
+          if (isServiceBusError(args.error)) {
+            switch (args.error.code) {
+              case 'MessagingEntityDisabled':
+              case 'MessagingEntityNotFound':
+              case 'UnauthorizedAccess':
+                logger.error(
+                  `An unrecoverable error occurred. Stopping processing. ${args.error.code}`,
+                  args.error,
+                );
+                await submissionsSubscription.close();
+                break;
+              case 'MessageLockLost':
+                logger.error(`Message lock lost for message`, args.error);
+                break;
+              case 'ServiceBusy':
+                await delay(1000);
+                break;
+            }
+          }
+        },
+      });
+
+      await delay(20000);
+      await submissionsReceiver.close();
+    }
+  } catch (error) {
+    console.log('Error occurred while starting the service.');
+    logger.info('Error occurred while starting the service.');
+    console.error(error);
+    logger.error(error);
+  }
 }
+
+init();

@@ -55,228 +55,239 @@ const referenceDataController = new ReferenceDataController(
   logger,
 );
 
-await server.invoker.listen(
-  api.getWasteCodes.name,
-  async () => {
-    return await referenceDataController.getWasteCodes(null);
-  },
-  { method: HttpMethod.POST },
-);
+async function init() {
+  try {
+    await server.invoker.listen(
+      api.getWasteCodes.name,
+      async () => {
+        return await referenceDataController.getWasteCodes(null);
+      },
+      { method: HttpMethod.POST },
+    );
 
-await server.invoker.listen(
-  api.getEWCCodes.name,
-  async ({ body }) => {
-    if (body === undefined) {
-      return fromBoom(Boom.badRequest('Missing body'));
-    }
-    const request = parse.getEwcCodesRequest(body);
-    if (request === undefined) {
-      return fromBoom(Boom.badRequest());
-    }
-    return await referenceDataController.getEWCCodes(request);
-  },
-  { method: HttpMethod.POST },
-);
+    await server.invoker.listen(
+      api.getEWCCodes.name,
+      async ({ body }) => {
+        if (body === undefined) {
+          return fromBoom(Boom.badRequest('Missing body'));
+        }
+        const request = parse.getEwcCodesRequest(body);
+        if (request === undefined) {
+          return fromBoom(Boom.badRequest());
+        }
+        return await referenceDataController.getEWCCodes(request);
+      },
+      { method: HttpMethod.POST },
+    );
 
-await server.invoker.listen(
-  api.getCountries.name,
-  async ({ body }) => {
-    if (body === undefined) {
-      return fromBoom(Boom.badRequest('Missing body'));
-    }
+    await server.invoker.listen(
+      api.getCountries.name,
+      async ({ body }) => {
+        if (body === undefined) {
+          return fromBoom(Boom.badRequest('Missing body'));
+        }
 
-    const request = parse.getCountriesRequest(body);
-    if (request === undefined) {
-      return fromBoom(Boom.badRequest());
-    }
+        const request = parse.getCountriesRequest(body);
+        if (request === undefined) {
+          return fromBoom(Boom.badRequest());
+        }
 
-    return await referenceDataController.getCountries(request);
-  },
-  { method: HttpMethod.POST },
-);
+        return await referenceDataController.getCountries(request);
+      },
+      { method: HttpMethod.POST },
+    );
 
-await server.invoker.listen(
-  api.getRecoveryCodes.name,
-  async () => {
-    return await referenceDataController.getRecoveryCodes(null);
-  },
-  { method: HttpMethod.POST },
-);
+    await server.invoker.listen(
+      api.getRecoveryCodes.name,
+      async () => {
+        return await referenceDataController.getRecoveryCodes(null);
+      },
+      { method: HttpMethod.POST },
+    );
 
-await server.invoker.listen(
-  api.getDisposalCodes.name,
-  async () => {
-    return await referenceDataController.getDisposalCodes(null);
-  },
-  { method: HttpMethod.POST },
-);
+    await server.invoker.listen(
+      api.getDisposalCodes.name,
+      async () => {
+        return await referenceDataController.getDisposalCodes(null);
+      },
+      { method: HttpMethod.POST },
+    );
 
-await server.invoker.listen(
-  api.getHazardousCodes.name,
-  async () => {
-    return await referenceDataController.getHazardousCodes(null);
-  },
-  { method: HttpMethod.POST },
-);
+    await server.invoker.listen(
+      api.getHazardousCodes.name,
+      async () => {
+        return await referenceDataController.getHazardousCodes(null);
+      },
+      { method: HttpMethod.POST },
+    );
 
-await server.invoker.listen(
-  api.getPops.name,
-  async () => {
-    return await referenceDataController.getPops(null);
-  },
-  { method: HttpMethod.POST },
-);
+    await server.invoker.listen(
+      api.getPops.name,
+      async () => {
+        return await referenceDataController.getPops(null);
+      },
+      { method: HttpMethod.POST },
+    );
 
-await server.invoker.listen(
-  api.getSICCodes.name,
-  async () => {
-    return await referenceDataController.getSICCodes(null);
-  },
-  { method: HttpMethod.POST },
-);
+    await server.invoker.listen(
+      api.getSICCodes.name,
+      async () => {
+        return await referenceDataController.getSICCodes(null);
+      },
+      { method: HttpMethod.POST },
+    );
 
-await server.invoker.listen(
-  api.getLocalAuthorities.name,
-  async () => {
-    return await referenceDataController.getLocalAuthorities(null);
-  },
-  { method: HttpMethod.POST },
-);
+    await server.invoker.listen(
+      api.getLocalAuthorities.name,
+      async () => {
+        return await referenceDataController.getLocalAuthorities(null);
+      },
+      { method: HttpMethod.POST },
+    );
 
-await server.invoker.listen(
-  api.createWasteCodes.name,
-  async ({ body }) => {
-    if (body === undefined) {
-      return fromBoom(Boom.badRequest('Missing body'));
-    }
+    await server.invoker.listen(
+      api.createWasteCodes.name,
+      async ({ body }) => {
+        if (body === undefined) {
+          return fromBoom(Boom.badRequest('Missing body'));
+        }
 
-    const request = JSON.parse(body) as api.CreateWasteCodesRequest;
-    if (request === undefined) {
-      return fromBoom(Boom.badRequest());
-    }
+        const request = JSON.parse(body) as api.CreateWasteCodesRequest;
+        if (request === undefined) {
+          return fromBoom(Boom.badRequest());
+        }
 
-    return await referenceDataController.createWasteCodes(request);
-  },
-  { method: HttpMethod.POST },
-);
+        return await referenceDataController.createWasteCodes(request);
+      },
+      { method: HttpMethod.POST },
+    );
 
-await server.invoker.listen(
-  api.createEWCCodes.name,
-  async ({ body }) => {
-    if (body === undefined) {
-      return fromBoom(Boom.badRequest('Missing body'));
-    }
+    await server.invoker.listen(
+      api.createEWCCodes.name,
+      async ({ body }) => {
+        if (body === undefined) {
+          return fromBoom(Boom.badRequest('Missing body'));
+        }
 
-    const request = JSON.parse(body) as api.CreateEWCCodesRequest;
-    if (request === undefined) {
-      return fromBoom(Boom.badRequest());
-    }
+        const request = JSON.parse(body) as api.CreateEWCCodesRequest;
+        if (request === undefined) {
+          return fromBoom(Boom.badRequest());
+        }
 
-    return await referenceDataController.createEWCCodes(request);
-  },
-  { method: HttpMethod.POST },
-);
+        return await referenceDataController.createEWCCodes(request);
+      },
+      { method: HttpMethod.POST },
+    );
 
-await server.invoker.listen(
-  api.createCountries.name,
-  async ({ body }) => {
-    if (body === undefined) {
-      return fromBoom(Boom.badRequest('Missing body'));
-    }
+    await server.invoker.listen(
+      api.createCountries.name,
+      async ({ body }) => {
+        if (body === undefined) {
+          return fromBoom(Boom.badRequest('Missing body'));
+        }
 
-    const request = JSON.parse(body) as api.CreateCountriesRequest;
-    if (request === undefined) {
-      return fromBoom(Boom.badRequest());
-    }
+        const request = JSON.parse(body) as api.CreateCountriesRequest;
+        if (request === undefined) {
+          return fromBoom(Boom.badRequest());
+        }
 
-    return await referenceDataController.createCountries(request);
-  },
-  { method: HttpMethod.POST },
-);
+        return await referenceDataController.createCountries(request);
+      },
+      { method: HttpMethod.POST },
+    );
 
-await server.invoker.listen(
-  api.createRecoveryCodes.name,
-  async ({ body }) => {
-    if (body === undefined) {
-      return fromBoom(Boom.badRequest('Missing body'));
-    }
+    await server.invoker.listen(
+      api.createRecoveryCodes.name,
+      async ({ body }) => {
+        if (body === undefined) {
+          return fromBoom(Boom.badRequest('Missing body'));
+        }
 
-    const request = JSON.parse(body) as api.CreateRecoveryCodesRequest;
-    if (request === undefined) {
-      return fromBoom(Boom.badRequest());
-    }
+        const request = JSON.parse(body) as api.CreateRecoveryCodesRequest;
+        if (request === undefined) {
+          return fromBoom(Boom.badRequest());
+        }
 
-    return await referenceDataController.createRecoveryCodes(request);
-  },
-  { method: HttpMethod.POST },
-);
+        return await referenceDataController.createRecoveryCodes(request);
+      },
+      { method: HttpMethod.POST },
+    );
 
-await server.invoker.listen(
-  api.createDisposalCodes.name,
-  async ({ body }) => {
-    if (body === undefined) {
-      return fromBoom(Boom.badRequest('Missing body'));
-    }
+    await server.invoker.listen(
+      api.createDisposalCodes.name,
+      async ({ body }) => {
+        if (body === undefined) {
+          return fromBoom(Boom.badRequest('Missing body'));
+        }
 
-    const request = JSON.parse(body) as api.CreateDisposalCodesRequest;
-    if (request === undefined) {
-      return fromBoom(Boom.badRequest());
-    }
+        const request = JSON.parse(body) as api.CreateDisposalCodesRequest;
+        if (request === undefined) {
+          return fromBoom(Boom.badRequest());
+        }
 
-    return await referenceDataController.createDisposalCodes(request);
-  },
-  { method: HttpMethod.POST },
-);
+        return await referenceDataController.createDisposalCodes(request);
+      },
+      { method: HttpMethod.POST },
+    );
 
-await server.invoker.listen(
-  api.createHazardousCodes.name,
-  async ({ body }) => {
-    if (body === undefined) {
-      return fromBoom(Boom.badRequest('Missing body'));
-    }
+    await server.invoker.listen(
+      api.createHazardousCodes.name,
+      async ({ body }) => {
+        if (body === undefined) {
+          return fromBoom(Boom.badRequest('Missing body'));
+        }
 
-    const request = JSON.parse(body) as api.CreateHazardousCodesRequest;
-    if (request === undefined) {
-      return fromBoom(Boom.badRequest());
-    }
+        const request = JSON.parse(body) as api.CreateHazardousCodesRequest;
+        if (request === undefined) {
+          return fromBoom(Boom.badRequest());
+        }
 
-    return await referenceDataController.createHazardousCodes(request);
-  },
-  { method: HttpMethod.POST },
-);
+        return await referenceDataController.createHazardousCodes(request);
+      },
+      { method: HttpMethod.POST },
+    );
 
-await server.invoker.listen(
-  api.createPops.name,
-  async ({ body }) => {
-    if (body === undefined) {
-      return fromBoom(Boom.badRequest('Missing body'));
-    }
+    await server.invoker.listen(
+      api.createPops.name,
+      async ({ body }) => {
+        if (body === undefined) {
+          return fromBoom(Boom.badRequest('Missing body'));
+        }
 
-    const request = JSON.parse(body) as api.CreatePopsRequest;
-    if (request === undefined) {
-      return fromBoom(Boom.badRequest());
-    }
+        const request = JSON.parse(body) as api.CreatePopsRequest;
+        if (request === undefined) {
+          return fromBoom(Boom.badRequest());
+        }
 
-    return await referenceDataController.createPops(request);
-  },
-  { method: HttpMethod.POST },
-);
+        return await referenceDataController.createPops(request);
+      },
+      { method: HttpMethod.POST },
+    );
 
-await server.invoker.listen(
-  api.createSICCodes.name,
-  async ({ body }) => {
-    if (body === undefined) {
-      return fromBoom(Boom.badRequest('Missing body'));
-    }
+    await server.invoker.listen(
+      api.createSICCodes.name,
+      async ({ body }) => {
+        if (body === undefined) {
+          return fromBoom(Boom.badRequest('Missing body'));
+        }
 
-    const request = JSON.parse(body) as api.CreateSICCodesRequest;
-    if (request === undefined) {
-      return fromBoom(Boom.badRequest());
-    }
+        const request = JSON.parse(body) as api.CreateSICCodesRequest;
+        if (request === undefined) {
+          return fromBoom(Boom.badRequest());
+        }
 
-    return await referenceDataController.createSICCodes(request);
-  },
-  { method: HttpMethod.POST },
-);
+        return await referenceDataController.createSICCodes(request);
+      },
+      { method: HttpMethod.POST },
+    );
 
-await server.start();
+    await server.start();
+  } catch (error) {
+    console.log('Error occurred while starting the service.');
+    logger.info('Error occurred while starting the service.');
+    console.error(error);
+    logger.error(error);
+  }
+}
+
+init();

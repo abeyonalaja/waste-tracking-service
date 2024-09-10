@@ -63,22 +63,33 @@ const feedbackClient = new FeedbackClient(
 
 const feedbackController = new FeedbackController(feedbackClient, logger);
 
-await server.invoker.listen(
-  api.sendFeedback.name,
-  async ({ body }) => {
-    if (body === undefined) {
-      return fromBoom(Boom.badRequest('Missing body'));
-    }
-    const request = parse.sendFeedbackRequest(body);
+async function init() {
+  try {
+    await server.invoker.listen(
+      api.sendFeedback.name,
+      async ({ body }) => {
+        if (body === undefined) {
+          return fromBoom(Boom.badRequest('Missing body'));
+        }
+        const request = parse.sendFeedbackRequest(body);
 
-    if (request === undefined) {
-      return fromBoom(Boom.badRequest());
-    }
-    return await feedbackController.sendFeedback(request);
-  },
-  {
-    method: HttpMethod.POST,
-  },
-);
+        if (request === undefined) {
+          return fromBoom(Boom.badRequest());
+        }
+        return await feedbackController.sendFeedback(request);
+      },
+      {
+        method: HttpMethod.POST,
+      },
+    );
 
-await server.start();
+    await server.start();
+  } catch (error) {
+    console.log('Error occurred while starting the service.');
+    logger.info('Error occurred while starting the service.');
+    console.error(error);
+    logger.error(error);
+  }
+}
+
+init();

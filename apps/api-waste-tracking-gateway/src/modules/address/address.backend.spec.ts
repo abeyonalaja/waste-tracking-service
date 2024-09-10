@@ -41,7 +41,7 @@ describe('AddressServiceBackend', () => {
 
     mockClientAddresses.getAddressByPostcode.mockResolvedValue(mockResponse);
 
-    const postcode = faker.address.zipCode();
+    const postcode = faker.location.zipCode();
     const result = await subject.listAddresses(postcode);
 
     expect(result).toEqual(mockResponse.value);
@@ -62,7 +62,7 @@ describe('AddressServiceBackend', () => {
 
     mockClientAddresses.getAddressByPostcode.mockResolvedValue(mockResponse);
 
-    const postcode = faker.address.zipCode();
+    const postcode = faker.location.zipCode();
     await expect(subject.listAddresses(postcode)).rejects.toThrow();
     expect(mockClientAddresses.getAddressByPostcode).toHaveBeenCalledWith({
       postcode,

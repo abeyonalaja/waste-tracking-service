@@ -54,55 +54,66 @@ const server = new DaprServer({
   },
 });
 
-await server.invoker.listen(
-  api.checkParticipation.name,
-  async ({ body }) => {
-    if (body === undefined) {
-      return fromBoom(Boom.badRequest('Missing body'));
-    }
+async function init() {
+  try {
+    await server.invoker.listen(
+      api.checkParticipation.name,
+      async ({ body }) => {
+        if (body === undefined) {
+          return fromBoom(Boom.badRequest('Missing body'));
+        }
 
-    const request = parse.checkParticipationRequest(body);
-    if (request === undefined) {
-      return fromBoom(Boom.badRequest());
-    }
+        const request = parse.checkParticipationRequest(body);
+        if (request === undefined) {
+          return fromBoom(Boom.badRequest());
+        }
 
-    return await controller.checkParticipation(request);
-  },
-  { method: HttpMethod.POST },
-);
+        return await controller.checkParticipation(request);
+      },
+      { method: HttpMethod.POST },
+    );
 
-await server.invoker.listen(
-  api.redeemInvitation.name,
-  async ({ body }) => {
-    if (body === undefined) {
-      return fromBoom(Boom.badRequest('Missing body'));
-    }
+    await server.invoker.listen(
+      api.redeemInvitation.name,
+      async ({ body }) => {
+        if (body === undefined) {
+          return fromBoom(Boom.badRequest('Missing body'));
+        }
 
-    const request = parse.redeemInvitationRequest(body);
-    if (request === undefined) {
-      return fromBoom(Boom.badRequest());
-    }
+        const request = parse.redeemInvitationRequest(body);
+        if (request === undefined) {
+          return fromBoom(Boom.badRequest());
+        }
 
-    return await controller.redeemInvitation(request);
-  },
-  { method: HttpMethod.POST },
-);
+        return await controller.redeemInvitation(request);
+      },
+      { method: HttpMethod.POST },
+    );
 
-await server.invoker.listen(
-  api.addParticipant.name,
-  async ({ body }) => {
-    if (body === undefined) {
-      return fromBoom(Boom.badRequest('Missing body'));
-    }
+    await server.invoker.listen(
+      api.addParticipant.name,
+      async ({ body }) => {
+        if (body === undefined) {
+          return fromBoom(Boom.badRequest('Missing body'));
+        }
 
-    const request = parse.addParticipantRequest(body);
-    if (request === undefined) {
-      return fromBoom(Boom.badRequest());
-    }
+        const request = parse.addParticipantRequest(body);
+        if (request === undefined) {
+          return fromBoom(Boom.badRequest());
+        }
 
-    return await controller.addParticipant(request);
-  },
-  { method: HttpMethod.POST },
-);
+        return await controller.addParticipant(request);
+      },
+      { method: HttpMethod.POST },
+    );
 
-await server.start();
+    await server.start();
+  } catch (error) {
+    console.log('Error occurred while starting the service.');
+    logger.info('Error occurred while starting the service.');
+    console.error(error);
+    logger.error(error);
+  }
+}
+
+init();

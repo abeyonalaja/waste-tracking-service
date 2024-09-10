@@ -3,7 +3,6 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/service-limited-audience/src",
   "projectType": "application",
-  "tags": [],
   "targets": {
     "build": {
       "executor": "@nrwl/webpack:webpack",
@@ -28,8 +27,7 @@
       "configurations": {
         "development": {},
         "production": {
-          "optimization": true,
-          "generateLockFile": true
+          "optimization": true
         }
       }
     },
@@ -53,13 +51,24 @@
       }
     },
     "lint": {
-      "executor": "@nx/eslint:lint"
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/service-limited-audience/**/*.ts"]
+      }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/service-limited-audience/jest.config.ts"
+        "jestConfig": "apps/service-limited-audience/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
       }
     },
     "container": {
@@ -76,10 +85,11 @@
             "type=ref,event=tag",
             "type=ref,event=pr",
             "type=sha,prefix=sha-",
-            "type=raw,value=3.0.22"
+            "type=raw,value=3.0.23"
           ]
         }
       }
     }
-  }
+  },
+  "tags": []
 }
