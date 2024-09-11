@@ -2049,9 +2049,9 @@ export async function setRecoveryFacilityDetail(
       if (
         v.recoveryFacilityType &&
         ((v.recoveryFacilityType.type === 'Laboratory' &&
-          v.recoveryFacilityType.disposalCode) ||
+          v.recoveryFacilityType.disposalCode !== undefined) ||
           (v.recoveryFacilityType.type !== 'Laboratory' &&
-            v.recoveryFacilityType.recoveryCode))
+            v.recoveryFacilityType.recoveryCode !== undefined))
       ) {
         const codeValidationResult =
           glwe.validationRules.validateDisposalOrRecoveryCode(
