@@ -3052,6 +3052,55 @@ describe(TemplateController, () => {
       expect(response.error.statusCode).toBe(418);
     });
 
+    it('forwards validation errors only for populated fields', async () => {
+      const invalidCollectionDetail: DraftCollectionDetail = {
+        status: 'Complete',
+        address: {
+          addressLine1: '',
+          addressLine2: '',
+          townCity: '',
+          postcode: '123',
+          country: '',
+        },
+        contactDetails: {
+          organisationName: '',
+          fullName: '',
+          emailAddress: '',
+          phoneNumber: 'ABC',
+          faxNumber: '',
+        },
+      };
+      const response = await subject.setTemplateCollectionDetail({
+        id,
+        accountId,
+        value: invalidCollectionDetail,
+      });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(response.error.statusCode).toBe(400);
+
+      expect(response.error.data).toEqual([
+        {
+          field: 'CollectionDetail',
+          message:
+            glwe.errorMessages.invalidPostcode('CollectionDetail')[locale][
+              context
+            ],
+        },
+        {
+          field: 'CollectionDetail',
+          message:
+            glwe.errorMessages.invalidPhone('CollectionDetail')[locale][
+              context
+            ],
+        },
+      ]);
+    });
+
     it('successfully sets the collection details', async () => {
       const lastModifiedDate = template.templateDetails.lastModified;
       const collectionDetail = { status: 'Started' } as DraftCollectionDetail;

@@ -633,6 +633,7 @@ export class AnnexViiServiceTemplateBackend implements TemplateBackend {
     if (!response.success) {
       throw new Boom.Boom(response.error.message, {
         statusCode: response.error.statusCode,
+        data: response.error.data,
       });
     }
   }

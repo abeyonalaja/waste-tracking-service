@@ -2746,13 +2746,14 @@ describe(DraftController, () => {
       },
     } as DraftSubmission;
 
-    const collectionDetail = {
+    const collectionDetail: DraftCollectionDetail = {
+      status: 'Complete',
       address: {
         addressLine1: 'test address',
         addressLine2: 'test address 2',
         townCity: 'City',
-        postcode: 'test',
-        country: 'Albania [AB]',
+        postcode: 'SW1A 2AA',
+        country: 'England',
       },
       contactDetails: {
         organisationName: 'test org',
@@ -2761,7 +2762,7 @@ describe(DraftController, () => {
         phoneNumber: '01234567890',
         faxNumber: '01234567890',
       },
-    } as DraftCollectionDetail;
+    };
 
     it('forwards thrown Boom errors', async () => {
       mockRepository.getRecord.mockRejectedValue(Boom.teapot());
@@ -2783,6 +2784,86 @@ describe(DraftController, () => {
         accountId,
       );
       expect(response.error.statusCode).toBe(418);
+    });
+
+    it('forwards validation errors', async () => {
+      const invalidCollectionDetail: DraftCollectionDetail = {
+        status: 'Complete',
+        address: {
+          addressLine1: '',
+          addressLine2: '',
+          townCity: '',
+          postcode: '',
+          country: '',
+        },
+        contactDetails: {
+          organisationName: '',
+          fullName: '',
+          emailAddress: '',
+          phoneNumber: '',
+          faxNumber: '',
+        },
+      };
+      const response = await subject.setDraftCollectionDetail({
+        id,
+        accountId,
+        value: invalidCollectionDetail,
+      });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(response.error.statusCode).toBe(400);
+
+      expect(response.error.data).toEqual([
+        {
+          field: 'CollectionDetail',
+          message:
+            glwe.errorMessages.emptyAddressLine1('CollectionDetail')[locale][
+              context
+            ],
+        },
+        {
+          field: 'CollectionDetail',
+          message:
+            glwe.errorMessages.emptyTownOrCity('CollectionDetail')[locale][
+              context
+            ],
+        },
+        {
+          field: 'CollectionDetail',
+          message:
+            glwe.errorMessages.emptyCountry('CollectionDetail')[locale][
+              context
+            ],
+        },
+        {
+          field: 'CollectionDetail',
+          message:
+            glwe.errorMessages.emptyOrganisationName('CollectionDetail')[
+              locale
+            ][context],
+        },
+        {
+          field: 'CollectionDetail',
+          message:
+            glwe.errorMessages.emptyContactFullName('CollectionDetail')[locale][
+              context
+            ],
+        },
+        {
+          field: 'CollectionDetail',
+          message:
+            glwe.errorMessages.emptyEmail('CollectionDetail')[locale][context],
+        },
+        {
+          field: 'CollectionDetail',
+          message:
+            glwe.errorMessages.emptyPhone('CollectionDetail')[locale][context],
+        },
+      ]);
     });
 
     it('updates a records collection details', async () => {

@@ -1312,193 +1312,141 @@ export function validateCollectionDetailSection(
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: CollectionDetail } {
   const errors: FieldFormatError[] = [];
-  if (
-    !value.wasteCollectionOrganisationName ||
-    !value.wasteCollectionOrganisationName.trim()
-  ) {
-    errors.push({
-      field: 'CollectionDetail',
-      message:
-        validation.CollectionDetailValidationErrorMessages
-          .emptyOrganisationName,
-    });
+
+  const organisationNameValidationResult =
+    glwe.validationRules.validateOrganisationName(
+      value.wasteCollectionOrganisationName,
+      'CollectionDetail',
+      locale,
+      context,
+    );
+
+  if (!organisationNameValidationResult.valid) {
+    errors.push(...organisationNameValidationResult.errors.fieldFormatErrors);
   } else {
-    if (
-      value.wasteCollectionOrganisationName.length > validation.FreeTextChar.max
-    ) {
-      errors.push({
-        field: 'CollectionDetail',
-        message:
-          validation.CollectionDetailValidationErrorMessages
-            .charTooManyOrganisationName,
-      });
-    }
+    value.wasteCollectionOrganisationName =
+      organisationNameValidationResult.value;
   }
 
-  if (
-    !value.wasteCollectionAddressLine1 ||
-    !value.wasteCollectionAddressLine1.trim()
-  ) {
-    errors.push({
-      field: 'CollectionDetail',
-      message:
-        validation.CollectionDetailValidationErrorMessages.emptyAddressLine1,
-    });
+  const addressLine1ValidationResult =
+    glwe.validationRules.validateAddressLine1(
+      value.wasteCollectionAddressLine1,
+      'CollectionDetail',
+      locale,
+      context,
+    );
+
+  if (!addressLine1ValidationResult.valid) {
+    errors.push(...addressLine1ValidationResult.errors.fieldFormatErrors);
   } else {
-    if (
-      value.wasteCollectionAddressLine1.length > validation.FreeTextChar.max
-    ) {
-      errors.push({
-        field: 'CollectionDetail',
-        message:
-          validation.CollectionDetailValidationErrorMessages
-            .charTooManyAddressLine1,
-      });
-    }
+    value.wasteCollectionAddressLine1 = addressLine1ValidationResult.value;
   }
 
-  if (value.wasteCollectionAddressLine2.length > validation.FreeTextChar.max) {
-    errors.push({
-      field: 'CollectionDetail',
-      message:
-        validation.CollectionDetailValidationErrorMessages
-          .charTooManyAddressLine2,
-    });
-  }
+  const addressLine2ValidationResult =
+    glwe.validationRules.validateAddressLine2(
+      value.wasteCollectionAddressLine2,
+      'CollectionDetail',
+      locale,
+      context,
+    );
 
-  if (
-    !value.wasteCollectionTownOrCity ||
-    !value.wasteCollectionTownOrCity.trim()
-  ) {
-    errors.push({
-      field: 'CollectionDetail',
-      message:
-        validation.CollectionDetailValidationErrorMessages.emptyTownOrCity,
-    });
+  if (!addressLine2ValidationResult.valid) {
+    errors.push(...addressLine2ValidationResult.errors.fieldFormatErrors);
   } else {
-    if (value.wasteCollectionTownOrCity.length > validation.FreeTextChar.max) {
-      errors.push({
-        field: 'CollectionDetail',
-        message:
-          validation.CollectionDetailValidationErrorMessages
-            .charTooManyTownOrCity,
-      });
-    }
+    value.wasteCollectionAddressLine2 =
+      addressLine2ValidationResult.value ?? '';
   }
 
-  if (!value.wasteCollectionCountry || !value.wasteCollectionCountry.trim()) {
-    errors.push({
-      field: 'CollectionDetail',
-      message: validation.CollectionDetailValidationErrorMessages.emptyCountry,
-    });
+  const townOrCityValidationResult = glwe.validationRules.validateTownOrCity(
+    value.wasteCollectionTownOrCity,
+    'CollectionDetail',
+    locale,
+    context,
+  );
+
+  if (!townOrCityValidationResult.valid) {
+    errors.push(...townOrCityValidationResult.errors.fieldFormatErrors);
   } else {
-    value.wasteCollectionCountry = titleCase(value.wasteCollectionCountry);
-    if (!fourNationsCountries.includes(value.wasteCollectionCountry)) {
-      errors.push({
-        field: 'CollectionDetail',
-        message:
-          validation.CollectionDetailValidationErrorMessages.invalidCountry,
-      });
-    }
+    value.wasteCollectionTownOrCity = townOrCityValidationResult.value;
   }
 
-  if (
-    value.wasteCollectionPostcode &&
-    !commonValidation.commonRegex.postcodeRegex.test(
-      value.wasteCollectionPostcode,
-    )
-  ) {
-    errors.push({
-      field: 'CollectionDetail',
-      message:
-        validation.CollectionDetailValidationErrorMessages.invalidPostcode,
-    });
-  }
+  const countryValidationResult = glwe.validationRules.validateCountry(
+    value.wasteCollectionCountry,
+    'CollectionDetail',
+    locale,
+    context,
+  );
 
-  if (
-    !value.wasteCollectionContactFullName ||
-    !value.wasteCollectionContactFullName.trim()
-  ) {
-    errors.push({
-      field: 'CollectionDetail',
-      message:
-        validation.CollectionDetailValidationErrorMessages.emptyContactFullName,
-    });
+  if (!countryValidationResult.valid) {
+    errors.push(...countryValidationResult.errors.fieldFormatErrors);
   } else {
-    if (
-      value.wasteCollectionContactFullName.length > validation.FreeTextChar.max
-    ) {
-      errors.push({
-        field: 'CollectionDetail',
-        message:
-          validation.CollectionDetailValidationErrorMessages
-            .charTooManyContactFullName,
-      });
-    }
+    value.wasteCollectionCountry = countryValidationResult.value;
   }
 
-  const reformattedwasteCollectionContactPhoneNumber =
-    value.wasteCollectionContactPhoneNumber.replace(/'/g, '');
-  if (!reformattedwasteCollectionContactPhoneNumber) {
-    errors.push({
-      field: 'CollectionDetail',
-      message: validation.CollectionDetailValidationErrorMessages.emptyPhone,
-    });
+  const postcodeValidationResult = glwe.validationRules.validatePostcode(
+    value.wasteCollectionPostcode,
+    'CollectionDetail',
+    locale,
+    context,
+  );
+
+  if (!postcodeValidationResult.valid) {
+    errors.push(...postcodeValidationResult.errors.fieldFormatErrors);
   } else {
-    if (
-      !commonValidation.commonRegex.phoneRegex.test(
-        reformattedwasteCollectionContactPhoneNumber,
-      )
-    ) {
-      errors.push({
-        field: 'CollectionDetail',
-        message:
-          validation.CollectionDetailValidationErrorMessages.invalidPhone,
-      });
-    }
+    value.wasteCollectionPostcode = postcodeValidationResult.value ?? '';
   }
 
-  const reformattedwasteCollectionFaxNumber =
-    value.wasteCollectionFaxNumber.replace(/'/g, '');
-  if (
-    reformattedwasteCollectionFaxNumber &&
-    !commonValidation.commonRegex.faxRegex.test(
-      reformattedwasteCollectionFaxNumber,
-    )
-  ) {
-    errors.push({
-      field: 'CollectionDetail',
-      message: validation.CollectionDetailValidationErrorMessages.invalidFax,
-    });
-  }
+  const fullNameValidationResult = glwe.validationRules.validateFullName(
+    value.wasteCollectionContactFullName,
+    'CollectionDetail',
+    locale,
+    context,
+  );
 
-  if (!value.wasteCollectionEmailAddress) {
-    errors.push({
-      field: 'CollectionDetail',
-      message: validation.CollectionDetailValidationErrorMessages.emptyEmail,
-    });
+  if (!fullNameValidationResult.valid) {
+    errors.push(...fullNameValidationResult.errors.fieldFormatErrors);
   } else {
-    if (
-      value.wasteCollectionEmailAddress.length > validation.FreeTextChar.max
-    ) {
-      errors.push({
-        field: 'CollectionDetail',
-        message:
-          validation.CollectionDetailValidationErrorMessages.charTooManyEmail,
-      });
-    } else {
-      if (
-        !commonValidation.commonRegex.emailRegex.test(
-          value.wasteCollectionEmailAddress,
-        )
-      ) {
-        errors.push({
-          field: 'CollectionDetail',
-          message:
-            validation.CollectionDetailValidationErrorMessages.invalidEmail,
-        });
-      }
-    }
+    value.wasteCollectionContactFullName = fullNameValidationResult.value;
+  }
+
+  const phoneNumberValidationResult = glwe.validationRules.validatePhoneNumber(
+    value.wasteCollectionContactPhoneNumber.replace(/'/g, ''),
+    'CollectionDetail',
+    locale,
+    context,
+  );
+
+  if (!phoneNumberValidationResult.valid) {
+    errors.push(...phoneNumberValidationResult.errors.fieldFormatErrors);
+  } else {
+    value.wasteCollectionContactPhoneNumber = phoneNumberValidationResult.value;
+  }
+
+  const faxNumberValidationResult = glwe.validationRules.validateFaxNumber(
+    value.wasteCollectionFaxNumber.replace(/'/g, ''),
+    'CollectionDetail',
+    locale,
+    context,
+  );
+
+  if (!faxNumberValidationResult.valid) {
+    errors.push(...faxNumberValidationResult.errors.fieldFormatErrors);
+  } else {
+    value.wasteCollectionFaxNumber = faxNumberValidationResult.value ?? '';
+  }
+
+  const emailAddressValidationResult =
+    glwe.validationRules.validateEmailAddress(
+      value.wasteCollectionEmailAddress,
+      'CollectionDetail',
+      locale,
+      context,
+    );
+
+  if (!emailAddressValidationResult.valid) {
+    errors.push(...emailAddressValidationResult.errors.fieldFormatErrors);
+  } else {
+    value.wasteCollectionEmailAddress = emailAddressValidationResult.value;
   }
 
   if (errors.length > 0) {
@@ -1526,10 +1474,10 @@ export function validateCollectionDetailSection(
         organisationName: value.wasteCollectionOrganisationName,
         fullName: value.wasteCollectionContactFullName,
         emailAddress: value.wasteCollectionEmailAddress,
-        phoneNumber: reformattedwasteCollectionContactPhoneNumber,
-        faxNumber: !reformattedwasteCollectionFaxNumber
+        phoneNumber: value.wasteCollectionContactPhoneNumber,
+        faxNumber: !value.wasteCollectionFaxNumber
           ? undefined
-          : reformattedwasteCollectionFaxNumber,
+          : value.wasteCollectionFaxNumber,
       },
     },
   };

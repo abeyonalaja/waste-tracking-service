@@ -1351,6 +1351,170 @@ export default class DraftController {
     api.SetDraftCollectionDetailResponse
   > = async ({ id, accountId, value }) => {
     try {
+      if (value.status !== 'NotStarted') {
+        const section = 'CollectionDetail';
+        const errors: FieldFormatError[] = [];
+        if (value.address) {
+          const addressLine1ValidationResult =
+            glwe.validationRules.validateAddressLine1(
+              value.address.addressLine1,
+              section,
+              locale,
+              context,
+            );
+
+          if (!addressLine1ValidationResult.valid) {
+            errors.push(
+              ...addressLine1ValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.address.addressLine1 = addressLine1ValidationResult.value;
+          }
+
+          const addressLine2ValidationResult =
+            glwe.validationRules.validateAddressLine2(
+              value.address.addressLine2,
+              section,
+              locale,
+              context,
+            );
+
+          if (!addressLine2ValidationResult.valid) {
+            errors.push(
+              ...addressLine2ValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.address.addressLine2 = addressLine2ValidationResult.value;
+          }
+
+          const townOrCityValidationResult =
+            glwe.validationRules.validateTownOrCity(
+              value.address.townCity,
+              section,
+              locale,
+              context,
+            );
+
+          if (!townOrCityValidationResult.valid) {
+            errors.push(...townOrCityValidationResult.errors.fieldFormatErrors);
+          } else {
+            value.address.townCity = townOrCityValidationResult.value;
+          }
+
+          const postcodeValidationResult =
+            glwe.validationRules.validatePostcode(
+              value.address.postcode,
+              section,
+              locale,
+              context,
+            );
+
+          if (!postcodeValidationResult.valid) {
+            errors.push(...postcodeValidationResult.errors.fieldFormatErrors);
+          } else {
+            value.address.postcode = postcodeValidationResult.value;
+          }
+
+          const countryValidationResult = glwe.validationRules.validateCountry(
+            value.address.country,
+            section,
+            locale,
+            context,
+          );
+
+          if (!countryValidationResult.valid) {
+            errors.push(...countryValidationResult.errors.fieldFormatErrors);
+          } else {
+            value.address.country = countryValidationResult.value;
+          }
+        }
+
+        if (value.contactDetails) {
+          const organisationNameValidationResult =
+            glwe.validationRules.validateOrganisationName(
+              value.contactDetails.organisationName,
+              section,
+              locale,
+              context,
+            );
+
+          if (!organisationNameValidationResult.valid) {
+            errors.push(
+              ...organisationNameValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.contactDetails.organisationName =
+              organisationNameValidationResult.value;
+          }
+
+          const fullNameValidationResult =
+            glwe.validationRules.validateFullName(
+              value.contactDetails.fullName,
+              section,
+              locale,
+              context,
+            );
+
+          if (!fullNameValidationResult.valid) {
+            errors.push(...fullNameValidationResult.errors.fieldFormatErrors);
+          } else {
+            value.contactDetails.fullName = fullNameValidationResult.value;
+          }
+
+          const emailAddressValidationResult =
+            glwe.validationRules.validateEmailAddress(
+              value.contactDetails.emailAddress,
+              section,
+              locale,
+              context,
+            );
+
+          if (!emailAddressValidationResult.valid) {
+            errors.push(
+              ...emailAddressValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.contactDetails.emailAddress =
+              emailAddressValidationResult.value;
+          }
+
+          const phoneNumberValidationResult =
+            glwe.validationRules.validatePhoneNumber(
+              value.contactDetails.phoneNumber,
+              section,
+              locale,
+              context,
+            );
+
+          if (!phoneNumberValidationResult.valid) {
+            errors.push(
+              ...phoneNumberValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.contactDetails.phoneNumber =
+              phoneNumberValidationResult.value;
+          }
+
+          const faxNumberValidationResult =
+            glwe.validationRules.validateFaxNumber(
+              value.contactDetails.faxNumber,
+              section,
+              locale,
+              context,
+            );
+
+          if (!faxNumberValidationResult.valid) {
+            errors.push(...faxNumberValidationResult.errors.fieldFormatErrors);
+          } else {
+            value.contactDetails.faxNumber = faxNumberValidationResult.value;
+          }
+        }
+
+        if (errors.length > 0) {
+          return fromBoom(Boom.badRequest('Validation failed', errors));
+        }
+      }
+
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,

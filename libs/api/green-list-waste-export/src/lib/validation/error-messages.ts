@@ -44,28 +44,6 @@ export const ImporterDetailValidationErrorMessages = {
   charTooManyEmail: `The importer email address must be less than ${FreeTextChar.max} characters`,
 };
 
-export const CollectionDetailValidationErrorMessages = {
-  emptyOrganisationName: 'Enter the waste collection organisation name',
-  charTooManyOrganisationName: `The waste collection organisation name must be less than ${FreeTextChar.max} characters`,
-  emptyAddressLine1: 'Enter the waste collection address',
-  charTooManyAddressLine1: `The waste collection address line 1 must be less than ${FreeTextChar.max} characters`,
-  charTooManyAddressLine2: `The waste collection address line 2 must be less than ${FreeTextChar.max} characters`,
-  emptyTownOrCity: 'Enter the waste collection town or city',
-  charTooManyTownOrCity: `The waste collection town or city must be less than ${FreeTextChar.max} characters`,
-  emptyCountry: 'Enter the waste collection country',
-  invalidCountry:
-    'The waste collection country must only be England, Wales, Scotland or Northern Ireland',
-  invalidPostcode: 'Enter the waste collection postcode in the correct format',
-  emptyContactFullName: 'Enter full name of waste collection contact',
-  charTooManyContactFullName: `The waste collection contact full name must be less than ${FreeTextChar.max} characters`,
-  emptyPhone: 'Enter waste collection contact phone number',
-  invalidPhone: 'Enter a real phone number for the waste collection',
-  invalidFax: 'Enter a real fax number for the waste collection',
-  emptyEmail: 'Enter waste collection email address',
-  invalidEmail: 'Enter a real email address for the waste collection',
-  charTooManyEmail: `The waste collection email address must be less than ${FreeTextChar.max} characters`,
-};
-
 interface RecoveryFacilityErrorMessages {
   emptyOrganisationName: string;
   charTooManyOrganisationName: string;

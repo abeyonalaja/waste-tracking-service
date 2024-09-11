@@ -1154,55 +1154,51 @@ describe(SubmissionController, () => {
               {
                 field: 'CollectionDetail',
                 message:
-                  validation.CollectionDetailValidationErrorMessages
-                    .emptyOrganisationName,
+                  glwe.errorMessages.emptyOrganisationName('CollectionDetail')[
+                    locale
+                  ][context],
               },
               {
                 field: 'CollectionDetail',
                 message:
-                  validation.CollectionDetailValidationErrorMessages
-                    .emptyAddressLine1,
+                  glwe.errorMessages.emptyAddressLine1('CollectionDetail')[
+                    locale
+                  ][context],
               },
               {
                 field: 'CollectionDetail',
                 message:
-                  validation.CollectionDetailValidationErrorMessages
-                    .emptyTownOrCity,
+                  glwe.errorMessages.emptyTownOrCity('CollectionDetail')[
+                    locale
+                  ][context],
               },
               {
                 field: 'CollectionDetail',
                 message:
-                  validation.CollectionDetailValidationErrorMessages
-                    .invalidCountry,
+                  glwe.errorMessages.invalidCountry('CollectionDetail')[locale][
+                    context
+                  ],
               },
               {
                 field: 'CollectionDetail',
                 message:
-                  validation.CollectionDetailValidationErrorMessages
-                    .invalidPostcode,
+                  glwe.errorMessages.emptyContactFullName('CollectionDetail')[
+                    locale
+                  ][context],
               },
               {
                 field: 'CollectionDetail',
                 message:
-                  validation.CollectionDetailValidationErrorMessages
-                    .emptyContactFullName,
+                  glwe.errorMessages.emptyPhone('CollectionDetail')[locale][
+                    context
+                  ],
               },
               {
                 field: 'CollectionDetail',
                 message:
-                  validation.CollectionDetailValidationErrorMessages
-                    .invalidPhone,
-              },
-              {
-                field: 'CollectionDetail',
-                message:
-                  validation.CollectionDetailValidationErrorMessages.invalidFax,
-              },
-              {
-                field: 'CollectionDetail',
-                message:
-                  validation.CollectionDetailValidationErrorMessages
-                    .invalidEmail,
+                  glwe.errorMessages.emptyEmail('CollectionDetail')[locale][
+                    context
+                  ],
               },
             ],
             invalidStructureErrors: [],

@@ -4731,37 +4731,45 @@ describe('validateCollectionDetailSection', () => {
       {
         field: 'CollectionDetail',
         message:
-          validation.CollectionDetailValidationErrorMessages
-            .emptyOrganisationName,
+          glwe.errorMessages.emptyOrganisationName('CollectionDetail')[locale][
+            context
+          ],
       },
       {
         field: 'CollectionDetail',
         message:
-          validation.CollectionDetailValidationErrorMessages.emptyAddressLine1,
+          glwe.errorMessages.emptyAddressLine1('CollectionDetail')[locale][
+            context
+          ],
       },
       {
         field: 'CollectionDetail',
         message:
-          validation.CollectionDetailValidationErrorMessages.emptyTownOrCity,
+          glwe.errorMessages.emptyTownOrCity('CollectionDetail')[locale][
+            context
+          ],
       },
       {
         field: 'CollectionDetail',
         message:
-          validation.CollectionDetailValidationErrorMessages.emptyCountry,
+          glwe.errorMessages.emptyCountry('CollectionDetail')[locale][context],
       },
       {
         field: 'CollectionDetail',
         message:
-          validation.CollectionDetailValidationErrorMessages
-            .emptyContactFullName,
+          glwe.errorMessages.emptyContactFullName('CollectionDetail')[locale][
+            context
+          ],
       },
       {
         field: 'CollectionDetail',
-        message: validation.CollectionDetailValidationErrorMessages.emptyPhone,
+        message:
+          glwe.errorMessages.emptyPhone('CollectionDetail')[locale][context],
       },
       {
         field: 'CollectionDetail',
-        message: validation.CollectionDetailValidationErrorMessages.emptyEmail,
+        message:
+          glwe.errorMessages.emptyEmail('CollectionDetail')[locale][context],
       },
     ]);
 
@@ -4782,48 +4790,45 @@ describe('validateCollectionDetailSection', () => {
       {
         field: 'CollectionDetail',
         message:
-          validation.CollectionDetailValidationErrorMessages
-            .emptyOrganisationName,
+          glwe.errorMessages.emptyOrganisationName('CollectionDetail')[locale][
+            context
+          ],
       },
       {
         field: 'CollectionDetail',
         message:
-          validation.CollectionDetailValidationErrorMessages.emptyAddressLine1,
+          glwe.errorMessages.emptyAddressLine1('CollectionDetail')[locale][
+            context
+          ],
       },
       {
         field: 'CollectionDetail',
         message:
-          validation.CollectionDetailValidationErrorMessages.emptyTownOrCity,
+          glwe.errorMessages.emptyTownOrCity('CollectionDetail')[locale][
+            context
+          ],
       },
       {
         field: 'CollectionDetail',
         message:
-          validation.CollectionDetailValidationErrorMessages.emptyCountry,
+          glwe.errorMessages.emptyCountry('CollectionDetail')[locale][context],
       },
       {
         field: 'CollectionDetail',
         message:
-          validation.CollectionDetailValidationErrorMessages.invalidPostcode,
+          glwe.errorMessages.emptyContactFullName('CollectionDetail')[locale][
+            context
+          ],
       },
       {
         field: 'CollectionDetail',
         message:
-          validation.CollectionDetailValidationErrorMessages
-            .emptyContactFullName,
+          glwe.errorMessages.invalidPhone('CollectionDetail')[locale][context],
       },
       {
         field: 'CollectionDetail',
         message:
-          validation.CollectionDetailValidationErrorMessages.invalidPhone,
-      },
-      {
-        field: 'CollectionDetail',
-        message: validation.CollectionDetailValidationErrorMessages.invalidFax,
-      },
-      {
-        field: 'CollectionDetail',
-        message:
-          validation.CollectionDetailValidationErrorMessages.invalidEmail,
+          glwe.errorMessages.emptyEmail('CollectionDetail')[locale][context],
       },
     ]);
 
@@ -4844,56 +4849,68 @@ describe('validateCollectionDetailSection', () => {
       {
         field: 'CollectionDetail',
         message:
-          validation.CollectionDetailValidationErrorMessages
-            .charTooManyOrganisationName,
+          glwe.errorMessages.charTooManyOrganisationName('CollectionDetail')[
+            locale
+          ][context],
       },
       {
         field: 'CollectionDetail',
         message:
-          validation.CollectionDetailValidationErrorMessages
-            .charTooManyAddressLine1,
+          glwe.errorMessages.charTooManyAddressLine1('CollectionDetail')[
+            locale
+          ][context],
       },
       {
         field: 'CollectionDetail',
         message:
-          validation.CollectionDetailValidationErrorMessages
-            .charTooManyAddressLine2,
+          glwe.errorMessages.charTooManyAddressLine2('CollectionDetail')[
+            locale
+          ][context],
       },
       {
         field: 'CollectionDetail',
         message:
-          validation.CollectionDetailValidationErrorMessages
-            .charTooManyTownOrCity,
+          glwe.errorMessages.charTooManyTownOrCity('CollectionDetail')[locale][
+            context
+          ],
       },
       {
         field: 'CollectionDetail',
         message:
-          validation.CollectionDetailValidationErrorMessages.invalidCountry,
+          glwe.errorMessages.invalidCountry('CollectionDetail')[locale][
+            context
+          ],
       },
       {
         field: 'CollectionDetail',
         message:
-          validation.CollectionDetailValidationErrorMessages.invalidPostcode,
+          glwe.errorMessages.invalidPostcode('CollectionDetail')[locale][
+            context
+          ],
       },
       {
         field: 'CollectionDetail',
         message:
-          validation.CollectionDetailValidationErrorMessages
-            .charTooManyContactFullName,
+          glwe.errorMessages.charTooManyContactFullName('CollectionDetail')[
+            locale
+          ][context],
       },
       {
         field: 'CollectionDetail',
         message:
-          validation.CollectionDetailValidationErrorMessages.invalidPhone,
-      },
-      {
-        field: 'CollectionDetail',
-        message: validation.CollectionDetailValidationErrorMessages.invalidFax,
+          glwe.errorMessages.invalidPhone('CollectionDetail')[locale][context],
       },
       {
         field: 'CollectionDetail',
         message:
-          validation.CollectionDetailValidationErrorMessages.charTooManyEmail,
+          glwe.errorMessages.invalidFax('CollectionDetail')[locale][context],
+      },
+      {
+        field: 'CollectionDetail',
+        message:
+          glwe.errorMessages.charTooManyEmail('CollectionDetail')[locale][
+            context
+          ],
       },
     ]);
   });
