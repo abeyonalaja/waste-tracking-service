@@ -602,8 +602,8 @@ export async function setWasteQuantity(
     const v = value as WasteQuantity;
 
     if (
-      v.status === 'Started' ||
-      (v.status === 'Complete' && v.value?.type !== 'NotApplicable')
+      (v.status === 'Started' || v.status === 'Complete') &&
+      v.value?.type !== 'NotApplicable'
     ) {
       const wasteQuantity =
         v.value?.type === 'ActualData'
@@ -612,7 +612,11 @@ export async function setWasteQuantity(
             ? v.value.estimateData
             : undefined;
 
-      if (wasteQuantity) {
+      if (
+        wasteQuantity &&
+        wasteQuantity.value !== undefined &&
+        wasteQuantity.value !== null
+      ) {
         const wasteQuantityValidationResult =
           glwe.validationRules.validateWasteQuantity(
             wasteQuantity.quantityType!,

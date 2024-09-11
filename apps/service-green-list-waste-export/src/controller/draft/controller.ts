@@ -484,8 +484,8 @@ export default class DraftController {
   > = async ({ id, accountId, value }) => {
     try {
       if (
-        value.status === 'Started' ||
-        (value.status === 'Complete' && value.value?.type !== 'NotApplicable')
+        (value.status === 'Started' || value.status === 'Complete') &&
+        value.value?.type !== 'NotApplicable'
       ) {
         const wasteQuantity =
           value.value?.type === 'ActualData'
@@ -494,7 +494,11 @@ export default class DraftController {
               ? value.value.estimateData
               : undefined;
 
-        if (wasteQuantity) {
+        if (
+          wasteQuantity &&
+          wasteQuantity.value !== undefined &&
+          wasteQuantity.value !== null
+        ) {
           const wasteQuantityValidationResult =
             glwe.validationRules.validateWasteQuantity(
               wasteQuantity.quantityType!,
