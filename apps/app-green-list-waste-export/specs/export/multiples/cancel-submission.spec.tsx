@@ -48,9 +48,7 @@ describe('Cancel Submission page', () => {
     });
 
     const button = screen.getByRole('button', { name: 'Confirm and cancel' });
-    await act(async () => {
-      await userEvent.click(button);
-    });
+    await userEvent.click(button);
 
     await waitFor(() => expect(useRouter().push).toHaveBeenCalled());
   });
@@ -61,9 +59,7 @@ describe('Cancel Submission page', () => {
     });
 
     const link = screen.getByRole('link', { name: 'Back' });
-    await act(async () => {
-      await userEvent.click(link);
-    });
+    await userEvent.click(link);
 
     await waitFor(() => expect(useRouter().back).toHaveBeenCalled());
   });
@@ -76,9 +72,7 @@ describe('Cancel Submission page', () => {
     const button = screen.getByRole('button', {
       name: 'Continue to submit records',
     });
-    await act(async () => {
-      await userEvent.click(button);
-    });
+    await userEvent.click(button);
 
     await waitFor(() => expect(useRouter().back).toHaveBeenCalled());
   });

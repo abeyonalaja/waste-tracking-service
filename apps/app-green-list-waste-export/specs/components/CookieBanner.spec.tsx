@@ -48,9 +48,7 @@ describe('Cookie Banner component', () => {
     const acceptButton = screen.getByText('Accept analytics cookies');
     expect(acceptButton).toBeInTheDocument();
 
-    await act(async () => {
-      await user.click(acceptButton);
-    });
+    await user.click(acceptButton);
 
     await waitFor(() => {
       expect(mockSetCookie).toHaveBeenCalled();

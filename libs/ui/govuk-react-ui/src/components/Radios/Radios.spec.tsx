@@ -12,6 +12,7 @@ describe('Radios component', () => {
         name={'country'}
         testId={testId}
         options={options}
+        onChange={jest.fn()}
       />,
     );
     const element = screen.getByTestId(testId);
