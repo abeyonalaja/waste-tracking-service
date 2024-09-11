@@ -48,15 +48,15 @@ export interface TransportDetail {
 export type RecoveryFacilityType =
   | {
       type: 'Laboratory';
-      disposalCode: string;
+      disposalCode?: string;
     }
   | {
       type: 'InterimSite';
-      recoveryCode: string;
+      recoveryCode?: string;
     }
   | {
       type: 'RecoveryFacility';
-      recoveryCode: string;
+      recoveryCode?: string;
     };
 
 export type SubmissionStateStatus =

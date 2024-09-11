@@ -17,6 +17,8 @@ import {
   Carrier,
   WasteQuantityData,
   WasteQuantity,
+  RecoveryCode,
+  RecoveryFacilityDetail,
 } from './model';
 import * as constraints from './constraints';
 import * as regex from './regex';
@@ -1393,4 +1395,145 @@ export function validateReference(
     valid: true,
     value: result.value,
   };
+}
+
+export function validateDisposalOrRecoveryCode(
+  value: string | undefined,
+  codeRef:
+    | {
+        type: 'Laboratory';
+        codeList: WasteCode[];
+      }
+    | {
+        type: 'InterimSite' | 'RecoveryFacility';
+        codeList: RecoveryCode[];
+      },
+  locale: Locale = 'en',
+  context: Exclude<Context, 'ui'> = 'api',
+): ValidationResult<string> {
+  value = value?.trim();
+  if (!value) {
+    return {
+      valid: false,
+      errors: {
+        fieldFormatErrors: [
+          {
+            field: 'RecoveryFacilityDetail',
+            message:
+              errorMessages.RecoveryFacilityDetailValidationErrorMessages(
+                locale,
+                context,
+                codeRef.type,
+              ).emptyCode,
+          },
+        ],
+      },
+    };
+  } else {
+    const filteredCodeList =
+      codeRef.type === 'Laboratory'
+        ? codeRef.codeList.filter(
+            (c) =>
+              c.code.toUpperCase() ===
+              (value as string).replace(/\s/g, '').toUpperCase(),
+          )
+        : codeRef.type === 'InterimSite'
+          ? codeRef.codeList.filter(
+              (c) =>
+                c.value.interim &&
+                c.code.toUpperCase() ===
+                  (value as string).replace(/\s/g, '').toUpperCase(),
+            )
+          : codeRef.codeList.filter(
+              (c) =>
+                c.code.toUpperCase() ===
+                (value as string).replace(/\s/g, '').toUpperCase(),
+            );
+    if (filteredCodeList.length !== 1) {
+      return {
+        valid: false,
+        errors: {
+          fieldFormatErrors: [
+            {
+              field: 'RecoveryFacilityDetail',
+              message:
+                errorMessages.RecoveryFacilityDetailValidationErrorMessages(
+                  locale,
+                  context,
+                  codeRef.type,
+                ).invalidCode,
+            },
+          ],
+        },
+      };
+    } else {
+      value = filteredCodeList[0].code;
+    }
+  }
+
+  return { valid: true, value: value };
+}
+
+export function validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+  wasteCodeSubSection: WasteDescription['wasteCode'],
+  recoveryFacilityTypes: RecoveryFacilityDetail['recoveryFacilityType']['type'][],
+  locale: Locale = 'en',
+  context: Exclude<Context, 'ui'> = 'api',
+): ValidationResult<undefined> {
+  if (recoveryFacilityTypes.length > 0) {
+    if (wasteCodeSubSection.type === 'NotApplicable') {
+      const errors: InvalidAttributeCombinationError[] = [];
+      if (recoveryFacilityTypes.some((el) => el === 'InterimSite')) {
+        errors.push({
+          fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+          message:
+            errorMessages.invalidInterimSiteRecoveryFacilityDetailCrossSection[
+              locale
+            ][context],
+        });
+      }
+
+      if (recoveryFacilityTypes.some((el) => el === 'RecoveryFacility')) {
+        errors.push({
+          fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+          message:
+            errorMessages
+              .invalidRecoveryFacilityRecoveryFacilityDetailCrossSection[
+              locale
+            ][context],
+        });
+      }
+
+      if (errors.length > 0) {
+        return {
+          valid: false,
+          errors: {
+            invalidStructureErrors: errors,
+            fieldFormatErrors: [],
+          },
+        };
+      }
+    } else {
+      if (recoveryFacilityTypes.some((el) => el === 'Laboratory')) {
+        return {
+          valid: false,
+          errors: {
+            invalidStructureErrors: [
+              {
+                fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+                message:
+                  errorMessages
+                    .invalidLaboratoryRecoveryFacilityDetailCrossSection[
+                    locale
+                  ][context],
+              },
+            ],
+            fieldFormatErrors: [],
+          },
+        };
+      }
+    }
+  }
+
+  return { valid: true, value: undefined };
 }

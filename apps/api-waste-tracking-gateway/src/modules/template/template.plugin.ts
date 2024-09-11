@@ -508,7 +508,7 @@ const plugin: Plugin<PluginOptions> = {
             params.carrierId,
             request,
           );
-          return request as dto.SetCarriersRequest;
+          return request as dto.SetCarriersResponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
             err.output.payload.data = err.data ?? undefined;
@@ -803,9 +803,10 @@ const plugin: Plugin<PluginOptions> = {
             params.rfdId,
             request,
           );
-          return request as dto.SetRecoveryFacilityDetailRequest;
+          return request as dto.SetRecoveryFacilityDetailResponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
+            err.output.payload.data = err.data ?? undefined;
             return err;
           }
 

@@ -9,6 +9,7 @@ import {
   DraftImporterDetail,
   DraftCarriers,
   DraftCollectionDetail,
+  DraftRecoveryFacilityDetails,
 } from '../../model';
 import DraftController from './controller';
 import { CosmosRepository } from '../../data';
@@ -162,6 +163,41 @@ const countriesIncludingUk = [
   },
 ];
 
+const recoveryCodes = [
+  {
+    code: 'R1',
+    value: {
+      description: {
+        en: 'English Description',
+        cy: 'Welsh Description',
+      },
+      interim: false,
+    },
+  },
+  {
+    code: 'R13',
+    value: {
+      description: {
+        en: 'English Description',
+        cy: 'Welsh Description',
+      },
+      interim: true,
+    },
+  },
+];
+
+const disposalCodes = [
+  {
+    code: 'D1',
+    value: {
+      description: {
+        en: 'English Description',
+        cy: 'Welsh Description',
+      },
+    },
+  },
+];
+
 describe(DraftController, () => {
   const subject = new DraftController(
     mockRepository as unknown as CosmosRepository,
@@ -169,6 +205,8 @@ describe(DraftController, () => {
     ewcCodes,
     countries,
     countriesIncludingUk,
+    recoveryCodes,
+    disposalCodes,
     new winston.Logger(),
   );
 
@@ -3243,7 +3281,7 @@ describe(DraftController, () => {
     });
   });
 
-  describe('createDraftRecoveryFacilities', () => {
+  describe('createDraftRecoveryFacilityDetails', () => {
     let id = faker.string.uuid();
     const accountId = faker.string.uuid();
     const draft = {
@@ -3332,7 +3370,7 @@ describe(DraftController, () => {
     });
   });
 
-  describe('getDraftRecoveryFacilities', () => {
+  describe('getDraftRecoveryFacilityDetails', () => {
     const id = faker.string.uuid();
     const accountId = faker.string.uuid();
     const rfdId = faker.string.uuid();
@@ -3427,8 +3465,9 @@ describe(DraftController, () => {
     });
   });
 
-  describe('setDraftRecoveryFacilities', () => {
+  describe('setDraftRecoveryFacilityDetails', () => {
     const id = faker.string.uuid();
+    const accountId = faker.string.uuid();
     const rfdId = faker.string.uuid();
     const timestamp = new Date();
     const draft = {
@@ -3462,6 +3501,50 @@ describe(DraftController, () => {
       },
     } as DraftSubmission;
 
+    it('forwards thrown Boom errors', async () => {
+      mockRepository.getRecord.mockRejectedValue(Boom.teapot());
+
+      const response = await subject.setDraftRecoveryFacilityDetails({
+        id,
+        accountId,
+        rfdId,
+        value: {
+          status: 'Complete',
+          values: [
+            {
+              recoveryFacilityType: {
+                type: 'Laboratory',
+                disposalCode: 'D1',
+              },
+              addressDetails: {
+                address: 'test address',
+                country: 'France [FR]',
+                name: 'test org',
+              },
+              contactDetails: {
+                emailAddress: 'test@test.com',
+                fullName: 'Full Name',
+                phoneNumber: '003478888888888',
+              },
+              id: rfdId,
+            },
+          ],
+        },
+      });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(mockRepository.getRecord).toBeCalledWith(
+        draftContainerName,
+        id,
+        accountId,
+      );
+      expect(response.error.statusCode).toBe(418);
+    });
+
     it('accepts a valid recovery facility detail', async () => {
       mockRepository.getRecord.mockResolvedValue(draft);
 
@@ -3475,15 +3558,14 @@ describe(DraftController, () => {
           values: [
             {
               addressDetails: {
-                address: '',
-                country: '',
-                name: '',
+                address: 'test address',
+                country: 'France [FR]',
+                name: 'test org',
               },
               contactDetails: {
-                emailAddress: '',
-                faxNumber: '',
-                fullName: '',
-                phoneNumber: '',
+                emailAddress: 'test@test.com',
+                fullName: 'Full Name',
+                phoneNumber: '003478888888888',
               },
               recoveryFacilityType: {
                 type: 'Laboratory',
@@ -3499,9 +3581,306 @@ describe(DraftController, () => {
 
       expect(response.success).toBe(true);
     });
+
+    it('forwards validation errors', async () => {
+      const rfType = 'Laboratory';
+      const recoveryFacilities = {
+        status: 'Complete',
+        values: [
+          {
+            recoveryFacilityType: {
+              type: rfType,
+              disposalCode: 'test',
+            },
+            addressDetails: {
+              address: faker.string.sample(251),
+              country: 'test',
+              name: faker.string.sample(251),
+            },
+            contactDetails: {
+              emailAddress: faker.string.sample(251),
+              faxNumber: 'test',
+              fullName: '',
+              phoneNumber: 'test',
+            },
+            id: rfdId,
+          },
+        ],
+      } as DraftRecoveryFacilityDetails;
+
+      mockRepository.getRecord.mockResolvedValue(draft);
+
+      const response = await subject.setDraftRecoveryFacilityDetails({
+        id,
+        accountId,
+        rfdId,
+        value: recoveryFacilities,
+      });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(response.error.statusCode).toBe(400);
+      expect(response.error.data).toEqual({
+        fieldFormatErrors: [
+          {
+            field: 'RecoveryFacilityDetail',
+            message:
+              glwe.errorMessages.RecoveryFacilityDetailValidationErrorMessages(
+                locale,
+                context,
+                rfType,
+                1,
+              ).charTooManyOrganisationName,
+          },
+          {
+            field: 'RecoveryFacilityDetail',
+            message:
+              glwe.errorMessages.RecoveryFacilityDetailValidationErrorMessages(
+                locale,
+                context,
+                rfType,
+                1,
+              ).charTooManyAddress,
+          },
+          {
+            field: 'RecoveryFacilityDetail',
+            message:
+              glwe.errorMessages.RecoveryFacilityDetailValidationErrorMessages(
+                locale,
+                context,
+                rfType,
+                1,
+              ).invalidCountry,
+          },
+          {
+            field: 'RecoveryFacilityDetail',
+            message:
+              glwe.errorMessages.RecoveryFacilityDetailValidationErrorMessages(
+                locale,
+                context,
+                rfType,
+                1,
+              ).emptyContactFullName,
+          },
+          {
+            field: 'RecoveryFacilityDetail',
+            message:
+              glwe.errorMessages.RecoveryFacilityDetailValidationErrorMessages(
+                locale,
+                context,
+                rfType,
+                1,
+              ).invalidPhone,
+          },
+          {
+            field: 'RecoveryFacilityDetail',
+            message:
+              glwe.errorMessages.RecoveryFacilityDetailValidationErrorMessages(
+                locale,
+                context,
+                rfType,
+                1,
+              ).invalidFax,
+          },
+          {
+            field: 'RecoveryFacilityDetail',
+            message:
+              glwe.errorMessages.RecoveryFacilityDetailValidationErrorMessages(
+                locale,
+                context,
+                rfType,
+                1,
+              ).charTooManyEmail,
+          },
+          {
+            field: 'RecoveryFacilityDetail',
+            message:
+              glwe.errorMessages.RecoveryFacilityDetailValidationErrorMessages(
+                locale,
+                context,
+                rfType,
+                1,
+              ).invalidCode,
+          },
+        ],
+      });
+    });
+
+    it('returns an error when the recovery facility, status is "NotStarted"', async () => {
+      draft.recoveryFacilityDetail.status = 'NotStarted';
+
+      const recoveryFacilities = {
+        status: 'Complete',
+        values: [
+          {
+            recoveryFacilityType: {
+              type: 'Laboratory',
+              disposalCode: 'D1',
+            },
+            addressDetails: {
+              address: 'test address',
+              country: 'France [FR]',
+              name: 'test org',
+            },
+            contactDetails: {
+              emailAddress: 'test@test.com',
+              faxNumber: '003478888888877',
+              fullName: 'test test',
+              phoneNumber: '003478888888888',
+            },
+            id: rfdId,
+          },
+        ],
+      } as DraftRecoveryFacilityDetails;
+
+      mockRepository.getRecord.mockResolvedValue(draft);
+
+      const response = await subject.setDraftRecoveryFacilityDetails({
+        id,
+        accountId,
+        rfdId,
+        value: recoveryFacilities,
+      });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+      expect(response.error.statusCode).toBe(404);
+    });
+
+    it('returns an error if the recovery facility id does not exist', async () => {
+      const response = await subject.setDraftRecoveryFacilityDetails({
+        id,
+        accountId,
+        rfdId: faker.string.uuid(),
+        value: {
+          status: 'Started',
+          values: [
+            {
+              recoveryFacilityType: {
+                type: 'Laboratory',
+                disposalCode: 'D1',
+              },
+              addressDetails: {
+                address: 'test address',
+                country: 'France [FR]',
+                name: 'test org',
+              },
+              contactDetails: {
+                emailAddress: 'test@test.com',
+                fullName: 'Full Name',
+                phoneNumber: '003478888888888',
+              },
+              id: faker.string.uuid(),
+            },
+          ],
+        },
+      });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(response.error.statusCode).toBe(404);
+    });
+
+    it('forwards cross-sectional validation errors', async () => {
+      const draft: DraftSubmission = {
+        id,
+        reference: 'abc',
+        wasteDescription: {
+          status: 'Started',
+          wasteCode: {
+            type: 'BaselAnnexIX',
+          },
+        },
+        wasteQuantity: { status: 'NotStarted' },
+        exporterDetail: { status: 'NotStarted' },
+        importerDetail: { status: 'NotStarted' },
+        collectionDate: { status: 'NotStarted' },
+        carriers: {
+          status: 'NotStarted',
+          transport: false,
+        },
+        collectionDetail: { status: 'NotStarted' },
+        ukExitLocation: { status: 'NotStarted' },
+        transitCountries: { status: 'NotStarted' },
+        recoveryFacilityDetail: {
+          status: 'Started',
+          values: [
+            {
+              id: rfdId,
+            },
+          ],
+        },
+        submissionConfirmation: { status: 'CannotStart' },
+        submissionDeclaration: { status: 'CannotStart' },
+        submissionState: {
+          status: 'InProgress',
+          timestamp: timestamp,
+        },
+      };
+      const recoveryFacilities = {
+        status: 'Complete',
+        values: [
+          {
+            recoveryFacilityType: {
+              type: 'Laboratory',
+              disposalCode: 'D1',
+            },
+            addressDetails: {
+              address: 'test address',
+              country: 'France [FR]',
+              name: 'test org',
+            },
+            contactDetails: {
+              emailAddress: 'test@test.com',
+              faxNumber: '003478888888877',
+              fullName: 'test test',
+              phoneNumber: '003478888888888',
+            },
+            id: rfdId,
+          },
+        ],
+      } as DraftRecoveryFacilityDetails;
+
+      mockRepository.getRecord.mockResolvedValue(draft);
+
+      const response = await subject.setDraftRecoveryFacilityDetails({
+        id,
+        accountId,
+        rfdId,
+        value: recoveryFacilities,
+      });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(response.error.statusCode).toBe(400);
+      expect(response.error.data).toEqual({
+        fieldFormatErrors: [],
+        invalidStructureErrors: [
+          {
+            fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+            message:
+              glwe.errorMessages
+                .invalidLaboratoryRecoveryFacilityDetailCrossSection[locale][
+                context
+              ],
+          },
+        ],
+      });
+    });
   });
 
-  describe('listDraftRecoveryFacilities', () => {
+  describe('listDraftRecoveryFacilityDetails', () => {
     const id = faker.string.uuid();
     const accountId = faker.string.uuid();
     const rfdId = faker.string.uuid();
@@ -3590,7 +3969,7 @@ describe(DraftController, () => {
     });
   });
 
-  describe('deleteDraftRecoveryFacilities', () => {
+  describe('deleteDraftRecoveryFacilityDetails', () => {
     const id = faker.string.uuid();
     const rfdId = faker.string.uuid();
     const accountId = faker.string.uuid();

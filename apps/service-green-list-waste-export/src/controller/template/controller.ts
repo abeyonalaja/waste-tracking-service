@@ -1,9 +1,5 @@
 import Boom from '@hapi/boom';
-import {
-  template as api,
-  draft,
-  validation,
-} from '@wts/api/green-list-waste-export';
+import { template as api, draft } from '@wts/api/green-list-waste-export';
 import { fromBoom, success } from '@wts/util/invocation';
 import { v4 as uuidv4 } from 'uuid';
 import { Logger } from 'winston';
@@ -18,15 +14,17 @@ import {
   DraftSubmission,
   Submission,
   FieldFormatError,
+  RecoveryFacilityDetail,
 } from '../../model';
-import {
-  setBaseWasteDescription,
-  copyCarriersNoTransport,
-} from '../../lib/util';
+import { setBaseWasteDescription, copyCarriersNoTransport } from '../../lib';
 import { CosmosRepository } from '../../data';
 import { glwe } from '@wts/util/shared-validation';
-import { WasteCode, WasteCodeType } from '@wts/api/reference-data';
-import { Country } from '@wts/api/reference-data';
+import {
+  Country,
+  RecoveryCode,
+  WasteCode,
+  WasteCodeType,
+} from '@wts/api/reference-data';
 
 export type Handler<Request, Response> = (
   request: Request,
@@ -46,6 +44,8 @@ export default class TemplateController {
     private ewcCodeList: WasteCode[],
     private countryList: Country[],
     private countryIncludingUkList: Country[],
+    private recoveryCodeList: RecoveryCode[],
+    private disposalCodeList: WasteCode[],
     private logger: Logger,
   ) {}
 
@@ -115,24 +115,24 @@ export default class TemplateController {
   > = async ({ accountId, templateDetails }) => {
     if (
       !templateDetails.name ||
-      templateDetails.name.length < validation.TemplateNameChar.min ||
-      templateDetails.name.length > validation.TemplateNameChar.max ||
-      !validation.templateNameRegex.test(templateDetails.name)
+      templateDetails.name.length < glwe.constraints.TemplateNameChar.min ||
+      templateDetails.name.length > glwe.constraints.TemplateNameChar.max ||
+      !glwe.regex.templateNameRegex.test(templateDetails.name)
     ) {
       return fromBoom(
         Boom.badRequest(
-          `Template name must be unique and between ${validation.TemplateNameChar.min} and ${validation.TemplateNameChar.max} alphanumeric characters.`,
+          `Template name must be unique and between ${glwe.constraints.TemplateNameChar.min} and ${glwe.constraints.TemplateNameChar.max} alphanumeric characters.`,
         ),
       );
     }
     if (
       templateDetails.description &&
       templateDetails.description.length >
-        validation.TemplateDescriptionChar.max
+        glwe.constraints.TemplateDescriptionChar.max
     ) {
       return fromBoom(
         Boom.badRequest(
-          `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
+          `Template description cannot exceed ${glwe.constraints.TemplateDescriptionChar.max} characters.`,
         ),
       );
     }
@@ -181,24 +181,24 @@ export default class TemplateController {
   > = async ({ accountId, id, templateDetails }) => {
     if (
       !templateDetails.name ||
-      templateDetails.name.length < validation.TemplateNameChar.min ||
-      templateDetails.name.length > validation.TemplateNameChar.max ||
-      !validation.templateNameRegex.test(templateDetails.name)
+      templateDetails.name.length < glwe.constraints.TemplateNameChar.min ||
+      templateDetails.name.length > glwe.constraints.TemplateNameChar.max ||
+      !glwe.regex.templateNameRegex.test(templateDetails.name)
     ) {
       return fromBoom(
         Boom.badRequest(
-          `Template name must be unique and between ${validation.TemplateNameChar.min} and ${validation.TemplateNameChar.max} alphanumeric characters.`,
+          `Template name must be unique and between ${glwe.constraints.TemplateNameChar.min} and ${glwe.constraints.TemplateNameChar.max} alphanumeric characters.`,
         ),
       );
     }
     if (
       templateDetails.description &&
       templateDetails.description.length >
-        validation.TemplateDescriptionChar.max
+        glwe.constraints.TemplateDescriptionChar.max
     ) {
       return fromBoom(
         Boom.badRequest(
-          `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
+          `Template description cannot exceed ${glwe.constraints.TemplateDescriptionChar.max} characters.`,
         ),
       );
     }
@@ -860,30 +860,6 @@ export default class TemplateController {
         return fromBoom(Boom.notFound());
       }
 
-      if (
-        template.wasteDescription.status !== 'NotStarted' &&
-        template.wasteDescription.wasteCode &&
-        value.status !== 'NotStarted'
-      ) {
-        const transportValidationResult =
-          glwe.validationRules.validateWasteCodeSubSectionAndCarriersCrossSection(
-            template.wasteDescription.wasteCode,
-            value.values.map((v) => v.transportDetails),
-          );
-
-        if (!transportValidationResult.valid) {
-          return fromBoom(
-            Boom.badRequest(
-              'Validation failed',
-              transportValidationResult.errors,
-            ),
-          );
-        } else {
-          value.transport =
-            template.wasteDescription.wasteCode.type !== 'NotApplicable';
-        }
-      }
-
       if (value.status === 'NotStarted') {
         template.carriers = value;
       } else {
@@ -899,6 +875,29 @@ export default class TemplateController {
         });
         if (index === -1) {
           return fromBoom(Boom.notFound());
+        }
+
+        if (
+          template.wasteDescription.status !== 'NotStarted' &&
+          template.wasteDescription.wasteCode
+        ) {
+          const transportValidationResult =
+            glwe.validationRules.validateWasteCodeSubSectionAndCarriersCrossSection(
+              template.wasteDescription.wasteCode,
+              value.values.map((v) => v.transportDetails),
+            );
+
+          if (!transportValidationResult.valid) {
+            return fromBoom(
+              Boom.badRequest(
+                'Validation failed',
+                transportValidationResult.errors,
+              ),
+            );
+          } else {
+            value.transport =
+              template.wasteDescription.wasteCode.type !== 'NotApplicable';
+          }
         }
 
         if (template.carriers !== undefined) {
@@ -1414,11 +1413,11 @@ export default class TemplateController {
       const value: DraftRecoveryFacilityDetails =
         template.recoveryFacilityDetail.status !== 'Complete'
           ? {
-              status: template.carriers.status as 'Started',
+              status: template.recoveryFacilityDetail.status as 'Started',
               values: [recoveryFacilityDetail as DraftRecoveryFacilityPartial],
             }
           : {
-              status: template.carriers.status,
+              status: template.recoveryFacilityDetail.status,
               values: [recoveryFacilityDetail as DraftRecoveryFacility],
             };
 
@@ -1463,12 +1462,12 @@ export default class TemplateController {
         template.recoveryFacilityDetail.status === 'Complete'
       ) {
         const maxFacilities =
-          validation.InterimSiteLength.max +
-          validation.RecoveryFacilityLength.max;
+          glwe.constraints.InterimSiteLength.max +
+          glwe.constraints.RecoveryFacilityLength.max;
         if (template.recoveryFacilityDetail.values.length === maxFacilities) {
           return fromBoom(
             Boom.badRequest(
-              `Cannot add more than ${maxFacilities} recovery facilities (Maximum: ${validation.InterimSiteLength.max} InterimSite & ${validation.RecoveryFacilityLength.max} Recovery Facilities)`,
+              `Cannot add more than ${maxFacilities} recovery facilities (Maximum: ${glwe.constraints.InterimSiteLength.max} InterimSite & ${glwe.constraints.RecoveryFacilityLength.max} Recovery Facilities)`,
             ),
           );
         }
@@ -1513,6 +1512,188 @@ export default class TemplateController {
     draft.SetDraftRecoveryFacilityDetailsResponse
   > = async ({ id, accountId, rfdId, value }) => {
     try {
+      if (value.status === 'Started' || value.status === 'Complete') {
+        const errors = {
+          fieldFormatErrors: [] as FieldFormatError[],
+        };
+        let index = 0;
+        value.values.forEach((v) => {
+          const section = 'RecoveryFacilityDetail';
+          index += 1;
+          if (v.addressDetails) {
+            const organisationNameValidationResult =
+              glwe.validationRules.validateOrganisationName(
+                v.addressDetails.name,
+                section,
+                locale,
+                context,
+                index,
+                v.recoveryFacilityType?.type,
+              );
+
+            if (!organisationNameValidationResult.valid) {
+              errors.fieldFormatErrors.push(
+                ...organisationNameValidationResult.errors.fieldFormatErrors,
+              );
+            } else {
+              v.addressDetails.name = organisationNameValidationResult.value;
+            }
+
+            const addressValidationResult =
+              glwe.validationRules.validateAddress(
+                v.addressDetails.address,
+                section,
+                locale,
+                context,
+                index,
+                v.recoveryFacilityType?.type,
+              );
+
+            if (!addressValidationResult.valid) {
+              errors.fieldFormatErrors.push(
+                ...addressValidationResult.errors.fieldFormatErrors,
+              );
+            } else {
+              v.addressDetails.address = addressValidationResult.value;
+            }
+
+            const countryValidationResult =
+              glwe.validationRules.validateCountry(
+                v.addressDetails.country,
+                section,
+                locale,
+                context,
+                this.countryIncludingUkList,
+                index,
+                v.recoveryFacilityType?.type,
+              );
+
+            if (!countryValidationResult.valid) {
+              errors.fieldFormatErrors.push(
+                ...countryValidationResult.errors.fieldFormatErrors,
+              );
+            } else {
+              v.addressDetails.country = countryValidationResult.value;
+            }
+          }
+
+          if (v.contactDetails) {
+            const contactFullNameValidationResult =
+              glwe.validationRules.validateFullName(
+                v.contactDetails.fullName,
+                section,
+                locale,
+                context,
+                index,
+                v.recoveryFacilityType?.type,
+              );
+
+            if (!contactFullNameValidationResult.valid) {
+              errors.fieldFormatErrors.push(
+                ...contactFullNameValidationResult.errors.fieldFormatErrors,
+              );
+            } else {
+              v.contactDetails.fullName = contactFullNameValidationResult.value;
+            }
+
+            const phoneValidationResult =
+              glwe.validationRules.validatePhoneNumber(
+                v.contactDetails.phoneNumber,
+                section,
+                locale,
+                context,
+                index,
+                v.recoveryFacilityType?.type,
+              );
+
+            if (!phoneValidationResult.valid) {
+              errors.fieldFormatErrors.push(
+                ...phoneValidationResult.errors.fieldFormatErrors,
+              );
+            } else {
+              v.contactDetails.phoneNumber = phoneValidationResult.value;
+            }
+
+            const faxValidationResult = glwe.validationRules.validateFaxNumber(
+              v.contactDetails.faxNumber,
+              section,
+              locale,
+              context,
+              index,
+              v.recoveryFacilityType?.type,
+            );
+
+            if (!faxValidationResult.valid) {
+              errors.fieldFormatErrors.push(
+                ...faxValidationResult.errors.fieldFormatErrors,
+              );
+            } else {
+              v.contactDetails.faxNumber = faxValidationResult.value;
+            }
+
+            const emailValidationResult =
+              glwe.validationRules.validateEmailAddress(
+                v.contactDetails.emailAddress,
+                section,
+                locale,
+                context,
+                index,
+                v.recoveryFacilityType?.type,
+              );
+
+            if (!emailValidationResult.valid) {
+              errors.fieldFormatErrors.push(
+                ...emailValidationResult.errors.fieldFormatErrors,
+              );
+            } else {
+              v.contactDetails.emailAddress = emailValidationResult.value;
+            }
+          }
+
+          if (
+            v.recoveryFacilityType &&
+            ((v.recoveryFacilityType.type === 'Laboratory' &&
+              v.recoveryFacilityType.disposalCode) ||
+              (v.recoveryFacilityType.type !== 'Laboratory' &&
+                v.recoveryFacilityType.recoveryCode))
+          ) {
+            const codeValidationResult =
+              glwe.validationRules.validateDisposalOrRecoveryCode(
+                v.recoveryFacilityType.type === 'Laboratory'
+                  ? v.recoveryFacilityType.disposalCode
+                  : v.recoveryFacilityType.recoveryCode,
+                v.recoveryFacilityType.type === 'Laboratory'
+                  ? {
+                      type: v.recoveryFacilityType.type,
+                      codeList: this.disposalCodeList,
+                    }
+                  : {
+                      type: v.recoveryFacilityType.type,
+                      codeList: this.recoveryCodeList,
+                    },
+                locale,
+                context,
+              );
+
+            if (!codeValidationResult.valid) {
+              errors.fieldFormatErrors.push(
+                ...codeValidationResult.errors.fieldFormatErrors,
+              );
+            } else {
+              v.recoveryFacilityType.type === 'Laboratory'
+                ? (v.recoveryFacilityType.disposalCode =
+                    codeValidationResult.value)
+                : (v.recoveryFacilityType.recoveryCode =
+                    codeValidationResult.value);
+            }
+          }
+        });
+
+        if (errors.fieldFormatErrors.length > 0) {
+          return fromBoom(Boom.badRequest('Validation failed', errors));
+        }
+      }
+
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
@@ -1542,6 +1723,33 @@ export default class TemplateController {
         });
         if (index === -1) {
           return fromBoom(Boom.notFound());
+        }
+
+        if (
+          template.wasteDescription.status !== 'NotStarted' &&
+          template.wasteDescription.wasteCode
+        ) {
+          const recoveryFacilityTypes: RecoveryFacilityDetail['recoveryFacilityType']['type'][] =
+            [];
+          value.values.forEach((v) => {
+            if (v.recoveryFacilityType) {
+              recoveryFacilityTypes.push(v.recoveryFacilityType.type);
+            }
+          });
+          const recoveryFacilityTypesValidationResult =
+            glwe.validationRules.validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+              template.wasteDescription.wasteCode,
+              recoveryFacilityTypes,
+            );
+
+          if (!recoveryFacilityTypesValidationResult.valid) {
+            return fromBoom(
+              Boom.badRequest(
+                'Validation failed',
+                recoveryFacilityTypesValidationResult.errors,
+              ),
+            );
+          }
         }
 
         template.recoveryFacilityDetail.status = value.status;
@@ -1685,24 +1893,24 @@ export default class TemplateController {
   > = async ({ accountId, id, templateDetails }) => {
     if (
       !templateDetails.name ||
-      templateDetails.name.length < validation.TemplateNameChar.min ||
-      templateDetails.name.length > validation.TemplateNameChar.max ||
-      !validation.templateNameRegex.test(templateDetails.name)
+      templateDetails.name.length < glwe.constraints.TemplateNameChar.min ||
+      templateDetails.name.length > glwe.constraints.TemplateNameChar.max ||
+      !glwe.regex.templateNameRegex.test(templateDetails.name)
     ) {
       return fromBoom(
         Boom.badRequest(
-          `Template name must be unique and between ${validation.TemplateNameChar.min} and ${validation.TemplateNameChar.max} alphanumeric characters.`,
+          `Template name must be unique and between ${glwe.constraints.TemplateNameChar.min} and ${glwe.constraints.TemplateNameChar.max} alphanumeric characters.`,
         ),
       );
     }
     if (
       templateDetails.description &&
       templateDetails.description.length >
-        validation.TemplateDescriptionChar.max
+        glwe.constraints.TemplateDescriptionChar.max
     ) {
       return fromBoom(
         Boom.badRequest(
-          `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
+          `Template description cannot exceed ${glwe.constraints.TemplateDescriptionChar.max} characters.`,
         ),
       );
     }
@@ -1794,24 +2002,24 @@ export default class TemplateController {
   > = async ({ accountId, id, templateDetails }) => {
     if (
       !templateDetails.name ||
-      templateDetails.name.length < validation.TemplateNameChar.min ||
-      templateDetails.name.length > validation.TemplateNameChar.max ||
-      !validation.templateNameRegex.test(templateDetails.name)
+      templateDetails.name.length < glwe.constraints.TemplateNameChar.min ||
+      templateDetails.name.length > glwe.constraints.TemplateNameChar.max ||
+      !glwe.regex.templateNameRegex.test(templateDetails.name)
     ) {
       return fromBoom(
         Boom.badRequest(
-          `Template name must be unique and between ${validation.TemplateNameChar.min} and ${validation.TemplateNameChar.max} alphanumeric characters.`,
+          `Template name must be unique and between ${glwe.constraints.TemplateNameChar.min} and ${glwe.constraints.TemplateNameChar.max} alphanumeric characters.`,
         ),
       );
     }
     if (
       templateDetails.description &&
       templateDetails.description.length >
-        validation.TemplateDescriptionChar.max
+        glwe.constraints.TemplateDescriptionChar.max
     ) {
       return fromBoom(
         Boom.badRequest(
-          `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
+          `Template description cannot exceed ${glwe.constraints.TemplateDescriptionChar.max} characters.`,
         ),
       );
     }

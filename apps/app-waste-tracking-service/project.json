@@ -39,6 +39,16 @@
         }
       }
     },
+    "serve-both": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx serve app-waste-tracking-service",
+          "nx serve api-mock-gateway"
+        ],
+        "parallel": true
+      }
+    },
     "export": {
       "executor": "@nx/next:export",
       "options": {
@@ -78,7 +88,7 @@
             "type=ref,event=tag",
             "type=ref,event=pr",
             "type=sha,prefix=sha-",
-            "type=raw,value=3.9.8"
+            "type=raw,value=3.9.9"
           ]
         }
       }

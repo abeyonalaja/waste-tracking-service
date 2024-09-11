@@ -177,8 +177,8 @@ const InterimSiteDetails = (): React.ReactNode => {
 
   const [recoveryFacilityType, setRecoveryFacilityType] = useState<{
     type: string;
-    recoveryCode: string;
-  }>({ type: 'InterimSite', recoveryCode: '' });
+    recoveryCode?: string;
+  }>({ type: 'InterimSite' });
 
   useEffect(() => {
     if (router.isReady) {

@@ -1580,13 +1580,14 @@ interface RecoveryFacilityEntry {
 
 function validateRecoveryFacilityEntry(
   values: RecoveryFacilityEntry[],
-  type: 'Laboratory' | 'InterimSite' | 'RecoveryFacility',
+  type: RecoveryFacilityDetail['recoveryFacilityType']['type'],
   countryList: Country[],
   recoveryCodeList: RecoveryCode[],
   disposalCodeList: WasteCode[],
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: RecoveryFacilityDetail[] } {
+  const section = 'RecoveryFacilityDetail';
   const errors: FieldFormatError[] = [];
   const recoveryFacilities: RecoveryFacilityDetail[] = [];
   let index = 0;
@@ -1608,158 +1609,145 @@ function validateRecoveryFacilityEntry(
     }
 
     let errorCount = 0;
-    const errorMessages =
-      validation.RecoveryFacilityDetailValidationErrorMessages(type, index);
 
-    if (!v.organisationName || !v.organisationName.trim()) {
-      errorCount += 1;
-      errors.push({
-        field: 'RecoveryFacilityDetail',
-        message: errorMessages.emptyOrganisationName,
-      });
-    } else {
-      if (v.organisationName.length > validation.FreeTextChar.max) {
-        errorCount += 1;
-        errors.push({
-          field: 'RecoveryFacilityDetail',
-          message: errorMessages.charTooManyOrganisationName,
-        });
-      }
-    }
-
-    if (!v.address || !v.address.trim()) {
-      errorCount += 1;
-      errors.push({
-        field: 'RecoveryFacilityDetail',
-        message: errorMessages.emptyAddress,
-      });
-    } else {
-      if (v.address.length > validation.FreeTextChar.max) {
-        errorCount += 1;
-        errors.push({
-          field: 'RecoveryFacilityDetail',
-          message: errorMessages.charTooManyAddress,
-        });
-      }
-    }
-
-    if (!v.country) {
-      errorCount += 1;
-      errors.push({
-        field: 'RecoveryFacilityDetail',
-        message: errorMessages.emptyCountry,
-      });
-    } else {
-      const filteredCountryList = countryList.filter((country) =>
-        country.name.toUpperCase().includes(v.country.toUpperCase()),
+    const organisationNameValidationResult =
+      glwe.validationRules.validateOrganisationName(
+        v.organisationName,
+        section,
+        locale,
+        context,
+        index,
+        type,
       );
-      if (filteredCountryList.length !== 1) {
-        errorCount += 1;
-        errors.push({
-          field: 'RecoveryFacilityDetail',
-          message: errorMessages.invalidCountry,
-        });
-      } else {
-        v.country = filteredCountryList[0].name;
-      }
-    }
 
-    if (!v.contactFullName || !v.contactFullName.trim()) {
-      errorCount += 1;
-      errors.push({
-        field: 'RecoveryFacilityDetail',
-        message: errorMessages.emptyContactFullName,
-      });
+    if (!organisationNameValidationResult.valid) {
+      errorCount +=
+        organisationNameValidationResult.errors.fieldFormatErrors.length;
+      errors.push(...organisationNameValidationResult.errors.fieldFormatErrors);
     } else {
-      if (v.contactFullName.length > validation.FreeTextChar.max) {
-        errorCount += 1;
-        errors.push({
-          field: 'RecoveryFacilityDetail',
-          message: errorMessages.charTooManyContactFullName,
-        });
-      }
+      v.organisationName = organisationNameValidationResult.value;
     }
 
-    v.contactPhoneNumber = v.contactPhoneNumber.replace(/'/g, '');
-    if (!v.contactPhoneNumber) {
-      errorCount += 1;
-      errors.push({
-        field: 'RecoveryFacilityDetail',
-        message: errorMessages.emptyPhone,
-      });
+    const addressValidationResult = glwe.validationRules.validateAddress(
+      v.address,
+      section,
+      locale,
+      context,
+      index,
+      type,
+    );
+
+    if (!addressValidationResult.valid) {
+      errorCount += addressValidationResult.errors.fieldFormatErrors.length;
+      errors.push(...addressValidationResult.errors.fieldFormatErrors);
     } else {
-      if (!glwe.regex.phoneInternationalRegex.test(v.contactPhoneNumber)) {
-        errorCount += 1;
-        errors.push({
-          field: 'RecoveryFacilityDetail',
-          message: errorMessages.invalidPhone,
-        });
-      }
+      v.address = addressValidationResult.value;
     }
 
-    v.faxNumber = v.faxNumber.replace(/'/g, '');
-    if (v.faxNumber && !glwe.regex.faxInternationalRegex.test(v.faxNumber)) {
-      errorCount += 1;
-      errors.push({
-        field: 'RecoveryFacilityDetail',
-        message: errorMessages.invalidFax,
-      });
-    }
+    const countryValidationResult = glwe.validationRules.validateCountry(
+      v.country,
+      section,
+      locale,
+      context,
+      countryList,
+      index,
+      type,
+    );
 
-    if (!v.emailAddress) {
-      errorCount += 1;
-      errors.push({
-        field: 'RecoveryFacilityDetail',
-        message: errorMessages.emptyEmail,
-      });
+    if (!countryValidationResult.valid) {
+      errorCount += countryValidationResult.errors.fieldFormatErrors.length;
+      errors.push(...countryValidationResult.errors.fieldFormatErrors);
     } else {
-      if (v.emailAddress.length > validation.FreeTextChar.max) {
-        errorCount += 1;
-        errors.push({
-          field: 'RecoveryFacilityDetail',
-          message: errorMessages.charTooManyEmail,
-        });
-      } else {
-        if (!commonValidation.commonRegex.emailRegex.test(v.emailAddress)) {
-          errorCount += 1;
-          errors.push({
-            field: 'RecoveryFacilityDetail',
-            message: errorMessages.invalidEmail,
-          });
-        }
-      }
+      v.country = countryValidationResult.value;
     }
 
-    if (!v.code) {
-      errorCount += 1;
-      errors.push({
-        field: 'RecoveryFacilityDetail',
-        message: errorMessages.emptyCode,
-      });
+    const contactFullNameValidationResult =
+      glwe.validationRules.validateFullName(
+        v.contactFullName,
+        section,
+        locale,
+        context,
+        index,
+        type,
+      );
+
+    if (!contactFullNameValidationResult.valid) {
+      errorCount +=
+        contactFullNameValidationResult.errors.fieldFormatErrors.length;
+      errors.push(...contactFullNameValidationResult.errors.fieldFormatErrors);
     } else {
-      const filteredCodeList =
+      v.contactFullName = contactFullNameValidationResult.value;
+    }
+
+    const phoneValidationResult = glwe.validationRules.validatePhoneNumber(
+      v.contactPhoneNumber.replace(/'/g, ''),
+      section,
+      locale,
+      context,
+      index,
+      type,
+    );
+
+    if (!phoneValidationResult.valid) {
+      errorCount += phoneValidationResult.errors.fieldFormatErrors.length;
+      errors.push(...phoneValidationResult.errors.fieldFormatErrors);
+    } else {
+      v.contactPhoneNumber = phoneValidationResult.value;
+    }
+
+    const faxValidationResult = glwe.validationRules.validateFaxNumber(
+      v.faxNumber.replace(/'/g, ''),
+      section,
+      locale,
+      context,
+      index,
+      type,
+    );
+
+    if (!faxValidationResult.valid) {
+      errorCount += faxValidationResult.errors.fieldFormatErrors.length;
+      errors.push(...faxValidationResult.errors.fieldFormatErrors);
+    } else {
+      v.faxNumber = faxValidationResult.value ?? '';
+    }
+
+    const emailValidationResult = glwe.validationRules.validateEmailAddress(
+      v.emailAddress,
+      section,
+      locale,
+      context,
+      index,
+      type,
+    );
+
+    if (!emailValidationResult.valid) {
+      errorCount += emailValidationResult.errors.fieldFormatErrors.length;
+      errors.push(...emailValidationResult.errors.fieldFormatErrors);
+    } else {
+      v.emailAddress = emailValidationResult.value;
+    }
+
+    const codeValidationResult =
+      glwe.validationRules.validateDisposalOrRecoveryCode(
+        v.code,
         type === 'Laboratory'
-          ? disposalCodeList.filter(
-              (c) => c.code.toUpperCase() === v.code.toUpperCase(),
-            )
-          : type === 'InterimSite'
-            ? recoveryCodeList.filter(
-                (c) =>
-                  c.value.interim &&
-                  c.code.toUpperCase() === v.code.toUpperCase(),
-              )
-            : recoveryCodeList.filter(
-                (c) => c.code.toUpperCase() === v.code.toUpperCase(),
-              );
-      if (filteredCodeList.length !== 1) {
-        errorCount += 1;
-        errors.push({
-          field: 'RecoveryFacilityDetail',
-          message: errorMessages.invalidCode,
-        });
-      } else {
-        v.code = filteredCodeList[0].code;
-      }
+          ? {
+              type: type,
+              codeList: disposalCodeList,
+            }
+          : {
+              type: type,
+              codeList: recoveryCodeList,
+            },
+        locale,
+        context,
+      );
+
+    if (!codeValidationResult.valid) {
+      errorCount += codeValidationResult.errors.fieldFormatErrors.length;
+      errors.push(...codeValidationResult.errors.fieldFormatErrors);
+    } else {
+      v.code = codeValidationResult.value;
     }
 
     if (errorCount === 0) {
@@ -1980,8 +1968,9 @@ export function validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection
 ):
   | { valid: false; value: InvalidAttributeCombinationError[] }
   | { valid: true } {
+  const recoveryFacilityTypes: RecoveryFacilityDetail['recoveryFacilityType']['type'][] =
+    [];
   if (wasteCodeSubSection.type === 'NotApplicable') {
-    const errors: InvalidAttributeCombinationError[] = [];
     if (
       recoveryFacilityDetail.interimSiteOrganisationName ||
       recoveryFacilityDetail.interimSiteAddress ||
@@ -1992,12 +1981,7 @@ export function validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection
       recoveryFacilityDetail.interimSiteEmailAddress ||
       recoveryFacilityDetail.interimSiteRecoveryCode
     ) {
-      errors.push({
-        fields: ['WasteDescription', 'RecoveryFacilityDetail'],
-        message:
-          validation.RecoveryFacilityDetailCrossSectionValidationErrorMessages
-            .invalidInterimSite,
-      });
+      recoveryFacilityTypes.push('InterimSite');
     }
 
     if (
@@ -2042,19 +2026,7 @@ export function validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection
       recoveryFacilityDetail.fifthRecoveryFacilityEmailAddress ||
       recoveryFacilityDetail.fifthRecoveryFacilityRecoveryCode
     ) {
-      errors.push({
-        fields: ['WasteDescription', 'RecoveryFacilityDetail'],
-        message:
-          validation.RecoveryFacilityDetailCrossSectionValidationErrorMessages
-            .invalidRecoveryFacility,
-      });
-    }
-
-    if (errors.length > 0) {
-      return {
-        valid: false,
-        value: errors,
-      };
+      recoveryFacilityTypes.push('RecoveryFacility');
     }
   } else {
     if (
@@ -2067,17 +2039,23 @@ export function validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection
       recoveryFacilityDetail.laboratoryEmailAddress ||
       recoveryFacilityDetail.laboratoryDisposalCode
     ) {
+      recoveryFacilityTypes.push('Laboratory');
+    }
+
+    const recoveryFacilityTypesValidationResult =
+      glwe.validationRules.validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+        wasteCodeSubSection,
+        recoveryFacilityTypes,
+      );
+
+    if (
+      !recoveryFacilityTypesValidationResult.valid &&
+      recoveryFacilityTypesValidationResult.errors.invalidStructureErrors
+    ) {
       return {
         valid: false,
-        value: [
-          {
-            fields: ['WasteDescription', 'RecoveryFacilityDetail'],
-            message:
-              validation
-                .RecoveryFacilityDetailCrossSectionValidationErrorMessages
-                .invalidLaboratory,
-          },
-        ],
+        value:
+          recoveryFacilityTypesValidationResult.errors.invalidStructureErrors,
       };
     }
   }

@@ -40,6 +40,16 @@
         }
       }
     },
+    "serve-both": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx serve app-uk-waste-movements",
+          "nx serve api-mock-gateway"
+        ],
+        "parallel": true
+      }
+    },
     "export": {
       "executor": "@nx/next:export",
       "options": {
@@ -79,7 +89,7 @@
             "type=ref,event=tag",
             "type=ref,event=pr",
             "type=sha,prefix=sha-",
-            "type=raw,value=3.14.9"
+            "type=raw,value=3.14.10"
           ]
         }
       }

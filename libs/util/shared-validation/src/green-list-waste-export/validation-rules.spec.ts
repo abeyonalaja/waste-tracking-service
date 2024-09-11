@@ -24,15 +24,25 @@ import {
   validateWasteQuantityType,
   validateWasteQuantity,
   validateWasteCodeSubSectionAndQuantityCrossSection,
+  validateDisposalOrRecoveryCode,
+  validateWasteCodeSubSectionAndCarriersCrossSection,
+  validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection,
 } from './validation-rules';
 import { UkExitLocationChar } from './constraints';
 import * as errorMessages from './error-messages';
 import { submission } from '@wts/api/green-list-waste-export';
-import { ImporterDetail } from './model';
+import {
+  Country,
+  ImporterDetail,
+  RecoveryCode,
+  RecoveryFacilityDetail,
+  WasteCode,
+  WasteCodeType,
+} from './model';
 import { Section } from './dto';
 import { commonConstraints, commonValidationRules } from '../common';
 
-const wasteCodes = [
+const wasteCodes: WasteCodeType[] = [
   {
     type: 'BaselAnnexIX',
     values: [
@@ -91,7 +101,7 @@ const wasteCodes = [
   },
 ];
 
-const ewcCodes = [
+const ewcCodes: WasteCode[] = [
   {
     code: '010101',
     value: {
@@ -112,7 +122,7 @@ const ewcCodes = [
   },
 ];
 
-const countries = [
+const countries: Country[] = [
   {
     name: 'Afghanistan [AF]',
   },
@@ -130,7 +140,7 @@ const countries = [
   },
 ];
 
-const countriesIncludingUk = [
+const countriesIncludingUk: Country[] = [
   {
     name: 'Afghanistan [AF]',
   },
@@ -148,6 +158,41 @@ const countriesIncludingUk = [
   },
   {
     name: 'United Kingdom (England) [GB-ENG]',
+  },
+];
+
+const recoveryCodes: RecoveryCode[] = [
+  {
+    code: 'R1',
+    value: {
+      description: {
+        en: 'English Description',
+        cy: 'Welsh Description',
+      },
+      interim: false,
+    },
+  },
+  {
+    code: 'R13',
+    value: {
+      description: {
+        en: 'English Description',
+        cy: 'Welsh Description',
+      },
+      interim: true,
+    },
+  },
+];
+
+const disposalCodes: WasteCode[] = [
+  {
+    code: 'D1',
+    value: {
+      description: {
+        en: 'English Description',
+        cy: 'Welsh Description',
+      },
+    },
   },
 ];
 
@@ -2395,6 +2440,95 @@ describe(validateImporterDetailAndTransitCountriesCross, () => {
   });
 });
 
+describe(validateWasteCodeSubSectionAndCarriersCrossSection, () => {
+  it('passes validation given valid data', () => {
+    let result = validateWasteCodeSubSectionAndCarriersCrossSection(
+      {
+        type: 'BaselAnnexIX',
+      },
+      [
+        {
+          type: 'Air',
+          description: 'test',
+        },
+      ],
+    );
+    expect(result.valid).toEqual(true);
+
+    result = validateWasteCodeSubSectionAndCarriersCrossSection(
+      {
+        type: 'NotApplicable',
+      },
+      [],
+    );
+    expect(result.valid).toEqual(true);
+  });
+
+  it('fails validation given invalid data, given transport details for small waste', () => {
+    let result = validateWasteCodeSubSectionAndCarriersCrossSection(
+      {
+        type: 'NotApplicable',
+      },
+      [
+        {
+          type: 'Air',
+          description: 'test',
+        },
+      ],
+    );
+
+    expect(result.valid).toEqual(false);
+    if (!result.valid) {
+      expect(result.errors).toEqual({
+        invalidStructureErrors: [
+          {
+            fields: ['WasteDescription', 'Carriers'],
+            message:
+              errorMessages.invalidTransportCarriersCrossSection[locale][
+                context
+              ],
+          },
+          {
+            fields: ['WasteDescription', 'Carriers'],
+            message:
+              errorMessages.invalidTransportDescriptionCarriersCrossSection[
+                locale
+              ][context],
+          },
+        ],
+        fieldFormatErrors: [],
+      });
+    }
+
+    result = validateWasteCodeSubSectionAndCarriersCrossSection(
+      {
+        type: 'NotApplicable',
+      },
+      [
+        {
+          type: 'Rail',
+        },
+      ],
+    );
+
+    expect(result.valid).toEqual(false);
+    if (!result.valid) {
+      expect(result.errors).toEqual({
+        invalidStructureErrors: [
+          {
+            fields: ['WasteDescription', 'Carriers'],
+            message:
+              errorMessages.invalidTransportCarriersCrossSection[locale][
+                context
+              ],
+          },
+        ],
+        fieldFormatErrors: [],
+      });
+    }
+  });
+});
+
 describe(validateWasteQuantityType, () => {
   it.each([
     ['actual', 'ActualData'],
@@ -2635,3 +2769,484 @@ describe(validateWasteCodeSubSectionAndQuantityCrossSection, () => {
     },
   );
 });
+
+describe(validateDisposalOrRecoveryCode, () => {
+  it.each([
+    {
+      value: 'D1',
+      codeRef: {
+        type: 'Laboratory' as Exclude<
+          RecoveryFacilityDetail['recoveryFacilityType']['type'],
+          'InterimSite' | 'RecoveryFacility'
+        >,
+        codeList: disposalCodes,
+      },
+    },
+    {
+      value: 'r13 ',
+      codeRef: {
+        type: 'InterimSite' as Exclude<
+          RecoveryFacilityDetail['recoveryFacilityType']['type'],
+          'Laboratory'
+        >,
+        codeList: recoveryCodes,
+      },
+    },
+    {
+      value: 'R 1',
+      codeRef: {
+        type: 'RecoveryFacility' as Exclude<
+          RecoveryFacilityDetail['recoveryFacilityType']['type'],
+          'Laboratory'
+        >,
+        codeList: recoveryCodes,
+      },
+    },
+  ])(
+    'passes DisposalOrRecoveryCode validation (%s)',
+    async ({ value, codeRef }) => {
+      const response = validateDisposalOrRecoveryCode(
+        value,
+        codeRef,
+        locale,
+        context,
+      );
+      expect(response.valid).toEqual(true);
+      if (response.valid) {
+        expect(response.value).toEqual(value.replace(/\s/g, '').toUpperCase());
+      }
+    },
+  );
+
+  it.each([
+    {
+      value: '',
+      codeRef: {
+        type: 'Laboratory' as Exclude<
+          RecoveryFacilityDetail['recoveryFacilityType']['type'],
+          'InterimSite' | 'RecoveryFacility'
+        >,
+        codeList: disposalCodes,
+      },
+    },
+    {
+      value: '',
+      codeRef: {
+        type: 'InterimSite' as Exclude<
+          RecoveryFacilityDetail['recoveryFacilityType']['type'],
+          'Laboratory'
+        >,
+        codeList: recoveryCodes,
+      },
+    },
+    {
+      value: '',
+      codeRef: {
+        type: 'RecoveryFacility' as Exclude<
+          RecoveryFacilityDetail['recoveryFacilityType']['type'],
+          'Laboratory'
+        >,
+        codeList: recoveryCodes,
+      },
+    },
+    {
+      value: '   ',
+      codeRef: {
+        type: 'Laboratory' as Exclude<
+          RecoveryFacilityDetail['recoveryFacilityType']['type'],
+          'InterimSite' | 'RecoveryFacility'
+        >,
+        codeList: disposalCodes,
+      },
+    },
+    {
+      value: '   ',
+      codeRef: {
+        type: 'InterimSite' as Exclude<
+          RecoveryFacilityDetail['recoveryFacilityType']['type'],
+          'Laboratory'
+        >,
+        codeList: recoveryCodes,
+      },
+    },
+    {
+      value: '   ',
+      codeRef: {
+        type: 'RecoveryFacility' as Exclude<
+          RecoveryFacilityDetail['recoveryFacilityType']['type'],
+          'Laboratory'
+        >,
+        codeList: recoveryCodes,
+      },
+    },
+    {
+      value: undefined,
+      codeRef: {
+        type: 'Laboratory' as Exclude<
+          RecoveryFacilityDetail['recoveryFacilityType']['type'],
+          'InterimSite' | 'RecoveryFacility'
+        >,
+        codeList: disposalCodes,
+      },
+    },
+    {
+      value: undefined,
+      codeRef: {
+        type: 'InterimSite' as Exclude<
+          RecoveryFacilityDetail['recoveryFacilityType']['type'],
+          'Laboratory'
+        >,
+        codeList: recoveryCodes,
+      },
+    },
+    {
+      value: undefined,
+      codeRef: {
+        type: 'RecoveryFacility' as Exclude<
+          RecoveryFacilityDetail['recoveryFacilityType']['type'],
+          'Laboratory'
+        >,
+        codeList: recoveryCodes,
+      },
+    },
+    {
+      value: 'test',
+      codeRef: {
+        type: 'Laboratory' as Exclude<
+          RecoveryFacilityDetail['recoveryFacilityType']['type'],
+          'InterimSite' | 'RecoveryFacility'
+        >,
+        codeList: disposalCodes,
+      },
+    },
+    {
+      value: 'test',
+      codeRef: {
+        type: 'InterimSite' as Exclude<
+          RecoveryFacilityDetail['recoveryFacilityType']['type'],
+          'Laboratory'
+        >,
+        codeList: recoveryCodes,
+      },
+    },
+    {
+      value: 'test',
+      codeRef: {
+        type: 'RecoveryFacility' as Exclude<
+          RecoveryFacilityDetail['recoveryFacilityType']['type'],
+          'Laboratory'
+        >,
+        codeList: recoveryCodes,
+      },
+    },
+  ])(
+    'fails DisposalOrRecoveryCode validation (%s)',
+    async ({ value, codeRef }) => {
+      const response = validateDisposalOrRecoveryCode(
+        value,
+        codeRef,
+        locale,
+        context,
+      );
+      expect(response.valid).toEqual(false);
+      if (!response.valid) {
+        expect(response.errors).toEqual(
+          !value?.trim()
+            ? {
+                fieldFormatErrors: [
+                  {
+                    field: 'RecoveryFacilityDetail',
+                    message:
+                      errorMessages.RecoveryFacilityDetailValidationErrorMessages(
+                        locale,
+                        context,
+                        codeRef.type,
+                      ).emptyCode,
+                  },
+                ],
+              }
+            : {
+                fieldFormatErrors: [
+                  {
+                    field: 'RecoveryFacilityDetail',
+                    message:
+                      errorMessages.RecoveryFacilityDetailValidationErrorMessages(
+                        locale,
+                        context,
+                        codeRef.type,
+                      ).invalidCode,
+                  },
+                ],
+              },
+        );
+      }
+    },
+  );
+});
+
+describe(
+  validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection,
+  () => {
+    it('passes validation given valid data', () => {
+      let result =
+        validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+          {
+            type: 'BaselAnnexIX',
+          },
+          [],
+        );
+      expect(result.valid).toEqual(true);
+
+      result = validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+        {
+          type: 'OECD',
+        },
+        ['InterimSite'],
+      );
+      expect(result.valid).toEqual(true);
+
+      result = validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+        {
+          type: 'AnnexIIIA',
+        },
+        ['RecoveryFacility'],
+      );
+      expect(result.valid).toEqual(true);
+
+      result = validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+        {
+          type: 'AnnexIIIB',
+        },
+        ['InterimSite', 'RecoveryFacility'],
+      );
+      expect(result.valid).toEqual(true);
+
+      result = validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+        {
+          type: 'NotApplicable',
+        },
+        [],
+      );
+      expect(result.valid).toEqual(true);
+
+      result = validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+        {
+          type: 'NotApplicable',
+        },
+        ['Laboratory'],
+      );
+      expect(result.valid).toEqual(true);
+    });
+
+    it('fails validation given invalid data, given transport details for small waste', () => {
+      let result =
+        validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+          {
+            type: 'NotApplicable',
+          },
+          ['InterimSite'],
+        );
+
+      expect(result.valid).toEqual(false);
+      if (!result.valid) {
+        expect(result.errors).toEqual({
+          invalidStructureErrors: [
+            {
+              fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+              message:
+                errorMessages
+                  .invalidInterimSiteRecoveryFacilityDetailCrossSection[locale][
+                  context
+                ],
+            },
+          ],
+          fieldFormatErrors: [],
+        });
+      }
+
+      result = validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+        {
+          type: 'NotApplicable',
+        },
+        ['RecoveryFacility'],
+      );
+
+      expect(result.valid).toEqual(false);
+      if (!result.valid) {
+        expect(result.errors).toEqual({
+          invalidStructureErrors: [
+            {
+              fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+              message:
+                errorMessages
+                  .invalidRecoveryFacilityRecoveryFacilityDetailCrossSection[
+                  locale
+                ][context],
+            },
+          ],
+          fieldFormatErrors: [],
+        });
+      }
+
+      result = validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+        {
+          type: 'NotApplicable',
+        },
+        ['InterimSite', 'RecoveryFacility'],
+      );
+
+      expect(result.valid).toEqual(false);
+      if (!result.valid) {
+        expect(result.errors).toEqual({
+          invalidStructureErrors: [
+            {
+              fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+              message:
+                errorMessages
+                  .invalidInterimSiteRecoveryFacilityDetailCrossSection[locale][
+                  context
+                ],
+            },
+            {
+              fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+              message:
+                errorMessages
+                  .invalidRecoveryFacilityRecoveryFacilityDetailCrossSection[
+                  locale
+                ][context],
+            },
+          ],
+          fieldFormatErrors: [],
+        });
+      }
+
+      result = validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+        {
+          type: 'NotApplicable',
+        },
+        ['Laboratory', 'InterimSite', 'RecoveryFacility'],
+      );
+
+      expect(result.valid).toEqual(false);
+      if (!result.valid) {
+        expect(result.errors).toEqual({
+          invalidStructureErrors: [
+            {
+              fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+              message:
+                errorMessages
+                  .invalidInterimSiteRecoveryFacilityDetailCrossSection[locale][
+                  context
+                ],
+            },
+            {
+              fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+              message:
+                errorMessages
+                  .invalidRecoveryFacilityRecoveryFacilityDetailCrossSection[
+                  locale
+                ][context],
+            },
+          ],
+          fieldFormatErrors: [],
+        });
+      }
+
+      result = validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+        {
+          type: 'BaselAnnexIX',
+        },
+        ['Laboratory'],
+      );
+
+      expect(result.valid).toEqual(false);
+      if (!result.valid) {
+        expect(result.errors).toEqual({
+          invalidStructureErrors: [
+            {
+              fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+              message:
+                errorMessages
+                  .invalidLaboratoryRecoveryFacilityDetailCrossSection[locale][
+                  context
+                ],
+            },
+          ],
+          fieldFormatErrors: [],
+        });
+      }
+
+      result = validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+        {
+          type: 'OECD',
+        },
+        ['Laboratory'],
+      );
+
+      expect(result.valid).toEqual(false);
+      if (!result.valid) {
+        expect(result.errors).toEqual({
+          invalidStructureErrors: [
+            {
+              fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+              message:
+                errorMessages
+                  .invalidLaboratoryRecoveryFacilityDetailCrossSection[locale][
+                  context
+                ],
+            },
+          ],
+          fieldFormatErrors: [],
+        });
+      }
+
+      result = validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+        {
+          type: 'AnnexIIIA',
+        },
+        ['Laboratory', 'InterimSite'],
+      );
+
+      expect(result.valid).toEqual(false);
+      if (!result.valid) {
+        expect(result.errors).toEqual({
+          invalidStructureErrors: [
+            {
+              fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+              message:
+                errorMessages
+                  .invalidLaboratoryRecoveryFacilityDetailCrossSection[locale][
+                  context
+                ],
+            },
+          ],
+          fieldFormatErrors: [],
+        });
+      }
+
+      result = validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+        {
+          type: 'AnnexIIIB',
+        },
+        ['Laboratory', 'InterimSite', 'RecoveryFacility'],
+      );
+
+      expect(result.valid).toEqual(false);
+      if (!result.valid) {
+        expect(result.errors).toEqual({
+          invalidStructureErrors: [
+            {
+              fields: ['WasteDescription', 'RecoveryFacilityDetail'],
+              message:
+                errorMessages
+                  .invalidLaboratoryRecoveryFacilityDetailCrossSection[locale][
+                  context
+                ],
+            },
+          ],
+          fieldFormatErrors: [],
+        });
+      }
+    });
+  },
+);

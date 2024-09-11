@@ -116,14 +116,19 @@ async function init() {
     ewcCodesResponse.value,
     countriesResponse.value,
     countriesIncludingUkResponse.value,
+    recoveryCodesResponse.value,
+    disposalCodesResponse.value,
     logger,
   );
+
   const templateController = new template.TemplateController(
     repository,
     wasteCodesResponse.value,
     ewcCodesResponse.value,
     countriesResponse.value,
     countriesIncludingUkResponse.value,
+    recoveryCodesResponse.value,
+    disposalCodesResponse.value,
     logger,
   );
 

@@ -5388,11 +5388,23 @@ describe('validateRecoveryFacilityDetailSection', () => {
   });
 
   const interimSiteErrorMessages =
-    validation.RecoveryFacilityDetailValidationErrorMessages('InterimSite', 1);
+    glwe.errorMessages.RecoveryFacilityDetailValidationErrorMessages(
+      locale,
+      context,
+      'InterimSite',
+      1,
+    );
   const laboratoryErrorMessages =
-    validation.RecoveryFacilityDetailValidationErrorMessages('Laboratory', 1);
+    glwe.errorMessages.RecoveryFacilityDetailValidationErrorMessages(
+      locale,
+      context,
+      'Laboratory',
+      1,
+    );
   const firstRecoveryFacilityErrorMessages =
-    validation.RecoveryFacilityDetailValidationErrorMessages(
+    glwe.errorMessages.RecoveryFacilityDetailValidationErrorMessages(
+      locale,
+      context,
       'RecoveryFacility',
       1,
     );
@@ -5402,12 +5414,12 @@ describe('validateRecoveryFacilityDetailSection', () => {
       {
         interimSiteOrganisationName: '     ',
         interimSiteAddress: '     ',
-        interimSiteCountry: '     ',
+        interimSiteCountry: 'test',
         interimSiteContactFullName: '     ',
-        interimSiteContactPhoneNumber: '      ',
-        interimSiteFaxNumber: '     ',
-        interimSiteEmailAddress: '     ',
-        interimSiteRecoveryCode: '     ',
+        interimSiteContactPhoneNumber: 'test',
+        interimSiteFaxNumber: 'test',
+        interimSiteEmailAddress: 'test',
+        interimSiteRecoveryCode: 'test',
         laboratoryOrganisationName: '',
         laboratoryAddress: '',
         laboratoryCountry: '',
@@ -5418,12 +5430,12 @@ describe('validateRecoveryFacilityDetailSection', () => {
         laboratoryDisposalCode: '',
         firstRecoveryFacilityOrganisationName: '     ',
         firstRecoveryFacilityAddress: '     ',
-        firstRecoveryFacilityCountry: '     ',
+        firstRecoveryFacilityCountry: 'test',
         firstRecoveryFacilityContactFullName: '     ',
-        firstRecoveryFacilityContactPhoneNumber: '     ',
-        firstRecoveryFacilityFaxNumber: '     ',
-        firstRecoveryFacilityEmailAddress: '     ',
-        firstRecoveryFacilityRecoveryCode: '     ',
+        firstRecoveryFacilityContactPhoneNumber: 'test',
+        firstRecoveryFacilityFaxNumber: 'test',
+        firstRecoveryFacilityEmailAddress: 'test',
+        firstRecoveryFacilityRecoveryCode: 'test',
         secondRecoveryFacilityOrganisationName: '',
         secondRecoveryFacilityAddress: '',
         secondRecoveryFacilityCountry: '',
@@ -5680,12 +5692,12 @@ describe('validateRecoveryFacilityDetailSection', () => {
         interimSiteRecoveryCode: '',
         laboratoryOrganisationName: '     ',
         laboratoryAddress: '     ',
-        laboratoryCountry: '     ',
+        laboratoryCountry: 'test',
         laboratoryContactFullName: '     ',
-        laboratoryContactPhoneNumber: '     ',
-        laboratoryFaxNumber: '     ',
-        laboratoryEmailAddress: '     ',
-        laboratoryDisposalCode: '     ',
+        laboratoryContactPhoneNumber: 'test',
+        laboratoryFaxNumber: 'test',
+        laboratoryEmailAddress: 'test',
+        laboratoryDisposalCode: 'test',
         firstRecoveryFacilityOrganisationName: '',
         firstRecoveryFacilityAddress: '',
         firstRecoveryFacilityCountry: '',
@@ -6149,8 +6161,10 @@ describe('validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection', () 
       {
         fields: ['WasteDescription', 'RecoveryFacilityDetail'],
         message:
-          validation.RecoveryFacilityDetailCrossSectionValidationErrorMessages
-            .invalidLaboratory,
+          glwe.errorMessages
+            .invalidLaboratoryRecoveryFacilityDetailCrossSection[locale][
+            context
+          ],
       },
     ]);
 
@@ -6223,8 +6237,10 @@ describe('validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection', () 
       {
         fields: ['WasteDescription', 'RecoveryFacilityDetail'],
         message:
-          validation.RecoveryFacilityDetailCrossSectionValidationErrorMessages
-            .invalidLaboratory,
+          glwe.errorMessages
+            .invalidLaboratoryRecoveryFacilityDetailCrossSection[locale][
+            context
+          ],
       },
     ]);
 
@@ -6298,8 +6314,10 @@ describe('validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection', () 
       {
         fields: ['WasteDescription', 'RecoveryFacilityDetail'],
         message:
-          validation.RecoveryFacilityDetailCrossSectionValidationErrorMessages
-            .invalidInterimSite,
+          glwe.errorMessages
+            .invalidInterimSiteRecoveryFacilityDetailCrossSection[locale][
+            context
+          ],
       },
     ]);
 
@@ -6372,8 +6390,10 @@ describe('validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection', () 
       {
         fields: ['WasteDescription', 'RecoveryFacilityDetail'],
         message:
-          validation.RecoveryFacilityDetailCrossSectionValidationErrorMessages
-            .invalidRecoveryFacility,
+          glwe.errorMessages
+            .invalidRecoveryFacilityRecoveryFacilityDetailCrossSection[locale][
+            context
+          ],
       },
     ]);
 
@@ -6446,14 +6466,18 @@ describe('validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection', () 
       {
         fields: ['WasteDescription', 'RecoveryFacilityDetail'],
         message:
-          validation.RecoveryFacilityDetailCrossSectionValidationErrorMessages
-            .invalidInterimSite,
+          glwe.errorMessages
+            .invalidInterimSiteRecoveryFacilityDetailCrossSection[locale][
+            context
+          ],
       },
       {
         fields: ['WasteDescription', 'RecoveryFacilityDetail'],
         message:
-          validation.RecoveryFacilityDetailCrossSectionValidationErrorMessages
-            .invalidRecoveryFacility,
+          glwe.errorMessages
+            .invalidRecoveryFacilityRecoveryFacilityDetailCrossSection[locale][
+            context
+          ],
       },
     ]);
   });

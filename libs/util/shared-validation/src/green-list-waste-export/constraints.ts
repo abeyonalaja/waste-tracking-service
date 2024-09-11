@@ -41,3 +41,21 @@ export const SmallWasteQuantityValue = {
   greaterThan: 0,
   lessThanOrEqual: 25,
 };
+
+export const InterimSiteLength = {
+  max: 1,
+};
+
+export const RecoveryFacilityLength = {
+  min: 1,
+  max: 5,
+};
+
+export const TemplateNameChar = {
+  min: 1,
+  max: 50,
+};
+
+export const TemplateDescriptionChar = {
+  max: 100,
+};

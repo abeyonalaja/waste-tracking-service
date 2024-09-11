@@ -38,10 +38,10 @@ import {
   isWasteCodeChangingBulkToBulkSameType,
   setBaseWasteDescription,
   paginateArray,
-  setSubmissionConfirmation,
-  setSubmissionDeclaration,
+  setSubmissionConfirmationStatus,
+  setSubmissionDeclarationStatus,
 } from '../../lib/util';
-import { validation } from '@wts/api/green-list-waste-export';
+import { validation, submission } from '@wts/api/green-list-waste-export';
 import { common as commonValidation, glwe } from '@wts/util/shared-validation';
 
 const locale = 'en';
@@ -573,8 +573,9 @@ export async function setWasteDescription(
   submission.recoveryFacilityDetail = submissionBase.recoveryFacilityDetail;
 
   submission.wasteQuantity = wasteQuantity;
-  submission.submissionConfirmation = setSubmissionConfirmation(submission);
-  submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionConfirmation =
+    setSubmissionConfirmationStatus(submission);
+  submission.submissionDeclaration = setSubmissionDeclarationStatus(submission);
   submission.submissionState.timestamp = new Date();
   return Promise.resolve();
 }
@@ -736,8 +737,10 @@ export async function setWasteQuantity(
 
     submission.wasteQuantity = wasteQuantity;
 
-    submission.submissionConfirmation = setSubmissionConfirmation(submission);
-    submission.submissionDeclaration = setSubmissionDeclaration(submission);
+    submission.submissionConfirmation =
+      setSubmissionConfirmationStatus(submission);
+    submission.submissionDeclaration =
+      setSubmissionDeclarationStatus(submission);
     submission.submissionState.timestamp = new Date();
   } else {
     const v = value as WasteQuantityData;
@@ -849,8 +852,9 @@ export async function setCustomerReference(
 
   submission.reference = reference;
 
-  submission.submissionConfirmation = setSubmissionConfirmation(submission);
-  submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionConfirmation =
+    setSubmissionConfirmationStatus(submission);
+  submission.submissionDeclaration = setSubmissionDeclarationStatus(submission);
   submission.submissionState.timestamp = new Date();
 
   return Promise.resolve();
@@ -882,8 +886,9 @@ export async function setExporterDetail(
 
   submission.exporterDetail = value;
 
-  submission.submissionConfirmation = setSubmissionConfirmation(submission);
-  submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionConfirmation =
+    setSubmissionConfirmationStatus(submission);
+  submission.submissionDeclaration = setSubmissionDeclarationStatus(submission);
   submission.submissionState.timestamp = new Date();
 
   return Promise.resolve();
@@ -937,8 +942,9 @@ export async function setImporterDetail(
 
   submission.importerDetail = value;
 
-  submission.submissionConfirmation = setSubmissionConfirmation(submission);
-  submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionConfirmation =
+    setSubmissionConfirmationStatus(submission);
+  submission.submissionDeclaration = setSubmissionDeclarationStatus(submission);
   submission.submissionState.timestamp = new Date();
 
   return Promise.resolve();
@@ -1019,8 +1025,10 @@ export async function setCollectionDate(
 
     submission.collectionDate = collectionDate;
 
-    submission.submissionConfirmation = setSubmissionConfirmation(submission);
-    submission.submissionDeclaration = setSubmissionDeclaration(submission);
+    submission.submissionConfirmation =
+      setSubmissionConfirmationStatus(submission);
+    submission.submissionDeclaration =
+      setSubmissionDeclarationStatus(submission);
     submission.submissionState.timestamp = new Date();
   } else {
     const submission = db.submissions.find(
@@ -1154,8 +1162,9 @@ export async function createCarriers(
     };
   }
 
-  submission.submissionConfirmation = setSubmissionConfirmation(submission);
-  submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionConfirmation =
+    setSubmissionConfirmationStatus(submission);
+  submission.submissionDeclaration = setSubmissionDeclarationStatus(submission);
   submission.submissionState.timestamp = new Date();
 
   return Promise.resolve({
@@ -1373,30 +1382,6 @@ export async function setCarriers(
     return Promise.reject(new BadRequestError('Carriers NotStarted.'));
   }
 
-  if (
-    submission.wasteDescription.status !== 'NotStarted' &&
-    submission.wasteDescription.wasteCode &&
-    value.status !== 'NotStarted'
-  ) {
-    const transportValidationResult =
-      glwe.validationRules.validateWasteCodeSubSectionAndCarriersCrossSection(
-        submission.wasteDescription.wasteCode,
-        value.values.map((v) => v.transportDetails),
-      );
-
-    if (!transportValidationResult.valid) {
-      return Promise.reject(
-        new BadRequestError(
-          'Validation failed',
-          transportValidationResult.errors,
-        ),
-      );
-    } else {
-      value.transport =
-        submission.wasteDescription.wasteCode.type !== 'NotApplicable';
-    }
-  }
-
   if (value.status === 'NotStarted') {
     submission.carriers = value;
   } else {
@@ -1413,14 +1398,39 @@ export async function setCarriers(
     if (index === -1) {
       return Promise.reject('Index not found.');
     }
+
+    if (
+      submission.wasteDescription.status !== 'NotStarted' &&
+      submission.wasteDescription.wasteCode
+    ) {
+      const transportValidationResult =
+        glwe.validationRules.validateWasteCodeSubSectionAndCarriersCrossSection(
+          submission.wasteDescription.wasteCode,
+          value.values.map((v) => v.transportDetails),
+        );
+
+      if (!transportValidationResult.valid) {
+        return Promise.reject(
+          new BadRequestError(
+            'Validation failed',
+            transportValidationResult.errors,
+          ),
+        );
+      } else {
+        value.transport =
+          submission.wasteDescription.wasteCode.type !== 'NotApplicable';
+      }
+    }
+
     if (submission.carriers !== undefined) {
       submission.carriers.status = value.status;
       submission.carriers.values[index] = carrier;
     }
   }
 
-  submission.submissionConfirmation = setSubmissionConfirmation(submission);
-  submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionConfirmation =
+    setSubmissionConfirmationStatus(submission);
+  submission.submissionDeclaration = setSubmissionDeclarationStatus(submission);
   submission.submissionState.timestamp = new Date();
 
   return Promise.resolve();
@@ -1464,8 +1474,9 @@ export async function deleteCarriers(
     };
   }
 
-  submission.submissionConfirmation = setSubmissionConfirmation(submission);
-  submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionConfirmation =
+    setSubmissionConfirmationStatus(submission);
+  submission.submissionDeclaration = setSubmissionDeclarationStatus(submission);
   submission.submissionState.timestamp = new Date();
 
   return Promise.resolve();
@@ -1649,8 +1660,9 @@ export async function setCollectionDetail(
   }
 
   submission.collectionDetail = value;
-  submission.submissionConfirmation = setSubmissionConfirmation(submission);
-  submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionConfirmation =
+    setSubmissionConfirmationStatus(submission);
+  submission.submissionDeclaration = setSubmissionDeclarationStatus(submission);
   submission.submissionState.timestamp = new Date();
 
   return Promise.resolve();
@@ -1700,8 +1712,9 @@ export async function setExitLocation(
   }
 
   submission.ukExitLocation = value;
-  submission.submissionConfirmation = setSubmissionConfirmation(submission);
-  submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionConfirmation =
+    setSubmissionConfirmationStatus(submission);
+  submission.submissionDeclaration = setSubmissionDeclarationStatus(submission);
   submission.submissionState.timestamp = new Date();
 
   return Promise.resolve();
@@ -1766,8 +1779,9 @@ export async function setTransitCountries(
   }
 
   submission.transitCountries = value;
-  submission.submissionConfirmation = setSubmissionConfirmation(submission);
-  submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionConfirmation =
+    setSubmissionConfirmationStatus(submission);
+  submission.submissionDeclaration = setSubmissionDeclarationStatus(submission);
   submission.submissionState.timestamp = new Date();
 
   return Promise.resolve();
@@ -1813,11 +1827,12 @@ export async function createRecoveryFacilityDetail(
     submission.recoveryFacilityDetail.status === 'Complete'
   ) {
     const maxFacilities =
-      validation.InterimSiteLength.max + validation.RecoveryFacilityLength.max;
+      glwe.constraints.InterimSiteLength.max +
+      glwe.constraints.RecoveryFacilityLength.max;
     if (submission.recoveryFacilityDetail.values.length === maxFacilities) {
       return Promise.reject(
         new BadRequestError(
-          `Cannot add more than ${maxFacilities} recovery facilities (Maximum: ${validation.InterimSiteLength.max} InterimSite & ${validation.RecoveryFacilityLength.max} Recovery Facilities)`,
+          `Cannot add more than ${maxFacilities} recovery facilities (Maximum: ${glwe.constraints.InterimSiteLength.max} InterimSite & ${glwe.constraints.RecoveryFacilityLength.max} Recovery Facilities)`,
         ),
       );
     }
@@ -1882,11 +1897,11 @@ export async function getRecoveryFacilityDetail(
   const value: RecoveryFacilityDetail =
     submission.recoveryFacilityDetail.status !== 'Complete'
       ? {
-          status: submission.carriers.status as 'Started',
+          status: submission.recoveryFacilityDetail.status as 'Started',
           values: [recoveryFacility as RecoveryFacilityPartial],
         }
       : {
-          status: submission.carriers.status,
+          status: submission.recoveryFacilityDetail.status,
           values: [recoveryFacility as RecoveryFacility],
         };
   return Promise.resolve(value);
@@ -1897,6 +1912,183 @@ export async function setRecoveryFacilityDetail(
   rfdId: string,
   value: RecoveryFacilityDetail,
 ): Promise<void> {
+  if (value.status === 'Started' || value.status === 'Complete') {
+    const errors = {
+      fieldFormatErrors: [] as validation.FieldFormatError[],
+    };
+    let index = 0;
+    value.values.forEach((v) => {
+      const section = 'RecoveryFacilityDetail';
+      index += 1;
+      if (v.addressDetails) {
+        const organisationNameValidationResult =
+          glwe.validationRules.validateOrganisationName(
+            v.addressDetails.name,
+            section,
+            locale,
+            context,
+            index,
+            v.recoveryFacilityType?.type,
+          );
+
+        if (!organisationNameValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...organisationNameValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.addressDetails.name = organisationNameValidationResult.value;
+        }
+
+        const addressValidationResult = glwe.validationRules.validateAddress(
+          v.addressDetails.address,
+          section,
+          locale,
+          context,
+          index,
+          v.recoveryFacilityType?.type,
+        );
+
+        if (!addressValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...addressValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.addressDetails.address = addressValidationResult.value;
+        }
+
+        const countryValidationResult = glwe.validationRules.validateCountry(
+          v.addressDetails.country,
+          section,
+          locale,
+          context,
+          db.countries,
+          index,
+          v.recoveryFacilityType?.type,
+        );
+
+        if (!countryValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...countryValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.addressDetails.country = countryValidationResult.value;
+        }
+      }
+
+      if (v.contactDetails) {
+        const contactFullNameValidationResult =
+          glwe.validationRules.validateFullName(
+            v.contactDetails.fullName,
+            section,
+            locale,
+            context,
+            index,
+            v.recoveryFacilityType?.type,
+          );
+
+        if (!contactFullNameValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...contactFullNameValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.contactDetails.fullName = contactFullNameValidationResult.value;
+        }
+
+        const phoneValidationResult = glwe.validationRules.validatePhoneNumber(
+          v.contactDetails.phoneNumber,
+          section,
+          locale,
+          context,
+          index,
+          v.recoveryFacilityType?.type,
+        );
+
+        if (!phoneValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...phoneValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.contactDetails.phoneNumber = phoneValidationResult.value;
+        }
+
+        const faxValidationResult = glwe.validationRules.validateFaxNumber(
+          v.contactDetails.faxNumber,
+          section,
+          locale,
+          context,
+          index,
+          v.recoveryFacilityType?.type,
+        );
+
+        if (!faxValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...faxValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.contactDetails.faxNumber = faxValidationResult.value;
+        }
+
+        const emailValidationResult = glwe.validationRules.validateEmailAddress(
+          v.contactDetails.emailAddress,
+          section,
+          locale,
+          context,
+          index,
+          v.recoveryFacilityType?.type,
+        );
+
+        if (!emailValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...emailValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.contactDetails.emailAddress = emailValidationResult.value;
+        }
+      }
+
+      if (
+        v.recoveryFacilityType &&
+        ((v.recoveryFacilityType.type === 'Laboratory' &&
+          v.recoveryFacilityType.disposalCode) ||
+          (v.recoveryFacilityType.type !== 'Laboratory' &&
+            v.recoveryFacilityType.recoveryCode))
+      ) {
+        const codeValidationResult =
+          glwe.validationRules.validateDisposalOrRecoveryCode(
+            v.recoveryFacilityType.type === 'Laboratory'
+              ? v.recoveryFacilityType.disposalCode
+              : v.recoveryFacilityType.recoveryCode,
+            v.recoveryFacilityType.type === 'Laboratory'
+              ? {
+                  type: v.recoveryFacilityType.type,
+                  codeList: db.disposalCodes,
+                }
+              : {
+                  type: v.recoveryFacilityType.type,
+                  codeList: db.recoveryCodes,
+                },
+            locale,
+            context,
+          );
+
+        if (!codeValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...codeValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.recoveryFacilityType.type === 'Laboratory'
+            ? (v.recoveryFacilityType.disposalCode = codeValidationResult.value)
+            : (v.recoveryFacilityType.recoveryCode =
+                codeValidationResult.value);
+        }
+      }
+    });
+
+    if (errors.fieldFormatErrors.length > 0) {
+      return Promise.reject(new BadRequestError('Validation failed', errors));
+    }
+  }
+
   const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId,
   );
@@ -1926,6 +2118,33 @@ export async function setRecoveryFacilityDetail(
       return Promise.reject(new Error('Not found.'));
     }
 
+    if (
+      submission.wasteDescription.status !== 'NotStarted' &&
+      submission.wasteDescription.wasteCode
+    ) {
+      const recoveryFacilityTypes: submission.RecoveryFacilityDetail['recoveryFacilityType']['type'][] =
+        [];
+      value.values.forEach((v) => {
+        if (v.recoveryFacilityType) {
+          recoveryFacilityTypes.push(v.recoveryFacilityType.type);
+        }
+      });
+      const recoveryFacilityTypesValidationResult =
+        glwe.validationRules.validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+          submission.wasteDescription.wasteCode,
+          recoveryFacilityTypes,
+        );
+
+      if (!recoveryFacilityTypesValidationResult.valid) {
+        return Promise.reject(
+          new BadRequestError(
+            'Validation failed',
+            recoveryFacilityTypesValidationResult.errors,
+          ),
+        );
+      }
+    }
+
     submission.recoveryFacilityDetail.status = value.status;
     submission.recoveryFacilityDetail.values[index] =
       recoveryFacility as RecoveryFacility;
@@ -1938,8 +2157,9 @@ export async function setRecoveryFacilityDetail(
     return Promise.reject(new NotFoundError('Not found.'));
   }
 
-  submission.submissionConfirmation = setSubmissionConfirmation(submission);
-  submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionConfirmation =
+    setSubmissionConfirmationStatus(submission);
+  submission.submissionDeclaration = setSubmissionDeclarationStatus(submission);
   submission.submissionState.timestamp = new Date();
 
   return Promise.resolve();
@@ -1976,8 +2196,9 @@ export async function deleteRecoveryFacilityDetail(
     submission.recoveryFacilityDetail = { status: 'NotStarted' };
   }
 
-  submission.submissionConfirmation = setSubmissionConfirmation(submission);
-  submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionConfirmation =
+    setSubmissionConfirmationStatus(submission);
+  submission.submissionDeclaration = setSubmissionDeclarationStatus(submission);
   submission.submissionState.timestamp = new Date();
 
   return Promise.resolve();
@@ -2029,7 +2250,8 @@ export async function updateSubmissionConfirmation(
 
     if (!collectionDateValidationResult.valid) {
       submission.collectionDate = { status: 'NotStarted' };
-      submission.submissionConfirmation = setSubmissionConfirmation(submission);
+      submission.submissionConfirmation =
+        setSubmissionConfirmationStatus(submission);
 
       db.drafts.push(submission);
       return Promise.reject(new Error('Invalid collection date'));
@@ -2037,7 +2259,7 @@ export async function updateSubmissionConfirmation(
   }
 
   submission.submissionConfirmation = value;
-  submission.submissionDeclaration = setSubmissionDeclaration(submission);
+  submission.submissionDeclaration = setSubmissionDeclarationStatus(submission);
   submission.submissionState.timestamp = new Date();
 
   return Promise.resolve();
@@ -2090,8 +2312,10 @@ export async function updateSubmissionDeclaration(
     if (!collectionDateValidationResult.valid) {
       submission.collectionDate = { status: 'NotStarted' };
 
-      submission.submissionConfirmation = setSubmissionConfirmation(submission);
-      submission.submissionDeclaration = setSubmissionDeclaration(submission);
+      submission.submissionConfirmation =
+        setSubmissionConfirmationStatus(submission);
+      submission.submissionDeclaration =
+        setSubmissionDeclarationStatus(submission);
       submission.submissionState.timestamp = new Date();
 
       db.drafts.push(submission);

@@ -24,7 +24,7 @@ import {
   TransitCountries,
   WasteDescription,
 } from '@wts/api/waste-tracking-gateway';
-import { validation } from '@wts/api/green-list-waste-export';
+import { validation, submission } from '@wts/api/green-list-waste-export';
 import {
   paginateArray,
   copyCarriersNoTransport,
@@ -193,20 +193,21 @@ export async function createTemplate(
 ): Promise<Template> {
   if (
     !templateDetails.name ||
-    templateDetails.name.length < validation.TemplateNameChar.min ||
-    templateDetails.name.length > validation.TemplateNameChar.max ||
-    !validation.templateNameRegex.test(templateDetails.name)
+    templateDetails.name.length < glwe.constraints.TemplateNameChar.min ||
+    templateDetails.name.length > glwe.constraints.TemplateNameChar.max ||
+    !glwe.regex.templateNameRegex.test(templateDetails.name)
   ) {
     throw new BadRequestError(
-      `Template name must be unique and between ${validation.TemplateNameChar.min} and ${validation.TemplateNameChar.max} alphanumeric characters.`,
+      `Template name must be unique and between ${glwe.constraints.TemplateNameChar.min} and ${glwe.constraints.TemplateNameChar.max} alphanumeric characters.`,
     );
   }
   if (
     templateDetails.description &&
-    templateDetails.description.length > validation.TemplateDescriptionChar.max
+    templateDetails.description.length >
+      glwe.constraints.TemplateDescriptionChar.max
   ) {
     throw new BadRequestError(
-      `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
+      `Template description cannot exceed ${glwe.constraints.TemplateDescriptionChar.max} characters.`,
     );
   }
 
@@ -249,20 +250,21 @@ export async function createTemplateFromSubmission(
 ): Promise<Template> {
   if (
     !templateDetails.name ||
-    templateDetails.name.length < validation.TemplateNameChar.min ||
-    templateDetails.name.length > validation.TemplateNameChar.max ||
-    !validation.templateNameRegex.test(templateDetails.name)
+    templateDetails.name.length < glwe.constraints.TemplateNameChar.min ||
+    templateDetails.name.length > glwe.constraints.TemplateNameChar.max ||
+    !glwe.regex.templateNameRegex.test(templateDetails.name)
   ) {
     throw new BadRequestError(
-      `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
+      `Template description cannot exceed ${glwe.constraints.TemplateDescriptionChar.max} characters.`,
     );
   }
   if (
     templateDetails.description &&
-    templateDetails.description.length > validation.TemplateDescriptionChar.max
+    templateDetails.description.length >
+      glwe.constraints.TemplateDescriptionChar.max
   ) {
     throw new BadRequestError(
-      `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
+      `Template description cannot exceed ${glwe.constraints.TemplateDescriptionChar.max} characters.`,
     );
   }
 
@@ -344,20 +346,21 @@ export async function createTemplateFromTemplate(
 ): Promise<Template> {
   if (
     !templateDetails.name ||
-    templateDetails.name.length < validation.TemplateNameChar.min ||
-    templateDetails.name.length > validation.TemplateNameChar.max ||
-    !validation.templateNameRegex.test(templateDetails.name)
+    templateDetails.name.length < glwe.constraints.TemplateNameChar.min ||
+    templateDetails.name.length > glwe.constraints.TemplateNameChar.max ||
+    !glwe.regex.templateNameRegex.test(templateDetails.name)
   ) {
     throw new BadRequestError(
-      `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
+      `Template description cannot exceed ${glwe.constraints.TemplateDescriptionChar.max} characters.`,
     );
   }
   if (
     templateDetails.description &&
-    templateDetails.description.length > validation.TemplateDescriptionChar.max
+    templateDetails.description.length >
+      glwe.constraints.TemplateDescriptionChar.max
   ) {
     throw new BadRequestError(
-      `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
+      `Template description cannot exceed ${glwe.constraints.TemplateDescriptionChar.max} characters.`,
     );
   }
 
@@ -405,20 +408,21 @@ export async function updateTemplate(
 ): Promise<Template> {
   if (
     !templateDetails.name ||
-    templateDetails.name.length < validation.TemplateNameChar.min ||
-    templateDetails.name.length > validation.TemplateNameChar.max ||
-    !validation.templateNameRegex.test(templateDetails.name)
+    templateDetails.name.length < glwe.constraints.TemplateNameChar.min ||
+    templateDetails.name.length > glwe.constraints.TemplateNameChar.max ||
+    !glwe.regex.templateNameRegex.test(templateDetails.name)
   ) {
     throw new BadRequestError(
-      `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
+      `Template description cannot exceed ${glwe.constraints.TemplateDescriptionChar.max} characters.`,
     );
   }
   if (
     templateDetails.description &&
-    templateDetails.description.length > validation.TemplateDescriptionChar.max
+    templateDetails.description.length >
+      glwe.constraints.TemplateDescriptionChar.max
   ) {
     throw new BadRequestError(
-      `Template description cannot exceed ${validation.TemplateDescriptionChar.max} characters.`,
+      `Template description cannot exceed ${glwe.constraints.TemplateDescriptionChar.max} characters.`,
     );
   }
   const template = db.templates.find(
@@ -981,30 +985,6 @@ export async function setCarriers(
     return Promise.reject(new NotFoundError('Carriers NotStarted'));
   }
 
-  if (
-    template.wasteDescription.status !== 'NotStarted' &&
-    template.wasteDescription.wasteCode &&
-    value.status !== 'NotStarted'
-  ) {
-    const transportValidationResult =
-      glwe.validationRules.validateWasteCodeSubSectionAndCarriersCrossSection(
-        template.wasteDescription.wasteCode,
-        value.values.map((v) => v.transportDetails),
-      );
-
-    if (!transportValidationResult.valid) {
-      return Promise.reject(
-        new BadRequestError(
-          'Validation failed',
-          transportValidationResult.errors,
-        ),
-      );
-    } else {
-      value.transport =
-        template.wasteDescription.wasteCode.type !== 'NotApplicable';
-    }
-  }
-
   if (value.status === 'NotStarted') {
     template.carriers = value;
   } else {
@@ -1020,6 +1000,29 @@ export async function setCarriers(
     });
     if (index === -1) {
       return Promise.reject(new NotFoundError('Index not found.'));
+    }
+
+    if (
+      template.wasteDescription.status !== 'NotStarted' &&
+      template.wasteDescription.wasteCode
+    ) {
+      const transportValidationResult =
+        glwe.validationRules.validateWasteCodeSubSectionAndCarriersCrossSection(
+          template.wasteDescription.wasteCode,
+          value.values.map((v) => v.transportDetails),
+        );
+
+      if (!transportValidationResult.valid) {
+        return Promise.reject(
+          new BadRequestError(
+            'Validation failed',
+            transportValidationResult.errors,
+          ),
+        );
+      } else {
+        value.transport =
+          template.wasteDescription.wasteCode.type !== 'NotApplicable';
+      }
     }
 
     if (template.carriers !== undefined) {
@@ -1427,11 +1430,12 @@ export async function createRecoveryFacilityDetail(
     template.recoveryFacilityDetail.status === 'Complete'
   ) {
     const maxFacilities =
-      validation.InterimSiteLength.max + validation.RecoveryFacilityLength.max;
+      glwe.constraints.InterimSiteLength.max +
+      glwe.constraints.RecoveryFacilityLength.max;
     if (template.recoveryFacilityDetail.values.length === maxFacilities) {
       return Promise.reject(
         new BadRequestError(
-          `Cannot add more than ${maxFacilities} recovery facilities (Maximum: ${validation.InterimSiteLength.max} InterimSite & ${validation.RecoveryFacilityLength.max} Recovery Facilities)`,
+          `Cannot add more than ${maxFacilities} recovery facilities (Maximum: ${glwe.constraints.InterimSiteLength.max} InterimSite & ${glwe.constraints.RecoveryFacilityLength.max} Recovery Facilities)`,
         ),
       );
     }
@@ -1496,13 +1500,14 @@ export async function getRecoveryFacilityDetail(
   const value: RecoveryFacilityDetail =
     template.recoveryFacilityDetail.status !== 'Complete'
       ? {
-          status: template.carriers.status as 'Started',
+          status: template.recoveryFacilityDetail.status as 'Started',
           values: [recoveryFacility as RecoveryFacilityPartial],
         }
       : {
-          status: template.carriers.status,
+          status: template.recoveryFacilityDetail.status,
           values: [recoveryFacility as RecoveryFacility],
         };
+
   return Promise.resolve(value);
 }
 
@@ -1511,6 +1516,183 @@ export async function setRecoveryFacilityDetail(
   rfdId: string,
   value: RecoveryFacilityDetail,
 ): Promise<void> {
+  if (value.status === 'Started' || value.status === 'Complete') {
+    const errors = {
+      fieldFormatErrors: [] as validation.FieldFormatError[],
+    };
+    let index = 0;
+    value.values.forEach((v) => {
+      const section = 'RecoveryFacilityDetail';
+      index += 1;
+      if (v.addressDetails) {
+        const organisationNameValidationResult =
+          glwe.validationRules.validateOrganisationName(
+            v.addressDetails.name,
+            section,
+            locale,
+            context,
+            index,
+            v.recoveryFacilityType?.type,
+          );
+
+        if (!organisationNameValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...organisationNameValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.addressDetails.name = organisationNameValidationResult.value;
+        }
+
+        const addressValidationResult = glwe.validationRules.validateAddress(
+          v.addressDetails.address,
+          section,
+          locale,
+          context,
+          index,
+          v.recoveryFacilityType?.type,
+        );
+
+        if (!addressValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...addressValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.addressDetails.address = addressValidationResult.value;
+        }
+
+        const countryValidationResult = glwe.validationRules.validateCountry(
+          v.addressDetails.country,
+          section,
+          locale,
+          context,
+          db.countries,
+          index,
+          v.recoveryFacilityType?.type,
+        );
+
+        if (!countryValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...countryValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.addressDetails.country = countryValidationResult.value;
+        }
+      }
+
+      if (v.contactDetails) {
+        const contactFullNameValidationResult =
+          glwe.validationRules.validateFullName(
+            v.contactDetails.fullName,
+            section,
+            locale,
+            context,
+            index,
+            v.recoveryFacilityType?.type,
+          );
+
+        if (!contactFullNameValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...contactFullNameValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.contactDetails.fullName = contactFullNameValidationResult.value;
+        }
+
+        const phoneValidationResult = glwe.validationRules.validatePhoneNumber(
+          v.contactDetails.phoneNumber,
+          section,
+          locale,
+          context,
+          index,
+          v.recoveryFacilityType?.type,
+        );
+
+        if (!phoneValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...phoneValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.contactDetails.phoneNumber = phoneValidationResult.value;
+        }
+
+        const faxValidationResult = glwe.validationRules.validateFaxNumber(
+          v.contactDetails.faxNumber,
+          section,
+          locale,
+          context,
+          index,
+          v.recoveryFacilityType?.type,
+        );
+
+        if (!faxValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...faxValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.contactDetails.faxNumber = faxValidationResult.value;
+        }
+
+        const emailValidationResult = glwe.validationRules.validateEmailAddress(
+          v.contactDetails.emailAddress,
+          section,
+          locale,
+          context,
+          index,
+          v.recoveryFacilityType?.type,
+        );
+
+        if (!emailValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...emailValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.contactDetails.emailAddress = emailValidationResult.value;
+        }
+      }
+
+      if (
+        v.recoveryFacilityType &&
+        ((v.recoveryFacilityType.type === 'Laboratory' &&
+          v.recoveryFacilityType.disposalCode) ||
+          (v.recoveryFacilityType.type !== 'Laboratory' &&
+            v.recoveryFacilityType.recoveryCode))
+      ) {
+        const codeValidationResult =
+          glwe.validationRules.validateDisposalOrRecoveryCode(
+            v.recoveryFacilityType.type === 'Laboratory'
+              ? v.recoveryFacilityType.disposalCode
+              : v.recoveryFacilityType.recoveryCode,
+            v.recoveryFacilityType.type === 'Laboratory'
+              ? {
+                  type: v.recoveryFacilityType.type,
+                  codeList: db.disposalCodes,
+                }
+              : {
+                  type: v.recoveryFacilityType.type,
+                  codeList: db.recoveryCodes,
+                },
+            locale,
+            context,
+          );
+
+        if (!codeValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...codeValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          v.recoveryFacilityType.type === 'Laboratory'
+            ? (v.recoveryFacilityType.disposalCode = codeValidationResult.value)
+            : (v.recoveryFacilityType.recoveryCode =
+                codeValidationResult.value);
+        }
+      }
+    });
+
+    if (errors.fieldFormatErrors.length > 0) {
+      return Promise.reject(new BadRequestError('Validation failed', errors));
+    }
+  }
+
   const template = db.templates.find(
     (t) => t.id == id && t.accountId == accountId,
   );
@@ -1538,6 +1720,33 @@ export async function setRecoveryFacilityDetail(
     });
     if (index === -1) {
       return Promise.reject(new NotFoundError('Index not found.'));
+    }
+
+    if (
+      template.wasteDescription.status !== 'NotStarted' &&
+      template.wasteDescription.wasteCode
+    ) {
+      const recoveryFacilityTypes: submission.RecoveryFacilityDetail['recoveryFacilityType']['type'][] =
+        [];
+      value.values.forEach((v) => {
+        if (v.recoveryFacilityType) {
+          recoveryFacilityTypes.push(v.recoveryFacilityType.type);
+        }
+      });
+      const recoveryFacilityTypesValidationResult =
+        glwe.validationRules.validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+          template.wasteDescription.wasteCode,
+          recoveryFacilityTypes,
+        );
+
+      if (!recoveryFacilityTypesValidationResult.valid) {
+        return Promise.reject(
+          new BadRequestError(
+            'Validation failed',
+            recoveryFacilityTypesValidationResult.errors,
+          ),
+        );
+      }
     }
 
     template.recoveryFacilityDetail.status = value.status;

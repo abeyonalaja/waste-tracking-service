@@ -178,8 +178,8 @@ const Laboratory = (): React.ReactNode => {
 
   const [recoveryFacilityType, setRecoveryFacilityType] = useState<{
     type: string;
-    disposalCode: string;
-  }>({ type: 'Laboratory', disposalCode: '' });
+    disposalCode?: string;
+  }>({ type: 'Laboratory' });
 
   useEffect(() => {
     if (router.isReady) {

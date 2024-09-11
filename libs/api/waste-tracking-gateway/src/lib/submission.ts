@@ -168,15 +168,15 @@ export interface RecoveryFacilityData {
   recoveryFacilityType:
     | {
         type: 'Laboratory';
-        disposalCode: string;
+        disposalCode?: string;
       }
     | {
         type: 'InterimSite';
-        recoveryCode: string;
+        recoveryCode?: string;
       }
     | {
         type: 'RecoveryFacility';
-        recoveryCode: string;
+        recoveryCode?: string;
       };
 }
 

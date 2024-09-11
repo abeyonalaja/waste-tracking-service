@@ -1,16 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
-import { draft } from '@wts/api/green-list-waste-export';
-import {
-  DraftSubmission,
-  SubmissionConfirmation,
-  SubmissionDeclaration,
-  Template,
-} from '@wts/api/waste-tracking-gateway';
+import { draft, template } from '@wts/api/green-list-waste-export';
 import { TemplateWithAccount } from '../db';
 
-export function setSubmissionConfirmation(
-  submission: DraftSubmission,
-): SubmissionConfirmation {
+export function setSubmissionConfirmationStatus(
+  submission: draft.DraftSubmission,
+): draft.DraftSubmission['submissionConfirmation'] {
   const {
     id,
     reference,
@@ -32,9 +26,9 @@ export function setSubmissionConfirmation(
   }
 }
 
-export function setSubmissionDeclaration(
-  submission: DraftSubmission,
-): SubmissionDeclaration {
+export function setSubmissionDeclarationStatus(
+  submission: draft.DraftSubmission,
+): draft.DraftSubmission['submissionDeclaration'] {
   if (submission.submissionConfirmation.status === 'Complete') {
     return { status: 'NotStarted' };
   } else {
@@ -42,36 +36,6 @@ export function setSubmissionDeclaration(
   }
 }
 
-export function setSubmissionConfirmationStatus(
-  draft: draft.DraftSubmission,
-): draft.DraftSubmission['submissionConfirmation'] {
-  const {
-    id,
-    reference,
-    submissionConfirmation,
-    submissionDeclaration,
-    submissionState,
-    ...filteredValues
-  } = draft;
-
-  if (
-    Object.values(filteredValues).every((value) => value.status === 'Complete')
-  ) {
-    return { status: 'NotStarted' };
-  } else {
-    return { status: 'CannotStart' };
-  }
-}
-
-export function setSubmissionDeclarationStatus(
-  draft: draft.DraftSubmission,
-): draft.DraftSubmission['submissionDeclaration'] {
-  if (draft.submissionConfirmation.status === 'Complete') {
-    return { status: 'NotStarted' };
-  } else {
-    return { status: 'CannotStart' };
-  }
-}
 export function copyCarriersNoTransport(
   sourceCarriers: draft.DraftCarriers,
   isSmallWaste: boolean,
@@ -119,14 +83,14 @@ export function setBaseWasteDescription(
   carriers: draft.DraftCarriers;
   recoveryFacilityDetail: draft.DraftRecoveryFacilityDetails;
 } {
-  let recoveryFacilityDetail: DraftSubmission['recoveryFacilityDetail'] =
+  let recoveryFacilityDetail: draft.DraftSubmission['recoveryFacilityDetail'] =
     draftRecoveryFacilityDetail.status === 'CannotStart' &&
     value.status !== 'NotStarted' &&
     value.wasteCode !== undefined
       ? { status: 'NotStarted' }
       : draftRecoveryFacilityDetail;
 
-  let carriers: DraftSubmission['carriers'] = draftCarriers;
+  let carriers: draft.DraftSubmission['carriers'] = draftCarriers;
 
   if (
     draftWasteDescription.status === 'NotStarted' &&
@@ -278,7 +242,7 @@ export function doesTemplateAlreadyExist(
   templateName: string,
 ): boolean {
   let exists = false;
-  const templates: Template[] = values.filter(
+  const templates: template.Template[] = values.filter(
     (template) => template.accountId === accountId,
   );
 

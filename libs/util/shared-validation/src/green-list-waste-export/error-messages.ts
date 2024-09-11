@@ -416,7 +416,7 @@ export const RecoveryFacilityDetailValidationErrorMessages: (
     codeStr = locale === 'en' ? 'disposal' : 'gwaredu';
   } else if (recoveryFacilityType === 'InterimSite') {
     typeStr = locale === 'en' ? 'interim site ' : 'interim safle ';
-    codeStr = locale === 'en' ? 'recovery ' : 'adfer ';
+    codeStr = locale === 'en' ? 'recovery' : 'adfer';
   } else {
     typeStr = locale === 'en' ? 'recovery facility ' : 'cyfleuster adfer ';
     codeStr = locale === 'en' ? 'recovery' : 'adfer';
@@ -508,7 +508,7 @@ export const RecoveryFacilityDetailValidationErrorMessages: (
       emptyEmail: `Enter ${typeStr}email address`,
       invalidEmail: `Enter a real email address for the ${typeStr}`.trim(),
       charTooManyEmail: `The ${typeStr}email address must be less than ${FreeTextChar.max} characters`,
-      emptyCode: `Enter a ${codeStr}code for the ${typeStr}`.trim(),
+      emptyCode: `Enter a ${codeStr} code for the ${typeStr}`.trim(),
       invalidCode: `Enter ${typeStr}${codeStr} code in correct format`,
     };
   }

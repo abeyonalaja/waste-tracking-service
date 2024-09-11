@@ -356,7 +356,7 @@ const plugin: Plugin<PluginOptions> = {
             },
             request,
           );
-          return request;
+          return request as dto.PutWasteQuantityResponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
             err.output.payload.data = err.data ?? undefined;
@@ -1000,9 +1000,10 @@ const plugin: Plugin<PluginOptions> = {
             params.rfdId,
             request,
           );
-          return request as dto.SetRecoveryFacilityDetailRequest;
+          return request as dto.SetRecoveryFacilityDetailResponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
+            err.output.payload.data = err.data ?? undefined;
             return err;
           }
 

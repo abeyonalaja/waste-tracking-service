@@ -614,17 +614,17 @@ export const validateSetRecoveryFacilityDetailRequest =
                   discriminator: 'type',
                   mapping: {
                     Laboratory: {
-                      properties: {
+                      optionalProperties: {
                         disposalCode: { type: 'string' },
                       },
                     },
                     InterimSite: {
-                      properties: {
+                      optionalProperties: {
                         recoveryCode: { type: 'string' },
                       },
                     },
                     RecoveryFacility: {
-                      properties: {
+                      optionalProperties: {
                         recoveryCode: { type: 'string' },
                       },
                     },

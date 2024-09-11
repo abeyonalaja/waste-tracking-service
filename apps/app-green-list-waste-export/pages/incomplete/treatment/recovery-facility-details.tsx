@@ -198,8 +198,8 @@ const RecoveryFacilityDetails = (): React.ReactNode => {
 
   const [recoveryFacilityType, setRecoveryFacilityType] = useState<{
     type: string;
-    recoveryCode: string;
-  }>({ type: 'RecoveryFacility', recoveryCode: '' });
+    recoveryCode?: string;
+  }>({ type: 'RecoveryFacility' });
 
   useEffect(() => {
     if (router.isReady) {
