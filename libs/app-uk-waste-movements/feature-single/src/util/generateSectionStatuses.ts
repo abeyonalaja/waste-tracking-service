@@ -8,6 +8,7 @@ interface SectionStatus {
 interface SectionStatuses {
   producer: SectionStatus;
   carrier: SectionStatus;
+  receiver: SectionStatus;
 }
 
 export function generateSectionStatuses(draft: UkwmDraft): SectionStatuses {
@@ -45,6 +46,15 @@ export function generateSectionStatuses(draft: UkwmDraft): SectionStatuses {
 
   const carrierOverall = 'Incomplete';
 
+  const receiverCheckYourAnswers: 'NotStarted' | 'CannotStart' | 'Complete' =
+    draft.receiver.address.status === 'Complete' &&
+    draft.receiver.contact.status === 'Complete' &&
+    draft.receiver.permitDetails.status === 'Complete'
+      ? 'NotStarted'
+      : 'CannotStart';
+
+  const receiverOverall = 'Incomplete';
+
   return {
     producer: {
       overall: producerOverall,
@@ -53,6 +63,10 @@ export function generateSectionStatuses(draft: UkwmDraft): SectionStatuses {
     carrier: {
       overall: carrierOverall,
       checkYourAnswers: carrierCheckYourAnswers,
+    },
+    receiver: {
+      overall: receiverOverall,
+      checkYourAnswers: receiverCheckYourAnswers,
     },
   };
 }

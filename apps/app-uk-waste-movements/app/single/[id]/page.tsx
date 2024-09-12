@@ -156,7 +156,7 @@ export default async function TaskListPage({
               {
                 heading: t('receiver.heading'),
                 description: t('receiver.description'),
-                overallSectionStatus: 'NotStarted',
+                overallSectionStatus: sectionStatuses.receiver.overall,
                 tasks: [
                   {
                     name: t('receiver.receiverAddress'),
