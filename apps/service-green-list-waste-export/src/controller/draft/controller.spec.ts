@@ -9,6 +9,7 @@ import {
   DraftImporterDetail,
   DraftCarriers,
   DraftCollectionDetail,
+  DraftExporterDetail,
   DraftRecoveryFacilityDetails,
 } from '../../model';
 import DraftController from './controller';
@@ -1770,6 +1771,168 @@ describe(DraftController, () => {
         accountId,
       );
       expect(response.value).toEqual(draft.exporterDetail);
+    });
+  });
+
+  describe('setDraftExporterDetail', () => {
+    const id = faker.string.uuid();
+    const accountId = faker.string.uuid();
+    const timestamp = new Date();
+    const draft = {
+      id,
+      reference: 'abc',
+      wasteDescription: { status: 'NotStarted' },
+      wasteQuantity: { status: 'NotStarted' },
+      exporterDetail: { status: 'NotStarted' },
+      importerDetail: { status: 'NotStarted' },
+      collectionDate: { status: 'NotStarted' },
+      carriers: {
+        status: 'NotStarted',
+        transport: false,
+      },
+      collectionDetail: { status: 'NotStarted' },
+      ukExitLocation: { status: 'NotStarted' },
+      transitCountries: { status: 'NotStarted' },
+      recoveryFacilityDetail: { status: 'NotStarted' },
+      submissionConfirmation: { status: 'CannotStart' },
+      submissionDeclaration: { status: 'CannotStart' },
+      submissionState: {
+        status: 'InProgress',
+        timestamp: timestamp,
+      },
+    } as DraftSubmission;
+
+    const exporterDetails = {
+      status: 'Complete',
+      exporterAddress: {
+        addressLine1: 'Exporter Address',
+        addressLine2: 'Exporter Address',
+        townCity: 'Town',
+        country: 'England',
+        postcode: 'AB1 2CD',
+      },
+      exporterContactDetails: {
+        organisationName: 'Exporter Name',
+        fullName: 'Exporter Name',
+        emailAddress: 'test@test.com',
+        phoneNumber: '01234567890',
+        faxNumber: '01234567890',
+      },
+    } as DraftExporterDetail;
+
+    it('forwards thrown Boom errors', async () => {
+      mockRepository.getRecord.mockRejectedValue(Boom.teapot());
+
+      const response = await subject.setDraftExporterDetail({
+        id,
+        accountId,
+        value: exporterDetails,
+      });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(mockRepository.getRecord).toBeCalledWith(
+        draftContainerName,
+        id,
+        accountId,
+      );
+      expect(response.error.statusCode).toBe(418);
+    });
+
+    it('accepts valid exporter details', async () => {
+      mockRepository.getRecord.mockResolvedValue(draft);
+
+      const response = await subject.setDraftExporterDetail({
+        id,
+        accountId,
+        value: exporterDetails,
+      });
+
+      expect(mockRepository.saveRecord).toBeCalledTimes(1);
+
+      expect(response.success).toBe(true);
+      expect(draft.exporterDetail).toEqual(exporterDetails);
+    });
+
+    it('forwards validation errors', async () => {
+      const invalidExporterDetail: DraftExporterDetail = {
+        status: 'Complete',
+        exporterAddress: {
+          addressLine1: '',
+          addressLine2: '',
+          townCity: '',
+          postcode: '',
+          country: '',
+        },
+        exporterContactDetails: {
+          organisationName: '',
+          fullName: '',
+          emailAddress: '',
+          phoneNumber: '',
+          faxNumber: '',
+        },
+      };
+      const response = await subject.setDraftExporterDetail({
+        id,
+        accountId,
+        value: invalidExporterDetail,
+      });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(response.error.statusCode).toBe(400);
+
+      expect(response.error.data).toEqual([
+        {
+          field: 'ExporterDetail',
+          message:
+            glwe.errorMessages.emptyAddressLine1('ExporterDetail')[locale][
+              context
+            ],
+        },
+        {
+          field: 'ExporterDetail',
+          message:
+            glwe.errorMessages.emptyTownOrCity('ExporterDetail')[locale][
+              context
+            ],
+        },
+        {
+          field: 'ExporterDetail',
+          message:
+            glwe.errorMessages.emptyCountry('ExporterDetail')[locale][context],
+        },
+        {
+          field: 'ExporterDetail',
+          message:
+            glwe.errorMessages.emptyOrganisationName('ExporterDetail')[locale][
+              context
+            ],
+        },
+        {
+          field: 'ExporterDetail',
+          message:
+            glwe.errorMessages.emptyContactFullName('ExporterDetail')[locale][
+              context
+            ],
+        },
+        {
+          field: 'ExporterDetail',
+          message:
+            glwe.errorMessages.emptyEmail('ExporterDetail')[locale][context],
+        },
+        {
+          field: 'ExporterDetail',
+          message:
+            glwe.errorMessages.emptyPhone('ExporterDetail')[locale][context],
+        },
+      ]);
     });
   });
 
@@ -4280,8 +4443,8 @@ describe(DraftController, () => {
         accountId,
         value: {
           exporterAddress: {
-            country: faker.string.sample(),
-            postcode: faker.string.sample(),
+            country: 'England',
+            postcode: 'SW1A1AA',
             townCity: faker.string.sample(),
             addressLine1: faker.string.sample(),
             addressLine2: faker.string.sample(),
@@ -4290,10 +4453,10 @@ describe(DraftController, () => {
           exporterContactDetails: {
             organisationName: faker.string.sample(),
             fullName: faker.string.sample(),
-            emailAddress: faker.string.sample(),
-            phoneNumber: faker.string.sample(),
+            emailAddress: faker.internet.email(),
+            phoneNumber: '+447123456789',
           },
-        },
+        } as DraftExporterDetail,
       });
 
       const response = await subject.setDraftSubmissionConfirmation({
@@ -4331,8 +4494,8 @@ describe(DraftController, () => {
         accountId,
         value: {
           exporterAddress: {
-            country: faker.string.sample(),
-            postcode: faker.string.sample(),
+            country: 'England',
+            postcode: 'SW1A1AA',
             townCity: faker.string.sample(),
             addressLine1: faker.string.sample(),
             addressLine2: faker.string.sample(),
@@ -4341,10 +4504,10 @@ describe(DraftController, () => {
           exporterContactDetails: {
             organisationName: faker.string.sample(),
             fullName: faker.string.sample(),
-            emailAddress: faker.string.sample(),
-            phoneNumber: faker.string.sample(),
+            emailAddress: faker.internet.email(),
+            phoneNumber: '+447123456789',
           },
-        },
+        } as DraftExporterDetail,
       });
 
       const response = await subject.getDraftSubmissionConfirmation({
@@ -4645,8 +4808,8 @@ describe(DraftController, () => {
         accountId,
         value: {
           exporterAddress: {
-            country: faker.string.sample(),
-            postcode: faker.string.sample(),
+            country: 'England',
+            postcode: 'SW1A1AA',
             townCity: faker.string.sample(),
             addressLine1: faker.string.sample(),
             addressLine2: faker.string.sample(),
@@ -4655,17 +4818,17 @@ describe(DraftController, () => {
           exporterContactDetails: {
             organisationName: faker.string.sample(),
             fullName: faker.string.sample(),
-            emailAddress: faker.string.sample(),
-            phoneNumber: faker.string.sample(),
+            emailAddress: faker.internet.email(),
+            phoneNumber: '+447123456789',
           },
-        },
+        } as DraftExporterDetail,
       });
 
       expect(
         subject.getDraftSubmissionConfirmation({ id, accountId }),
       ).resolves.toEqual({ success: true, value: { status: 'CannotStart' } });
       expect(
-        subject.getDraftSubmissionConfirmation({ id, accountId }),
+        subject.getDraftSubmissionDeclaration({ id, accountId }),
       ).resolves.toEqual({ success: true, value: { status: 'CannotStart' } });
     });
 

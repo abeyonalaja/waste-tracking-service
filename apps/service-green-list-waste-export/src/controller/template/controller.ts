@@ -439,12 +439,195 @@ export default class TemplateController {
     draft.SetDraftExporterDetailResponse
   > = async ({ id, accountId, value }) => {
     try {
+      if (value.status !== 'NotStarted') {
+        const section = 'ExporterDetail';
+        const errors: FieldFormatError[] = [];
+        if (value.exporterAddress?.addressLine1) {
+          const addressLine1ValidationResult =
+            glwe.validationRules.validateAddressLine1(
+              value.exporterAddress.addressLine1,
+              section,
+              locale,
+              context,
+            );
+
+          if (!addressLine1ValidationResult.valid) {
+            errors.push(
+              ...addressLine1ValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.exporterAddress.addressLine1 =
+              addressLine1ValidationResult.value;
+          }
+        }
+
+        if (value.exporterAddress?.addressLine2) {
+          const addressLine2ValidationResult =
+            glwe.validationRules.validateAddressLine2(
+              value.exporterAddress.addressLine2,
+              section,
+              locale,
+              context,
+            );
+
+          if (!addressLine2ValidationResult.valid) {
+            errors.push(
+              ...addressLine2ValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.exporterAddress.addressLine2 =
+              addressLine2ValidationResult.value;
+          }
+        }
+
+        if (value.exporterAddress?.townCity) {
+          const townOrCityValidationResult =
+            glwe.validationRules.validateTownOrCity(
+              value.exporterAddress.townCity,
+              section,
+              locale,
+              context,
+            );
+
+          if (!townOrCityValidationResult.valid) {
+            errors.push(...townOrCityValidationResult.errors.fieldFormatErrors);
+          } else {
+            value.exporterAddress.townCity = townOrCityValidationResult.value;
+          }
+        }
+
+        if (value.exporterAddress?.postcode) {
+          const postcodeValidationResult =
+            glwe.validationRules.validatePostcode(
+              value.exporterAddress.postcode,
+              section,
+              locale,
+              context,
+            );
+
+          if (!postcodeValidationResult.valid) {
+            errors.push(...postcodeValidationResult.errors.fieldFormatErrors);
+          } else {
+            value.exporterAddress.postcode = postcodeValidationResult.value;
+          }
+        }
+
+        if (value.exporterAddress?.country) {
+          const countryValidationResult = glwe.validationRules.validateCountry(
+            value.exporterAddress.country,
+            section,
+            locale,
+            context,
+          );
+
+          if (!countryValidationResult.valid) {
+            errors.push(...countryValidationResult.errors.fieldFormatErrors);
+          } else {
+            value.exporterAddress.country = countryValidationResult.value;
+          }
+        }
+
+        if (value.exporterContactDetails?.organisationName) {
+          const organisationNameValidationResult =
+            glwe.validationRules.validateOrganisationName(
+              value.exporterContactDetails.organisationName,
+              section,
+              locale,
+              context,
+            );
+
+          if (!organisationNameValidationResult.valid) {
+            errors.push(
+              ...organisationNameValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.exporterContactDetails.organisationName =
+              organisationNameValidationResult.value;
+          }
+        }
+
+        if (value.exporterContactDetails?.fullName) {
+          const fullNameValidationResult =
+            glwe.validationRules.validateFullName(
+              value.exporterContactDetails.fullName,
+              section,
+              locale,
+              context,
+            );
+
+          if (!fullNameValidationResult.valid) {
+            errors.push(...fullNameValidationResult.errors.fieldFormatErrors);
+          } else {
+            value.exporterContactDetails.fullName =
+              fullNameValidationResult.value;
+          }
+        }
+
+        if (value.exporterContactDetails?.emailAddress) {
+          const emailAddressValidationResult =
+            glwe.validationRules.validateEmailAddress(
+              value.exporterContactDetails.emailAddress,
+              section,
+              locale,
+              context,
+            );
+
+          if (!emailAddressValidationResult.valid) {
+            errors.push(
+              ...emailAddressValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.exporterContactDetails.emailAddress =
+              emailAddressValidationResult.value;
+          }
+        }
+
+        if (value.exporterContactDetails?.phoneNumber) {
+          const phoneNumberValidationResult =
+            glwe.validationRules.validatePhoneNumber(
+              value.exporterContactDetails.phoneNumber,
+              section,
+              locale,
+              context,
+            );
+
+          if (!phoneNumberValidationResult.valid) {
+            errors.push(
+              ...phoneNumberValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.exporterContactDetails.phoneNumber =
+              phoneNumberValidationResult.value;
+          }
+        }
+
+        if (value.exporterContactDetails?.faxNumber) {
+          const faxNumberValidationResult =
+            glwe.validationRules.validateFaxNumber(
+              value.exporterContactDetails.faxNumber,
+              section,
+              locale,
+              context,
+            );
+
+          if (!faxNumberValidationResult.valid) {
+            errors.push(...faxNumberValidationResult.errors.fieldFormatErrors);
+          } else {
+            value.exporterContactDetails.faxNumber =
+              faxNumberValidationResult.value;
+          }
+        }
+
+        if (errors.length > 0) {
+          return fromBoom(Boom.badRequest('Validation failed', errors));
+        }
+      }
+
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
         accountId,
       )) as Template;
-
       template.exporterDetail = value;
 
       template.templateDetails.lastModified = new Date();

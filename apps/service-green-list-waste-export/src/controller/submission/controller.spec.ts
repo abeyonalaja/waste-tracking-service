@@ -10,10 +10,13 @@ import {
   CollectionDate,
   validation,
 } from '../../model';
+
 import { CosmosRepository } from '../../data';
 
-import { common as commonValidation } from '@wts/util/shared-validation';
-import { glwe } from '@wts/util/shared-validation';
+import {
+  common as commonValidation,
+  glwe as glweValidation,
+} from '@wts/util/shared-validation';
 
 jest.mock('winston', () => ({
   Logger: jest.fn().mockImplementation(() => ({
@@ -988,7 +991,11 @@ describe(SubmissionController, () => {
       }
 
       const carrierErrorMessages =
-        glwe.errorMessages.CarrierValidationErrorMessages(locale, context, 1);
+        glweValidation.errorMessages.CarrierValidationErrorMessages(
+          locale,
+          context,
+          1,
+        );
 
       expect(response.value).toEqual({
         valid: false,
@@ -1007,69 +1014,70 @@ describe(SubmissionController, () => {
               {
                 field: 'WasteDescription',
                 message:
-                  glwe.errorMessages.invalidWasteCode['AnnexIIIA'][locale][
-                    context
-                  ],
+                  glweValidation.errorMessages.invalidWasteCode['AnnexIIIA'][
+                    locale
+                  ][context],
               },
               {
                 field: 'WasteDescription',
-                message: glwe.errorMessages.invalidEwcCodes[locale][context],
+                message:
+                  glweValidation.errorMessages.invalidEwcCodes[locale][context],
               },
               {
                 field: 'WasteQuantity',
                 message:
-                  glwe.errorMessages.missingWasteQuantityType[locale][context],
+                  glweValidation.errorMessages.missingWasteQuantityType[locale][
+                    context
+                  ],
               },
               {
                 field: 'ExporterDetail',
                 message:
-                  validation.ExporterDetailValidationErrorMessages
-                    .emptyOrganisationName,
+                  glweValidation.errorMessages.emptyAddressLine1(
+                    'ExporterDetail',
+                  )[locale][context],
               },
               {
                 field: 'ExporterDetail',
                 message:
-                  validation.ExporterDetailValidationErrorMessages
-                    .emptyAddressLine1,
+                  glweValidation.errorMessages.emptyTownOrCity(
+                    'ExporterDetail',
+                  )[locale][context],
               },
               {
                 field: 'ExporterDetail',
                 message:
-                  validation.ExporterDetailValidationErrorMessages
-                    .emptyTownOrCity,
+                  glweValidation.errorMessages.invalidCountry('ExporterDetail')[
+                    locale
+                  ][context],
               },
               {
                 field: 'ExporterDetail',
                 message:
-                  validation.ExporterDetailValidationErrorMessages
-                    .invalidCountry,
+                  glweValidation.errorMessages.emptyOrganisationName(
+                    'ExporterDetail',
+                  )[locale][context],
               },
               {
                 field: 'ExporterDetail',
                 message:
-                  validation.ExporterDetailValidationErrorMessages
-                    .invalidPostcode,
+                  glweValidation.errorMessages.emptyContactFullName(
+                    'ExporterDetail',
+                  )[locale][context],
               },
               {
                 field: 'ExporterDetail',
                 message:
-                  validation.ExporterDetailValidationErrorMessages
-                    .emptyContactFullName,
+                  glweValidation.errorMessages.emptyEmail('ExporterDetail')[
+                    locale
+                  ][context],
               },
               {
                 field: 'ExporterDetail',
                 message:
-                  validation.ExporterDetailValidationErrorMessages.invalidPhone,
-              },
-              {
-                field: 'ExporterDetail',
-                message:
-                  validation.ExporterDetailValidationErrorMessages.invalidFax,
-              },
-              {
-                field: 'ExporterDetail',
-                message:
-                  validation.ExporterDetailValidationErrorMessages.invalidEmail,
+                  glweValidation.errorMessages.emptyPhone('ExporterDetail')[
+                    locale
+                  ][context],
               },
               {
                 field: 'ImporterDetail',
@@ -1117,7 +1125,8 @@ describe(SubmissionController, () => {
               },
               {
                 field: 'CollectionDate',
-                message: glwe.errorMessages.missingTypeCollectionDate.en.csv,
+                message:
+                  glweValidation.errorMessages.missingTypeCollectionDate.en.csv,
               },
               {
                 field: 'Carriers',
@@ -1154,51 +1163,51 @@ describe(SubmissionController, () => {
               {
                 field: 'CollectionDetail',
                 message:
-                  glwe.errorMessages.emptyOrganisationName('CollectionDetail')[
+                  glweValidation.errorMessages.emptyOrganisationName(
+                    'CollectionDetail',
+                  )[locale][context],
+              },
+              {
+                field: 'CollectionDetail',
+                message:
+                  glweValidation.errorMessages.emptyAddressLine1(
+                    'CollectionDetail',
+                  )[locale][context],
+              },
+              {
+                field: 'CollectionDetail',
+                message:
+                  glweValidation.errorMessages.emptyTownOrCity(
+                    'CollectionDetail',
+                  )[locale][context],
+              },
+              {
+                field: 'CollectionDetail',
+                message:
+                  glweValidation.errorMessages.invalidCountry(
+                    'CollectionDetail',
+                  )[locale][context],
+              },
+              {
+                field: 'CollectionDetail',
+                message:
+                  glweValidation.errorMessages.emptyContactFullName(
+                    'CollectionDetail',
+                  )[locale][context],
+              },
+              {
+                field: 'CollectionDetail',
+                message:
+                  glweValidation.errorMessages.emptyPhone('CollectionDetail')[
                     locale
                   ][context],
               },
               {
                 field: 'CollectionDetail',
                 message:
-                  glwe.errorMessages.emptyAddressLine1('CollectionDetail')[
+                  glweValidation.errorMessages.emptyEmail('CollectionDetail')[
                     locale
                   ][context],
-              },
-              {
-                field: 'CollectionDetail',
-                message:
-                  glwe.errorMessages.emptyTownOrCity('CollectionDetail')[
-                    locale
-                  ][context],
-              },
-              {
-                field: 'CollectionDetail',
-                message:
-                  glwe.errorMessages.invalidCountry('CollectionDetail')[locale][
-                    context
-                  ],
-              },
-              {
-                field: 'CollectionDetail',
-                message:
-                  glwe.errorMessages.emptyContactFullName('CollectionDetail')[
-                    locale
-                  ][context],
-              },
-              {
-                field: 'CollectionDetail',
-                message:
-                  glwe.errorMessages.emptyPhone('CollectionDetail')[locale][
-                    context
-                  ],
-              },
-              {
-                field: 'CollectionDetail',
-                message:
-                  glwe.errorMessages.emptyEmail('CollectionDetail')[locale][
-                    context
-                  ],
               },
             ],
             invalidStructureErrors: [],
@@ -1387,12 +1396,14 @@ describe(SubmissionController, () => {
               {
                 fields: ['WasteDescription', 'WasteQuantity'],
                 message:
-                  glwe.errorMessages.laboratoryWasteQuantity[locale][context],
+                  glweValidation.errorMessages.laboratoryWasteQuantity[locale][
+                    context
+                  ],
               },
               {
                 fields: ['ImporterDetail', 'TransitCountries'],
                 message:
-                  glwe.errorMessages
+                  glweValidation.errorMessages
                     .importerDetailInvalidCrossSectionTransitCountries[locale][
                     context
                   ],
@@ -1400,7 +1411,7 @@ describe(SubmissionController, () => {
               {
                 fields: ['ImporterDetail', 'TransitCountries'],
                 message:
-                  glwe.errorMessages
+                  glweValidation.errorMessages
                     .transitCountriesInvalidCrossSectionImporterDetail[locale][
                     context
                   ],

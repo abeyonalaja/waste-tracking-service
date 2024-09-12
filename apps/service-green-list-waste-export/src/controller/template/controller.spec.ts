@@ -1987,6 +1987,39 @@ describe(TemplateController, () => {
       );
       expect(template.exporterDetail).toEqual(exporterDetail);
     });
+
+    it('fails to set the exporter detail if invalid data is provided', async () => {
+      const lastModifiedDate = template.templateDetails.lastModified;
+
+      const exporterDetail = {
+        status: 'Started',
+        exporterAddress: {
+          country: 'France',
+          postcode: 'SW1A1AA',
+          townCity: faker.string.sample(),
+          addressLine1: faker.string.sample(),
+          addressLine2: faker.string.sample(),
+        },
+        exporterContactDetails: {
+          organisationName: faker.string.sample(),
+          fullName: faker.string.sample(),
+          phoneNumber: '+447123456789',
+        },
+      } as DraftExporterDetail;
+
+      mockRepository.getRecord.mockResolvedValue(template);
+
+      const response = await subject.setTemplateExporterDetail({
+        id,
+        accountId,
+        value: exporterDetail,
+      });
+      expect(response.success).toBe(false);
+
+      expect(template.templateDetails.lastModified.getTime()).toBe(
+        lastModifiedDate.getTime(),
+      );
+    });
   });
 
   describe('getTemplateImporterDetail', () => {

@@ -37,25 +37,10 @@ import {
   WasteQuantityData,
 } from '../model';
 
-import { common as commonValidation } from '@wts/util/shared-validation';
-import { glwe } from '@wts/util/shared-validation';
-
-function titleCase(str: string) {
-  return str
-    .toLowerCase()
-    .split(' ')
-    .map(function (s) {
-      return s.replace(s[0], s[0].toUpperCase());
-    })
-    .join(' ');
-}
-
-const fourNationsCountries = [
-  'England',
-  'Scotland',
-  'Wales',
-  'Northern Ireland',
-];
+import {
+  common as commonValidation,
+  glwe as glweValidation,
+} from '@wts/util/shared-validation';
 
 const locale = 'en';
 const context = 'csv';
@@ -65,7 +50,7 @@ export function validateCustomerReferenceSection(
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: CustomerReference } {
-  const validationResult = glwe.validationRules.validateReference(
+  const validationResult = glweValidation.validationRules.validateReference(
     value.reference,
   );
 
@@ -101,7 +86,8 @@ export function validateWasteCodeSubSection(
       value: [
         {
           field: 'WasteDescription',
-          message: glwe.errorMessages.emptyWasteCodeType[locale][context],
+          message:
+            glweValidation.errorMessages.emptyWasteCodeType[locale][context],
         },
       ],
     };
@@ -120,7 +106,8 @@ export function validateWasteCodeSubSection(
       value: [
         {
           field: 'WasteDescription',
-          message: glwe.errorMessages.tooManyWasteCodeType[locale][context],
+          message:
+            glweValidation.errorMessages.tooManyWasteCodeType[locale][context],
         },
       ],
     };
@@ -138,20 +125,21 @@ export function validateWasteCodeSubSection(
       value: [
         {
           field: 'WasteDescription',
-          message: glwe.errorMessages.laboratoryType[locale][context],
+          message: glweValidation.errorMessages.laboratoryType[locale][context],
         },
       ],
     };
   }
 
   if (value.baselAnnexIXCode) {
-    const wasteCodeValidationResult = glwe.validationRules.validateWasteCode(
-      value.baselAnnexIXCode,
-      'BaselAnnexIX',
-      wasteCodeList,
-      locale,
-      context,
-    );
+    const wasteCodeValidationResult =
+      glweValidation.validationRules.validateWasteCode(
+        value.baselAnnexIXCode,
+        'BaselAnnexIX',
+        wasteCodeList,
+        locale,
+        context,
+      );
 
     if (!wasteCodeValidationResult.valid) {
       return {
@@ -164,13 +152,14 @@ export function validateWasteCodeSubSection(
   }
 
   if (value.oecdCode) {
-    const wasteCodeValidationResult = glwe.validationRules.validateWasteCode(
-      value.oecdCode,
-      'OECD',
-      wasteCodeList,
-      locale,
-      context,
-    );
+    const wasteCodeValidationResult =
+      glweValidation.validationRules.validateWasteCode(
+        value.oecdCode,
+        'OECD',
+        wasteCodeList,
+        locale,
+        context,
+      );
 
     if (!wasteCodeValidationResult.valid) {
       return {
@@ -183,13 +172,14 @@ export function validateWasteCodeSubSection(
   }
 
   if (value.annexIIIACode) {
-    const wasteCodeValidationResult = glwe.validationRules.validateWasteCode(
-      value.annexIIIACode,
-      'AnnexIIIA',
-      wasteCodeList,
-      locale,
-      context,
-    );
+    const wasteCodeValidationResult =
+      glweValidation.validationRules.validateWasteCode(
+        value.annexIIIACode,
+        'AnnexIIIA',
+        wasteCodeList,
+        locale,
+        context,
+      );
 
     if (!wasteCodeValidationResult.valid) {
       return {
@@ -202,13 +192,14 @@ export function validateWasteCodeSubSection(
   }
 
   if (value.annexIIIBCode) {
-    const wasteCodeValidationResult = glwe.validationRules.validateWasteCode(
-      value.annexIIIBCode,
-      'AnnexIIIB',
-      wasteCodeList,
-      locale,
-      context,
-    );
+    const wasteCodeValidationResult =
+      glweValidation.validationRules.validateWasteCode(
+        value.annexIIIBCode,
+        'AnnexIIIB',
+        wasteCodeList,
+        locale,
+        context,
+      );
 
     if (!wasteCodeValidationResult.valid) {
       return {
@@ -229,7 +220,9 @@ export function validateWasteCodeSubSection(
           {
             field: 'WasteDescription',
             message:
-              glwe.errorMessages.invalidUnlistedWasteType[locale][context],
+              glweValidation.errorMessages.invalidUnlistedWasteType[locale][
+                context
+              ],
           },
         ],
       };
@@ -257,15 +250,16 @@ export function validateWasteDescriptionSubSection(
   if (!value.ewcCodes) {
     errors.push({
       field: 'WasteDescription',
-      message: glwe.errorMessages.emptyEwcCodes[locale][context],
+      message: glweValidation.errorMessages.emptyEwcCodes[locale][context],
     });
   } else {
-    const ewcCodesValidationResult = glwe.validationRules.validateEwcCodes(
-      value.ewcCodes.replace(/'/g, '').replace(/\s/g, '').split(';'),
-      ewcCodeList,
-      locale,
-      context,
-    );
+    const ewcCodesValidationResult =
+      glweValidation.validationRules.validateEwcCodes(
+        value.ewcCodes.replace(/'/g, '').replace(/\s/g, '').split(';'),
+        ewcCodeList,
+        locale,
+        context,
+      );
 
     if (!ewcCodesValidationResult.valid) {
       errors.push(...ewcCodesValidationResult.errors.fieldFormatErrors);
@@ -276,7 +270,7 @@ export function validateWasteDescriptionSubSection(
 
   let nationalCode: NationalCodeComponent = { provided: 'No' };
   const nationalCodeValidationResult =
-    glwe.validationRules.validateNationalCode(
+    glweValidation.validationRules.validateNationalCode(
       value.nationalCode,
       locale,
       context,
@@ -288,7 +282,7 @@ export function validateWasteDescriptionSubSection(
   }
 
   const descriptionValidationResult =
-    glwe.validationRules.validateWasteDecription(
+    glweValidation.validationRules.validateWasteDecription(
       value.wasteDescription,
       locale,
       context,
@@ -407,7 +401,7 @@ export function validateWasteQuantitySection(
 
   if (errors.length === 0) {
     const wasteQuantityValidationResult =
-      glwe.validationRules.validateWasteQuantity(
+      glweValidation.validationRules.validateWasteQuantity(
         quantityType,
         unit,
         value.wasteQuantityKilograms ||
@@ -425,7 +419,7 @@ export function validateWasteQuantitySection(
   }
 
   const wasteQuantityTypeValidationResult =
-    glwe.validationRules.validateWasteQuantityType(
+    glweValidation.validationRules.validateWasteQuantityType(
       value.estimatedOrActualWasteQuantity,
     );
   let wasteQuantityType: 'EstimateData' | 'ActualData' = 'EstimateData';
@@ -436,7 +430,8 @@ export function validateWasteQuantitySection(
         case 'invalid':
           errors.push({
             field: 'WasteQuantity',
-            message: glwe.errorMessages.missingWasteQuantityType.en.csv,
+            message:
+              glweValidation.errorMessages.missingWasteQuantityType.en.csv,
           });
           break;
       }
@@ -469,7 +464,7 @@ export function validateWasteCodeSubSectionAndQuantityCrossSection(
   | { valid: false; value: InvalidAttributeCombinationError[] }
   | { valid: true } {
   const validationResult =
-    glwe.validationRules.validateWasteCodeSubSectionAndQuantityCrossSection(
+    glweValidation.validationRules.validateWasteCodeSubSectionAndQuantityCrossSection(
       wasteCodeSubSection,
       wasteQuantity,
       'en',
@@ -492,170 +487,124 @@ export function validateExporterDetailSection(
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: ExporterDetail } {
   const errors: FieldFormatError[] = [];
-  if (
-    !value.exporterOrganisationName ||
-    !value.exporterOrganisationName.trim()
-  ) {
-    errors.push({
-      field: 'ExporterDetail',
-      message:
-        validation.ExporterDetailValidationErrorMessages.emptyOrganisationName,
-    });
-  } else {
-    if (value.exporterOrganisationName.length > validation.FreeTextChar.max) {
-      errors.push({
-        field: 'ExporterDetail',
-        message:
-          validation.ExporterDetailValidationErrorMessages
-            .charTooManyOrganisationName,
-      });
-    }
-  }
 
-  if (!value.exporterAddressLine1 || !value.exporterAddressLine1.trim()) {
-    errors.push({
-      field: 'ExporterDetail',
-      message:
-        validation.ExporterDetailValidationErrorMessages.emptyAddressLine1,
-    });
-  } else {
-    if (value.exporterAddressLine1.length > validation.FreeTextChar.max) {
-      errors.push({
-        field: 'ExporterDetail',
-        message:
-          validation.ExporterDetailValidationErrorMessages
-            .charTooManyAddressLine1,
-      });
-    }
-  }
-
-  if (value.exporterAddressLine2.length > validation.FreeTextChar.max) {
-    errors.push({
-      field: 'ExporterDetail',
-      message:
-        validation.ExporterDetailValidationErrorMessages
-          .charTooManyAddressLine2,
-    });
-  }
-
-  if (!value.exporterTownOrCity || !value.exporterTownOrCity.trim()) {
-    errors.push({
-      field: 'ExporterDetail',
-      message: validation.ExporterDetailValidationErrorMessages.emptyTownOrCity,
-    });
-  } else {
-    if (value.exporterTownOrCity.length > validation.FreeTextChar.max) {
-      errors.push({
-        field: 'ExporterDetail',
-        message:
-          validation.ExporterDetailValidationErrorMessages
-            .charTooManyTownOrCity,
-      });
-    }
-  }
-
-  if (!value.exporterCountry || !value.exporterCountry.trim()) {
-    errors.push({
-      field: 'ExporterDetail',
-      message: validation.ExporterDetailValidationErrorMessages.emptyCountry,
-    });
-  } else {
-    value.exporterCountry = titleCase(value.exporterCountry);
-    if (!fourNationsCountries.includes(value.exporterCountry)) {
-      errors.push({
-        field: 'ExporterDetail',
-        message:
-          validation.ExporterDetailValidationErrorMessages.invalidCountry,
-      });
-    }
-  }
-
-  if (
-    value.exporterPostcode &&
-    !commonValidation.commonRegex.postcodeRegex.test(value.exporterPostcode)
-  ) {
-    errors.push({
-      field: 'ExporterDetail',
-      message: validation.ExporterDetailValidationErrorMessages.invalidPostcode,
-    });
-  }
-
-  if (!value.exporterContactFullName || !value.exporterContactFullName.trim()) {
-    errors.push({
-      field: 'ExporterDetail',
-      message:
-        validation.ExporterDetailValidationErrorMessages.emptyContactFullName,
-    });
-  } else {
-    if (value.exporterContactFullName.length > validation.FreeTextChar.max) {
-      errors.push({
-        field: 'ExporterDetail',
-        message:
-          validation.ExporterDetailValidationErrorMessages
-            .charTooManyContactFullName,
-      });
-    }
-  }
-
-  const reformattedExporterContactPhoneNumber =
-    value.exporterContactPhoneNumber.replace(/'/g, '');
-  if (!reformattedExporterContactPhoneNumber) {
-    errors.push({
-      field: 'ExporterDetail',
-      message: validation.ExporterDetailValidationErrorMessages.emptyPhone,
-    });
-  } else {
-    if (
-      !commonValidation.commonRegex.phoneRegex.test(
-        reformattedExporterContactPhoneNumber,
-      )
-    ) {
-      errors.push({
-        field: 'ExporterDetail',
-        message: validation.ExporterDetailValidationErrorMessages.invalidPhone,
-      });
-    }
-  }
-
-  const reformattedExporterFaxNumber = value.exporterFaxNumber.replace(
-    /'/g,
-    '',
+  const addressLine1 = glweValidation.validationRules.validateAddressLine1(
+    value.exporterAddressLine1,
+    'ExporterDetail',
+    locale,
+    context,
   );
-  if (
-    reformattedExporterFaxNumber &&
-    !commonValidation.commonRegex.faxRegex.test(reformattedExporterFaxNumber)
-  ) {
-    errors.push({
-      field: 'ExporterDetail',
-      message: validation.ExporterDetailValidationErrorMessages.invalidFax,
-    });
+  if (!addressLine1.valid) {
+    errors.push(...addressLine1.errors.fieldFormatErrors);
+  } else {
+    value.exporterAddressLine1 = addressLine1.value;
   }
 
-  if (!value.exporterEmailAddress) {
-    errors.push({
-      field: 'ExporterDetail',
-      message: validation.ExporterDetailValidationErrorMessages.emptyEmail,
-    });
+  const addressLine2 = glweValidation.validationRules.validateAddressLine2(
+    value.exporterAddressLine2,
+    'ExporterDetail',
+    locale,
+    context,
+  );
+  if (!addressLine2.valid) {
+    errors.push(...addressLine2.errors.fieldFormatErrors);
   } else {
-    if (value.exporterEmailAddress.length > validation.FreeTextChar.max) {
-      errors.push({
-        field: 'ExporterDetail',
-        message:
-          validation.ExporterDetailValidationErrorMessages.charTooManyEmail,
-      });
-    } else {
-      if (
-        !commonValidation.commonRegex.emailRegex.test(
-          value.exporterEmailAddress,
-        )
-      ) {
-        errors.push({
-          field: 'ExporterDetail',
-          message:
-            validation.ExporterDetailValidationErrorMessages.invalidEmail,
-        });
-      }
-    }
+    value.exporterAddressLine2 = addressLine2.value ?? '';
+  }
+
+  const townOrCity = glweValidation.validationRules.validateTownOrCity(
+    value.exporterTownOrCity,
+    'ExporterDetail',
+    locale,
+    context,
+  );
+  if (!townOrCity.valid) {
+    errors.push(...townOrCity.errors.fieldFormatErrors);
+  } else {
+    value.exporterTownOrCity = townOrCity.value;
+  }
+  const postcode = glweValidation.validationRules.validatePostcode(
+    value.exporterPostcode,
+    'ExporterDetail',
+    locale,
+    context,
+  );
+  if (!postcode.valid) {
+    errors.push(...postcode.errors.fieldFormatErrors);
+  } else {
+    value.exporterPostcode = postcode.value ?? '';
+  }
+
+  const country = glweValidation.validationRules.validateCountry(
+    value.exporterCountry,
+    'ExporterDetail',
+    locale,
+    context,
+  );
+  if (!country.valid) {
+    errors.push(...country.errors.fieldFormatErrors);
+  } else {
+    value.exporterCountry = country.value;
+  }
+
+  const organisationName =
+    glweValidation.validationRules.validateOrganisationName(
+      value.exporterOrganisationName,
+      'ExporterDetail',
+      locale,
+      context,
+    );
+  if (!organisationName.valid) {
+    errors.push(...organisationName.errors.fieldFormatErrors);
+  } else {
+    value.exporterOrganisationName = organisationName.value;
+  }
+
+  const fullName = glweValidation.validationRules.validateFullName(
+    value.exporterContactFullName,
+    'ExporterDetail',
+    locale,
+    context,
+  );
+  if (!fullName.valid) {
+    errors.push(...fullName.errors.fieldFormatErrors);
+  } else {
+    value.exporterContactFullName = fullName.value;
+  }
+
+  const emailAddress = glweValidation.validationRules.validateEmailAddress(
+    value.exporterEmailAddress,
+    'ExporterDetail',
+    locale,
+    context,
+  );
+  if (!emailAddress.valid) {
+    errors.push(...emailAddress.errors.fieldFormatErrors);
+  } else {
+    value.exporterEmailAddress = emailAddress.value;
+  }
+  const phoneNumber = glweValidation.validationRules.validatePhoneNumber(
+    value.exporterContactPhoneNumber.replace(/'/g, ''),
+    'ExporterDetail',
+    locale,
+    context,
+  );
+  if (!phoneNumber.valid) {
+    errors.push(...phoneNumber.errors.fieldFormatErrors);
+  } else {
+    value.exporterContactPhoneNumber = phoneNumber.value;
+  }
+
+  const faxNumber = glweValidation.validationRules.validateFaxNumber(
+    value.exporterFaxNumber.replace(/'/g, ''),
+    'ExporterDetail',
+    locale,
+    context,
+  );
+  if (!faxNumber.valid) {
+    errors.push(...faxNumber.errors.fieldFormatErrors);
+  } else {
+    value.exporterFaxNumber = faxNumber.value ?? '';
   }
 
   if (errors.length > 0) {
@@ -681,10 +630,10 @@ export function validateExporterDetailSection(
         organisationName: value.exporterOrganisationName,
         fullName: value.exporterContactFullName,
         emailAddress: value.exporterEmailAddress,
-        phoneNumber: reformattedExporterContactPhoneNumber,
-        faxNumber: !reformattedExporterFaxNumber
+        phoneNumber: value.exporterContactPhoneNumber,
+        faxNumber: !value.exporterFaxNumber
           ? undefined
-          : reformattedExporterFaxNumber,
+          : value.exporterFaxNumber,
       },
     },
   };
@@ -778,7 +727,7 @@ export function validateImporterDetailSection(
     });
   } else {
     if (
-      !glwe.regex.phoneInternationalRegex.test(
+      !glweValidation.regex.phoneInternationalRegex.test(
         reformattedImporterContactPhoneNumber,
       )
     ) {
@@ -795,7 +744,9 @@ export function validateImporterDetailSection(
   );
   if (
     reformattedImporterFaxNumber &&
-    !glwe.regex.faxInternationalRegex.test(reformattedImporterFaxNumber)
+    !glweValidation.regex.faxInternationalRegex.test(
+      reformattedImporterFaxNumber,
+    )
   ) {
     errors.push({
       field: 'ImporterDetail',
@@ -906,7 +857,7 @@ export function validateCollectionDateSection(
   }
 
   const collectionDateTypeValidationResult =
-    glwe.validationRules.validateCollectionDateType(
+    glweValidation.validationRules.validateCollectionDateType(
       value.estimatedOrActualCollectionDate,
     );
   let collectionDateType: 'EstimateDate' | 'ActualDate' = 'EstimateDate';
@@ -917,7 +868,8 @@ export function validateCollectionDateSection(
         case 'invalid':
           errors.push({
             field: 'CollectionDate',
-            message: glwe.errorMessages.missingTypeCollectionDate.en.csv,
+            message:
+              glweValidation.errorMessages.missingTypeCollectionDate.en.csv,
           });
           break;
       }
@@ -1041,7 +993,7 @@ export function validateCarriersSection(
     let errorCount = 0;
 
     const organisationNameValidationResult =
-      glwe.validationRules.validateOrganisationName(
+      glweValidation.validationRules.validateOrganisationName(
         c.carrierOrganisationName,
         section,
         locale,
@@ -1057,13 +1009,14 @@ export function validateCarriersSection(
       c.carrierOrganisationName = organisationNameValidationResult.value;
     }
 
-    const addressValidationResult = glwe.validationRules.validateAddress(
-      c.carrierAddress,
-      section,
-      locale,
-      context,
-      index,
-    );
+    const addressValidationResult =
+      glweValidation.validationRules.validateAddress(
+        c.carrierAddress,
+        section,
+        locale,
+        context,
+        index,
+      );
 
     if (!addressValidationResult.valid) {
       errorCount += addressValidationResult.errors.fieldFormatErrors.length;
@@ -1072,14 +1025,15 @@ export function validateCarriersSection(
       c.carrierAddress = addressValidationResult.value;
     }
 
-    const countryValidationResult = glwe.validationRules.validateCountry(
-      c.carrierCountry,
-      section,
-      locale,
-      context,
-      countryIncludingUkList,
-      index,
-    );
+    const countryValidationResult =
+      glweValidation.validationRules.validateCountry(
+        c.carrierCountry,
+        section,
+        locale,
+        context,
+        countryIncludingUkList,
+        index,
+      );
 
     if (!countryValidationResult.valid) {
       errorCount += countryValidationResult.errors.fieldFormatErrors.length;
@@ -1089,7 +1043,7 @@ export function validateCarriersSection(
     }
 
     const contactFullNameValidationResult =
-      glwe.validationRules.validateFullName(
+      glweValidation.validationRules.validateFullName(
         c.carrierContactFullName,
         section,
         locale,
@@ -1105,13 +1059,14 @@ export function validateCarriersSection(
       c.carrierContactFullName = contactFullNameValidationResult.value;
     }
 
-    const phoneValidationResult = glwe.validationRules.validatePhoneNumber(
-      c.carrierContactPhoneNumber.replace(/'/g, ''),
-      section,
-      locale,
-      context,
-      index,
-    );
+    const phoneValidationResult =
+      glweValidation.validationRules.validatePhoneNumber(
+        c.carrierContactPhoneNumber.replace(/'/g, ''),
+        section,
+        locale,
+        context,
+        index,
+      );
 
     if (!phoneValidationResult.valid) {
       errorCount += phoneValidationResult.errors.fieldFormatErrors.length;
@@ -1120,13 +1075,14 @@ export function validateCarriersSection(
       c.carrierContactPhoneNumber = phoneValidationResult.value;
     }
 
-    const faxValidationResult = glwe.validationRules.validateFaxNumber(
-      c.carrierFaxNumber.replace(/'/g, ''),
-      section,
-      locale,
-      context,
-      index,
-    );
+    const faxValidationResult =
+      glweValidation.validationRules.validateFaxNumber(
+        c.carrierFaxNumber.replace(/'/g, ''),
+        section,
+        locale,
+        context,
+        index,
+      );
 
     if (!faxValidationResult.valid) {
       errorCount += faxValidationResult.errors.fieldFormatErrors.length;
@@ -1135,13 +1091,14 @@ export function validateCarriersSection(
       c.carrierFaxNumber = faxValidationResult.value ?? '';
     }
 
-    const emailValidationResult = glwe.validationRules.validateEmailAddress(
-      c.carrierEmailAddress,
-      section,
-      locale,
-      context,
-      index,
-    );
+    const emailValidationResult =
+      glweValidation.validationRules.validateEmailAddress(
+        c.carrierEmailAddress,
+        section,
+        locale,
+        context,
+        index,
+      );
 
     if (!emailValidationResult.valid) {
       errorCount += emailValidationResult.errors.fieldFormatErrors.length;
@@ -1152,7 +1109,7 @@ export function validateCarriersSection(
 
     if (transport) {
       const meansOfTransportValidationResult =
-        glwe.validationRules.validateCarrierMeansOfTransport(
+        glweValidation.validationRules.validateCarrierMeansOfTransport(
           c.carrierMeansOfTransport,
           locale,
           context,
@@ -1170,7 +1127,7 @@ export function validateCarriersSection(
       }
 
       const meansOfTransportDetailsValidationResult =
-        glwe.validationRules.validateCarrierMeansOfTransportDetails(
+        glweValidation.validationRules.validateCarrierMeansOfTransportDetails(
           locale,
           context,
           c.carrierMeansOfTransportDetails,
@@ -1240,7 +1197,7 @@ export function validateWasteCodeSubSectionAndCarriersCrossSection(
   | { valid: false; value: InvalidAttributeCombinationError[] }
   | { valid: true } {
   const transportValidationResult =
-    glwe.validationRules.validateWasteCodeSubSectionAndCarriersCrossSection(
+    glweValidation.validationRules.validateWasteCodeSubSectionAndCarriersCrossSection(
       wasteCodeSubSection,
       [
         {
@@ -1314,7 +1271,7 @@ export function validateCollectionDetailSection(
   const errors: FieldFormatError[] = [];
 
   const organisationNameValidationResult =
-    glwe.validationRules.validateOrganisationName(
+    glweValidation.validationRules.validateOrganisationName(
       value.wasteCollectionOrganisationName,
       'CollectionDetail',
       locale,
@@ -1329,7 +1286,7 @@ export function validateCollectionDetailSection(
   }
 
   const addressLine1ValidationResult =
-    glwe.validationRules.validateAddressLine1(
+    glweValidation.validationRules.validateAddressLine1(
       value.wasteCollectionAddressLine1,
       'CollectionDetail',
       locale,
@@ -1343,7 +1300,7 @@ export function validateCollectionDetailSection(
   }
 
   const addressLine2ValidationResult =
-    glwe.validationRules.validateAddressLine2(
+    glweValidation.validationRules.validateAddressLine2(
       value.wasteCollectionAddressLine2,
       'CollectionDetail',
       locale,
@@ -1357,12 +1314,13 @@ export function validateCollectionDetailSection(
       addressLine2ValidationResult.value ?? '';
   }
 
-  const townOrCityValidationResult = glwe.validationRules.validateTownOrCity(
-    value.wasteCollectionTownOrCity,
-    'CollectionDetail',
-    locale,
-    context,
-  );
+  const townOrCityValidationResult =
+    glweValidation.validationRules.validateTownOrCity(
+      value.wasteCollectionTownOrCity,
+      'CollectionDetail',
+      locale,
+      context,
+    );
 
   if (!townOrCityValidationResult.valid) {
     errors.push(...townOrCityValidationResult.errors.fieldFormatErrors);
@@ -1370,12 +1328,13 @@ export function validateCollectionDetailSection(
     value.wasteCollectionTownOrCity = townOrCityValidationResult.value;
   }
 
-  const countryValidationResult = glwe.validationRules.validateCountry(
-    value.wasteCollectionCountry,
-    'CollectionDetail',
-    locale,
-    context,
-  );
+  const countryValidationResult =
+    glweValidation.validationRules.validateCountry(
+      value.wasteCollectionCountry,
+      'CollectionDetail',
+      locale,
+      context,
+    );
 
   if (!countryValidationResult.valid) {
     errors.push(...countryValidationResult.errors.fieldFormatErrors);
@@ -1383,12 +1342,13 @@ export function validateCollectionDetailSection(
     value.wasteCollectionCountry = countryValidationResult.value;
   }
 
-  const postcodeValidationResult = glwe.validationRules.validatePostcode(
-    value.wasteCollectionPostcode,
-    'CollectionDetail',
-    locale,
-    context,
-  );
+  const postcodeValidationResult =
+    glweValidation.validationRules.validatePostcode(
+      value.wasteCollectionPostcode,
+      'CollectionDetail',
+      locale,
+      context,
+    );
 
   if (!postcodeValidationResult.valid) {
     errors.push(...postcodeValidationResult.errors.fieldFormatErrors);
@@ -1396,12 +1356,13 @@ export function validateCollectionDetailSection(
     value.wasteCollectionPostcode = postcodeValidationResult.value ?? '';
   }
 
-  const fullNameValidationResult = glwe.validationRules.validateFullName(
-    value.wasteCollectionContactFullName,
-    'CollectionDetail',
-    locale,
-    context,
-  );
+  const fullNameValidationResult =
+    glweValidation.validationRules.validateFullName(
+      value.wasteCollectionContactFullName,
+      'CollectionDetail',
+      locale,
+      context,
+    );
 
   if (!fullNameValidationResult.valid) {
     errors.push(...fullNameValidationResult.errors.fieldFormatErrors);
@@ -1409,12 +1370,13 @@ export function validateCollectionDetailSection(
     value.wasteCollectionContactFullName = fullNameValidationResult.value;
   }
 
-  const phoneNumberValidationResult = glwe.validationRules.validatePhoneNumber(
-    value.wasteCollectionContactPhoneNumber.replace(/'/g, ''),
-    'CollectionDetail',
-    locale,
-    context,
-  );
+  const phoneNumberValidationResult =
+    glweValidation.validationRules.validatePhoneNumber(
+      value.wasteCollectionContactPhoneNumber.replace(/'/g, ''),
+      'CollectionDetail',
+      locale,
+      context,
+    );
 
   if (!phoneNumberValidationResult.valid) {
     errors.push(...phoneNumberValidationResult.errors.fieldFormatErrors);
@@ -1422,12 +1384,13 @@ export function validateCollectionDetailSection(
     value.wasteCollectionContactPhoneNumber = phoneNumberValidationResult.value;
   }
 
-  const faxNumberValidationResult = glwe.validationRules.validateFaxNumber(
-    value.wasteCollectionFaxNumber.replace(/'/g, ''),
-    'CollectionDetail',
-    locale,
-    context,
-  );
+  const faxNumberValidationResult =
+    glweValidation.validationRules.validateFaxNumber(
+      value.wasteCollectionFaxNumber.replace(/'/g, ''),
+      'CollectionDetail',
+      locale,
+      context,
+    );
 
   if (!faxNumberValidationResult.valid) {
     errors.push(...faxNumberValidationResult.errors.fieldFormatErrors);
@@ -1436,7 +1399,7 @@ export function validateCollectionDetailSection(
   }
 
   const emailAddressValidationResult =
-    glwe.validationRules.validateEmailAddress(
+    glweValidation.validationRules.validateEmailAddress(
       value.wasteCollectionEmailAddress,
       'CollectionDetail',
       locale,
@@ -1489,7 +1452,7 @@ export function validateUkExitLocationSection(
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: UkExitLocation } {
   const ukExitLocationValidationResult =
-    glwe.validationRules.validateUkExitLocation(
+    glweValidation.validationRules.validateUkExitLocation(
       value.whereWasteLeavesUk,
       locale,
       context,
@@ -1515,7 +1478,7 @@ export function validateTransitCountriesSection(
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: TransitCountries } {
   const transitCountriesValidationResult =
-    glwe.validationRules.validateTransitCountries(
+    glweValidation.validationRules.validateTransitCountries(
       value.transitCountries && value.transitCountries.trim()
         ? [...new Set(value.transitCountries.trim().toUpperCase().split(';'))]
         : [],
@@ -1544,7 +1507,7 @@ export function validateImporterDetailAndTransitCountriesCrossSection(
   | { valid: false; value: InvalidAttributeCombinationError[] }
   | { valid: true } {
   const transitCountriesCrossValidationResult =
-    glwe.validationRules.validateImporterDetailAndTransitCountriesCross(
+    glweValidation.validationRules.validateImporterDetailAndTransitCountriesCross(
       importerDetail,
       transitCountries,
       locale,
@@ -1611,7 +1574,7 @@ function validateRecoveryFacilityEntry(
     let errorCount = 0;
 
     const organisationNameValidationResult =
-      glwe.validationRules.validateOrganisationName(
+      glweValidation.validationRules.validateOrganisationName(
         v.organisationName,
         section,
         locale,
@@ -1628,14 +1591,15 @@ function validateRecoveryFacilityEntry(
       v.organisationName = organisationNameValidationResult.value;
     }
 
-    const addressValidationResult = glwe.validationRules.validateAddress(
-      v.address,
-      section,
-      locale,
-      context,
-      index,
-      type,
-    );
+    const addressValidationResult =
+      glweValidation.validationRules.validateAddress(
+        v.address,
+        section,
+        locale,
+        context,
+        index,
+        type,
+      );
 
     if (!addressValidationResult.valid) {
       errorCount += addressValidationResult.errors.fieldFormatErrors.length;
@@ -1644,15 +1608,16 @@ function validateRecoveryFacilityEntry(
       v.address = addressValidationResult.value;
     }
 
-    const countryValidationResult = glwe.validationRules.validateCountry(
-      v.country,
-      section,
-      locale,
-      context,
-      countryList,
-      index,
-      type,
-    );
+    const countryValidationResult =
+      glweValidation.validationRules.validateCountry(
+        v.country,
+        section,
+        locale,
+        context,
+        countryList,
+        index,
+        type,
+      );
 
     if (!countryValidationResult.valid) {
       errorCount += countryValidationResult.errors.fieldFormatErrors.length;
@@ -1662,7 +1627,7 @@ function validateRecoveryFacilityEntry(
     }
 
     const contactFullNameValidationResult =
-      glwe.validationRules.validateFullName(
+      glweValidation.validationRules.validateFullName(
         v.contactFullName,
         section,
         locale,
@@ -1679,14 +1644,15 @@ function validateRecoveryFacilityEntry(
       v.contactFullName = contactFullNameValidationResult.value;
     }
 
-    const phoneValidationResult = glwe.validationRules.validatePhoneNumber(
-      v.contactPhoneNumber.replace(/'/g, ''),
-      section,
-      locale,
-      context,
-      index,
-      type,
-    );
+    const phoneValidationResult =
+      glweValidation.validationRules.validatePhoneNumber(
+        v.contactPhoneNumber.replace(/'/g, ''),
+        section,
+        locale,
+        context,
+        index,
+        type,
+      );
 
     if (!phoneValidationResult.valid) {
       errorCount += phoneValidationResult.errors.fieldFormatErrors.length;
@@ -1695,14 +1661,15 @@ function validateRecoveryFacilityEntry(
       v.contactPhoneNumber = phoneValidationResult.value;
     }
 
-    const faxValidationResult = glwe.validationRules.validateFaxNumber(
-      v.faxNumber.replace(/'/g, ''),
-      section,
-      locale,
-      context,
-      index,
-      type,
-    );
+    const faxValidationResult =
+      glweValidation.validationRules.validateFaxNumber(
+        v.faxNumber.replace(/'/g, ''),
+        section,
+        locale,
+        context,
+        index,
+        type,
+      );
 
     if (!faxValidationResult.valid) {
       errorCount += faxValidationResult.errors.fieldFormatErrors.length;
@@ -1711,14 +1678,15 @@ function validateRecoveryFacilityEntry(
       v.faxNumber = faxValidationResult.value ?? '';
     }
 
-    const emailValidationResult = glwe.validationRules.validateEmailAddress(
-      v.emailAddress,
-      section,
-      locale,
-      context,
-      index,
-      type,
-    );
+    const emailValidationResult =
+      glweValidation.validationRules.validateEmailAddress(
+        v.emailAddress,
+        section,
+        locale,
+        context,
+        index,
+        type,
+      );
 
     if (!emailValidationResult.valid) {
       errorCount += emailValidationResult.errors.fieldFormatErrors.length;
@@ -1728,7 +1696,7 @@ function validateRecoveryFacilityEntry(
     }
 
     const codeValidationResult =
-      glwe.validationRules.validateDisposalOrRecoveryCode(
+      glweValidation.validationRules.validateDisposalOrRecoveryCode(
         v.code,
         type === 'Laboratory'
           ? {
@@ -2043,7 +2011,7 @@ export function validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection
     }
 
     const recoveryFacilityTypesValidationResult =
-      glwe.validationRules.validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+      glweValidation.validationRules.validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
         wasteCodeSubSection,
         recoveryFacilityTypes,
       );

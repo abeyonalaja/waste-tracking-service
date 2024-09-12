@@ -318,6 +318,7 @@ const plugin: Plugin<PluginOptions> = {
           return value as dto.GetExporterDetailResponse;
         } catch (err) {
           if (err instanceof Boom.Boom) {
+            err.output.payload.data = err.data ?? undefined;
             return err;
           }
 

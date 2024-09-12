@@ -444,9 +444,9 @@ export default class SubmissionController {
           exporterCountry: s.exporterCountry,
           exporterPostcode: s.exporterPostcode,
           exporterContactFullName: s.exporterContactFullName,
+          exporterEmailAddress: s.exporterEmailAddress,
           exporterContactPhoneNumber: s.exporterContactPhoneNumber,
           exporterFaxNumber: s.exporterFaxNumber,
-          exporterEmailAddress: s.exporterEmailAddress,
         });
         if (!exporterDetail.valid) {
           fieldFormatErrors.push(...exporterDetail.value);

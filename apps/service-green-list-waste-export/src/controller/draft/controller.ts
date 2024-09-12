@@ -27,12 +27,15 @@ import {
   setSubmissionDeclarationStatus,
 } from '../../lib';
 import { CosmosRepository } from '../../data';
-import { common as commonValidation, glwe } from '@wts/util/shared-validation';
+import {
+  common as commonValidation,
+  glwe as glweValidation,
+} from '@wts/util/shared-validation';
 import {
   Country,
-  RecoveryCode,
   WasteCode,
   WasteCodeType,
+  RecoveryCode,
 } from '@wts/api/reference-data';
 
 export type Handler<Request, Response> = (
@@ -116,7 +119,7 @@ export default class DraftController {
     async ({ accountId, reference }) => {
       try {
         const referenceValidationResult =
-          glwe.validationRules.validateReference(reference);
+          glweValidation.validationRules.validateReference(reference);
 
         if (!referenceValidationResult.valid) {
           const boom = Boom.badRequest(
@@ -217,7 +220,7 @@ export default class DraftController {
   > = async ({ id, accountId, reference }) => {
     try {
       const referenceValidationResult =
-        glwe.validationRules.validateReference(reference);
+        glweValidation.validationRules.validateReference(reference);
 
       if (!referenceValidationResult.valid) {
         const boom = Boom.badRequest(
@@ -292,7 +295,7 @@ export default class DraftController {
             !('code' in value.wasteCode)
           ) {
             const wasteCodeValidationResult =
-              glwe.validationRules.validateWasteCode(
+              glweValidation.validationRules.validateWasteCode(
                 '',
                 value.wasteCode.type,
                 this.wasteCodeList,
@@ -309,7 +312,7 @@ export default class DraftController {
             typeof value.wasteCode.code === 'string'
           ) {
             const wasteCodeValidationResult =
-              glwe.validationRules.validateWasteCode(
+              glweValidation.validationRules.validateWasteCode(
                 value.wasteCode.code,
                 value.wasteCode.type,
                 this.wasteCodeList,
@@ -331,7 +334,7 @@ export default class DraftController {
 
         if (value.ewcCodes) {
           const ewcCodesValidationResult =
-            glwe.validationRules.validateEwcCodes(
+            glweValidation.validationRules.validateEwcCodes(
               value.ewcCodes.map((e) => e.code),
               this.ewcCodeList,
             );
@@ -347,7 +350,7 @@ export default class DraftController {
 
         if (value.nationalCode) {
           const nationalCodeValidationResult =
-            glwe.validationRules.validateNationalCode(
+            glweValidation.validationRules.validateNationalCode(
               value.nationalCode.provided === 'Yes'
                 ? value.nationalCode.value
                 : undefined,
@@ -364,7 +367,9 @@ export default class DraftController {
 
         if (value.description) {
           const descriptionValidationResult =
-            glwe.validationRules.validateWasteDecription(value.description);
+            glweValidation.validationRules.validateWasteDecription(
+              value.description,
+            );
 
           if (!descriptionValidationResult.valid) {
             errors.fieldFormatErrors.push(
@@ -503,7 +508,7 @@ export default class DraftController {
           wasteQuantity.value !== null
         ) {
           const wasteQuantityValidationResult =
-            glwe.validationRules.validateWasteQuantity(
+            glweValidation.validationRules.validateWasteQuantity(
               wasteQuantity.quantityType!,
               wasteQuantity.unit!,
               wasteQuantity.value,
@@ -607,7 +612,7 @@ export default class DraftController {
         draft.wasteQuantity.value?.type !== 'NotApplicable'
       ) {
         const wasteQuantityCrossSectionValidationResult =
-          glwe.validationRules.validateWasteCodeSubSectionAndQuantityCrossSection(
+          glweValidation.validationRules.validateWasteCodeSubSectionAndQuantityCrossSection(
             draft.wasteDescription.wasteCode,
             draft.wasteQuantity.value,
           );
@@ -664,6 +669,175 @@ export default class DraftController {
     api.SetDraftExporterDetailResponse
   > = async ({ id, accountId, value }) => {
     try {
+      if (value.status !== 'NotStarted') {
+        const section = 'ExporterDetail';
+        const errors: FieldFormatError[] = [];
+        if (value.exporterAddress) {
+          const addressLine1ValidationResult =
+            glweValidation.validationRules.validateAddressLine1(
+              value.exporterAddress.addressLine1,
+              section,
+              locale,
+              context,
+            );
+
+          if (!addressLine1ValidationResult.valid) {
+            errors.push(
+              ...addressLine1ValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.exporterAddress.addressLine1 =
+              addressLine1ValidationResult.value;
+          }
+
+          const addressLine2ValidationResult =
+            glweValidation.validationRules.validateAddressLine2(
+              value.exporterAddress.addressLine2,
+              section,
+              locale,
+              context,
+            );
+
+          if (!addressLine2ValidationResult.valid) {
+            errors.push(
+              ...addressLine2ValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.exporterAddress.addressLine2 =
+              addressLine2ValidationResult.value;
+          }
+
+          const townOrCityValidationResult =
+            glweValidation.validationRules.validateTownOrCity(
+              value.exporterAddress.townCity,
+              section,
+              locale,
+              context,
+            );
+
+          if (!townOrCityValidationResult.valid) {
+            errors.push(...townOrCityValidationResult.errors.fieldFormatErrors);
+          } else {
+            value.exporterAddress.townCity = townOrCityValidationResult.value;
+          }
+
+          const postcodeValidationResult =
+            glweValidation.validationRules.validatePostcode(
+              value.exporterAddress.postcode,
+              section,
+              locale,
+              context,
+            );
+
+          if (!postcodeValidationResult.valid) {
+            errors.push(...postcodeValidationResult.errors.fieldFormatErrors);
+          } else {
+            value.exporterAddress.postcode = postcodeValidationResult.value;
+          }
+
+          const countryValidationResult =
+            glweValidation.validationRules.validateCountry(
+              value.exporterAddress.country,
+              section,
+              locale,
+              context,
+            );
+
+          if (!countryValidationResult.valid) {
+            errors.push(...countryValidationResult.errors.fieldFormatErrors);
+          } else {
+            value.exporterAddress.country = countryValidationResult.value;
+          }
+        }
+
+        if (value.exporterContactDetails) {
+          const organisationNameValidationResult =
+            glweValidation.validationRules.validateOrganisationName(
+              value.exporterContactDetails.organisationName,
+              section,
+              locale,
+              context,
+            );
+
+          if (!organisationNameValidationResult.valid) {
+            errors.push(
+              ...organisationNameValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.exporterContactDetails.organisationName =
+              organisationNameValidationResult.value;
+          }
+
+          const fullNameValidationResult =
+            glweValidation.validationRules.validateFullName(
+              value.exporterContactDetails.fullName,
+              section,
+              locale,
+              context,
+            );
+
+          if (!fullNameValidationResult.valid) {
+            errors.push(...fullNameValidationResult.errors.fieldFormatErrors);
+          } else {
+            value.exporterContactDetails.fullName =
+              fullNameValidationResult.value;
+          }
+
+          const emailAddressValidationResult =
+            glweValidation.validationRules.validateEmailAddress(
+              value.exporterContactDetails.emailAddress,
+              section,
+              locale,
+              context,
+            );
+
+          if (!emailAddressValidationResult.valid) {
+            errors.push(
+              ...emailAddressValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.exporterContactDetails.emailAddress =
+              emailAddressValidationResult.value;
+          }
+
+          const phoneNumberValidationResult =
+            glweValidation.validationRules.validatePhoneNumber(
+              value.exporterContactDetails.phoneNumber,
+              section,
+              locale,
+              context,
+            );
+
+          if (!phoneNumberValidationResult.valid) {
+            errors.push(
+              ...phoneNumberValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.exporterContactDetails.phoneNumber =
+              phoneNumberValidationResult.value;
+          }
+
+          const faxNumberValidationResult =
+            glweValidation.validationRules.validateFaxNumber(
+              value.exporterContactDetails.faxNumber,
+              section,
+              locale,
+              context,
+            );
+
+          if (!faxNumberValidationResult.valid) {
+            errors.push(...faxNumberValidationResult.errors.fieldFormatErrors);
+          } else {
+            value.exporterContactDetails.faxNumber =
+              faxNumberValidationResult.value;
+          }
+        }
+
+        if (errors.length > 0) {
+          return fromBoom(Boom.badRequest('Validation failed', errors));
+        }
+      }
+
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
@@ -671,6 +845,7 @@ export default class DraftController {
       )) as DraftSubmission;
 
       draft.exporterDetail = value;
+
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
       draft.submissionState.timestamp = new Date();
@@ -729,7 +904,7 @@ export default class DraftController {
         (value.status === 'Complete' || value.status === 'Started')
       ) {
         const transitCountriesCrossValidationResult =
-          glwe.validationRules.validateImporterDetailAndTransitCountriesCross(
+          glweValidation.validationRules.validateImporterDetailAndTransitCountriesCross(
             value,
             draft.transitCountries.values,
           );
@@ -965,11 +1140,12 @@ export default class DraftController {
 
       if (draft.carriers.status !== 'NotStarted') {
         if (
-          draft.carriers.values.length === glwe.constraints.CarrierLength.max
+          draft.carriers.values.length ===
+          glweValidation.constraints.CarrierLength.max
         ) {
           return fromBoom(
             Boom.badRequest(
-              `Cannot add more than ${glwe.constraints.CarrierLength.max} carriers`,
+              `Cannot add more than ${glweValidation.constraints.CarrierLength.max} carriers`,
             ),
           );
         }
@@ -1043,7 +1219,7 @@ export default class DraftController {
           index += 1;
           if (v.addressDetails) {
             const organisationNameValidationResult =
-              glwe.validationRules.validateOrganisationName(
+              glweValidation.validationRules.validateOrganisationName(
                 v.addressDetails.organisationName,
                 section,
                 locale,
@@ -1061,7 +1237,7 @@ export default class DraftController {
             }
 
             const addressValidationResult =
-              glwe.validationRules.validateAddress(
+              glweValidation.validationRules.validateAddress(
                 v.addressDetails.address,
                 section,
                 locale,
@@ -1078,7 +1254,7 @@ export default class DraftController {
             }
 
             const countryValidationResult =
-              glwe.validationRules.validateCountry(
+              glweValidation.validationRules.validateCountry(
                 v.addressDetails.country,
                 section,
                 locale,
@@ -1098,7 +1274,7 @@ export default class DraftController {
 
           if (v.contactDetails) {
             const contactFullNameValidationResult =
-              glwe.validationRules.validateFullName(
+              glweValidation.validationRules.validateFullName(
                 v.contactDetails.fullName,
                 section,
                 locale,
@@ -1115,7 +1291,7 @@ export default class DraftController {
             }
 
             const phoneValidationResult =
-              glwe.validationRules.validatePhoneNumber(
+              glweValidation.validationRules.validatePhoneNumber(
                 v.contactDetails.phoneNumber,
                 section,
                 locale,
@@ -1131,13 +1307,14 @@ export default class DraftController {
               v.contactDetails.phoneNumber = phoneValidationResult.value;
             }
 
-            const faxValidationResult = glwe.validationRules.validateFaxNumber(
-              v.contactDetails.faxNumber,
-              section,
-              locale,
-              context,
-              index,
-            );
+            const faxValidationResult =
+              glweValidation.validationRules.validateFaxNumber(
+                v.contactDetails.faxNumber,
+                section,
+                locale,
+                context,
+                index,
+              );
 
             if (!faxValidationResult.valid) {
               errors.fieldFormatErrors.push(
@@ -1148,7 +1325,7 @@ export default class DraftController {
             }
 
             const emailValidationResult =
-              glwe.validationRules.validateEmailAddress(
+              glweValidation.validationRules.validateEmailAddress(
                 v.contactDetails.emailAddress,
                 section,
                 locale,
@@ -1167,7 +1344,7 @@ export default class DraftController {
 
           if (value.transport && v.transportDetails) {
             const meansOfTransportDetailsValidationResult =
-              glwe.validationRules.validateCarrierMeansOfTransportDetails(
+              glweValidation.validationRules.validateCarrierMeansOfTransportDetails(
                 locale,
                 context,
                 v.transportDetails.description,
@@ -1226,7 +1403,7 @@ export default class DraftController {
           draft.wasteDescription.wasteCode
         ) {
           const transportValidationResult =
-            glwe.validationRules.validateWasteCodeSubSectionAndCarriersCrossSection(
+            glweValidation.validationRules.validateWasteCodeSubSectionAndCarriersCrossSection(
               draft.wasteDescription.wasteCode,
               value.values.map((v) => v.transportDetails),
             );
@@ -1362,7 +1539,7 @@ export default class DraftController {
         const errors: FieldFormatError[] = [];
         if (value.address) {
           const addressLine1ValidationResult =
-            glwe.validationRules.validateAddressLine1(
+            glweValidation.validationRules.validateAddressLine1(
               value.address.addressLine1,
               section,
               locale,
@@ -1378,7 +1555,7 @@ export default class DraftController {
           }
 
           const addressLine2ValidationResult =
-            glwe.validationRules.validateAddressLine2(
+            glweValidation.validationRules.validateAddressLine2(
               value.address.addressLine2,
               section,
               locale,
@@ -1394,7 +1571,7 @@ export default class DraftController {
           }
 
           const townOrCityValidationResult =
-            glwe.validationRules.validateTownOrCity(
+            glweValidation.validationRules.validateTownOrCity(
               value.address.townCity,
               section,
               locale,
@@ -1408,7 +1585,7 @@ export default class DraftController {
           }
 
           const postcodeValidationResult =
-            glwe.validationRules.validatePostcode(
+            glweValidation.validationRules.validatePostcode(
               value.address.postcode,
               section,
               locale,
@@ -1421,12 +1598,13 @@ export default class DraftController {
             value.address.postcode = postcodeValidationResult.value;
           }
 
-          const countryValidationResult = glwe.validationRules.validateCountry(
-            value.address.country,
-            section,
-            locale,
-            context,
-          );
+          const countryValidationResult =
+            glweValidation.validationRules.validateCountry(
+              value.address.country,
+              section,
+              locale,
+              context,
+            );
 
           if (!countryValidationResult.valid) {
             errors.push(...countryValidationResult.errors.fieldFormatErrors);
@@ -1437,7 +1615,7 @@ export default class DraftController {
 
         if (value.contactDetails) {
           const organisationNameValidationResult =
-            glwe.validationRules.validateOrganisationName(
+            glweValidation.validationRules.validateOrganisationName(
               value.contactDetails.organisationName,
               section,
               locale,
@@ -1454,7 +1632,7 @@ export default class DraftController {
           }
 
           const fullNameValidationResult =
-            glwe.validationRules.validateFullName(
+            glweValidation.validationRules.validateFullName(
               value.contactDetails.fullName,
               section,
               locale,
@@ -1468,7 +1646,7 @@ export default class DraftController {
           }
 
           const emailAddressValidationResult =
-            glwe.validationRules.validateEmailAddress(
+            glweValidation.validationRules.validateEmailAddress(
               value.contactDetails.emailAddress,
               section,
               locale,
@@ -1485,7 +1663,7 @@ export default class DraftController {
           }
 
           const phoneNumberValidationResult =
-            glwe.validationRules.validatePhoneNumber(
+            glweValidation.validationRules.validatePhoneNumber(
               value.contactDetails.phoneNumber,
               section,
               locale,
@@ -1502,7 +1680,7 @@ export default class DraftController {
           }
 
           const faxNumberValidationResult =
-            glwe.validationRules.validateFaxNumber(
+            glweValidation.validationRules.validateFaxNumber(
               value.contactDetails.faxNumber,
               section,
               locale,
@@ -1576,7 +1754,7 @@ export default class DraftController {
     try {
       if (value.status !== 'NotStarted') {
         const ukExitLocationValidationResult =
-          glwe.validationRules.validateUkExitLocation(
+          glweValidation.validationRules.validateUkExitLocation(
             'value' in value.exitLocation &&
               typeof value.exitLocation.value === 'string'
               ? value.exitLocation.value
@@ -1650,7 +1828,7 @@ export default class DraftController {
     try {
       if (value.status !== 'NotStarted') {
         const transitCountriesValidationResult =
-          glwe.validationRules.validateTransitCountries(
+          glweValidation.validationRules.validateTransitCountries(
             value.values,
             this.countryList,
           );
@@ -1678,7 +1856,7 @@ export default class DraftController {
         value.status !== 'NotStarted'
       ) {
         const transitCountriesCrossValidationResult =
-          glwe.validationRules.validateImporterDetailAndTransitCountriesCross(
+          glweValidation.validationRules.validateImporterDetailAndTransitCountriesCross(
             draft.importerDetail,
             value.values,
           );
@@ -1814,12 +1992,12 @@ export default class DraftController {
         draft.recoveryFacilityDetail.status === 'Complete'
       ) {
         const maxFacilities =
-          glwe.constraints.InterimSiteLength.max +
-          glwe.constraints.RecoveryFacilityLength.max;
+          glweValidation.constraints.InterimSiteLength.max +
+          glweValidation.constraints.RecoveryFacilityLength.max;
         if (draft.recoveryFacilityDetail.values.length === maxFacilities) {
           return fromBoom(
             Boom.badRequest(
-              `Cannot add more than ${maxFacilities} recovery facilities (Maximum: ${glwe.constraints.InterimSiteLength.max} InterimSite & ${glwe.constraints.RecoveryFacilityLength.max} Recovery Facilities)`,
+              `Cannot add more than ${maxFacilities} recovery facilities (Maximum: ${glweValidation.constraints.InterimSiteLength.max} InterimSite & ${glweValidation.constraints.RecoveryFacilityLength.max} Recovery Facilities)`,
             ),
           );
         }
@@ -1880,7 +2058,7 @@ export default class DraftController {
           index += 1;
           if (v.addressDetails) {
             const organisationNameValidationResult =
-              glwe.validationRules.validateOrganisationName(
+              glweValidation.validationRules.validateOrganisationName(
                 v.addressDetails.name,
                 section,
                 locale,
@@ -1898,7 +2076,7 @@ export default class DraftController {
             }
 
             const addressValidationResult =
-              glwe.validationRules.validateAddress(
+              glweValidation.validationRules.validateAddress(
                 v.addressDetails.address,
                 section,
                 locale,
@@ -1916,7 +2094,7 @@ export default class DraftController {
             }
 
             const countryValidationResult =
-              glwe.validationRules.validateCountry(
+              glweValidation.validationRules.validateCountry(
                 v.addressDetails.country,
                 section,
                 locale,
@@ -1937,7 +2115,7 @@ export default class DraftController {
 
           if (v.contactDetails) {
             const contactFullNameValidationResult =
-              glwe.validationRules.validateFullName(
+              glweValidation.validationRules.validateFullName(
                 v.contactDetails.fullName,
                 section,
                 locale,
@@ -1955,7 +2133,7 @@ export default class DraftController {
             }
 
             const phoneValidationResult =
-              glwe.validationRules.validatePhoneNumber(
+              glweValidation.validationRules.validatePhoneNumber(
                 v.contactDetails.phoneNumber,
                 section,
                 locale,
@@ -1972,14 +2150,15 @@ export default class DraftController {
               v.contactDetails.phoneNumber = phoneValidationResult.value;
             }
 
-            const faxValidationResult = glwe.validationRules.validateFaxNumber(
-              v.contactDetails.faxNumber,
-              section,
-              locale,
-              context,
-              index,
-              v.recoveryFacilityType?.type,
-            );
+            const faxValidationResult =
+              glweValidation.validationRules.validateFaxNumber(
+                v.contactDetails.faxNumber,
+                section,
+                locale,
+                context,
+                index,
+                v.recoveryFacilityType?.type,
+              );
 
             if (!faxValidationResult.valid) {
               errors.fieldFormatErrors.push(
@@ -1990,7 +2169,7 @@ export default class DraftController {
             }
 
             const emailValidationResult =
-              glwe.validationRules.validateEmailAddress(
+              glweValidation.validationRules.validateEmailAddress(
                 v.contactDetails.emailAddress,
                 section,
                 locale,
@@ -2016,7 +2195,7 @@ export default class DraftController {
                 v.recoveryFacilityType.recoveryCode !== undefined))
           ) {
             const codeValidationResult =
-              glwe.validationRules.validateDisposalOrRecoveryCode(
+              glweValidation.validationRules.validateDisposalOrRecoveryCode(
                 v.recoveryFacilityType.type === 'Laboratory'
                   ? v.recoveryFacilityType.disposalCode
                   : v.recoveryFacilityType.recoveryCode,
@@ -2095,7 +2274,7 @@ export default class DraftController {
             }
           });
           const recoveryFacilityTypesValidationResult =
-            glwe.validationRules.validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
+            glweValidation.validationRules.validateWasteCodeSubSectionAndRecoveryFacilityDetailCrossSection(
               draft.wasteDescription.wasteCode,
               recoveryFacilityTypes,
             );
