@@ -3105,7 +3105,8 @@ describe('validateWasteQuantitySection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteQuantity',
-        message: validation.WasteQuantityValidationErrorMessages.tooMany,
+        message:
+          glweValidation.errorMessages.tooManyWasteQuantity[locale][context],
       },
     ]);
 
@@ -3119,7 +3120,8 @@ describe('validateWasteQuantitySection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteQuantity',
-        message: validation.WasteQuantityValidationErrorMessages.tooMany,
+        message:
+          glweValidation.errorMessages.tooManyWasteQuantity[locale][context],
       },
     ]);
 
@@ -3133,7 +3135,8 @@ describe('validateWasteQuantitySection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteQuantity',
-        message: validation.WasteQuantityValidationErrorMessages.tooMany,
+        message:
+          glweValidation.errorMessages.tooManyWasteQuantity[locale][context],
       },
     ]);
 
@@ -3365,7 +3368,8 @@ describe('validateWasteQuantitySection', () => {
     expect(response.value).toEqual([
       {
         field: 'WasteQuantity',
-        message: validation.WasteQuantityValidationErrorMessages.tooMany,
+        message:
+          glweValidation.errorMessages.tooManyWasteQuantity[locale][context],
       },
       {
         field: 'WasteQuantity',
@@ -3609,7 +3613,7 @@ describe('validateWasteCodeSubSectionAndQuantityCrossSection', () => {
       {
         fields: ['WasteDescription', 'WasteQuantity'],
         message:
-          glweValidation.errorMessages.smallNonKgwasteQuantity[locale][context],
+          glweValidation.errorMessages.smallNonKgWasteQuantity[locale][context],
       },
     ]);
   });
@@ -3639,7 +3643,7 @@ describe('validateWasteCodeSubSectionAndQuantityCrossSection', () => {
       {
         fields: ['WasteDescription', 'WasteQuantity'],
         message:
-          glweValidation.errorMessages.smallNonKgwasteQuantity[locale][context],
+          glweValidation.errorMessages.smallNonKgWasteQuantity[locale][context],
       },
     ]);
   });

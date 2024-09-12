@@ -1,10 +1,5 @@
 import { FreeTextChar } from './constraints';
 
-export const WasteQuantityValidationErrorMessages = {
-  tooMany:
-    'Only enter one of the following; waste quantity in tonnes, kilograms, or cubic metres',
-};
-
 export const ImporterDetailValidationErrorMessages = {
   emptyOrganisationName: 'Enter the importer organisation name',
   charTooManyOrganisationName: `The importer organisation name must be less than ${FreeTextChar.max} characters`,

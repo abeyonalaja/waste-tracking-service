@@ -2702,7 +2702,7 @@ describe(validateWasteCodeSubSectionAndQuantityCrossSection, () => {
         invalidStructureErrors: [
           {
             fields: ['WasteDescription', 'WasteQuantity'],
-            message: errorMessages.smallNonKgwasteQuantity[locale][context],
+            message: errorMessages.smallNonKgWasteQuantity[locale][context],
           },
         ],
         fieldFormatErrors: [],
@@ -2729,7 +2729,7 @@ describe(validateWasteCodeSubSectionAndQuantityCrossSection, () => {
         invalidStructureErrors: [
           {
             fields: ['WasteDescription', 'WasteQuantity'],
-            message: errorMessages.smallNonKgwasteQuantity[locale][context],
+            message: errorMessages.smallNonKgWasteQuantity[locale][context],
           },
         ],
         fieldFormatErrors: [],

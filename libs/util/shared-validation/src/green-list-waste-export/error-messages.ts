@@ -2256,7 +2256,7 @@ export const laboratoryWasteQuantity = {
   },
 };
 
-export const smallNonKgwasteQuantity = {
+export const smallNonKgWasteQuantity = {
   en: {
     ui: 'Unlisted weight can only be measured in kilograms',
     csv: 'Unlisted weight can only be measured in kilograms',
@@ -2266,5 +2266,18 @@ export const smallNonKgwasteQuantity = {
     ui: 'Dim ond mewn cilogramau y gellir mesur pwysau heb ei restru',
     csv: 'Dim ond mewn cilogramau y gellir mesur pwysau heb ei restru',
     api: 'Dim ond mewn cilogramau y gellir mesur pwysau heb ei restru',
+  },
+};
+
+export const tooManyWasteQuantity = {
+  en: {
+    ui: 'Only enter one of the following: waste quantity in tonnes, kilograms, or cubic metres',
+    csv: 'Only enter one of the following: waste quantity in tonnes, kilograms, or cubic metres',
+    api: 'Only enter one of the following: waste quantity in tonnes, kilograms, or cubic metres',
+  },
+  cy: {
+    ui: "Nodwch un o'r canlynol yn unig: maint gwastraff mewn tunelli, cilogramau, neu fetrau ciwbig",
+    csv: "Nodwch un o'r canlynol yn unig: maint gwastraff mewn tunelli, cilogramau, neu fetrau ciwbig",
+    api: "Nodwch un o'r canlynol yn unig: maint gwastraff mewn tunelli, cilogramau, neu fetrau ciwbig",
   },
 };

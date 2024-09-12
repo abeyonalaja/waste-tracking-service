@@ -378,7 +378,8 @@ export function validateWasteQuantitySection(
   ) {
     errors.push({
       field: 'WasteQuantity',
-      message: validation.WasteQuantityValidationErrorMessages.tooMany,
+      message:
+        glweValidation.errorMessages.tooManyWasteQuantity[locale][context],
     });
   }
 
