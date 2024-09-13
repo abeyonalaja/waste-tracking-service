@@ -3492,7 +3492,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UkwmGetDraftProducerAddressDetailsResponse'
+                $ref: >-
+                  #/components/schemas/UkwmGetDraftProducerAddressDetailsResponse
         '400':
           description: Bad Request
           content:
@@ -3647,7 +3648,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UkwmGetDraftWasteCollectionAddressDetailsResponse'
+                $ref: >-
+                  #/components/schemas/UkwmGetDraftWasteCollectionAddressDetailsResponse
         '400':
           description: Bad Request
           content:
@@ -3711,7 +3713,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UkwmSetDraftWasteCollectionAddressDetailsRequest'
+              $ref: >-
+                #/components/schemas/UkwmSetDraftWasteCollectionAddressDetailsRequest
   /api/ukwm/drafts/{id}/sic-code:
     get:
       tags:
@@ -3901,7 +3904,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UkwmSetDraftCarrierAddressDetailsRequestCombined'
+              $ref: >-
+                #/components/schemas/UkwmSetDraftCarrierAddressDetailsRequestCombined
   /api/ukwm/drafts/{id}/receiver-contact:
     get:
       tags:
@@ -3946,7 +3950,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetUkwmDraftReceiverContactDetailsResponse'
+                $ref: >-
+                  #/components/schemas/GetUkwmDraftReceiverContactDetailsResponse
         '400':
           description: Bad Request
           content:
@@ -3981,7 +3986,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UkwmSetDraftReceiverContactDetailsRequestCombined'
+              $ref: >-
+                #/components/schemas/UkwmSetDraftReceiverContactDetailsRequestCombined
   /api/ukwm/drafts/{id}/carrier-contact:
     get:
       tags:
@@ -4061,7 +4067,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UkwmSetDraftCarrierContactDetailsRequestCombined'
+              $ref: >-
+                #/components/schemas/UkwmSetDraftCarrierContactDetailsRequestCombined
   /api/ukwm/drafts/{id}/receiver-address:
     get:
       tags:
@@ -4072,7 +4079,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UkwmGetDraftReceiverAddressDetailsResponse'
+                $ref: >-
+                  #/components/schemas/UkwmGetDraftReceiverAddressDetailsResponse
         '400':
           description: Bad Request
           content:
@@ -4141,7 +4149,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UkwmSetDraftReceiverAddressDetailsRequestCombined'
+              $ref: >-
+                #/components/schemas/UkwmSetDraftReceiverAddressDetailsRequestCombined
   /api/ukwm/drafts/{id}/producer-confirmation:
     put:
       tags:
@@ -6865,45 +6874,7 @@ components:
     CreateSubmissionResponse:
       $ref: '#/components/schemas/DraftSubmission'
     UkwmGetDraftProducerAddressDetailsResponse:
-      discriminator:
-        propertyName: status
-      oneOf:
-        - properties:
-            status:
-              type: string
-          title: NotStarted
-        - properties:
-            buildingNameOrNumber:
-              type: string
-            addressLine1:
-              type: string
-            addressLine2:
-              type: string
-            townCity:
-              type: string
-            postcode:
-              type: string
-            country:
-              type: string
-            status:
-              type: string
-          title: Started
-        - properties:
-            buildingNameOrNumber:
-              type: string
-            addressLine1:
-              type: string
-            addressLine2:
-              type: string
-            townCity:
-              type: string
-            postcode:
-              type: string
-            country:
-              type: string
-            status:
-              type: string
-          title: Complete
+      $ref: '#/components/schemas/UkwmDraftAddress'
     UkwmAddress:
       type: object
       properties:
@@ -7021,13 +6992,13 @@ components:
         - properties:
             organisationName:
               type: string
-            name:
+            fullName:
               type: string
-            email:
+            emailAddress:
               type: string
-            phone:
+            phoneNumber:
               type: string
-            fax:
+            faxNumber:
               type: string
             status:
               type: string
@@ -7035,13 +7006,13 @@ components:
         - properties:
             organisationName:
               type: string
-            name:
+            fullName:
               type: string
-            email:
+            emailAddress:
               type: string
-            phone:
+            phoneNumber:
               type: string
-            fax:
+            faxNumber:
               type: string
             status:
               type: string
@@ -7051,19 +7022,19 @@ components:
       properties:
         organisationName:
           type: string
-        name:
+        fullName:
           type: string
-        email:
+        emailAddress:
           type: string
-        phone:
+        phoneNumber:
           type: string
-        fax:
+        faxNumber:
           type: string
       required:
         - organisationName
-        - name
-        - email
-        - phone
+        - fullName
+        - emailAddress
+        - phoneNumber
       additionalProperties: false
     UkwmDraftReceiverContact:
       discriminator:
@@ -7325,20 +7296,14 @@ components:
                       - properties:
                           disposalCode:
                             type: string
-                        required:
-                          - disposalCode
                         title: Laboratory
                       - properties:
                           recoveryCode:
                             type: string
-                        required:
-                          - recoveryCode
                         title: InterimSite
                       - properties:
                           recoveryCode:
                             type: string
-                        required:
-                          - recoveryCode
                         title: RecoveryFacility
                 required:
                   - id
@@ -7534,6 +7499,8 @@ components:
         error:
           type: string
         message:
+          type: string
+        data:
           type: string
       required:
         - statusCode
@@ -7794,20 +7761,23 @@ components:
       properties:
         id:
           type: string
+        reference:
+          type: string
         wasteInformation:
           $ref: '#/components/schemas/UkwmWasteInformation'
         receiver:
-          $ref: '#/components/schemas/UkwmDraftReceiverDetail'
+          $ref: '#/components/schemas/UkwmDraftReceiver'
         producerAndCollection:
           $ref: '#/components/schemas/UkwmProducerAndWasteCollectionDetail'
         carrier:
-          $ref: '#/components/schemas/UkwmDraftCarrierDetail'
+          $ref: '#/components/schemas/UkwmDraftCarrier'
         declaration:
           $ref: '#/components/schemas/UkwmDraftSubmissionDeclaration'
         state:
           $ref: '#/components/schemas/UkwmSubmissionState'
       required:
         - id
+        - reference
         - wasteInformation
         - receiver
         - producerAndCollection
@@ -7978,42 +7948,30 @@ components:
         - address
       additionalProperties: false
     UkwmProducerAndWasteCollectionDetail:
-      discriminator:
-        propertyName: status
-      oneOf:
-        - properties:
-            status:
-              type: string
-          title: NotStarted
-        - properties:
-            producer:
-              $ref: '#/components/schemas/UkwmDraftProducer'
-            wasteCollection:
-              $ref: '#/components/schemas/UkwmDraftWasteCollection'
-            status:
-              type: string
-          title: Started
-        - properties:
-            producer:
-              $ref: '#/components/schemas/UkwmDraftProducer'
-            wasteCollection:
-              $ref: '#/components/schemas/UkwmDraftWasteCollection'
-            status:
-              type: string
-          title: Complete
+      type: object
+      properties:
+        producer:
+          $ref: '#/components/schemas/UkwmDraftProducer'
+        wasteCollection:
+          $ref: '#/components/schemas/UkwmDraftWasteCollection'
+        confirmation:
+          $ref: '#/components/schemas/UkwmDraftSectionConfirmation'
+      required:
+        - producer
+        - wasteCollection
+        - confirmation
+      additionalProperties: false
     UkwmDraftProducer:
       type: object
       properties:
-        reference:
-          type: string
-        sicCode:
-          type: string
+        sicCodes:
+          $ref: '#/components/schemas/UkwmDraftSicCodes'
         contact:
-          $ref: '#/components/schemas/UkwmDraftProducerContact'
+          $ref: '#/components/schemas/UkwmDraftContact'
         address:
-          $ref: '#/components/schemas/UkwmDraftProducerContactAddress'
+          $ref: '#/components/schemas/UkwmDraftAddress'
       required:
-        - reference
+        - sicCodes
         - contact
         - address
       additionalProperties: false
@@ -8090,45 +8048,24 @@ components:
               type: string
           title: Complete
     UkwmDraftWasteCollection:
-      discriminator:
-        propertyName: status
-      oneOf:
-        - properties:
-            status:
-              type: string
-          title: NotStarted
-        - properties:
-            wasteSource:
-              type: string
-            brokerRegistrationNumber:
-              type: string
-            carrierRegistrationNumber:
-              type: string
-            localAuthority:
-              type: string
-            expectedWasteCollectionDate:
-              $ref: '#/components/schemas/UkwmExpectedWasteCollectionDate'
-            address:
-              $ref: '#/components/schemas/UkwmWasteCollectionAddress'
-            status:
-              type: string
-          title: Started
-        - properties:
-            wasteSource:
-              type: string
-            brokerRegistrationNumber:
-              type: string
-            carrierRegistrationNumber:
-              type: string
-            localAuthority:
-              type: string
-            expectedWasteCollectionDate:
-              $ref: '#/components/schemas/UkwmExpectedWasteCollectionDate'
-            address:
-              $ref: '#/components/schemas/UkwmWasteCollectionAddress'
-            status:
-              type: string
-          title: Complete
+      type: object
+      properties:
+        wasteSource:
+          $ref: '#/components/schemas/UkwmDraftWasteSource'
+        brokerRegistrationNumber:
+          type: string
+        carrierRegistrationNumber:
+          type: string
+        localAuthority:
+          type: string
+        expectedWasteCollectionDate:
+          $ref: '#/components/schemas/UkwmExpectedWasteCollectionDate'
+        address:
+          $ref: '#/components/schemas/UkwmDraftAddress'
+      required:
+        - wasteSource
+        - address
+      additionalProperties: false
     UkwmExpectedWasteCollectionDate:
       type: object
       properties:
@@ -8376,26 +8313,18 @@ components:
         - properties:
             code:
               type: string
-          required:
-            - code
           title: BaselAnnexIX
         - properties:
             code:
               type: string
-          required:
-            - code
           title: OECD
         - properties:
             code:
               type: string
-          required:
-            - code
           title: AnnexIIIA
         - properties:
             code:
               type: string
-          required:
-            - code
           title: AnnexIIIB
     ewcCodes:
       type: array
@@ -9288,3 +9217,242 @@ components:
       oneOf:
         - $ref: '#/components/schemas/SetDraftReceiverAddressDetailsRequest'
         - $ref: '#/components/schemas/SetPartialDraftReceiverAddressDetailsRequest'
+    UkwmDraftReceiver:
+      type: object
+      properties:
+        permitDetails:
+          $ref: '#/components/schemas/UkwmDraftPermitDetails'
+        contact:
+          $ref: '#/components/schemas/UkwmDraftContact'
+        address:
+          $ref: '#/components/schemas/UkwmDraftAddress'
+      required:
+        - permitDetails
+        - contact
+        - address
+      additionalProperties: false
+    UkwmDraftPermitDetails:
+      discriminator:
+        propertyName: status
+      oneOf:
+        - properties:
+            status:
+              type: string
+          title: NotStarted
+        - properties:
+            authorizationType:
+              type: string
+            environmentalPermitNumber:
+              type: string
+            status:
+              type: string
+          title: Started
+        - properties:
+            authorizationType:
+              type: string
+            environmentalPermitNumber:
+              type: string
+            status:
+              type: string
+          title: Complete
+    UkwmDraftSectionConfirmation:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - NotStarted
+            - InProgress
+            - Complete
+      required:
+        - status
+      additionalProperties: false
+    UkwmDraftCarrier:
+      type: object
+      properties:
+        contact:
+          $ref: '#/components/schemas/UkwmDraftContact'
+        address:
+          $ref: '#/components/schemas/UkwmDraftAddress'
+        modeOfTransport:
+          $ref: '#/components/schemas/UkwmDraftModeOfTransport'
+      required:
+        - contact
+        - address
+        - modeOfTransport
+      additionalProperties: false
+    UkwmDraftModeOfTransport:
+      discriminator:
+        propertyName: status
+      oneOf:
+        - properties:
+            status:
+              type: string
+          title: NotStarted
+        - properties:
+            value:
+              $ref: '#/components/schemas/UkwmWasteTransport'
+            status:
+              type: string
+          title: Complete
+    UkwmWasteTransport:
+      type: string
+      enum:
+        - Road
+        - Rail
+        - Sea
+        - Air
+        - InlandWaterways
+    UkwmGetDraftProducerContactDetailResponse:
+      $ref: '#/components/schemas/UkwmDraftContact'
+    UkwmSetDraftProducerContactDetailRequest:
+      $ref: '#/components/schemas/UkwmContact'
+    UkwmGetDraftCarrierContactDetailResponse:
+      $ref: '#/components/schemas/UkwmDraftContact'
+    UkwmGetDraftReceiverContactDetailResponse:
+      $ref: '#/components/schemas/UkwmDraftContact'
+    CreateDraftRequest:
+      properties:
+        reference:
+          type: string
+      required:
+        - reference
+    SetDraftProducerContactRequest:
+      properties:
+        organisationName:
+          type: string
+        fullName:
+          type: string
+        emailAddress:
+          type: string
+        phoneNumber:
+          type: string
+        faxNumber:
+          type: string
+      required:
+        - organisationName
+        - fullName
+        - emailAddress
+        - phoneNumber
+    SetPartialDraftProducerContactRequest:
+      properties:
+        organisationName:
+          type: string
+        fullName:
+          type: string
+        emailAddress:
+          type: string
+        phoneNumber:
+          type: string
+        faxNumber:
+          type: string
+    SetPartialDraftProducerAddressDetailsRequest:
+      properties:
+        buildingNameOrNumber:
+          type: string
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+        townCity:
+          type: string
+        country:
+          type: string
+        postcode:
+          type: string
+    SetDraftWasteCollectionAddressDetailsRequest:
+      properties:
+        addressLine1:
+          type: string
+        townCity:
+          type: string
+        country:
+          type: string
+        buildingNameOrNumber:
+          type: string
+        addressLine2:
+          type: string
+        postcode:
+          type: string
+      required:
+        - addressLine1
+        - townCity
+        - country
+    SetPartialDraftWasteCollectionAddressDetailsRequest:
+      properties:
+        buildingNameOrNumber:
+          type: string
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+        townCity:
+          type: string
+        country:
+          type: string
+        postcode:
+          type: string
+    CreateDraftSicCodeRequest:
+      properties:
+        sicCode:
+          type: string
+      required:
+        - sicCode
+    SetDraftCarrierContactRequest:
+      properties:
+        organisationName:
+          type: string
+        fullName:
+          type: string
+        emailAddress:
+          type: string
+        phoneNumber:
+          type: string
+        faxNumber:
+          type: string
+      required:
+        - organisationName
+        - fullName
+        - emailAddress
+        - phoneNumber
+    SetPartialDraftCarrierContactRequest:
+      properties:
+        organisationName:
+          type: string
+        fullName:
+          type: string
+        emailAddress:
+          type: string
+        phoneNumber:
+          type: string
+        faxNumber:
+          type: string
+    SetDraftReceiverContactRequest:
+      properties:
+        organisationName:
+          type: string
+        fullName:
+          type: string
+        emailAddress:
+          type: string
+        phoneNumber:
+          type: string
+        faxNumber:
+          type: string
+      required:
+        - organisationName
+        - fullName
+        - emailAddress
+        - phoneNumber
+    SetPartialDraftReceiverContactRequest:
+      properties:
+        organisationName:
+          type: string
+        fullName:
+          type: string
+        emailAddress:
+          type: string
+        phoneNumber:
+          type: string
+        faxNumber:
+          type: string
