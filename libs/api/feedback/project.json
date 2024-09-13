@@ -6,7 +6,11 @@
   "tags": [],
   "targets": {
     "lint": {
-      "executor": "@nx/eslint:lint"
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/client/feedback/**/*.ts"]
+      }
     },
     "test": {
       "executor": "@nrwl/jest:jest",

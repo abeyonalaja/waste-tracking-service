@@ -66,6 +66,16 @@ Defra's [software development standards][1].
   `test` target so for instance `nx run-many --target=test` will run all tests
   for all projects.
 
+- [ESLint][21] is our linting utility. All projects have a ESLint-based
+  `lint` target so for instance `nx run-many --target=lint` will analyzes all
+  code to quickly find problems for all projects.
+
+## Continuous Integration
+
+- [Helm][22] is used to manage our [Kubernetes][23] applications.
+
+- [YAML][24] is our target language.
+
 [1]: https://github.com/DEFRA/software-development-standards
 [2]: https://nodejs.org/en/
 [3]: https://www.docker.com/
@@ -86,3 +96,7 @@ Defra's [software development standards][1].
 [18]: https://www.typescriptlang.org/
 [19]: https://prettier.io/
 [20]: https://jestjs.io/
+[21]: https://eslint.org/
+[22]: https://helm.sh/
+[23]: https://kubernetes.io/
+[24]: https://yaml.org/
