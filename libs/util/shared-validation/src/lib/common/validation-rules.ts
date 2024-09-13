@@ -1,5 +1,6 @@
 import { commonConstraints, commonRegex, ValidationResult } from '.';
 import { isPast, isValid, parse } from 'date-fns';
+import { DateData } from './dto';
 
 export function titleCase(str: string): string {
   return str
@@ -304,7 +305,7 @@ export function validateCollectionDate(
   month?: number | string,
   year?: number | string,
   futureDatesOnly = true,
-): ValidationResult<Date> {
+): ValidationResult<DateData> {
   if (!day || !month || !year) {
     return {
       valid: false,
@@ -336,6 +337,10 @@ export function validateCollectionDate(
 
   return {
     valid: true,
-    value: parsedDate,
+    value: {
+      day: formattedDay,
+      month: formattedMonth,
+      year: `${year}`,
+    },
   };
 }

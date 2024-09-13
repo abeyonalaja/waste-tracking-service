@@ -5,7 +5,6 @@ import {
   RecoveryCode,
 } from '@wts/api/reference-data';
 import {
-  validation,
   FieldFormatError,
   CustomerReference,
   WasteDescriptionFlattened,
@@ -426,17 +425,7 @@ export function validateWasteQuantitySection(
   let wasteQuantityType: 'EstimateData' | 'ActualData' = 'EstimateData';
 
   if (!wasteQuantityTypeValidationResult.valid) {
-    for (const error of wasteQuantityTypeValidationResult.errors) {
-      switch (error) {
-        case 'invalid':
-          errors.push({
-            field: 'WasteQuantity',
-            message:
-              glweValidation.errorMessages.missingWasteQuantityType.en.csv,
-          });
-          break;
-      }
-    }
+    errors.push(...wasteQuantityTypeValidationResult.errors.fieldFormatErrors);
   } else {
     wasteQuantityType = wasteQuantityTypeValidationResult.value;
   }
@@ -646,140 +635,104 @@ export function validateImporterDetailSection(
 ):
   | { valid: false; value: FieldFormatError[] }
   | { valid: true; value: ImporterDetail } {
+  const section = 'ImporterDetail';
   const errors: FieldFormatError[] = [];
-  if (
-    !value.importerOrganisationName ||
-    !value.importerOrganisationName.trim()
-  ) {
-    errors.push({
-      field: 'ImporterDetail',
-      message:
-        validation.ImporterDetailValidationErrorMessages.emptyOrganisationName,
-    });
-  } else {
-    if (value.importerOrganisationName.length > validation.FreeTextChar.max) {
-      errors.push({
-        field: 'ImporterDetail',
-        message:
-          validation.ImporterDetailValidationErrorMessages
-            .charTooManyOrganisationName,
-      });
-    }
-  }
-
-  if (!value.importerAddress || !value.importerAddress.trim()) {
-    errors.push({
-      field: 'ImporterDetail',
-      message: validation.ImporterDetailValidationErrorMessages.emptyAddress,
-    });
-  } else {
-    if (value.importerAddress.length > validation.FreeTextChar.max) {
-      errors.push({
-        field: 'ImporterDetail',
-        message:
-          validation.ImporterDetailValidationErrorMessages.charTooManyAddress,
-      });
-    }
-  }
-
-  if (!value.importerCountry) {
-    errors.push({
-      field: 'ImporterDetail',
-      message: validation.ImporterDetailValidationErrorMessages.emptyCountry,
-    });
-  } else {
-    const filteredCountryList = countryList.filter((c) =>
-      c.name.toUpperCase().includes(value.importerCountry.toUpperCase()),
+  const organisationNameValidationResult =
+    glweValidation.validationRules.validateOrganisationName(
+      value.importerOrganisationName,
+      section,
+      locale,
+      context,
     );
-    if (filteredCountryList.length !== 1) {
-      errors.push({
-        field: 'ImporterDetail',
-        message:
-          validation.ImporterDetailValidationErrorMessages.invalidCountry,
-      });
-    } else {
-      value.importerCountry = filteredCountryList[0].name;
-    }
-  }
 
-  if (!value.importerContactFullName || !value.importerContactFullName.trim()) {
-    errors.push({
-      field: 'ImporterDetail',
-      message:
-        validation.ImporterDetailValidationErrorMessages.emptyContactFullName,
-    });
+  if (!organisationNameValidationResult.valid) {
+    errors.push(...organisationNameValidationResult.errors.fieldFormatErrors);
   } else {
-    if (value.importerContactFullName.length > validation.FreeTextChar.max) {
-      errors.push({
-        field: 'ImporterDetail',
-        message:
-          validation.ImporterDetailValidationErrorMessages
-            .charTooManyContactFullName,
-      });
-    }
+    value.importerOrganisationName = organisationNameValidationResult.value;
   }
 
-  const reformattedImporterContactPhoneNumber =
-    value.importerContactPhoneNumber.replace(/'/g, '');
-  if (!reformattedImporterContactPhoneNumber) {
-    errors.push({
-      field: 'ImporterDetail',
-      message: validation.ImporterDetailValidationErrorMessages.emptyPhone,
-    });
+  const addressValidationResult =
+    glweValidation.validationRules.validateAddress(
+      value.importerAddress,
+      section,
+      locale,
+      context,
+    );
+
+  if (!addressValidationResult.valid) {
+    errors.push(...addressValidationResult.errors.fieldFormatErrors);
   } else {
-    if (
-      !glweValidation.regex.phoneInternationalRegex.test(
-        reformattedImporterContactPhoneNumber,
-      )
-    ) {
-      errors.push({
-        field: 'ImporterDetail',
-        message: validation.ImporterDetailValidationErrorMessages.invalidPhone,
-      });
-    }
+    value.importerAddress = addressValidationResult.value;
   }
 
-  const reformattedImporterFaxNumber = value.importerFaxNumber.replace(
-    /'/g,
-    '',
+  const countryValidationResult =
+    glweValidation.validationRules.validateCountry(
+      value.importerCountry,
+      section,
+      locale,
+      context,
+      countryList,
+    );
+
+  if (!countryValidationResult.valid) {
+    errors.push(...countryValidationResult.errors.fieldFormatErrors);
+  } else {
+    value.importerCountry = countryValidationResult.value;
+  }
+
+  const contactFullNameValidationResult =
+    glweValidation.validationRules.validateFullName(
+      value.importerContactFullName,
+      section,
+      locale,
+      context,
+    );
+
+  if (!contactFullNameValidationResult.valid) {
+    errors.push(...contactFullNameValidationResult.errors.fieldFormatErrors);
+  } else {
+    value.importerContactFullName = contactFullNameValidationResult.value;
+  }
+
+  const phoneValidationResult =
+    glweValidation.validationRules.validatePhoneNumber(
+      value.importerContactPhoneNumber.replace(/'/g, ''),
+      section,
+      locale,
+      context,
+    );
+
+  if (!phoneValidationResult.valid) {
+    errors.push(...phoneValidationResult.errors.fieldFormatErrors);
+  } else {
+    value.importerContactPhoneNumber = phoneValidationResult.value;
+  }
+
+  const faxValidationResult = glweValidation.validationRules.validateFaxNumber(
+    value.importerFaxNumber.replace(/'/g, ''),
+    section,
+    locale,
+    context,
   );
-  if (
-    reformattedImporterFaxNumber &&
-    !glweValidation.regex.faxInternationalRegex.test(
-      reformattedImporterFaxNumber,
-    )
-  ) {
-    errors.push({
-      field: 'ImporterDetail',
-      message: validation.ImporterDetailValidationErrorMessages.invalidFax,
-    });
+
+  if (!faxValidationResult.valid) {
+    errors.push(...faxValidationResult.errors.fieldFormatErrors);
+  } else {
+    value.importerFaxNumber = faxValidationResult.value ?? '';
   }
 
-  if (!value.importerEmailAddress) {
-    errors.push({
-      field: 'ImporterDetail',
-      message: validation.ImporterDetailValidationErrorMessages.emptyEmail,
-    });
+  const emailValidationResult =
+    glweValidation.validationRules.validateEmailAddress(
+      value.importerEmailAddress,
+      section,
+      locale,
+      context,
+    );
+
+  if (!emailValidationResult.valid) {
+    errors.push(...emailValidationResult.errors.fieldFormatErrors);
   } else {
-    if (value.importerEmailAddress.length > validation.FreeTextChar.max) {
-      errors.push({
-        field: 'ImporterDetail',
-        message:
-          validation.ImporterDetailValidationErrorMessages.charTooManyEmail,
-      });
-    } else {
-      if (
-        !commonValidation.commonRegex.emailRegex.test(
-          value.importerEmailAddress,
-        )
-      ) {
-        errors.push({
-          field: 'ImporterDetail',
-          message:
-            validation.ImporterDetailValidationErrorMessages.invalidEmail,
-        });
-      }
-    }
+    value.importerEmailAddress = emailValidationResult.value;
   }
 
   if (errors.length > 0) {
@@ -800,10 +753,10 @@ export function validateImporterDetailSection(
       importerContactDetails: {
         fullName: value.importerContactFullName,
         emailAddress: value.importerEmailAddress,
-        phoneNumber: reformattedImporterContactPhoneNumber,
-        faxNumber: !reformattedImporterFaxNumber
+        phoneNumber: value.importerContactPhoneNumber,
+        faxNumber: !value.importerFaxNumber
           ? undefined
-          : reformattedImporterFaxNumber,
+          : value.importerFaxNumber,
       },
     },
   };
@@ -817,7 +770,11 @@ export function validateCollectionDateSection(
   const errors: FieldFormatError[] = [];
 
   let dateArr: string[] = [];
-  let collectionDate: Date | undefined;
+  let date: commonValidation.DateData = {
+    day: '',
+    month: '',
+    year: '',
+  };
   if (!value.wasteCollectionDate) {
     errors.push({
       field: 'CollectionDate',
@@ -827,33 +784,18 @@ export function validateCollectionDateSection(
     dateArr = value.wasteCollectionDate.replace(/-/g, '/').split('/');
 
     const collectionDateValidationResult =
-      commonValidation.commonValidationRules.validateCollectionDate(
+      glweValidation.validationRules.validateCollectionDate(
         dateArr[0],
         dateArr[1],
         dateArr[2],
+        locale,
+        context,
       );
 
     if (!collectionDateValidationResult.valid) {
-      for (const error of collectionDateValidationResult.errors) {
-        switch (error) {
-          case 'empty':
-            errors.push({
-              field: 'CollectionDate',
-              message:
-                commonValidation.commonErrorMessages.emptyCollectionDate.en.csv,
-            });
-            break;
-
-          case 'invalid':
-            errors.push({
-              field: 'CollectionDate',
-              message:
-                commonValidation.commonErrorMessages.invalidCollectionDate.en
-                  .csv,
-            });
-            break;
-        }
-      }
+      errors.push(...collectionDateValidationResult.errors.fieldFormatErrors);
+    } else {
+      date = collectionDateValidationResult.value;
     }
   }
 
@@ -861,20 +803,10 @@ export function validateCollectionDateSection(
     glweValidation.validationRules.validateCollectionDateType(
       value.estimatedOrActualCollectionDate,
     );
-  let collectionDateType: 'EstimateDate' | 'ActualDate' = 'EstimateDate';
 
+  let collectionDateType: 'EstimateDate' | 'ActualDate' = 'EstimateDate';
   if (!collectionDateTypeValidationResult.valid) {
-    for (const error of collectionDateTypeValidationResult.errors) {
-      switch (error) {
-        case 'invalid':
-          errors.push({
-            field: 'CollectionDate',
-            message:
-              glweValidation.errorMessages.missingTypeCollectionDate.en.csv,
-          });
-          break;
-      }
-    }
+    errors.push(...collectionDateTypeValidationResult.errors.fieldFormatErrors);
   } else {
     collectionDateType = collectionDateTypeValidationResult.value;
   }
@@ -885,12 +817,6 @@ export function validateCollectionDateSection(
       value: errors,
     };
   }
-
-  const date = {
-    day: dateArr[0]?.padStart(2, '0'),
-    month: dateArr[1]?.padStart(2, '0'),
-    year: collectionDate?.getFullYear()?.toString() || dateArr[2],
-  };
 
   return {
     valid: true,

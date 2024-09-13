@@ -228,19 +228,26 @@ export default class SubmissionController {
     api.SetCollectionDateResponse
   > = async ({ id, accountId, value }) => {
     try {
+      let dateData: commonValidation.DateData = {
+        day: '',
+        month: '',
+        year: '',
+      };
+
       const date =
         value.type === 'ActualDate' ? value.actualDate : value.estimateDate;
-      const dateValidationResult =
-        commonValidation.commonValidationRules.validateCollectionDate(
-          date.day,
-          date.month,
-          date.year,
-        );
+      const dateValidationResult = glwe.validationRules.validateCollectionDate(
+        date.day,
+        date.month,
+        date.year,
+      );
 
       if (!dateValidationResult.valid) {
         return fromBoom(
           Boom.badRequest('Validation failed', dateValidationResult.errors),
         );
+      } else {
+        dateData = dateValidationResult.value;
       }
 
       const submission = (await this.repository.getRecord(
@@ -253,30 +260,29 @@ export default class SubmissionController {
         return success(undefined);
       }
 
-      let collectionDate = value;
       if (value.type === 'ActualDate') {
-        collectionDate = {
+        value = {
           type: value.type,
           actualDate: {
-            day: value.actualDate.day?.padStart(2, '0'),
-            month: value.actualDate.month?.padStart(2, '0'),
-            year: value.actualDate.year,
+            day: dateData.day,
+            month: dateData.month,
+            year: dateData.year,
           },
           estimateDate: submission.collectionDate.estimateDate,
         };
       } else {
-        collectionDate = {
+        value = {
           type: value.type,
           estimateDate: {
-            day: value.estimateDate.day?.padStart(2, '0'),
-            month: value.estimateDate.month?.padStart(2, '0'),
-            year: value.estimateDate.year,
+            day: dateData.day,
+            month: dateData.month,
+            year: dateData.year,
           },
           actualDate: submission.collectionDate.actualDate,
         };
       }
 
-      submission.collectionDate = collectionDate;
+      submission.collectionDate = value;
 
       submission.submissionState =
         submission.wasteQuantity.type === 'ActualData' &&

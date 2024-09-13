@@ -8,6 +8,9 @@ export type RecoveryCode = apiRefData.RecoveryCode;
 
 export type WasteDescription = api.submission.WasteDescription;
 
+export type WasteQuantity = api.submission.WasteQuantity;
+export type WasteQuantityData = api.submission.WasteQuantityData;
+
 export type ImporterDetail = api.submission.ImporterDetail;
 
 export type Carrier = api.submission.Carrier;
@@ -15,8 +18,5 @@ export type Carrier = api.submission.Carrier;
 export type UkExitLocation = api.submission.UkExitLocation;
 
 export type TransitCountry = api.submission.TransitCountry;
-
-export type WasteQuantity = api.submission.WasteQuantity;
-export type WasteQuantityData = api.submission.WasteQuantityData;
 
 export type RecoveryFacilityDetail = api.submission.RecoveryFacilityDetail;

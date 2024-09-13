@@ -167,6 +167,7 @@ export default class TemplatePlugin {
           .jsonp(new InternalServerError('An internal server error occurred'));
       }
     });
+
     this.server.post(`${this.prefix}/copy-submission/:id`, async (req, res) => {
       if (!validateCreateTemplateRequest(req.body)) {
         return res.status(400).jsonp(new BadRequestError('Bad Request'));
@@ -194,6 +195,7 @@ export default class TemplatePlugin {
           .jsonp(new InternalServerError('An internal server error occurred'));
       }
     });
+
     this.server.post(`${this.prefix}/copy-template/:id`, async (req, res) => {
       if (!validateCreateTemplateRequest(req.body)) {
         return res.status(400).jsonp(new BadRequestError('Bad Request'));
@@ -221,6 +223,7 @@ export default class TemplatePlugin {
           .jsonp(new InternalServerError('An internal server error occurred'));
       }
     });
+
     this.server.put(`${this.prefix}/update/:id`, async (req, res) => {
       if (!validateCreateTemplateRequest(req.body)) {
         return res.status(400).jsonp(new BadRequestError('Bad Request'));
@@ -248,6 +251,7 @@ export default class TemplatePlugin {
           .jsonp(new InternalServerError('An internal server error occurred'));
       }
     });
+
     this.server.delete(`${this.prefix}/:id`, async (req, res) => {
       const user = req.user as User;
       try {
@@ -267,6 +271,7 @@ export default class TemplatePlugin {
           .jsonp(new InternalServerError('An internal server error occurred'));
       }
     });
+
     this.server.get(
       `${this.prefix}/:id/waste-description`,
       async (req, res) => {
@@ -290,6 +295,7 @@ export default class TemplatePlugin {
         }
       },
     );
+
     this.server.put(
       `${this.prefix}/:id/waste-description`,
       async (req, res) => {
@@ -555,6 +561,7 @@ export default class TemplatePlugin {
         }
       },
     );
+
     this.server.get(
       `${this.prefix}/:id/collection-detail`,
       async (req, res) => {
@@ -578,6 +585,7 @@ export default class TemplatePlugin {
         }
       },
     );
+
     this.server.put(
       `${this.prefix}/:id/collection-detail`,
       async (req, res) => {

@@ -13,7 +13,6 @@ import {
   DraftRecoveryFacilityDetails,
   DraftSubmission,
   Submission,
-  FieldFormatError,
   RecoveryFacilityDetail,
 } from '../../model';
 import { setBaseWasteDescription, copyCarriersNoTransport } from '../../lib';
@@ -278,51 +277,32 @@ export default class TemplateController {
     draft.SetDraftCustomerReferenceResponse
   > = async ({ id, accountId, value }) => {
     try {
-      if (value.status !== 'NotStarted') {
-        const errors = {
-          fieldFormatErrors: [] as FieldFormatError[],
-        };
+      const errors: glwe.Errors = {
+        fieldFormatErrors: [],
+      };
+      if (value.status === 'Started') {
         if (value.wasteCode) {
-          if (
-            value.status === 'Complete' &&
-            value.wasteCode.type !== 'NotApplicable' &&
-            !('code' in value.wasteCode)
-          ) {
-            const wasteCodeValidationResult =
-              glwe.validationRules.validateWasteCode(
-                '',
-                value.wasteCode.type,
-                this.wasteCodeList,
-              );
-            if (!wasteCodeValidationResult.valid) {
-              errors.fieldFormatErrors.push(
-                ...wasteCodeValidationResult.errors.fieldFormatErrors,
-              );
-            } else {
-              value.wasteCode = wasteCodeValidationResult.value;
-            }
-          } else if (
-            'code' in value.wasteCode &&
-            typeof value.wasteCode.code === 'string'
-          ) {
-            const wasteCodeValidationResult =
-              glwe.validationRules.validateWasteCode(
-                value.wasteCode.code,
-                value.wasteCode.type,
-                this.wasteCodeList,
-              );
-
-            if (!wasteCodeValidationResult.valid) {
-              errors.fieldFormatErrors.push(
-                ...wasteCodeValidationResult.errors.fieldFormatErrors,
-              );
-            } else {
-              value.wasteCode = wasteCodeValidationResult.value;
-            }
-          } else {
+          if (value.wasteCode.type === 'NotApplicable') {
             value.wasteCode = {
               type: value.wasteCode.type,
             };
+          } else {
+            if (value.wasteCode.code) {
+              const wasteCodeValidationResult =
+                glwe.validationRules.validateWasteCode(
+                  value.wasteCode.code,
+                  value.wasteCode.type,
+                  this.wasteCodeList,
+                );
+
+              if (!wasteCodeValidationResult.valid) {
+                errors.fieldFormatErrors.push(
+                  ...wasteCodeValidationResult.errors.fieldFormatErrors,
+                );
+              } else {
+                value.wasteCode = wasteCodeValidationResult.value;
+              }
+            }
           }
         }
 
@@ -371,10 +351,92 @@ export default class TemplateController {
             value.description = descriptionValidationResult.value;
           }
         }
+      }
 
-        if (errors.fieldFormatErrors.length > 0) {
-          return fromBoom(Boom.badRequest('Validation failed', errors));
+      if (value.status === 'Complete') {
+        if (
+          value.wasteCode.type !== 'NotApplicable' &&
+          !('code' in value.wasteCode)
+        ) {
+          const wasteCodeValidationResult =
+            glwe.validationRules.validateWasteCode(
+              '',
+              value.wasteCode.type,
+              this.wasteCodeList,
+            );
+          if (!wasteCodeValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...wasteCodeValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.wasteCode = wasteCodeValidationResult.value;
+          }
+        } else if (
+          'code' in value.wasteCode &&
+          typeof value.wasteCode.code === 'string'
+        ) {
+          const wasteCodeValidationResult =
+            glwe.validationRules.validateWasteCode(
+              value.wasteCode.code,
+              value.wasteCode.type,
+              this.wasteCodeList,
+            );
+
+          if (!wasteCodeValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...wasteCodeValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.wasteCode = wasteCodeValidationResult.value;
+          }
+        } else {
+          value.wasteCode = {
+            type: value.wasteCode.type,
+          };
         }
+
+        const ewcCodesValidationResult = glwe.validationRules.validateEwcCodes(
+          value.ewcCodes.map((e) => e.code),
+          this.ewcCodeList,
+        );
+
+        if (!ewcCodesValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...ewcCodesValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.ewcCodes = ewcCodesValidationResult.value;
+        }
+
+        const nationalCodeValidationResult =
+          glwe.validationRules.validateNationalCode(
+            value.nationalCode?.provided === 'Yes'
+              ? value.nationalCode.value
+              : undefined,
+          );
+
+        if (!nationalCodeValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...nationalCodeValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.nationalCode = nationalCodeValidationResult.value;
+        }
+
+        const descriptionValidationResult =
+          glwe.validationRules.validateWasteDecription(value.description);
+
+        if (!descriptionValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...descriptionValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.description = descriptionValidationResult.value;
+        }
+      }
+
+      if (errors.fieldFormatErrors.length > 0) {
+        return fromBoom(Boom.badRequest('Validation failed', errors));
       }
 
       const template = (await this.repository.getRecord(
@@ -439,9 +501,11 @@ export default class TemplateController {
     draft.SetDraftExporterDetailResponse
   > = async ({ id, accountId, value }) => {
     try {
-      if (value.status !== 'NotStarted') {
-        const section = 'ExporterDetail';
-        const errors: FieldFormatError[] = [];
+      const section = 'ExporterDetail';
+      const errors: glwe.Errors = {
+        fieldFormatErrors: [],
+      };
+      if (value.status === 'Started') {
         if (value.exporterAddress?.addressLine1) {
           const addressLine1ValidationResult =
             glwe.validationRules.validateAddressLine1(
@@ -452,7 +516,7 @@ export default class TemplateController {
             );
 
           if (!addressLine1ValidationResult.valid) {
-            errors.push(
+            errors.fieldFormatErrors.push(
               ...addressLine1ValidationResult.errors.fieldFormatErrors,
             );
           } else {
@@ -471,7 +535,7 @@ export default class TemplateController {
             );
 
           if (!addressLine2ValidationResult.valid) {
-            errors.push(
+            errors.fieldFormatErrors.push(
               ...addressLine2ValidationResult.errors.fieldFormatErrors,
             );
           } else {
@@ -490,7 +554,9 @@ export default class TemplateController {
             );
 
           if (!townOrCityValidationResult.valid) {
-            errors.push(...townOrCityValidationResult.errors.fieldFormatErrors);
+            errors.fieldFormatErrors.push(
+              ...townOrCityValidationResult.errors.fieldFormatErrors,
+            );
           } else {
             value.exporterAddress.townCity = townOrCityValidationResult.value;
           }
@@ -506,7 +572,9 @@ export default class TemplateController {
             );
 
           if (!postcodeValidationResult.valid) {
-            errors.push(...postcodeValidationResult.errors.fieldFormatErrors);
+            errors.fieldFormatErrors.push(
+              ...postcodeValidationResult.errors.fieldFormatErrors,
+            );
           } else {
             value.exporterAddress.postcode = postcodeValidationResult.value;
           }
@@ -521,7 +589,9 @@ export default class TemplateController {
           );
 
           if (!countryValidationResult.valid) {
-            errors.push(...countryValidationResult.errors.fieldFormatErrors);
+            errors.fieldFormatErrors.push(
+              ...countryValidationResult.errors.fieldFormatErrors,
+            );
           } else {
             value.exporterAddress.country = countryValidationResult.value;
           }
@@ -537,7 +607,7 @@ export default class TemplateController {
             );
 
           if (!organisationNameValidationResult.valid) {
-            errors.push(
+            errors.fieldFormatErrors.push(
               ...organisationNameValidationResult.errors.fieldFormatErrors,
             );
           } else {
@@ -556,7 +626,9 @@ export default class TemplateController {
             );
 
           if (!fullNameValidationResult.valid) {
-            errors.push(...fullNameValidationResult.errors.fieldFormatErrors);
+            errors.fieldFormatErrors.push(
+              ...fullNameValidationResult.errors.fieldFormatErrors,
+            );
           } else {
             value.exporterContactDetails.fullName =
               fullNameValidationResult.value;
@@ -573,7 +645,7 @@ export default class TemplateController {
             );
 
           if (!emailAddressValidationResult.valid) {
-            errors.push(
+            errors.fieldFormatErrors.push(
               ...emailAddressValidationResult.errors.fieldFormatErrors,
             );
           } else {
@@ -592,7 +664,7 @@ export default class TemplateController {
             );
 
           if (!phoneNumberValidationResult.valid) {
-            errors.push(
+            errors.fieldFormatErrors.push(
               ...phoneNumberValidationResult.errors.fieldFormatErrors,
             );
           } else {
@@ -611,16 +683,184 @@ export default class TemplateController {
             );
 
           if (!faxNumberValidationResult.valid) {
-            errors.push(...faxNumberValidationResult.errors.fieldFormatErrors);
+            errors.fieldFormatErrors.push(
+              ...faxNumberValidationResult.errors.fieldFormatErrors,
+            );
           } else {
             value.exporterContactDetails.faxNumber =
               faxNumberValidationResult.value;
           }
         }
+      }
 
-        if (errors.length > 0) {
-          return fromBoom(Boom.badRequest('Validation failed', errors));
+      if (value.status === 'Complete') {
+        const addressLine1ValidationResult =
+          glwe.validationRules.validateAddressLine1(
+            value.exporterAddress.addressLine1,
+            section,
+            locale,
+            context,
+          );
+
+        if (!addressLine1ValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...addressLine1ValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.exporterAddress.addressLine1 =
+            addressLine1ValidationResult.value;
         }
+
+        const addressLine2ValidationResult =
+          glwe.validationRules.validateAddressLine2(
+            value.exporterAddress.addressLine2,
+            section,
+            locale,
+            context,
+          );
+
+        if (!addressLine2ValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...addressLine2ValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.exporterAddress.addressLine2 =
+            addressLine2ValidationResult.value;
+        }
+
+        const townOrCityValidationResult =
+          glwe.validationRules.validateTownOrCity(
+            value.exporterAddress.townCity,
+            section,
+            locale,
+            context,
+          );
+
+        if (!townOrCityValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...townOrCityValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.exporterAddress.townCity = townOrCityValidationResult.value;
+        }
+
+        const postcodeValidationResult = glwe.validationRules.validatePostcode(
+          value.exporterAddress.postcode,
+          section,
+          locale,
+          context,
+        );
+
+        if (!postcodeValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...postcodeValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.exporterAddress.postcode = postcodeValidationResult.value;
+        }
+
+        const countryValidationResult = glwe.validationRules.validateCountry(
+          value.exporterAddress.country,
+          section,
+          locale,
+          context,
+        );
+
+        if (!countryValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...countryValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.exporterAddress.country = countryValidationResult.value;
+        }
+
+        const organisationNameValidationResult =
+          glwe.validationRules.validateOrganisationName(
+            value.exporterContactDetails.organisationName,
+            section,
+            locale,
+            context,
+          );
+
+        if (!organisationNameValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...organisationNameValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.exporterContactDetails.organisationName =
+            organisationNameValidationResult.value;
+        }
+
+        const fullNameValidationResult = glwe.validationRules.validateFullName(
+          value.exporterContactDetails.fullName,
+          section,
+          locale,
+          context,
+        );
+
+        if (!fullNameValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...fullNameValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.exporterContactDetails.fullName =
+            fullNameValidationResult.value;
+        }
+
+        const emailAddressValidationResult =
+          glwe.validationRules.validateEmailAddress(
+            value.exporterContactDetails.emailAddress,
+            section,
+            locale,
+            context,
+          );
+
+        if (!emailAddressValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...emailAddressValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.exporterContactDetails.emailAddress =
+            emailAddressValidationResult.value;
+        }
+
+        const phoneNumberValidationResult =
+          glwe.validationRules.validatePhoneNumber(
+            value.exporterContactDetails.phoneNumber,
+            section,
+            locale,
+            context,
+          );
+
+        if (!phoneNumberValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...phoneNumberValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.exporterContactDetails.phoneNumber =
+            phoneNumberValidationResult.value;
+        }
+
+        const faxNumberValidationResult =
+          glwe.validationRules.validateFaxNumber(
+            value.exporterContactDetails.faxNumber,
+            section,
+            locale,
+            context,
+          );
+
+        if (!faxNumberValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...faxNumberValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.exporterContactDetails.faxNumber =
+            faxNumberValidationResult.value;
+        }
+      }
+
+      if (errors.fieldFormatErrors.length > 0) {
+        return fromBoom(Boom.badRequest('Validation failed', errors));
       }
 
       const template = (await this.repository.getRecord(
@@ -673,6 +913,260 @@ export default class TemplateController {
     draft.SetDraftImporterDetailResponse
   > = async ({ id, accountId, value }) => {
     try {
+      const section = 'ImporterDetail';
+      const errors: glwe.Errors = {
+        fieldFormatErrors: [],
+      };
+      if (value.status === 'Started') {
+        if (value.importerAddressDetails?.organisationName) {
+          const organisationNameValidationResult =
+            glwe.validationRules.validateOrganisationName(
+              value.importerAddressDetails.organisationName,
+              section,
+              locale,
+              context,
+            );
+
+          if (!organisationNameValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...organisationNameValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.importerAddressDetails.organisationName =
+              organisationNameValidationResult.value;
+          }
+        }
+
+        if (value.importerAddressDetails?.address) {
+          const addressValidationResult = glwe.validationRules.validateAddress(
+            value.importerAddressDetails.address,
+            section,
+            locale,
+            context,
+          );
+
+          if (!addressValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...addressValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.importerAddressDetails.address =
+              addressValidationResult.value;
+          }
+        }
+
+        if (value.importerAddressDetails?.country) {
+          const countryValidationResult = glwe.validationRules.validateCountry(
+            value.importerAddressDetails.country,
+            section,
+            locale,
+            context,
+            this.countryList,
+          );
+
+          if (!countryValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...countryValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.importerAddressDetails.country =
+              countryValidationResult.value;
+          }
+        }
+
+        if (value.importerContactDetails?.fullName) {
+          const contactFullNameValidationResult =
+            glwe.validationRules.validateFullName(
+              value.importerContactDetails.fullName,
+              section,
+              locale,
+              context,
+            );
+
+          if (!contactFullNameValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...contactFullNameValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.importerContactDetails.fullName =
+              contactFullNameValidationResult.value;
+          }
+        }
+
+        if (value.importerContactDetails?.phoneNumber) {
+          const phoneValidationResult =
+            glwe.validationRules.validatePhoneNumber(
+              value.importerContactDetails.phoneNumber,
+              section,
+              locale,
+              context,
+            );
+
+          if (!phoneValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...phoneValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.importerContactDetails.phoneNumber =
+              phoneValidationResult.value;
+          }
+        }
+
+        if (value.importerContactDetails?.faxNumber) {
+          const faxValidationResult = glwe.validationRules.validateFaxNumber(
+            value.importerContactDetails.faxNumber,
+            section,
+            locale,
+            context,
+          );
+
+          if (!faxValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...faxValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.importerContactDetails.faxNumber = faxValidationResult.value;
+          }
+        }
+
+        if (value.importerContactDetails?.emailAddress) {
+          const emailValidationResult =
+            glwe.validationRules.validateEmailAddress(
+              value.importerContactDetails.emailAddress,
+              section,
+              locale,
+              context,
+            );
+
+          if (!emailValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...emailValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.importerContactDetails.emailAddress =
+              emailValidationResult.value;
+          }
+        }
+      }
+
+      if (value.status === 'Complete') {
+        const organisationNameValidationResult =
+          glwe.validationRules.validateOrganisationName(
+            value.importerAddressDetails.organisationName,
+            section,
+            locale,
+            context,
+          );
+
+        if (!organisationNameValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...organisationNameValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.importerAddressDetails.organisationName =
+            organisationNameValidationResult.value;
+        }
+
+        const addressValidationResult = glwe.validationRules.validateAddress(
+          value.importerAddressDetails.address,
+          section,
+          locale,
+          context,
+        );
+
+        if (!addressValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...addressValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.importerAddressDetails.address = addressValidationResult.value;
+        }
+
+        const countryValidationResult = glwe.validationRules.validateCountry(
+          value.importerAddressDetails.country,
+          section,
+          locale,
+          context,
+          this.countryList,
+        );
+
+        if (!countryValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...countryValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.importerAddressDetails.country = countryValidationResult.value;
+        }
+
+        const contactFullNameValidationResult =
+          glwe.validationRules.validateFullName(
+            value.importerContactDetails.fullName,
+            section,
+            locale,
+            context,
+          );
+
+        if (!contactFullNameValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...contactFullNameValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.importerContactDetails.fullName =
+            contactFullNameValidationResult.value;
+        }
+
+        const phoneValidationResult = glwe.validationRules.validatePhoneNumber(
+          value.importerContactDetails.phoneNumber,
+          section,
+          locale,
+          context,
+        );
+
+        if (!phoneValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...phoneValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.importerContactDetails.phoneNumber =
+            phoneValidationResult.value;
+        }
+
+        const faxValidationResult = glwe.validationRules.validateFaxNumber(
+          value.importerContactDetails.faxNumber,
+          section,
+          locale,
+          context,
+        );
+
+        if (!faxValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...faxValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.importerContactDetails.faxNumber = faxValidationResult.value;
+        }
+
+        const emailValidationResult = glwe.validationRules.validateEmailAddress(
+          value.importerContactDetails.emailAddress,
+          section,
+          locale,
+          context,
+        );
+
+        if (!emailValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...emailValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.importerContactDetails.emailAddress =
+            emailValidationResult.value;
+        }
+      }
+
+      if (errors.fieldFormatErrors.length > 0) {
+        return fromBoom(Boom.badRequest('Validation failed', errors));
+      }
+
       const template = (await this.repository.getRecord(
         templateContainerName,
         id,
@@ -872,15 +1366,15 @@ export default class TemplateController {
     draft.SetDraftCarriersResponse
   > = async ({ id, accountId, carrierId, value }) => {
     try {
-      if (value.status !== 'NotStarted') {
-        const errors = {
-          fieldFormatErrors: [] as FieldFormatError[],
-        };
+      const section = 'Carriers';
+      const errors: glwe.Errors = {
+        fieldFormatErrors: [],
+      };
+      if (value.status === 'Started') {
         let index = 0;
         value.values.forEach((v) => {
-          const section = 'Carriers';
           index += 1;
-          if (v.addressDetails) {
+          if (v.addressDetails?.organisationName) {
             const organisationNameValidationResult =
               glwe.validationRules.validateOrganisationName(
                 v.addressDetails.organisationName,
@@ -898,7 +1392,9 @@ export default class TemplateController {
               v.addressDetails.organisationName =
                 organisationNameValidationResult.value;
             }
+          }
 
+          if (v.addressDetails?.address) {
             const addressValidationResult =
               glwe.validationRules.validateAddress(
                 v.addressDetails.address,
@@ -915,7 +1411,9 @@ export default class TemplateController {
             } else {
               v.addressDetails.address = addressValidationResult.value;
             }
+          }
 
+          if (v.addressDetails?.country) {
             const countryValidationResult =
               glwe.validationRules.validateCountry(
                 v.addressDetails.country,
@@ -935,7 +1433,7 @@ export default class TemplateController {
             }
           }
 
-          if (v.contactDetails) {
+          if (v.contactDetails?.fullName) {
             const contactFullNameValidationResult =
               glwe.validationRules.validateFullName(
                 v.contactDetails.fullName,
@@ -952,7 +1450,9 @@ export default class TemplateController {
             } else {
               v.contactDetails.fullName = contactFullNameValidationResult.value;
             }
+          }
 
+          if (v.contactDetails?.phoneNumber) {
             const phoneValidationResult =
               glwe.validationRules.validatePhoneNumber(
                 v.contactDetails.phoneNumber,
@@ -969,7 +1469,9 @@ export default class TemplateController {
             } else {
               v.contactDetails.phoneNumber = phoneValidationResult.value;
             }
+          }
 
+          if (v.contactDetails?.faxNumber) {
             const faxValidationResult = glwe.validationRules.validateFaxNumber(
               v.contactDetails.faxNumber,
               section,
@@ -985,7 +1487,9 @@ export default class TemplateController {
             } else {
               v.contactDetails.faxNumber = faxValidationResult.value;
             }
+          }
 
+          if (v.contactDetails?.emailAddress) {
             const emailValidationResult =
               glwe.validationRules.validateEmailAddress(
                 v.contactDetails.emailAddress,
@@ -1024,10 +1528,154 @@ export default class TemplateController {
             }
           }
         });
+      }
 
-        if (errors.fieldFormatErrors.length > 0) {
-          return fromBoom(Boom.badRequest('Validation failed', errors));
-        }
+      if (value.status === 'Complete') {
+        let index = 0;
+        value.values.forEach((v) => {
+          index += 1;
+          const organisationNameValidationResult =
+            glwe.validationRules.validateOrganisationName(
+              v.addressDetails.organisationName,
+              section,
+              locale,
+              context,
+              index,
+            );
+
+          if (!organisationNameValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...organisationNameValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            v.addressDetails.organisationName =
+              organisationNameValidationResult.value;
+          }
+
+          const addressValidationResult = glwe.validationRules.validateAddress(
+            v.addressDetails.address,
+            section,
+            locale,
+            context,
+            index,
+          );
+
+          if (!addressValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...addressValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            v.addressDetails.address = addressValidationResult.value;
+          }
+
+          const countryValidationResult = glwe.validationRules.validateCountry(
+            v.addressDetails.country,
+            section,
+            locale,
+            context,
+            this.countryIncludingUkList,
+            index,
+          );
+
+          if (!countryValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...countryValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            v.addressDetails.country = countryValidationResult.value;
+          }
+
+          const contactFullNameValidationResult =
+            glwe.validationRules.validateFullName(
+              v.contactDetails.fullName,
+              section,
+              locale,
+              context,
+              index,
+            );
+
+          if (!contactFullNameValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...contactFullNameValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            v.contactDetails.fullName = contactFullNameValidationResult.value;
+          }
+
+          const phoneValidationResult =
+            glwe.validationRules.validatePhoneNumber(
+              v.contactDetails.phoneNumber,
+              section,
+              locale,
+              context,
+              index,
+            );
+
+          if (!phoneValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...phoneValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            v.contactDetails.phoneNumber = phoneValidationResult.value;
+          }
+
+          const faxValidationResult = glwe.validationRules.validateFaxNumber(
+            v.contactDetails.faxNumber,
+            section,
+            locale,
+            context,
+            index,
+          );
+
+          if (!faxValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...faxValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            v.contactDetails.faxNumber = faxValidationResult.value;
+          }
+
+          const emailValidationResult =
+            glwe.validationRules.validateEmailAddress(
+              v.contactDetails.emailAddress,
+              section,
+              locale,
+              context,
+              index,
+            );
+
+          if (!emailValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...emailValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            v.contactDetails.emailAddress = emailValidationResult.value;
+          }
+
+          if (value.transport && v.transportDetails) {
+            const meansOfTransportDetailsValidationResult =
+              glwe.validationRules.validateCarrierMeansOfTransportDetails(
+                locale,
+                context,
+                v.transportDetails.description,
+                index,
+              );
+
+            if (!meansOfTransportDetailsValidationResult.valid) {
+              errors.fieldFormatErrors.push(
+                ...meansOfTransportDetailsValidationResult.errors
+                  .fieldFormatErrors,
+              );
+            } else {
+              v.transportDetails.description =
+                meansOfTransportDetailsValidationResult.value;
+            }
+          }
+        });
+      }
+
+      if (errors.fieldFormatErrors.length > 0) {
+        return fromBoom(Boom.badRequest('Validation failed', errors));
       }
 
       const template = (await this.repository.getRecord(
@@ -1190,9 +1838,11 @@ export default class TemplateController {
     draft.SetDraftCollectionDetailResponse
   > = async ({ id, accountId, value }) => {
     try {
-      if (value.status !== 'NotStarted') {
-        const section = 'CollectionDetail';
-        const errors: FieldFormatError[] = [];
+      const section = 'CollectionDetail';
+      const errors: glwe.Errors = {
+        fieldFormatErrors: [],
+      };
+      if (value.status === 'Started') {
         if (value.address?.addressLine1) {
           const addressLine1ValidationResult =
             glwe.validationRules.validateAddressLine1(
@@ -1203,7 +1853,7 @@ export default class TemplateController {
             );
 
           if (!addressLine1ValidationResult.valid) {
-            errors.push(
+            errors.fieldFormatErrors.push(
               ...addressLine1ValidationResult.errors.fieldFormatErrors,
             );
           } else {
@@ -1221,7 +1871,7 @@ export default class TemplateController {
             );
 
           if (!addressLine2ValidationResult.valid) {
-            errors.push(
+            errors.fieldFormatErrors.push(
               ...addressLine2ValidationResult.errors.fieldFormatErrors,
             );
           } else {
@@ -1239,7 +1889,9 @@ export default class TemplateController {
             );
 
           if (!townOrCityValidationResult.valid) {
-            errors.push(...townOrCityValidationResult.errors.fieldFormatErrors);
+            errors.fieldFormatErrors.push(
+              ...townOrCityValidationResult.errors.fieldFormatErrors,
+            );
           } else {
             value.address.townCity = townOrCityValidationResult.value;
           }
@@ -1255,7 +1907,9 @@ export default class TemplateController {
             );
 
           if (!postcodeValidationResult.valid) {
-            errors.push(...postcodeValidationResult.errors.fieldFormatErrors);
+            errors.fieldFormatErrors.push(
+              ...postcodeValidationResult.errors.fieldFormatErrors,
+            );
           } else {
             value.address.postcode = postcodeValidationResult.value;
           }
@@ -1270,7 +1924,9 @@ export default class TemplateController {
           );
 
           if (!countryValidationResult.valid) {
-            errors.push(...countryValidationResult.errors.fieldFormatErrors);
+            errors.fieldFormatErrors.push(
+              ...countryValidationResult.errors.fieldFormatErrors,
+            );
           } else {
             value.address.country = countryValidationResult.value;
           }
@@ -1286,7 +1942,7 @@ export default class TemplateController {
             );
 
           if (!organisationNameValidationResult.valid) {
-            errors.push(
+            errors.fieldFormatErrors.push(
               ...organisationNameValidationResult.errors.fieldFormatErrors,
             );
           } else {
@@ -1305,7 +1961,9 @@ export default class TemplateController {
             );
 
           if (!fullNameValidationResult.valid) {
-            errors.push(...fullNameValidationResult.errors.fieldFormatErrors);
+            errors.fieldFormatErrors.push(
+              ...fullNameValidationResult.errors.fieldFormatErrors,
+            );
           } else {
             value.contactDetails.fullName = fullNameValidationResult.value;
           }
@@ -1321,7 +1979,7 @@ export default class TemplateController {
             );
 
           if (!emailAddressValidationResult.valid) {
-            errors.push(
+            errors.fieldFormatErrors.push(
               ...emailAddressValidationResult.errors.fieldFormatErrors,
             );
           } else {
@@ -1340,7 +1998,7 @@ export default class TemplateController {
             );
 
           if (!phoneNumberValidationResult.valid) {
-            errors.push(
+            errors.fieldFormatErrors.push(
               ...phoneNumberValidationResult.errors.fieldFormatErrors,
             );
           } else {
@@ -1359,15 +2017,178 @@ export default class TemplateController {
             );
 
           if (!faxNumberValidationResult.valid) {
-            errors.push(...faxNumberValidationResult.errors.fieldFormatErrors);
+            errors.fieldFormatErrors.push(
+              ...faxNumberValidationResult.errors.fieldFormatErrors,
+            );
           } else {
             value.contactDetails.faxNumber = faxNumberValidationResult.value;
           }
         }
+      }
 
-        if (errors.length > 0) {
-          return fromBoom(Boom.badRequest('Validation failed', errors));
+      if (value.status === 'Complete') {
+        const addressLine1ValidationResult =
+          glwe.validationRules.validateAddressLine1(
+            value.address.addressLine1,
+            section,
+            locale,
+            context,
+          );
+
+        if (!addressLine1ValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...addressLine1ValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.address.addressLine1 = addressLine1ValidationResult.value;
         }
+
+        const addressLine2ValidationResult =
+          glwe.validationRules.validateAddressLine2(
+            value.address.addressLine2,
+            section,
+            locale,
+            context,
+          );
+
+        if (!addressLine2ValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...addressLine2ValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.address.addressLine2 = addressLine2ValidationResult.value;
+        }
+
+        const townOrCityValidationResult =
+          glwe.validationRules.validateTownOrCity(
+            value.address.townCity,
+            section,
+            locale,
+            context,
+          );
+
+        if (!townOrCityValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...townOrCityValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.address.townCity = townOrCityValidationResult.value;
+        }
+
+        const postcodeValidationResult = glwe.validationRules.validatePostcode(
+          value.address.postcode,
+          section,
+          locale,
+          context,
+        );
+
+        if (!postcodeValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...postcodeValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.address.postcode = postcodeValidationResult.value;
+        }
+
+        const countryValidationResult = glwe.validationRules.validateCountry(
+          value.address.country,
+          section,
+          locale,
+          context,
+        );
+
+        if (!countryValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...countryValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.address.country = countryValidationResult.value;
+        }
+
+        const organisationNameValidationResult =
+          glwe.validationRules.validateOrganisationName(
+            value.contactDetails.organisationName,
+            section,
+            locale,
+            context,
+          );
+
+        if (!organisationNameValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...organisationNameValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.contactDetails.organisationName =
+            organisationNameValidationResult.value;
+        }
+
+        const fullNameValidationResult = glwe.validationRules.validateFullName(
+          value.contactDetails.fullName,
+          section,
+          locale,
+          context,
+        );
+
+        if (!fullNameValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...fullNameValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.contactDetails.fullName = fullNameValidationResult.value;
+        }
+
+        const emailAddressValidationResult =
+          glwe.validationRules.validateEmailAddress(
+            value.contactDetails.emailAddress,
+            section,
+            locale,
+            context,
+          );
+
+        if (!emailAddressValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...emailAddressValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.contactDetails.emailAddress =
+            emailAddressValidationResult.value;
+        }
+
+        const phoneNumberValidationResult =
+          glwe.validationRules.validatePhoneNumber(
+            value.contactDetails.phoneNumber,
+            section,
+            locale,
+            context,
+          );
+
+        if (!phoneNumberValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...phoneNumberValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.contactDetails.phoneNumber = phoneNumberValidationResult.value;
+        }
+
+        const faxNumberValidationResult =
+          glwe.validationRules.validateFaxNumber(
+            value.contactDetails.faxNumber,
+            section,
+            locale,
+            context,
+          );
+
+        if (!faxNumberValidationResult.valid) {
+          errors.fieldFormatErrors.push(
+            ...faxNumberValidationResult.errors.fieldFormatErrors,
+          );
+        } else {
+          value.contactDetails.faxNumber = faxNumberValidationResult.value;
+        }
+      }
+
+      if (errors.fieldFormatErrors.length > 0) {
+        return fromBoom(Boom.badRequest('Validation failed', errors));
       }
 
       const template = (await this.repository.getRecord(
@@ -1695,15 +2516,15 @@ export default class TemplateController {
     draft.SetDraftRecoveryFacilityDetailsResponse
   > = async ({ id, accountId, rfdId, value }) => {
     try {
-      if (value.status === 'Started' || value.status === 'Complete') {
-        const errors = {
-          fieldFormatErrors: [] as FieldFormatError[],
-        };
+      const section = 'RecoveryFacilityDetail';
+      const errors: glwe.Errors = {
+        fieldFormatErrors: [],
+      };
+      if (value.status === 'Started') {
         let index = 0;
         value.values.forEach((v) => {
-          const section = 'RecoveryFacilityDetail';
           index += 1;
-          if (v.addressDetails) {
+          if (v.addressDetails?.name) {
             const organisationNameValidationResult =
               glwe.validationRules.validateOrganisationName(
                 v.addressDetails.name,
@@ -1721,7 +2542,9 @@ export default class TemplateController {
             } else {
               v.addressDetails.name = organisationNameValidationResult.value;
             }
+          }
 
+          if (v.addressDetails?.address) {
             const addressValidationResult =
               glwe.validationRules.validateAddress(
                 v.addressDetails.address,
@@ -1739,14 +2562,16 @@ export default class TemplateController {
             } else {
               v.addressDetails.address = addressValidationResult.value;
             }
+          }
 
+          if (v.addressDetails?.country) {
             const countryValidationResult =
               glwe.validationRules.validateCountry(
                 v.addressDetails.country,
                 section,
                 locale,
                 context,
-                this.countryIncludingUkList,
+                this.countryList,
                 index,
                 v.recoveryFacilityType?.type,
               );
@@ -1760,7 +2585,7 @@ export default class TemplateController {
             }
           }
 
-          if (v.contactDetails) {
+          if (v.contactDetails?.fullName) {
             const contactFullNameValidationResult =
               glwe.validationRules.validateFullName(
                 v.contactDetails.fullName,
@@ -1778,7 +2603,9 @@ export default class TemplateController {
             } else {
               v.contactDetails.fullName = contactFullNameValidationResult.value;
             }
+          }
 
+          if (v.contactDetails?.phoneNumber) {
             const phoneValidationResult =
               glwe.validationRules.validatePhoneNumber(
                 v.contactDetails.phoneNumber,
@@ -1796,7 +2623,9 @@ export default class TemplateController {
             } else {
               v.contactDetails.phoneNumber = phoneValidationResult.value;
             }
+          }
 
+          if (v.contactDetails?.faxNumber) {
             const faxValidationResult = glwe.validationRules.validateFaxNumber(
               v.contactDetails.faxNumber,
               section,
@@ -1813,7 +2642,9 @@ export default class TemplateController {
             } else {
               v.contactDetails.faxNumber = faxValidationResult.value;
             }
+          }
 
+          if (v.contactDetails?.emailAddress) {
             const emailValidationResult =
               glwe.validationRules.validateEmailAddress(
                 v.contactDetails.emailAddress,
@@ -1836,9 +2667,9 @@ export default class TemplateController {
           if (
             v.recoveryFacilityType &&
             ((v.recoveryFacilityType.type === 'Laboratory' &&
-              v.recoveryFacilityType.disposalCode !== undefined) ||
+              v.recoveryFacilityType.disposalCode) ||
               (v.recoveryFacilityType.type !== 'Laboratory' &&
-                v.recoveryFacilityType.recoveryCode !== undefined))
+                v.recoveryFacilityType.recoveryCode))
           ) {
             const codeValidationResult =
               glwe.validationRules.validateDisposalOrRecoveryCode(
@@ -1871,10 +2702,176 @@ export default class TemplateController {
             }
           }
         });
+      }
 
-        if (errors.fieldFormatErrors.length > 0) {
-          return fromBoom(Boom.badRequest('Validation failed', errors));
-        }
+      if (value.status === 'Complete') {
+        let index = 0;
+        value.values.forEach((v) => {
+          index += 1;
+          const organisationNameValidationResult =
+            glwe.validationRules.validateOrganisationName(
+              v.addressDetails.name,
+              section,
+              locale,
+              context,
+              index,
+              v.recoveryFacilityType.type,
+            );
+
+          if (!organisationNameValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...organisationNameValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            v.addressDetails.name = organisationNameValidationResult.value;
+          }
+
+          const addressValidationResult = glwe.validationRules.validateAddress(
+            v.addressDetails.address,
+            section,
+            locale,
+            context,
+            index,
+            v.recoveryFacilityType.type,
+          );
+
+          if (!addressValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...addressValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            v.addressDetails.address = addressValidationResult.value;
+          }
+
+          const countryValidationResult = glwe.validationRules.validateCountry(
+            v.addressDetails.country,
+            section,
+            locale,
+            context,
+            this.countryList,
+            index,
+            v.recoveryFacilityType.type,
+          );
+
+          if (!countryValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...countryValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            v.addressDetails.country = countryValidationResult.value;
+          }
+
+          const contactFullNameValidationResult =
+            glwe.validationRules.validateFullName(
+              v.contactDetails.fullName,
+              section,
+              locale,
+              context,
+              index,
+              v.recoveryFacilityType.type,
+            );
+
+          if (!contactFullNameValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...contactFullNameValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            v.contactDetails.fullName = contactFullNameValidationResult.value;
+          }
+
+          const phoneValidationResult =
+            glwe.validationRules.validatePhoneNumber(
+              v.contactDetails.phoneNumber,
+              section,
+              locale,
+              context,
+              index,
+              v.recoveryFacilityType.type,
+            );
+
+          if (!phoneValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...phoneValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            v.contactDetails.phoneNumber = phoneValidationResult.value;
+          }
+
+          const faxValidationResult = glwe.validationRules.validateFaxNumber(
+            v.contactDetails.faxNumber,
+            section,
+            locale,
+            context,
+            index,
+            v.recoveryFacilityType.type,
+          );
+
+          if (!faxValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...faxValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            v.contactDetails.faxNumber = faxValidationResult.value;
+          }
+
+          const emailValidationResult =
+            glwe.validationRules.validateEmailAddress(
+              v.contactDetails.emailAddress,
+              section,
+              locale,
+              context,
+              index,
+              v.recoveryFacilityType.type,
+            );
+
+          if (!emailValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...emailValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            v.contactDetails.emailAddress = emailValidationResult.value;
+          }
+
+          if (
+            (v.recoveryFacilityType.type === 'Laboratory' &&
+              v.recoveryFacilityType.disposalCode !== undefined) ||
+            (v.recoveryFacilityType.type !== 'Laboratory' &&
+              v.recoveryFacilityType.recoveryCode !== undefined)
+          ) {
+            const codeValidationResult =
+              glwe.validationRules.validateDisposalOrRecoveryCode(
+                v.recoveryFacilityType.type === 'Laboratory'
+                  ? v.recoveryFacilityType.disposalCode
+                  : v.recoveryFacilityType.recoveryCode,
+                v.recoveryFacilityType.type === 'Laboratory'
+                  ? {
+                      type: v.recoveryFacilityType.type,
+                      codeList: this.disposalCodeList,
+                    }
+                  : {
+                      type: v.recoveryFacilityType.type,
+                      codeList: this.recoveryCodeList,
+                    },
+                locale,
+                context,
+              );
+
+            if (!codeValidationResult.valid) {
+              errors.fieldFormatErrors.push(
+                ...codeValidationResult.errors.fieldFormatErrors,
+              );
+            } else {
+              v.recoveryFacilityType.type === 'Laboratory'
+                ? (v.recoveryFacilityType.disposalCode =
+                    codeValidationResult.value)
+                : (v.recoveryFacilityType.recoveryCode =
+                    codeValidationResult.value);
+            }
+          }
+        });
+      }
+      if (errors.fieldFormatErrors.length > 0) {
+        return fromBoom(Boom.badRequest('Validation failed', errors));
       }
 
       const template = (await this.repository.getRecord(

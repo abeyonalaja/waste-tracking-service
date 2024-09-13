@@ -11,7 +11,6 @@ import {
   DraftRecoveryFacilityDetails,
   DraftRecoveryFacilityPartial,
   DraftSubmission,
-  FieldFormatError,
   RecordState,
   RecoveryFacilityDetail,
   Submission,
@@ -285,8 +284,8 @@ export default class DraftController {
   > = async ({ id, accountId, value }) => {
     try {
       if (value.status !== 'NotStarted') {
-        const errors = {
-          fieldFormatErrors: [] as FieldFormatError[],
+        const errors: glweValidation.Errors = {
+          fieldFormatErrors: [],
         };
         if (value.wasteCode) {
           if (
@@ -671,7 +670,9 @@ export default class DraftController {
     try {
       if (value.status !== 'NotStarted') {
         const section = 'ExporterDetail';
-        const errors: FieldFormatError[] = [];
+        const errors: glweValidation.Errors = {
+          fieldFormatErrors: [],
+        };
         if (value.exporterAddress) {
           const addressLine1ValidationResult =
             glweValidation.validationRules.validateAddressLine1(
@@ -682,7 +683,7 @@ export default class DraftController {
             );
 
           if (!addressLine1ValidationResult.valid) {
-            errors.push(
+            errors.fieldFormatErrors.push(
               ...addressLine1ValidationResult.errors.fieldFormatErrors,
             );
           } else {
@@ -699,7 +700,7 @@ export default class DraftController {
             );
 
           if (!addressLine2ValidationResult.valid) {
-            errors.push(
+            errors.fieldFormatErrors.push(
               ...addressLine2ValidationResult.errors.fieldFormatErrors,
             );
           } else {
@@ -716,7 +717,9 @@ export default class DraftController {
             );
 
           if (!townOrCityValidationResult.valid) {
-            errors.push(...townOrCityValidationResult.errors.fieldFormatErrors);
+            errors.fieldFormatErrors.push(
+              ...townOrCityValidationResult.errors.fieldFormatErrors,
+            );
           } else {
             value.exporterAddress.townCity = townOrCityValidationResult.value;
           }
@@ -730,7 +733,9 @@ export default class DraftController {
             );
 
           if (!postcodeValidationResult.valid) {
-            errors.push(...postcodeValidationResult.errors.fieldFormatErrors);
+            errors.fieldFormatErrors.push(
+              ...postcodeValidationResult.errors.fieldFormatErrors,
+            );
           } else {
             value.exporterAddress.postcode = postcodeValidationResult.value;
           }
@@ -744,7 +749,9 @@ export default class DraftController {
             );
 
           if (!countryValidationResult.valid) {
-            errors.push(...countryValidationResult.errors.fieldFormatErrors);
+            errors.fieldFormatErrors.push(
+              ...countryValidationResult.errors.fieldFormatErrors,
+            );
           } else {
             value.exporterAddress.country = countryValidationResult.value;
           }
@@ -760,7 +767,7 @@ export default class DraftController {
             );
 
           if (!organisationNameValidationResult.valid) {
-            errors.push(
+            errors.fieldFormatErrors.push(
               ...organisationNameValidationResult.errors.fieldFormatErrors,
             );
           } else {
@@ -777,7 +784,9 @@ export default class DraftController {
             );
 
           if (!fullNameValidationResult.valid) {
-            errors.push(...fullNameValidationResult.errors.fieldFormatErrors);
+            errors.fieldFormatErrors.push(
+              ...fullNameValidationResult.errors.fieldFormatErrors,
+            );
           } else {
             value.exporterContactDetails.fullName =
               fullNameValidationResult.value;
@@ -792,7 +801,7 @@ export default class DraftController {
             );
 
           if (!emailAddressValidationResult.valid) {
-            errors.push(
+            errors.fieldFormatErrors.push(
               ...emailAddressValidationResult.errors.fieldFormatErrors,
             );
           } else {
@@ -809,7 +818,7 @@ export default class DraftController {
             );
 
           if (!phoneNumberValidationResult.valid) {
-            errors.push(
+            errors.fieldFormatErrors.push(
               ...phoneNumberValidationResult.errors.fieldFormatErrors,
             );
           } else {
@@ -826,14 +835,16 @@ export default class DraftController {
             );
 
           if (!faxNumberValidationResult.valid) {
-            errors.push(...faxNumberValidationResult.errors.fieldFormatErrors);
+            errors.fieldFormatErrors.push(
+              ...faxNumberValidationResult.errors.fieldFormatErrors,
+            );
           } else {
             value.exporterContactDetails.faxNumber =
               faxNumberValidationResult.value;
           }
         }
 
-        if (errors.length > 0) {
+        if (errors.fieldFormatErrors.length > 0) {
           return fromBoom(Boom.badRequest('Validation failed', errors));
         }
       }
@@ -892,6 +903,139 @@ export default class DraftController {
     api.SetDraftImporterDetailResponse
   > = async ({ id, accountId, value }) => {
     try {
+      if (value.status !== 'NotStarted') {
+        const section = 'ImporterDetail';
+        const errors: glweValidation.Errors = {
+          fieldFormatErrors: [],
+        };
+        if (value.importerAddressDetails) {
+          const organisationNameValidationResult =
+            glweValidation.validationRules.validateOrganisationName(
+              value.importerAddressDetails.organisationName,
+              section,
+              locale,
+              context,
+            );
+
+          if (!organisationNameValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...organisationNameValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.importerAddressDetails.organisationName =
+              organisationNameValidationResult.value;
+          }
+
+          const addressValidationResult =
+            glweValidation.validationRules.validateAddress(
+              value.importerAddressDetails.address,
+              section,
+              locale,
+              context,
+            );
+
+          if (!addressValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...addressValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.importerAddressDetails.address =
+              addressValidationResult.value;
+          }
+
+          const countryValidationResult =
+            glweValidation.validationRules.validateCountry(
+              value.importerAddressDetails.country,
+              section,
+              locale,
+              context,
+              this.countryList,
+            );
+
+          if (!countryValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...countryValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.importerAddressDetails.country =
+              countryValidationResult.value;
+          }
+        }
+
+        if (value.importerContactDetails) {
+          const contactFullNameValidationResult =
+            glweValidation.validationRules.validateFullName(
+              value.importerContactDetails.fullName,
+              section,
+              locale,
+              context,
+            );
+
+          if (!contactFullNameValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...contactFullNameValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.importerContactDetails.fullName =
+              contactFullNameValidationResult.value;
+          }
+
+          const phoneValidationResult =
+            glweValidation.validationRules.validatePhoneNumber(
+              value.importerContactDetails.phoneNumber,
+              section,
+              locale,
+              context,
+            );
+
+          if (!phoneValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...phoneValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.importerContactDetails.phoneNumber =
+              phoneValidationResult.value;
+          }
+
+          const faxValidationResult =
+            glweValidation.validationRules.validateFaxNumber(
+              value.importerContactDetails.faxNumber,
+              section,
+              locale,
+              context,
+            );
+
+          if (!faxValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...faxValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.importerContactDetails.faxNumber = faxValidationResult.value;
+          }
+
+          const emailValidationResult =
+            glweValidation.validationRules.validateEmailAddress(
+              value.importerContactDetails.emailAddress,
+              section,
+              locale,
+              context,
+            );
+
+          if (!emailValidationResult.valid) {
+            errors.fieldFormatErrors.push(
+              ...emailValidationResult.errors.fieldFormatErrors,
+            );
+          } else {
+            value.importerContactDetails.emailAddress =
+              emailValidationResult.value;
+          }
+        }
+
+        if (errors.fieldFormatErrors.length > 0) {
+          return fromBoom(Boom.badRequest('Validation failed', errors));
+        }
+      }
+
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
@@ -965,13 +1109,18 @@ export default class DraftController {
     api.SetDraftCollectionDateResponse
   > = async ({ id, accountId, value }) => {
     try {
+      let dateData: commonValidation.DateData = {
+        day: '',
+        month: '',
+        year: '',
+      };
       if (value.status !== 'NotStarted') {
         const date =
           value.value.type === 'ActualDate'
             ? value.value.actualDate
             : value.value.estimateDate;
         const collectionDateValidationResult =
-          commonValidation.commonValidationRules.validateCollectionDate(
+          glweValidation.validationRules.validateCollectionDate(
             date.day,
             date.month,
             date.year,
@@ -984,49 +1133,78 @@ export default class DraftController {
               collectionDateValidationResult.errors,
             ),
           );
+        } else {
+          dateData = collectionDateValidationResult.value;
         }
       }
+
       const draft = (await this.repository.getRecord(
         draftContainerName,
         id,
         accountId,
       )) as DraftSubmission;
 
-      let collectionDate = value;
-      if (
-        value.status !== 'NotStarted' &&
-        draft.collectionDate.status !== 'NotStarted'
-      ) {
-        if (value.value.type === 'ActualDate') {
-          collectionDate = {
-            status: value.status,
-            value: {
-              type: value.value.type,
-              actualDate: {
-                day: value.value.actualDate.day?.padStart(2, '0'),
-                month: value.value.actualDate.month?.padStart(2, '0'),
-                year: value.value.actualDate.year,
+      if (value.status !== 'NotStarted') {
+        if (draft.collectionDate.status !== 'NotStarted') {
+          if (value.value.type === 'ActualDate') {
+            value = {
+              status: value.status,
+              value: {
+                type: value.value.type,
+                actualDate: {
+                  day: dateData.day,
+                  month: dateData.month,
+                  year: dateData.year,
+                },
+                estimateDate: draft.collectionDate.value.estimateDate,
               },
-              estimateDate: draft.collectionDate.value.estimateDate,
-            },
-          };
+            };
+          } else {
+            value = {
+              status: value.status,
+              value: {
+                type: value.value.type,
+                actualDate: draft.collectionDate.value.actualDate,
+                estimateDate: {
+                  day: dateData.day,
+                  month: dateData.month,
+                  year: dateData.year,
+                },
+              },
+            };
+          }
         } else {
-          collectionDate = {
-            status: value.status,
-            value: {
-              type: value.value.type,
-              estimateDate: {
-                day: value.value.estimateDate.day?.padStart(2, '0'),
-                month: value.value.estimateDate.month?.padStart(2, '0'),
-                year: value.value.estimateDate.year,
+          if (value.value.type === 'ActualDate') {
+            value = {
+              status: value.status,
+              value: {
+                type: value.value.type,
+                actualDate: {
+                  day: dateData.day,
+                  month: dateData.month,
+                  year: dateData.year,
+                },
+                estimateDate: {},
               },
-              actualDate: draft.collectionDate.value.actualDate,
-            },
-          };
+            };
+          } else {
+            value = {
+              status: value.status,
+              value: {
+                type: value.value.type,
+                actualDate: {},
+                estimateDate: {
+                  day: dateData.day,
+                  month: dateData.month,
+                  year: dateData.year,
+                },
+              },
+            };
+          }
         }
       }
 
-      draft.collectionDate = collectionDate;
+      draft.collectionDate = value;
 
       draft.submissionConfirmation = setSubmissionConfirmationStatus(draft);
       draft.submissionDeclaration = setSubmissionDeclarationStatus(draft);
@@ -1210,8 +1388,8 @@ export default class DraftController {
   > = async ({ id, accountId, carrierId, value }) => {
     try {
       if (value.status !== 'NotStarted') {
-        const errors = {
-          fieldFormatErrors: [] as FieldFormatError[],
+        const errors: glweValidation.Errors = {
+          fieldFormatErrors: [],
         };
         let index = 0;
         value.values.forEach((v) => {
@@ -1536,7 +1714,9 @@ export default class DraftController {
     try {
       if (value.status !== 'NotStarted') {
         const section = 'CollectionDetail';
-        const errors: FieldFormatError[] = [];
+        const errors: glweValidation.Errors = {
+          fieldFormatErrors: [],
+        };
         if (value.address) {
           const addressLine1ValidationResult =
             glweValidation.validationRules.validateAddressLine1(
@@ -1547,7 +1727,7 @@ export default class DraftController {
             );
 
           if (!addressLine1ValidationResult.valid) {
-            errors.push(
+            errors.fieldFormatErrors.push(
               ...addressLine1ValidationResult.errors.fieldFormatErrors,
             );
           } else {
@@ -1563,7 +1743,7 @@ export default class DraftController {
             );
 
           if (!addressLine2ValidationResult.valid) {
-            errors.push(
+            errors.fieldFormatErrors.push(
               ...addressLine2ValidationResult.errors.fieldFormatErrors,
             );
           } else {
@@ -1579,7 +1759,9 @@ export default class DraftController {
             );
 
           if (!townOrCityValidationResult.valid) {
-            errors.push(...townOrCityValidationResult.errors.fieldFormatErrors);
+            errors.fieldFormatErrors.push(
+              ...townOrCityValidationResult.errors.fieldFormatErrors,
+            );
           } else {
             value.address.townCity = townOrCityValidationResult.value;
           }
@@ -1593,7 +1775,9 @@ export default class DraftController {
             );
 
           if (!postcodeValidationResult.valid) {
-            errors.push(...postcodeValidationResult.errors.fieldFormatErrors);
+            errors.fieldFormatErrors.push(
+              ...postcodeValidationResult.errors.fieldFormatErrors,
+            );
           } else {
             value.address.postcode = postcodeValidationResult.value;
           }
@@ -1607,7 +1791,9 @@ export default class DraftController {
             );
 
           if (!countryValidationResult.valid) {
-            errors.push(...countryValidationResult.errors.fieldFormatErrors);
+            errors.fieldFormatErrors.push(
+              ...countryValidationResult.errors.fieldFormatErrors,
+            );
           } else {
             value.address.country = countryValidationResult.value;
           }
@@ -1623,7 +1809,7 @@ export default class DraftController {
             );
 
           if (!organisationNameValidationResult.valid) {
-            errors.push(
+            errors.fieldFormatErrors.push(
               ...organisationNameValidationResult.errors.fieldFormatErrors,
             );
           } else {
@@ -1640,7 +1826,9 @@ export default class DraftController {
             );
 
           if (!fullNameValidationResult.valid) {
-            errors.push(...fullNameValidationResult.errors.fieldFormatErrors);
+            errors.fieldFormatErrors.push(
+              ...fullNameValidationResult.errors.fieldFormatErrors,
+            );
           } else {
             value.contactDetails.fullName = fullNameValidationResult.value;
           }
@@ -1654,7 +1842,7 @@ export default class DraftController {
             );
 
           if (!emailAddressValidationResult.valid) {
-            errors.push(
+            errors.fieldFormatErrors.push(
               ...emailAddressValidationResult.errors.fieldFormatErrors,
             );
           } else {
@@ -1671,7 +1859,7 @@ export default class DraftController {
             );
 
           if (!phoneNumberValidationResult.valid) {
-            errors.push(
+            errors.fieldFormatErrors.push(
               ...phoneNumberValidationResult.errors.fieldFormatErrors,
             );
           } else {
@@ -1688,13 +1876,15 @@ export default class DraftController {
             );
 
           if (!faxNumberValidationResult.valid) {
-            errors.push(...faxNumberValidationResult.errors.fieldFormatErrors);
+            errors.fieldFormatErrors.push(
+              ...faxNumberValidationResult.errors.fieldFormatErrors,
+            );
           } else {
             value.contactDetails.faxNumber = faxNumberValidationResult.value;
           }
         }
 
-        if (errors.length > 0) {
+        if (errors.fieldFormatErrors.length > 0) {
           return fromBoom(Boom.badRequest('Validation failed', errors));
         }
       }
@@ -2049,8 +2239,8 @@ export default class DraftController {
   > = async ({ id, accountId, rfdId, value }) => {
     try {
       if (value.status === 'Started' || value.status === 'Complete') {
-        const errors = {
-          fieldFormatErrors: [] as FieldFormatError[],
+        const errors: glweValidation.Errors = {
+          fieldFormatErrors: [],
         };
         let index = 0;
         value.values.forEach((v) => {

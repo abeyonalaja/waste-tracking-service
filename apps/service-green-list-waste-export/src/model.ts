@@ -1,8 +1,6 @@
 import * as api from '@wts/api/green-list-waste-export';
 import * as bulkApi from '@wts/api/green-list-waste-export-bulk';
 
-export { validation } from '@wts/api/green-list-waste-export';
-
 export type Submission = api.submission.Submission;
 export type SubmissionSummary = api.submission.SubmissionSummary;
 

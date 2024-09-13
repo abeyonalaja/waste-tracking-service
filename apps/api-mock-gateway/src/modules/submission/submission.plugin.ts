@@ -25,7 +25,6 @@ import {
   getSubmissions,
   getSubmission,
   createSubmission,
-  createSubmissionFromTemplate,
   deleteSubmission,
   cancelSubmission,
   getWasteDescription,
@@ -68,6 +67,7 @@ import {
   InternalServerError,
 } from '../../lib/errors';
 import { User } from '../../lib/user';
+import { createSubmissionFromTemplate } from '../template';
 
 export default class SubmissionPlugin {
   constructor(
@@ -181,6 +181,7 @@ export default class SubmissionPlugin {
           .jsonp(new InternalServerError('An internal server error occurred'));
       }
     });
+
     this.server.post(this.prefix, async (req, res) => {
       if (!validateCreateSubmissionRequest(req.body)) {
         return res.status(400).jsonp(new BadRequestError('Bad Request'));
@@ -794,6 +795,7 @@ export default class SubmissionPlugin {
         }
       },
     );
+
     this.server.put(
       `${this.prefix}/:id/collection-detail`,
       async (req, res) => {

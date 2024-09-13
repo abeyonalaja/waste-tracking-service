@@ -1752,7 +1752,7 @@ describe(DraftController, () => {
       expect(response.error.statusCode).toBe(418);
     });
 
-    it('successfully returns waste quantity', async () => {
+    it('successfully returns exporter detail', async () => {
       const id = faker.string.uuid();
       const accountId = faker.string.uuid();
 
@@ -1842,7 +1842,7 @@ describe(DraftController, () => {
       expect(response.error.statusCode).toBe(418);
     });
 
-    it('accepts valid exporter details', async () => {
+    it('accepts valid exporter detail', async () => {
       mockRepository.getRecord.mockResolvedValue(draft);
 
       const response = await subject.setDraftExporterDetail({
@@ -1888,51 +1888,55 @@ describe(DraftController, () => {
 
       expect(response.error.statusCode).toBe(400);
 
-      expect(response.error.data).toEqual([
-        {
-          field: 'ExporterDetail',
-          message:
-            glwe.errorMessages.emptyAddressLine1('ExporterDetail')[locale][
-              context
-            ],
-        },
-        {
-          field: 'ExporterDetail',
-          message:
-            glwe.errorMessages.emptyTownOrCity('ExporterDetail')[locale][
-              context
-            ],
-        },
-        {
-          field: 'ExporterDetail',
-          message:
-            glwe.errorMessages.emptyCountry('ExporterDetail')[locale][context],
-        },
-        {
-          field: 'ExporterDetail',
-          message:
-            glwe.errorMessages.emptyOrganisationName('ExporterDetail')[locale][
-              context
-            ],
-        },
-        {
-          field: 'ExporterDetail',
-          message:
-            glwe.errorMessages.emptyContactFullName('ExporterDetail')[locale][
-              context
-            ],
-        },
-        {
-          field: 'ExporterDetail',
-          message:
-            glwe.errorMessages.emptyEmail('ExporterDetail')[locale][context],
-        },
-        {
-          field: 'ExporterDetail',
-          message:
-            glwe.errorMessages.emptyPhone('ExporterDetail')[locale][context],
-        },
-      ]);
+      expect(response.error.data).toEqual({
+        fieldFormatErrors: [
+          {
+            field: 'ExporterDetail',
+            message:
+              glwe.errorMessages.emptyAddressLine1('ExporterDetail')[locale][
+                context
+              ],
+          },
+          {
+            field: 'ExporterDetail',
+            message:
+              glwe.errorMessages.emptyTownOrCity('ExporterDetail')[locale][
+                context
+              ],
+          },
+          {
+            field: 'ExporterDetail',
+            message:
+              glwe.errorMessages.emptyCountry('ExporterDetail')[locale][
+                context
+              ],
+          },
+          {
+            field: 'ExporterDetail',
+            message:
+              glwe.errorMessages.emptyOrganisationName('ExporterDetail')[
+                locale
+              ][context],
+          },
+          {
+            field: 'ExporterDetail',
+            message:
+              glwe.errorMessages.emptyContactFullName('ExporterDetail')[locale][
+                context
+              ],
+          },
+          {
+            field: 'ExporterDetail',
+            message:
+              glwe.errorMessages.emptyEmail('ExporterDetail')[locale][context],
+          },
+          {
+            field: 'ExporterDetail',
+            message:
+              glwe.errorMessages.emptyPhone('ExporterDetail')[locale][context],
+          },
+        ],
+      });
     });
   });
 
@@ -1987,7 +1991,7 @@ describe(DraftController, () => {
       expect(response.error.statusCode).toBe(418);
     });
 
-    it('successfully returns waste quantity', async () => {
+    it('successfully returns importer detail', async () => {
       const id = faker.string.uuid();
       const accountId = faker.string.uuid();
 
@@ -2042,7 +2046,7 @@ describe(DraftController, () => {
       importerAddressDetails: {
         organisationName: 'Importer Name',
         address: 'Importer Address',
-        country: 'Albania [AB]',
+        country: 'France [FR]',
       },
       importerContactDetails: {
         fullName: 'Importer Name',
@@ -2087,6 +2091,78 @@ describe(DraftController, () => {
 
       expect(response.success).toBe(true);
       expect(draft.importerDetail).toEqual(importerDetails);
+    });
+
+    it('forwards validation errors', async () => {
+      const invalidImporterDetail: DraftImporterDetail = {
+        status: 'Complete',
+        importerAddressDetails: {
+          organisationName: '',
+          address: '',
+          country: '',
+        },
+        importerContactDetails: {
+          fullName: '',
+          emailAddress: '',
+          phoneNumber: '',
+          faxNumber: '',
+        },
+      };
+      const response = await subject.setDraftImporterDetail({
+        id,
+        accountId,
+        value: invalidImporterDetail,
+      });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(response.error.statusCode).toBe(400);
+
+      expect(response.error.data).toEqual({
+        fieldFormatErrors: [
+          {
+            field: 'ImporterDetail',
+            message:
+              glwe.errorMessages.emptyOrganisationName('ImporterDetail')[
+                locale
+              ][context],
+          },
+          {
+            field: 'ImporterDetail',
+            message:
+              glwe.errorMessages.emptyAddress('ImporterDetail')[locale][
+                context
+              ],
+          },
+          {
+            field: 'ImporterDetail',
+            message:
+              glwe.errorMessages.emptyCountry('ImporterDetail')[locale][
+                context
+              ],
+          },
+          {
+            field: 'ImporterDetail',
+            message:
+              glwe.errorMessages.emptyContactFullName('ImporterDetail')[locale][
+                context
+              ],
+          },
+          {
+            field: 'ImporterDetail',
+            message:
+              glwe.errorMessages.emptyPhone('ImporterDetail')[locale][context],
+          },
+          {
+            field: 'ImporterDetail',
+            message:
+              glwe.errorMessages.emptyEmail('ImporterDetail')[locale][context],
+          },
+        ],
+      });
     });
   });
 
@@ -3018,53 +3094,59 @@ describe(DraftController, () => {
 
       expect(response.error.statusCode).toBe(400);
 
-      expect(response.error.data).toEqual([
-        {
-          field: 'CollectionDetail',
-          message:
-            glwe.errorMessages.emptyAddressLine1('CollectionDetail')[locale][
-              context
-            ],
-        },
-        {
-          field: 'CollectionDetail',
-          message:
-            glwe.errorMessages.emptyTownOrCity('CollectionDetail')[locale][
-              context
-            ],
-        },
-        {
-          field: 'CollectionDetail',
-          message:
-            glwe.errorMessages.emptyCountry('CollectionDetail')[locale][
-              context
-            ],
-        },
-        {
-          field: 'CollectionDetail',
-          message:
-            glwe.errorMessages.emptyOrganisationName('CollectionDetail')[
-              locale
-            ][context],
-        },
-        {
-          field: 'CollectionDetail',
-          message:
-            glwe.errorMessages.emptyContactFullName('CollectionDetail')[locale][
-              context
-            ],
-        },
-        {
-          field: 'CollectionDetail',
-          message:
-            glwe.errorMessages.emptyEmail('CollectionDetail')[locale][context],
-        },
-        {
-          field: 'CollectionDetail',
-          message:
-            glwe.errorMessages.emptyPhone('CollectionDetail')[locale][context],
-        },
-      ]);
+      expect(response.error.data).toEqual({
+        fieldFormatErrors: [
+          {
+            field: 'CollectionDetail',
+            message:
+              glwe.errorMessages.emptyAddressLine1('CollectionDetail')[locale][
+                context
+              ],
+          },
+          {
+            field: 'CollectionDetail',
+            message:
+              glwe.errorMessages.emptyTownOrCity('CollectionDetail')[locale][
+                context
+              ],
+          },
+          {
+            field: 'CollectionDetail',
+            message:
+              glwe.errorMessages.emptyCountry('CollectionDetail')[locale][
+                context
+              ],
+          },
+          {
+            field: 'CollectionDetail',
+            message:
+              glwe.errorMessages.emptyOrganisationName('CollectionDetail')[
+                locale
+              ][context],
+          },
+          {
+            field: 'CollectionDetail',
+            message:
+              glwe.errorMessages.emptyContactFullName('CollectionDetail')[
+                locale
+              ][context],
+          },
+          {
+            field: 'CollectionDetail',
+            message:
+              glwe.errorMessages.emptyEmail('CollectionDetail')[locale][
+                context
+              ],
+          },
+          {
+            field: 'CollectionDetail',
+            message:
+              glwe.errorMessages.emptyPhone('CollectionDetail')[locale][
+                context
+              ],
+          },
+        ],
+      });
     });
 
     it('updates a records collection details', async () => {

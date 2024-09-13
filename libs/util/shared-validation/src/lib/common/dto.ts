@@ -23,3 +23,9 @@ export type ValidationResult<T> =
       valid: false;
       errors: ValidationFailureReason[];
     };
+
+export interface DateData {
+  day: string;
+  month: string;
+  year: string;
+}

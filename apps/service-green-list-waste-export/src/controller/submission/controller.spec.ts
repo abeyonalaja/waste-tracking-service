@@ -8,7 +8,6 @@ import {
   Submission,
   WasteQuantity,
   CollectionDate,
-  validation,
 } from '../../model';
 
 import { CosmosRepository } from '../../data';
@@ -861,11 +860,11 @@ describe(SubmissionController, () => {
             exporterEmailAddress: '     ',
             importerOrganisationName: '     ',
             importerAddress: '     ',
-            importerCountry: '     ',
+            importerCountry: 'test',
             importerContactFullName: '     ',
-            importerContactPhoneNumber: '     ',
-            importerFaxNumber: '     ',
-            importerEmailAddress: '     ',
+            importerContactPhoneNumber: 'test',
+            importerFaxNumber: 'test',
+            importerEmailAddress: 'test',
             wasteCollectionDate: 'date',
             estimatedOrActualCollectionDate: 'type',
             firstCarrierOrganisationName: '     ',
@@ -1082,40 +1081,51 @@ describe(SubmissionController, () => {
               {
                 field: 'ImporterDetail',
                 message:
-                  validation.ImporterDetailValidationErrorMessages
-                    .emptyOrganisationName,
+                  glweValidation.errorMessages.emptyOrganisationName(
+                    'ImporterDetail',
+                  )[locale][context],
               },
               {
                 field: 'ImporterDetail',
                 message:
-                  validation.ImporterDetailValidationErrorMessages.emptyAddress,
+                  glweValidation.errorMessages.emptyAddress('ImporterDetail')[
+                    locale
+                  ][context],
               },
               {
                 field: 'ImporterDetail',
                 message:
-                  validation.ImporterDetailValidationErrorMessages
-                    .invalidCountry,
+                  glweValidation.errorMessages.invalidCountry('ImporterDetail')[
+                    locale
+                  ][context],
               },
               {
                 field: 'ImporterDetail',
                 message:
-                  validation.ImporterDetailValidationErrorMessages
-                    .emptyContactFullName,
+                  glweValidation.errorMessages.emptyContactFullName(
+                    'ImporterDetail',
+                  )[locale][context],
               },
               {
                 field: 'ImporterDetail',
                 message:
-                  validation.ImporterDetailValidationErrorMessages.invalidPhone,
+                  glweValidation.errorMessages.invalidPhone('ImporterDetail')[
+                    locale
+                  ][context],
               },
               {
                 field: 'ImporterDetail',
                 message:
-                  validation.ImporterDetailValidationErrorMessages.invalidFax,
+                  glweValidation.errorMessages.invalidFax('ImporterDetail')[
+                    locale
+                  ][context],
               },
               {
                 field: 'ImporterDetail',
                 message:
-                  validation.ImporterDetailValidationErrorMessages.invalidEmail,
+                  glweValidation.errorMessages.invalidEmail('ImporterDetail')[
+                    locale
+                  ][context],
               },
               {
                 field: 'CollectionDate',

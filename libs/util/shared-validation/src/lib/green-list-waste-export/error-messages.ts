@@ -197,29 +197,107 @@ export const charTooManyWasteDescription = {
   },
 };
 
-export const invalidUkExitLocation = {
+export const emptyWasteQuantity = {
   en: {
-    ui: 'The location must only include letters a to z, and special characters such as full stops, hyphens, spaces and apostrophes',
-    csv: 'The location must only include letters a to z, and special characters such as full stops, hyphens, commas, and apostrophes',
-    api: 'The location must only include letters a to z, and special characters such as full stops, hyphens, commas, and apostrophes',
+    ui: 'Enter quantity of waste',
+    csv: 'Enter quantity of waste',
+    api: 'Enter quantity of waste',
   },
   cy: {
-    ui: "Rhaid i'r lleoliad gynnwys llythrennau a i z yn unig, a nodau arbennig fel atalnodau llawn, cysylltnodau, atalnodau a chollnod",
-    csv: "Rhaid i'r lleoliad gynnwys llythrennau a i z yn unig, a nodau arbennig fel atalnodau llawn, cysylltnodau, atalnodau a chollnod",
-    api: "Rhaid i'r lleoliad gynnwys llythrennau a i z yn unig, a nodau arbennig fel atalnodau llawn, cysylltnodau, atalnodau a chollnod",
+    ui: 'Nodwch faint o wastraff',
+    csv: 'Nodwch faint o wastraff',
+    api: 'Nodwch faint o wastraff',
   },
 };
 
-export const charTooManyUkExitLocation = {
+export const invalidWasteQuantity = {
   en: {
-    ui: `The location must be less than ${UkExitLocationChar.max} characters`,
-    csv: `The location must be less than ${UkExitLocationChar.max} characters`,
-    api: `The location must be less than ${UkExitLocationChar.max} characters`,
+    ui: 'Enter the weight using only numbers and a full stop',
+    csv: 'Enter the weight using only numbers and a full stop',
+    api: 'Enter the weight using only numbers and a full stop',
   },
   cy: {
-    ui: `Rhaid i'r lleoliad fod yn llai na ${UkExitLocationChar.max} nod`,
-    csv: `Rhaid i'r lleoliad fod yn llai na ${UkExitLocationChar.max} nod`,
-    api: `Rhaid i'r lleoliad fod yn llai na ${UkExitLocationChar.max} nod`,
+    ui: 'Rhowch y pwysau gan ddefnyddio rhifau yn unig ac atalnod llawn',
+    csv: 'Rhowch y pwysau gan ddefnyddio rhifau yn unig ac atalnod llawn',
+    api: 'Rhowch y pwysau gan ddefnyddio rhifau yn unig ac atalnod llawn',
+  },
+};
+
+export const invalidBulkWasteQuantity = {
+  en: {
+    ui: `The waste quantity must be between ${BulkWasteQuantityValue.greaterThan} and ${BulkWasteQuantityValue.lessThan}`,
+    csv: `The waste quantity must be between ${BulkWasteQuantityValue.greaterThan} and ${BulkWasteQuantityValue.lessThan}`,
+    api: `The waste quantity must be between ${BulkWasteQuantityValue.greaterThan} and ${BulkWasteQuantityValue.lessThan}`,
+  },
+  cy: {
+    ui: `Rhaid i swm y gwastraff fod rhwng ${BulkWasteQuantityValue.greaterThan} a ${BulkWasteQuantityValue.lessThan}`,
+    csv: `Rhaid i swm y gwastraff fod rhwng ${BulkWasteQuantityValue.greaterThan} a ${BulkWasteQuantityValue.lessThan}`,
+    api: `Rhaid i swm y gwastraff fod rhwng ${BulkWasteQuantityValue.greaterThan} a ${BulkWasteQuantityValue.lessThan}`,
+  },
+};
+
+export const invalidSmallWasteQuantity = {
+  en: {
+    ui: `Enter a weight ${SmallWasteQuantityValue.lessThanOrEqual}kg or under`,
+    csv: `Enter a weight ${SmallWasteQuantityValue.lessThanOrEqual}kg or under`,
+    api: `Enter a weight ${SmallWasteQuantityValue.lessThanOrEqual}kg or under`,
+  },
+  cy: {
+    ui: `Rhowch bwysau ${SmallWasteQuantityValue.lessThanOrEqual}kg neu lai`,
+    csv: `Rhowch bwysau ${SmallWasteQuantityValue.lessThanOrEqual}kg neu lai`,
+    api: `Rhowch bwysau ${SmallWasteQuantityValue.lessThanOrEqual}kg neu lai`,
+  },
+};
+
+export const missingWasteQuantityType = {
+  en: {
+    ui: "Enter either 'estimate' or 'actual' waste quantity",
+    csv: "Enter either 'estimate' or 'actual' waste quantity",
+    api: "Enter either 'estimate' or 'actual' waste quantity",
+  },
+  cy: {
+    ui: "Nodwch naill ai swm gwastraff 'amcangyfrif' neu 'gwirioneddol'",
+    csv: "Nodwch naill ai swm gwastraff 'amcangyfrif' neu 'gwirioneddol'",
+    api: "Nodwch naill ai swm gwastraff 'amcangyfrif' neu 'gwirioneddol'",
+  },
+};
+
+export const laboratoryWasteQuantity = {
+  en: {
+    ui: 'Only enter the weight as kilograms if you are sending unlisted waste to a laboratory',
+    csv: 'Only enter the weight as kilograms if you are sending unlisted waste to a laboratory',
+    api: 'Only enter the weight as kilograms if you are sending unlisted waste to a laboratory',
+  },
+  cy: {
+    ui: 'Rhowch y pwysau fel cilogramau dim ond os ydych yn anfon gwastraff heb ei restru i labordy',
+    csv: 'Rhowch y pwysau fel cilogramau dim ond os ydych yn anfon gwastraff heb ei restru i labordy',
+    api: 'Rhowch y pwysau fel cilogramau dim ond os ydych yn anfon gwastraff heb ei restru i labordy',
+  },
+};
+
+export const smallNonKgWasteQuantity = {
+  en: {
+    ui: 'Unlisted weight can only be measured in kilograms',
+    csv: 'Unlisted weight can only be measured in kilograms',
+    api: 'Unlisted weight can only be measured in kilograms',
+  },
+  cy: {
+    ui: 'Dim ond mewn cilogramau y gellir mesur pwysau heb ei restru',
+    csv: 'Dim ond mewn cilogramau y gellir mesur pwysau heb ei restru',
+    api: 'Dim ond mewn cilogramau y gellir mesur pwysau heb ei restru',
+  },
+};
+
+export const tooManyWasteQuantity = {
+  en: {
+    ui: 'Only enter one of the following: waste quantity in tonnes, kilograms, or cubic metres',
+    csv: 'Only enter one of the following: waste quantity in tonnes, kilograms, or cubic metres',
+    api: 'Only enter one of the following: waste quantity in tonnes, kilograms, or cubic metres',
+  },
+  cy: {
+    ui: "Nodwch un o'r canlynol yn unig: maint gwastraff mewn tunelli, cilogramau, neu fetrau ciwbig",
+    csv: "Nodwch un o'r canlynol yn unig: maint gwastraff mewn tunelli, cilogramau, neu fetrau ciwbig",
+    api: "Nodwch un o'r canlynol yn unig: maint gwastraff mewn tunelli, cilogramau, neu fetrau ciwbig",
   },
 };
 
@@ -259,6 +337,32 @@ export const importerDetailInvalidCrossSectionTransitCountries = {
     ui: 'Ni all y wlad fewnforiwr fod yr un fath â gwlad dramwy',
     csv: 'Ni all y wlad fewnforiwr fod yr un fath â gwlad dramwy',
     api: 'Ni all y wlad fewnforiwr fod yr un fath â gwlad dramwy',
+  },
+};
+
+export const invalidUkExitLocation = {
+  en: {
+    ui: 'The location must only include letters a to z, and special characters such as full stops, hyphens, spaces and apostrophes',
+    csv: 'The location must only include letters a to z, and special characters such as full stops, hyphens, commas, and apostrophes',
+    api: 'The location must only include letters a to z, and special characters such as full stops, hyphens, commas, and apostrophes',
+  },
+  cy: {
+    ui: "Rhaid i'r lleoliad gynnwys llythrennau a i z yn unig, a nodau arbennig fel atalnodau llawn, cysylltnodau, atalnodau a chollnod",
+    csv: "Rhaid i'r lleoliad gynnwys llythrennau a i z yn unig, a nodau arbennig fel atalnodau llawn, cysylltnodau, atalnodau a chollnod",
+    api: "Rhaid i'r lleoliad gynnwys llythrennau a i z yn unig, a nodau arbennig fel atalnodau llawn, cysylltnodau, atalnodau a chollnod",
+  },
+};
+
+export const charTooManyUkExitLocation = {
+  en: {
+    ui: `The location must be less than ${UkExitLocationChar.max} characters`,
+    csv: `The location must be less than ${UkExitLocationChar.max} characters`,
+    api: `The location must be less than ${UkExitLocationChar.max} characters`,
+  },
+  cy: {
+    ui: `Rhaid i'r lleoliad fod yn llai na ${UkExitLocationChar.max} nod`,
+    csv: `Rhaid i'r lleoliad fod yn llai na ${UkExitLocationChar.max} nod`,
+    api: `Rhaid i'r lleoliad fod yn llai na ${UkExitLocationChar.max} nod`,
   },
 };
 
@@ -2175,109 +2279,5 @@ export const invalidRecoveryFacilityRecoveryFacilityDetailCrossSection = {
   cy: {
     csv: 'Peidiwch â nodi unrhyw fanylion cyfleuster adennill os ydych yn allforio gwastraff heb ei restru',
     api: 'Peidiwch â nodi unrhyw fanylion cyfleuster adennill os ydych yn allforio gwastraff heb ei restru',
-  },
-};
-
-export const emptyWasteQuantity = {
-  en: {
-    ui: 'Enter quantity of waste',
-    csv: 'Enter quantity of waste',
-    api: 'Enter quantity of waste',
-  },
-  cy: {
-    ui: 'Nodwch faint o wastraff',
-    csv: 'Nodwch faint o wastraff',
-    api: 'Nodwch faint o wastraff',
-  },
-};
-
-export const invalidWasteQuantity = {
-  en: {
-    ui: 'Enter the weight using only numbers and a full stop',
-    csv: 'Enter the weight using only numbers and a full stop',
-    api: 'Enter the weight using only numbers and a full stop',
-  },
-  cy: {
-    ui: 'Rhowch y pwysau gan ddefnyddio rhifau yn unig ac atalnod llawn',
-    csv: 'Rhowch y pwysau gan ddefnyddio rhifau yn unig ac atalnod llawn',
-    api: 'Rhowch y pwysau gan ddefnyddio rhifau yn unig ac atalnod llawn',
-  },
-};
-
-export const invalidBulkWasteQuantity = {
-  en: {
-    ui: `The waste quantity must be between ${BulkWasteQuantityValue.greaterThan} and ${BulkWasteQuantityValue.lessThan}`,
-    csv: `The waste quantity must be between ${BulkWasteQuantityValue.greaterThan} and ${BulkWasteQuantityValue.lessThan}`,
-    api: `The waste quantity must be between ${BulkWasteQuantityValue.greaterThan} and ${BulkWasteQuantityValue.lessThan}`,
-  },
-  cy: {
-    ui: `Rhaid i swm y gwastraff fod rhwng ${BulkWasteQuantityValue.greaterThan} a ${BulkWasteQuantityValue.lessThan}`,
-    csv: `Rhaid i swm y gwastraff fod rhwng ${BulkWasteQuantityValue.greaterThan} a ${BulkWasteQuantityValue.lessThan}`,
-    api: `Rhaid i swm y gwastraff fod rhwng ${BulkWasteQuantityValue.greaterThan} a ${BulkWasteQuantityValue.lessThan}`,
-  },
-};
-
-export const invalidSmallWasteQuantity = {
-  en: {
-    ui: `Enter a weight ${SmallWasteQuantityValue.lessThanOrEqual}kg or under`,
-    csv: `Enter a weight ${SmallWasteQuantityValue.lessThanOrEqual}kg or under`,
-    api: `Enter a weight ${SmallWasteQuantityValue.lessThanOrEqual}kg or under`,
-  },
-  cy: {
-    ui: `Rhowch bwysau ${SmallWasteQuantityValue.lessThanOrEqual}kg neu lai`,
-    csv: `Rhowch bwysau ${SmallWasteQuantityValue.lessThanOrEqual}kg neu lai`,
-    api: `Rhowch bwysau ${SmallWasteQuantityValue.lessThanOrEqual}kg neu lai`,
-  },
-};
-
-export const missingWasteQuantityType = {
-  en: {
-    ui: "Enter either 'estimate' or 'actual' waste quantity",
-    csv: "Enter either 'estimate' or 'actual' waste quantity",
-    api: "Enter either 'estimate' or 'actual' waste quantity",
-  },
-  cy: {
-    ui: "Nodwch naill ai swm gwastraff 'amcangyfrif' neu 'gwirioneddol'",
-    csv: "Nodwch naill ai swm gwastraff 'amcangyfrif' neu 'gwirioneddol'",
-    api: "Nodwch naill ai swm gwastraff 'amcangyfrif' neu 'gwirioneddol'",
-  },
-};
-
-export const laboratoryWasteQuantity = {
-  en: {
-    ui: 'Only enter the weight as kilograms if you are sending unlisted waste to a laboratory',
-    csv: 'Only enter the weight as kilograms if you are sending unlisted waste to a laboratory',
-    api: 'Only enter the weight as kilograms if you are sending unlisted waste to a laboratory',
-  },
-  cy: {
-    ui: 'Rhowch y pwysau fel cilogramau dim ond os ydych yn anfon gwastraff heb ei restru i labordy',
-    csv: 'Rhowch y pwysau fel cilogramau dim ond os ydych yn anfon gwastraff heb ei restru i labordy',
-    api: 'Rhowch y pwysau fel cilogramau dim ond os ydych yn anfon gwastraff heb ei restru i labordy',
-  },
-};
-
-export const smallNonKgWasteQuantity = {
-  en: {
-    ui: 'Unlisted weight can only be measured in kilograms',
-    csv: 'Unlisted weight can only be measured in kilograms',
-    api: 'Unlisted weight can only be measured in kilograms',
-  },
-  cy: {
-    ui: 'Dim ond mewn cilogramau y gellir mesur pwysau heb ei restru',
-    csv: 'Dim ond mewn cilogramau y gellir mesur pwysau heb ei restru',
-    api: 'Dim ond mewn cilogramau y gellir mesur pwysau heb ei restru',
-  },
-};
-
-export const tooManyWasteQuantity = {
-  en: {
-    ui: 'Only enter one of the following: waste quantity in tonnes, kilograms, or cubic metres',
-    csv: 'Only enter one of the following: waste quantity in tonnes, kilograms, or cubic metres',
-    api: 'Only enter one of the following: waste quantity in tonnes, kilograms, or cubic metres',
-  },
-  cy: {
-    ui: "Nodwch un o'r canlynol yn unig: maint gwastraff mewn tunelli, cilogramau, neu fetrau ciwbig",
-    csv: "Nodwch un o'r canlynol yn unig: maint gwastraff mewn tunelli, cilogramau, neu fetrau ciwbig",
-    api: "Nodwch un o'r canlynol yn unig: maint gwastraff mewn tunelli, cilogramau, neu fetrau ciwbig",
   },
 };

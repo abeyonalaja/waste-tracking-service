@@ -2160,6 +2160,78 @@ describe(TemplateController, () => {
       );
       expect(template.importerDetail).toEqual(importerDetail);
     });
+
+    it('forwards validation errors', async () => {
+      const invalidImporterDetail: DraftImporterDetail = {
+        status: 'Complete',
+        importerAddressDetails: {
+          organisationName: '',
+          address: '',
+          country: '',
+        },
+        importerContactDetails: {
+          fullName: '',
+          emailAddress: '',
+          phoneNumber: '',
+          faxNumber: '',
+        },
+      };
+      const response = await subject.setTemplateImporterDetail({
+        id,
+        accountId,
+        value: invalidImporterDetail,
+      });
+
+      expect(response.success).toBe(false);
+      if (response.success) {
+        return;
+      }
+
+      expect(response.error.statusCode).toBe(400);
+
+      expect(response.error.data).toEqual({
+        fieldFormatErrors: [
+          {
+            field: 'ImporterDetail',
+            message:
+              glwe.errorMessages.emptyOrganisationName('ImporterDetail')[
+                locale
+              ][context],
+          },
+          {
+            field: 'ImporterDetail',
+            message:
+              glwe.errorMessages.emptyAddress('ImporterDetail')[locale][
+                context
+              ],
+          },
+          {
+            field: 'ImporterDetail',
+            message:
+              glwe.errorMessages.emptyCountry('ImporterDetail')[locale][
+                context
+              ],
+          },
+          {
+            field: 'ImporterDetail',
+            message:
+              glwe.errorMessages.emptyContactFullName('ImporterDetail')[locale][
+                context
+              ],
+          },
+          {
+            field: 'ImporterDetail',
+            message:
+              glwe.errorMessages.emptyPhone('ImporterDetail')[locale][context],
+          },
+          {
+            field: 'ImporterDetail',
+            message:
+              glwe.errorMessages.emptyEmail('ImporterDetail')[locale][context],
+          },
+        ],
+      });
+    });
   });
 
   describe('listTemplateCarriers', () => {
@@ -3123,7 +3195,7 @@ describe(TemplateController, () => {
 
     it('forwards validation errors only for populated fields', async () => {
       const invalidCollectionDetail: DraftCollectionDetail = {
-        status: 'Complete',
+        status: 'Started',
         address: {
           addressLine1: '',
           addressLine2: '',
@@ -3152,22 +3224,24 @@ describe(TemplateController, () => {
 
       expect(response.error.statusCode).toBe(400);
 
-      expect(response.error.data).toEqual([
-        {
-          field: 'CollectionDetail',
-          message:
-            glwe.errorMessages.invalidPostcode('CollectionDetail')[locale][
-              context
-            ],
-        },
-        {
-          field: 'CollectionDetail',
-          message:
-            glwe.errorMessages.invalidPhone('CollectionDetail')[locale][
-              context
-            ],
-        },
-      ]);
+      expect(response.error.data).toEqual({
+        fieldFormatErrors: [
+          {
+            field: 'CollectionDetail',
+            message:
+              glwe.errorMessages.invalidPostcode('CollectionDetail')[locale][
+                context
+              ],
+          },
+          {
+            field: 'CollectionDetail',
+            message:
+              glwe.errorMessages.invalidPhone('CollectionDetail')[locale][
+                context
+              ],
+          },
+        ],
+      });
     });
 
     it('successfully sets the collection details', async () => {

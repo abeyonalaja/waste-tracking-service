@@ -17,6 +17,16 @@ export const WasteDescriptionChar = {
   max: 100,
 };
 
+export const BulkWasteQuantityValue = {
+  greaterThan: 0,
+  lessThan: 1000000,
+};
+
+export const SmallWasteQuantityValue = {
+  greaterThan: 0,
+  lessThanOrEqual: 25,
+};
+
 export const CarrierTransportDescriptionChar = {
   min: 1,
   max: 200,
@@ -30,16 +40,6 @@ export const CarrierLength = {
 export const UkExitLocationChar = {
   min: 1,
   max: 50,
-};
-
-export const BulkWasteQuantityValue = {
-  greaterThan: 0,
-  lessThan: 1000000,
-};
-
-export const SmallWasteQuantityValue = {
-  greaterThan: 0,
-  lessThanOrEqual: 25,
 };
 
 export const InterimSiteLength = {

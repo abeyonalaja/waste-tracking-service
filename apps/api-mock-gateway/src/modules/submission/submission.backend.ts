@@ -31,7 +31,6 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { BadRequestError, NotFoundError } from '../../lib/errors';
 import {
-  copyCarriersNoTransport,
   isWasteCodeChangingBulkToSmall,
   isWasteCodeChangingSmallToBulk,
   isWasteCodeChangingBulkToBulkDifferentType,
@@ -45,7 +44,7 @@ import {
   common as commonValidation,
   glwe as glweValidation,
 } from '@wts/util/shared-validation';
-import { validation, submission } from '@wts/api/green-list-waste-export';
+import { submission } from '@wts/api/green-list-waste-export';
 
 const locale = 'en';
 const context = 'api';
@@ -276,7 +275,10 @@ export async function createSubmission(
 
   if (!referenceValidationResult.valid) {
     return Promise.reject(
-      new BadRequestError('Validation error', referenceValidationResult.errors),
+      new BadRequestError(
+        'Validation failed',
+        referenceValidationResult.errors,
+      ),
     );
   }
 
@@ -297,63 +299,6 @@ export async function createSubmission(
     ukExitLocation: { status: 'NotStarted' },
     transitCountries: { status: 'NotStarted' },
     recoveryFacilityDetail: { status: 'CannotStart' },
-    submissionConfirmation: { status: 'CannotStart' },
-    submissionDeclaration: { status: 'CannotStart' },
-    submissionState: {
-      status: 'InProgress',
-      timestamp: new Date(),
-    },
-    accountId: accountId,
-  };
-
-  db.drafts.push(value);
-
-  return Promise.resolve(value);
-}
-
-export async function createSubmissionFromTemplate(
-  id: string,
-  accountId: string,
-  reference: CustomerReference,
-): Promise<DraftSubmission> {
-  const referenceValidationResult =
-    glweValidation.validationRules.validateReference(reference);
-
-  if (!referenceValidationResult.valid) {
-    return Promise.reject(
-      new BadRequestError('Validation error', referenceValidationResult.errors),
-    );
-  }
-
-  const template = db.templates.find(
-    (t) => t.id == id && t.accountId == accountId,
-  );
-  if (template === undefined) {
-    return Promise.reject(new NotFoundError('Template not found'));
-  }
-
-  id = uuidv4();
-
-  const value: DraftSubmission & { accountId: string } = {
-    id,
-    reference,
-    wasteDescription: template.wasteDescription,
-    wasteQuantity:
-      template.wasteDescription.status === 'NotStarted'
-        ? { status: 'CannotStart' }
-        : { status: 'NotStarted' },
-    exporterDetail: template.exporterDetail,
-    importerDetail: template.importerDetail,
-    collectionDate: { status: 'NotStarted' },
-    carriers: copyCarriersNoTransport(
-      template.carriers,
-      template.wasteDescription.status === 'Complete' &&
-        template.wasteDescription.wasteCode.type === 'NotApplicable',
-    ),
-    collectionDetail: template.collectionDetail,
-    ukExitLocation: template.ukExitLocation,
-    transitCountries: template.transitCountries,
-    recoveryFacilityDetail: template.recoveryFacilityDetail,
     submissionConfirmation: { status: 'CannotStart' },
     submissionDeclaration: { status: 'CannotStart' },
     submissionState: {
@@ -420,8 +365,8 @@ export async function setWasteDescription(
   value: WasteDescription,
 ): Promise<void> {
   if (value.status !== 'NotStarted') {
-    const errors = {
-      fieldFormatErrors: [] as validation.FieldFormatError[],
+    const errors: glweValidation.Errors = {
+      fieldFormatErrors: [],
     };
     if (value.wasteCode) {
       if (
@@ -516,7 +461,7 @@ export async function setWasteDescription(
     }
 
     if (errors.fieldFormatErrors.length > 0) {
-      return Promise.reject(new BadRequestError('Validation error', errors));
+      return Promise.reject(new BadRequestError('Validation failed', errors));
     }
   }
 
@@ -634,7 +579,7 @@ export async function setWasteQuantity(
         if (!wasteQuantityValidationResult.valid) {
           return Promise.reject(
             new BadRequestError(
-              'Validation error',
+              'Validation failed',
               wasteQuantityValidationResult.errors,
             ),
           );
@@ -734,7 +679,7 @@ export async function setWasteQuantity(
       if (!wasteQuantityCrossSectionValidationResult.valid) {
         return Promise.reject(
           new BadRequestError(
-            'Validation error',
+            'Validation failed',
             wasteQuantityCrossSectionValidationResult.errors,
           ),
         );
@@ -763,7 +708,7 @@ export async function setWasteQuantity(
     if (!wasteQuantityValidationResult.valid) {
       return Promise.reject(
         new BadRequestError(
-          'Validation error',
+          'Validation failed',
           wasteQuantityValidationResult.errors,
         ),
       );
@@ -803,7 +748,7 @@ export async function setWasteQuantity(
     if (!wasteQuantityCrossSectionValidationResult.valid) {
       return Promise.reject(
         new BadRequestError(
-          'Validation error',
+          'Validation failed',
           wasteQuantityCrossSectionValidationResult.errors,
         ),
       );
@@ -845,7 +790,10 @@ export async function setCustomerReference(
 
   if (!referenceValidationResult.valid) {
     return Promise.reject(
-      new BadRequestError('Validation error', referenceValidationResult.errors),
+      new BadRequestError(
+        'Validation failed',
+        referenceValidationResult.errors,
+      ),
     );
   }
 
@@ -885,7 +833,9 @@ export async function setExporterDetail(
 ): Promise<void> {
   if (value.status !== 'NotStarted') {
     const section = 'ExporterDetail';
-    const errors: validation.FieldFormatError[] = [];
+    const errors: glweValidation.Errors = {
+      fieldFormatErrors: [],
+    };
     if (value.exporterAddress) {
       const addressLine1ValidationResult =
         glweValidation.validationRules.validateAddressLine1(
@@ -896,7 +846,9 @@ export async function setExporterDetail(
         );
 
       if (!addressLine1ValidationResult.valid) {
-        errors.push(...addressLine1ValidationResult.errors.fieldFormatErrors);
+        errors.fieldFormatErrors.push(
+          ...addressLine1ValidationResult.errors.fieldFormatErrors,
+        );
       } else {
         value.exporterAddress.addressLine1 = addressLine1ValidationResult.value;
       }
@@ -910,7 +862,9 @@ export async function setExporterDetail(
         );
 
       if (!addressLine2ValidationResult.valid) {
-        errors.push(...addressLine2ValidationResult.errors.fieldFormatErrors);
+        errors.fieldFormatErrors.push(
+          ...addressLine2ValidationResult.errors.fieldFormatErrors,
+        );
       } else {
         value.exporterAddress.addressLine2 = addressLine2ValidationResult.value;
       }
@@ -924,7 +878,9 @@ export async function setExporterDetail(
         );
 
       if (!townOrCityValidationResult.valid) {
-        errors.push(...townOrCityValidationResult.errors.fieldFormatErrors);
+        errors.fieldFormatErrors.push(
+          ...townOrCityValidationResult.errors.fieldFormatErrors,
+        );
       } else {
         value.exporterAddress.townCity = townOrCityValidationResult.value;
       }
@@ -938,7 +894,9 @@ export async function setExporterDetail(
         );
 
       if (!postcodeValidationResult.valid) {
-        errors.push(...postcodeValidationResult.errors.fieldFormatErrors);
+        errors.fieldFormatErrors.push(
+          ...postcodeValidationResult.errors.fieldFormatErrors,
+        );
       } else {
         value.exporterAddress.postcode = postcodeValidationResult.value;
       }
@@ -952,7 +910,9 @@ export async function setExporterDetail(
         );
 
       if (!countryValidationResult.valid) {
-        errors.push(...countryValidationResult.errors.fieldFormatErrors);
+        errors.fieldFormatErrors.push(
+          ...countryValidationResult.errors.fieldFormatErrors,
+        );
       } else {
         value.exporterAddress.country = countryValidationResult.value;
       }
@@ -968,7 +928,7 @@ export async function setExporterDetail(
         );
 
       if (!organisationNameValidationResult.valid) {
-        errors.push(
+        errors.fieldFormatErrors.push(
           ...organisationNameValidationResult.errors.fieldFormatErrors,
         );
       } else {
@@ -985,7 +945,9 @@ export async function setExporterDetail(
         );
 
       if (!fullNameValidationResult.valid) {
-        errors.push(...fullNameValidationResult.errors.fieldFormatErrors);
+        errors.fieldFormatErrors.push(
+          ...fullNameValidationResult.errors.fieldFormatErrors,
+        );
       } else {
         value.exporterContactDetails.fullName = fullNameValidationResult.value;
       }
@@ -999,7 +961,9 @@ export async function setExporterDetail(
         );
 
       if (!emailAddressValidationResult.valid) {
-        errors.push(...emailAddressValidationResult.errors.fieldFormatErrors);
+        errors.fieldFormatErrors.push(
+          ...emailAddressValidationResult.errors.fieldFormatErrors,
+        );
       } else {
         value.exporterContactDetails.emailAddress =
           emailAddressValidationResult.value;
@@ -1014,7 +978,9 @@ export async function setExporterDetail(
         );
 
       if (!phoneNumberValidationResult.valid) {
-        errors.push(...phoneNumberValidationResult.errors.fieldFormatErrors);
+        errors.fieldFormatErrors.push(
+          ...phoneNumberValidationResult.errors.fieldFormatErrors,
+        );
       } else {
         value.exporterContactDetails.phoneNumber =
           phoneNumberValidationResult.value;
@@ -1029,15 +995,17 @@ export async function setExporterDetail(
         );
 
       if (!faxNumberValidationResult.valid) {
-        errors.push(...faxNumberValidationResult.errors.fieldFormatErrors);
+        errors.fieldFormatErrors.push(
+          ...faxNumberValidationResult.errors.fieldFormatErrors,
+        );
       } else {
         value.exporterContactDetails.faxNumber =
           faxNumberValidationResult.value;
       }
     }
 
-    if (errors.length > 0) {
-      return Promise.reject(new BadRequestError('Validation error', errors));
+    if (errors.fieldFormatErrors.length > 0) {
+      return Promise.reject(new BadRequestError('Validation failed', errors));
     }
   }
 
@@ -1077,6 +1045,135 @@ export async function setImporterDetail(
   { id, accountId }: SubmissionRef,
   value: ImporterDetail,
 ): Promise<void> {
+  if (value.status !== 'NotStarted') {
+    const section = 'ImporterDetail';
+    const errors: glweValidation.Errors = {
+      fieldFormatErrors: [],
+    };
+    if (value.importerAddressDetails) {
+      const organisationNameValidationResult =
+        glweValidation.validationRules.validateOrganisationName(
+          value.importerAddressDetails.organisationName,
+          section,
+          locale,
+          context,
+        );
+
+      if (!organisationNameValidationResult.valid) {
+        errors.fieldFormatErrors.push(
+          ...organisationNameValidationResult.errors.fieldFormatErrors,
+        );
+      } else {
+        value.importerAddressDetails.organisationName =
+          organisationNameValidationResult.value;
+      }
+
+      const addressValidationResult =
+        glweValidation.validationRules.validateAddress(
+          value.importerAddressDetails.address,
+          section,
+          locale,
+          context,
+        );
+
+      if (!addressValidationResult.valid) {
+        errors.fieldFormatErrors.push(
+          ...addressValidationResult.errors.fieldFormatErrors,
+        );
+      } else {
+        value.importerAddressDetails.address = addressValidationResult.value;
+      }
+
+      const countryValidationResult =
+        glweValidation.validationRules.validateCountry(
+          value.importerAddressDetails.country,
+          section,
+          locale,
+          context,
+          db.countries,
+        );
+
+      if (!countryValidationResult.valid) {
+        errors.fieldFormatErrors.push(
+          ...countryValidationResult.errors.fieldFormatErrors,
+        );
+      } else {
+        value.importerAddressDetails.country = countryValidationResult.value;
+      }
+    }
+
+    if (value.importerContactDetails) {
+      const contactFullNameValidationResult =
+        glweValidation.validationRules.validateFullName(
+          value.importerContactDetails.fullName,
+          section,
+          locale,
+          context,
+        );
+
+      if (!contactFullNameValidationResult.valid) {
+        errors.fieldFormatErrors.push(
+          ...contactFullNameValidationResult.errors.fieldFormatErrors,
+        );
+      } else {
+        value.importerContactDetails.fullName =
+          contactFullNameValidationResult.value;
+      }
+
+      const phoneValidationResult =
+        glweValidation.validationRules.validatePhoneNumber(
+          value.importerContactDetails.phoneNumber,
+          section,
+          locale,
+          context,
+        );
+
+      if (!phoneValidationResult.valid) {
+        errors.fieldFormatErrors.push(
+          ...phoneValidationResult.errors.fieldFormatErrors,
+        );
+      } else {
+        value.importerContactDetails.phoneNumber = phoneValidationResult.value;
+      }
+
+      const faxValidationResult =
+        glweValidation.validationRules.validateFaxNumber(
+          value.importerContactDetails.faxNumber,
+          section,
+          locale,
+          context,
+        );
+
+      if (!faxValidationResult.valid) {
+        errors.fieldFormatErrors.push(
+          ...faxValidationResult.errors.fieldFormatErrors,
+        );
+      } else {
+        value.importerContactDetails.faxNumber = faxValidationResult.value;
+      }
+
+      const emailValidationResult =
+        glweValidation.validationRules.validateEmailAddress(
+          value.importerContactDetails.emailAddress,
+          section,
+          locale,
+          context,
+        );
+
+      if (!emailValidationResult.valid) {
+        errors.fieldFormatErrors.push(
+          ...emailValidationResult.errors.fieldFormatErrors,
+        );
+      } else {
+        value.importerContactDetails.emailAddress = emailValidationResult.value;
+      }
+    }
+
+    if (errors.fieldFormatErrors.length > 0) {
+      return Promise.reject(new BadRequestError('Validation failed', errors));
+    }
+  }
+
   const submission = db.drafts.find(
     (s) => s.id == id && s.accountId == accountId,
   );
@@ -1097,7 +1194,7 @@ export async function setImporterDetail(
     if (!transitCountriesCrossValidationResult.valid) {
       return Promise.reject(
         new BadRequestError(
-          'Validation error',
+          'Validation failed',
           transitCountriesCrossValidationResult.errors,
         ),
       );
@@ -1134,6 +1231,36 @@ export async function setCollectionDate(
   value: CollectionDate | CollectionDateData,
 ): Promise<void> {
   if (!submitted) {
+    let v = value as CollectionDate;
+    let dateData: commonValidation.DateData = {
+      day: '',
+      month: '',
+      year: '',
+    };
+    if (v.status !== 'NotStarted') {
+      const date =
+        v.value.type === 'ActualDate'
+          ? v.value.actualDate
+          : v.value.estimateDate;
+      const collectionDateValidationResult =
+        glweValidation.validationRules.validateCollectionDate(
+          date.day,
+          date.month,
+          date.year,
+        );
+
+      if (!collectionDateValidationResult.valid) {
+        return Promise.reject(
+          new BadRequestError(
+            'Validation failed',
+            collectionDateValidationResult.errors,
+          ),
+        );
+      } else {
+        dateData = collectionDateValidationResult.value;
+      }
+    }
+
     const submission = db.drafts.find(
       (s) => s.id == id && s.accountId == accountId,
     ) as DraftSubmission;
@@ -1141,53 +1268,67 @@ export async function setCollectionDate(
       return Promise.reject(new NotFoundError('Submission not found.'));
     }
 
-    const v = value as CollectionDate;
     if (v.status !== 'NotStarted') {
-      const date =
-        v.value.type === 'ActualDate'
-          ? v.value.actualDate
-          : v.value.estimateDate;
-      const dateValidationResult =
-        commonValidation.commonValidationRules.validateCollectionDate(
-          date.day,
-          date.month,
-          date.year,
-        );
-
-      if (!dateValidationResult.valid) {
-        return Promise.reject(
-          new BadRequestError('Validation error', dateValidationResult.errors),
-        );
-      }
-    }
-
-    let collectionDate = v;
-    if (
-      v.status !== 'NotStarted' &&
-      submission.collectionDate.status !== 'NotStarted'
-    ) {
-      if (v.value.type === 'ActualDate') {
-        collectionDate = {
-          status: v.status,
-          value: {
-            type: v.value.type,
-            actualDate: v.value.actualDate,
-            estimateDate: submission.collectionDate.value.estimateDate,
-          },
-        };
+      if (submission.collectionDate.status !== 'NotStarted') {
+        if (v.value.type === 'ActualDate') {
+          v = {
+            status: v.status,
+            value: {
+              type: v.value.type,
+              actualDate: {
+                day: dateData.day,
+                month: dateData.month,
+                year: dateData.year,
+              },
+              estimateDate: submission.collectionDate.value.estimateDate,
+            },
+          };
+        } else {
+          v = {
+            status: v.status,
+            value: {
+              type: v.value.type,
+              actualDate: submission.collectionDate.value.actualDate,
+              estimateDate: {
+                day: dateData.day,
+                month: dateData.month,
+                year: dateData.year,
+              },
+            },
+          };
+        }
       } else {
-        collectionDate = {
-          status: v.status,
-          value: {
-            type: v.value.type,
-            actualDate: submission.collectionDate.value.actualDate,
-            estimateDate: v.value.estimateDate,
-          },
-        };
+        if (v.value.type === 'ActualDate') {
+          v = {
+            status: v.status,
+            value: {
+              type: v.value.type,
+              actualDate: {
+                day: dateData.day,
+                month: dateData.month,
+                year: dateData.year,
+              },
+              estimateDate: {},
+            },
+          };
+        } else {
+          v = {
+            status: v.status,
+            value: {
+              type: v.value.type,
+              actualDate: {},
+              estimateDate: {
+                day: dateData.day,
+                month: dateData.month,
+                year: dateData.year,
+              },
+            },
+          };
+        }
       }
     }
 
-    submission.collectionDate = collectionDate;
+    submission.collectionDate = v;
 
     submission.submissionConfirmation =
       setSubmissionConfirmationStatus(submission);
@@ -1195,6 +1336,32 @@ export async function setCollectionDate(
       setSubmissionDeclarationStatus(submission);
     submission.submissionState.timestamp = new Date();
   } else {
+    let v = value as CollectionDateData;
+    let dateData: commonValidation.DateData = {
+      day: '',
+      month: '',
+      year: '',
+    };
+
+    const date = v.type === 'ActualDate' ? v.actualDate : v.estimateDate;
+    const collectionDateValidationResult =
+      glweValidation.validationRules.validateCollectionDate(
+        date.day,
+        date.month,
+        date.year,
+      );
+
+    if (!collectionDateValidationResult.valid) {
+      return Promise.reject(
+        new BadRequestError(
+          'Validation failed',
+          collectionDateValidationResult.errors,
+        ),
+      );
+    } else {
+      dateData = collectionDateValidationResult.value;
+    }
+
     const submission = db.submissions.find(
       (s) => s.id == id && s.accountId == accountId,
     ) as Submission;
@@ -1202,46 +1369,29 @@ export async function setCollectionDate(
       return Promise.reject(new NotFoundError('Submission not found.'));
     }
 
-    const v = value as CollectionDateData;
-
-    const date = v.type === 'ActualDate' ? v.actualDate : v.estimateDate;
-    const dateValidationResult =
-      commonValidation.commonValidationRules.validateCollectionDate(
-        date.day,
-        date.month,
-        date.year,
-      );
-
-    if (!dateValidationResult.valid) {
-      return Promise.reject(
-        new BadRequestError('Validation error', dateValidationResult.errors),
-      );
-    }
-
-    let collectionDate = v;
     if (v.type === 'ActualDate') {
-      collectionDate = {
+      v = {
         type: v.type,
         actualDate: {
-          day: v.actualDate.day,
-          month: v.actualDate.month,
-          year: v.actualDate.year,
+          day: dateData.day,
+          month: dateData.month,
+          year: dateData.year,
         },
         estimateDate: submission.collectionDate.estimateDate,
       };
     } else {
-      collectionDate = {
+      v = {
         type: v.type,
         estimateDate: {
-          day: v.estimateDate.day,
-          month: v.estimateDate.month,
-          year: v.estimateDate.year,
+          day: dateData.day,
+          month: dateData.month,
+          year: dateData.year,
         },
         actualDate: submission.collectionDate.actualDate,
       };
     }
 
-    submission.collectionDate = collectionDate;
+    submission.collectionDate = v;
 
     submission.submissionState =
       submission.wasteQuantity.type === 'ActualData' &&
@@ -1384,8 +1534,8 @@ export async function setCarriers(
   value: Carriers,
 ): Promise<void> {
   if (value.status !== 'NotStarted') {
-    const errors = {
-      fieldFormatErrors: [] as validation.FieldFormatError[],
+    const errors: glweValidation.Errors = {
+      fieldFormatErrors: [],
     };
     let index = 0;
     value.values.forEach((v) => {
@@ -1673,7 +1823,9 @@ export async function setCollectionDetail(
 ): Promise<void> {
   if (value.status !== 'NotStarted') {
     const section = 'CollectionDetail';
-    const errors: validation.FieldFormatError[] = [];
+    const errors: glweValidation.Errors = {
+      fieldFormatErrors: [],
+    };
     if (value.address) {
       const addressLine1ValidationResult =
         glweValidation.validationRules.validateAddressLine1(
@@ -1684,7 +1836,9 @@ export async function setCollectionDetail(
         );
 
       if (!addressLine1ValidationResult.valid) {
-        errors.push(...addressLine1ValidationResult.errors.fieldFormatErrors);
+        errors.fieldFormatErrors.push(
+          ...addressLine1ValidationResult.errors.fieldFormatErrors,
+        );
       } else {
         value.address.addressLine1 = addressLine1ValidationResult.value;
       }
@@ -1698,7 +1852,9 @@ export async function setCollectionDetail(
         );
 
       if (!addressLine2ValidationResult.valid) {
-        errors.push(...addressLine2ValidationResult.errors.fieldFormatErrors);
+        errors.fieldFormatErrors.push(
+          ...addressLine2ValidationResult.errors.fieldFormatErrors,
+        );
       } else {
         value.address.addressLine2 = addressLine2ValidationResult.value;
       }
@@ -1712,7 +1868,9 @@ export async function setCollectionDetail(
         );
 
       if (!townOrCityValidationResult.valid) {
-        errors.push(...townOrCityValidationResult.errors.fieldFormatErrors);
+        errors.fieldFormatErrors.push(
+          ...townOrCityValidationResult.errors.fieldFormatErrors,
+        );
       } else {
         value.address.townCity = townOrCityValidationResult.value;
       }
@@ -1726,7 +1884,9 @@ export async function setCollectionDetail(
         );
 
       if (!postcodeValidationResult.valid) {
-        errors.push(...postcodeValidationResult.errors.fieldFormatErrors);
+        errors.fieldFormatErrors.push(
+          ...postcodeValidationResult.errors.fieldFormatErrors,
+        );
       } else {
         value.address.postcode = postcodeValidationResult.value;
       }
@@ -1740,7 +1900,9 @@ export async function setCollectionDetail(
         );
 
       if (!countryValidationResult.valid) {
-        errors.push(...countryValidationResult.errors.fieldFormatErrors);
+        errors.fieldFormatErrors.push(
+          ...countryValidationResult.errors.fieldFormatErrors,
+        );
       } else {
         value.address.country = countryValidationResult.value;
       }
@@ -1756,7 +1918,7 @@ export async function setCollectionDetail(
         );
 
       if (!organisationNameValidationResult.valid) {
-        errors.push(
+        errors.fieldFormatErrors.push(
           ...organisationNameValidationResult.errors.fieldFormatErrors,
         );
       } else {
@@ -1773,7 +1935,9 @@ export async function setCollectionDetail(
         );
 
       if (!fullNameValidationResult.valid) {
-        errors.push(...fullNameValidationResult.errors.fieldFormatErrors);
+        errors.fieldFormatErrors.push(
+          ...fullNameValidationResult.errors.fieldFormatErrors,
+        );
       } else {
         value.contactDetails.fullName = fullNameValidationResult.value;
       }
@@ -1787,7 +1951,9 @@ export async function setCollectionDetail(
         );
 
       if (!emailAddressValidationResult.valid) {
-        errors.push(...emailAddressValidationResult.errors.fieldFormatErrors);
+        errors.fieldFormatErrors.push(
+          ...emailAddressValidationResult.errors.fieldFormatErrors,
+        );
       } else {
         value.contactDetails.emailAddress = emailAddressValidationResult.value;
       }
@@ -1801,7 +1967,9 @@ export async function setCollectionDetail(
         );
 
       if (!phoneNumberValidationResult.valid) {
-        errors.push(...phoneNumberValidationResult.errors.fieldFormatErrors);
+        errors.fieldFormatErrors.push(
+          ...phoneNumberValidationResult.errors.fieldFormatErrors,
+        );
       } else {
         value.contactDetails.phoneNumber = phoneNumberValidationResult.value;
       }
@@ -1815,14 +1983,16 @@ export async function setCollectionDetail(
         );
 
       if (!faxNumberValidationResult.valid) {
-        errors.push(...faxNumberValidationResult.errors.fieldFormatErrors);
+        errors.fieldFormatErrors.push(
+          ...faxNumberValidationResult.errors.fieldFormatErrors,
+        );
       } else {
         value.contactDetails.faxNumber = faxNumberValidationResult.value;
       }
     }
 
-    if (errors.length > 0) {
-      return Promise.reject(new BadRequestError('Validation error', errors));
+    if (errors.fieldFormatErrors.length > 0) {
+      return Promise.reject(new BadRequestError('Validation failed', errors));
     }
   }
 
@@ -1871,7 +2041,7 @@ export async function setExitLocation(
     if (!uKExitLocationValidationResult.valid) {
       return Promise.reject(
         new BadRequestError(
-          'Validation error',
+          'Validation failed',
           uKExitLocationValidationResult.errors,
         ),
       );
@@ -1921,7 +2091,7 @@ export async function setTransitCountries(
     if (!transitCountriesValidationResult.valid) {
       return Promise.reject(
         new BadRequestError(
-          'Validation error',
+          'Validation failed',
           transitCountriesValidationResult.errors,
         ),
       );
@@ -1948,7 +2118,7 @@ export async function setTransitCountries(
     if (!transitCountriesCrossValidationResult.valid) {
       return Promise.reject(
         new BadRequestError(
-          'Validation error',
+          'Validation failed',
           transitCountriesCrossValidationResult.errors,
         ),
       );
@@ -2090,8 +2260,8 @@ export async function setRecoveryFacilityDetail(
   value: RecoveryFacilityDetail,
 ): Promise<void> {
   if (value.status === 'Started' || value.status === 'Complete') {
-    const errors = {
-      fieldFormatErrors: [] as validation.FieldFormatError[],
+    const errors: glweValidation.Errors = {
+      fieldFormatErrors: [],
     };
     let index = 0;
     value.values.forEach((v) => {

@@ -3,7 +3,6 @@ import {
   TransitCountries,
   WasteDescription,
   WasteQuantity,
-  validation,
 } from '../model';
 import {
   validateCarriersSection,
@@ -4002,29 +4001,44 @@ describe('validateImporterDetailSection', () => {
       {
         field: 'ImporterDetail',
         message:
-          validation.ImporterDetailValidationErrorMessages
-            .emptyOrganisationName,
-      },
-      {
-        field: 'ImporterDetail',
-        message: validation.ImporterDetailValidationErrorMessages.emptyAddress,
-      },
-      {
-        field: 'ImporterDetail',
-        message: validation.ImporterDetailValidationErrorMessages.emptyCountry,
+          glweValidation.errorMessages.emptyOrganisationName('ImporterDetail')[
+            locale
+          ][context],
       },
       {
         field: 'ImporterDetail',
         message:
-          validation.ImporterDetailValidationErrorMessages.emptyContactFullName,
+          glweValidation.errorMessages.emptyAddress('ImporterDetail')[locale][
+            context
+          ],
       },
       {
         field: 'ImporterDetail',
-        message: validation.ImporterDetailValidationErrorMessages.emptyPhone,
+        message:
+          glweValidation.errorMessages.emptyCountry('ImporterDetail')[locale][
+            context
+          ],
       },
       {
         field: 'ImporterDetail',
-        message: validation.ImporterDetailValidationErrorMessages.emptyEmail,
+        message:
+          glweValidation.errorMessages.emptyContactFullName('ImporterDetail')[
+            locale
+          ][context],
+      },
+      {
+        field: 'ImporterDetail',
+        message:
+          glweValidation.errorMessages.emptyPhone('ImporterDetail')[locale][
+            context
+          ],
+      },
+      {
+        field: 'ImporterDetail',
+        message:
+          glweValidation.errorMessages.emptyEmail('ImporterDetail')[locale][
+            context
+          ],
       },
     ]);
 
@@ -4032,11 +4046,11 @@ describe('validateImporterDetailSection', () => {
       {
         importerOrganisationName: '     ',
         importerAddress: '     ',
-        importerCountry: '     ',
+        importerCountry: 'test',
         importerContactFullName: '     ',
-        importerContactPhoneNumber: '     ',
-        importerFaxNumber: '     ',
-        importerEmailAddress: '     ',
+        importerContactPhoneNumber: 'test',
+        importerFaxNumber: 'test',
+        importerEmailAddress: 'test',
       },
       countries,
     );
@@ -4045,34 +4059,51 @@ describe('validateImporterDetailSection', () => {
       {
         field: 'ImporterDetail',
         message:
-          validation.ImporterDetailValidationErrorMessages
-            .emptyOrganisationName,
-      },
-      {
-        field: 'ImporterDetail',
-        message: validation.ImporterDetailValidationErrorMessages.emptyAddress,
-      },
-      {
-        field: 'ImporterDetail',
-        message:
-          validation.ImporterDetailValidationErrorMessages.invalidCountry,
+          glweValidation.errorMessages.emptyOrganisationName('ImporterDetail')[
+            locale
+          ][context],
       },
       {
         field: 'ImporterDetail',
         message:
-          validation.ImporterDetailValidationErrorMessages.emptyContactFullName,
+          glweValidation.errorMessages.emptyAddress('ImporterDetail')[locale][
+            context
+          ],
       },
       {
         field: 'ImporterDetail',
-        message: validation.ImporterDetailValidationErrorMessages.invalidPhone,
+        message:
+          glweValidation.errorMessages.invalidCountry('ImporterDetail')[locale][
+            context
+          ],
       },
       {
         field: 'ImporterDetail',
-        message: validation.ImporterDetailValidationErrorMessages.invalidFax,
+        message:
+          glweValidation.errorMessages.emptyContactFullName('ImporterDetail')[
+            locale
+          ][context],
       },
       {
         field: 'ImporterDetail',
-        message: validation.ImporterDetailValidationErrorMessages.invalidEmail,
+        message:
+          glweValidation.errorMessages.invalidPhone('ImporterDetail')[locale][
+            context
+          ],
+      },
+      {
+        field: 'ImporterDetail',
+        message:
+          glweValidation.errorMessages.invalidFax('ImporterDetail')[locale][
+            context
+          ],
+      },
+      {
+        field: 'ImporterDetail',
+        message:
+          glweValidation.errorMessages.invalidEmail('ImporterDetail')[locale][
+            context
+          ],
       },
     ]);
 
@@ -4093,37 +4124,51 @@ describe('validateImporterDetailSection', () => {
       {
         field: 'ImporterDetail',
         message:
-          validation.ImporterDetailValidationErrorMessages
-            .charTooManyOrganisationName,
+          glweValidation.errorMessages.charTooManyOrganisationName(
+            'ImporterDetail',
+          )[locale][context],
       },
       {
         field: 'ImporterDetail',
         message:
-          validation.ImporterDetailValidationErrorMessages.charTooManyAddress,
+          glweValidation.errorMessages.charTooManyAddress('ImporterDetail')[
+            locale
+          ][context],
       },
       {
         field: 'ImporterDetail',
         message:
-          validation.ImporterDetailValidationErrorMessages.invalidCountry,
+          glweValidation.errorMessages.invalidCountry('ImporterDetail')[locale][
+            context
+          ],
       },
       {
         field: 'ImporterDetail',
         message:
-          validation.ImporterDetailValidationErrorMessages
-            .charTooManyContactFullName,
-      },
-      {
-        field: 'ImporterDetail',
-        message: validation.ImporterDetailValidationErrorMessages.invalidPhone,
-      },
-      {
-        field: 'ImporterDetail',
-        message: validation.ImporterDetailValidationErrorMessages.invalidFax,
+          glweValidation.errorMessages.charTooManyContactFullName(
+            'ImporterDetail',
+          )[locale][context],
       },
       {
         field: 'ImporterDetail',
         message:
-          validation.ImporterDetailValidationErrorMessages.charTooManyEmail,
+          glweValidation.errorMessages.invalidPhone('ImporterDetail')[locale][
+            context
+          ],
+      },
+      {
+        field: 'ImporterDetail',
+        message:
+          glweValidation.errorMessages.invalidFax('ImporterDetail')[locale][
+            context
+          ],
+      },
+      {
+        field: 'ImporterDetail',
+        message:
+          glweValidation.errorMessages.charTooManyEmail('ImporterDetail')[
+            locale
+          ][context],
       },
     ]);
   });
