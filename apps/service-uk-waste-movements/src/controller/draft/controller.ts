@@ -755,6 +755,10 @@ export default class SubmissionController {
         accountId,
       );
 
+      if (value.addressLine1 && value.townCity && value.country) {
+        saveAsDraft = false;
+      }
+
       draft.producerAndCollection.producer.address = !saveAsDraft
         ? {
             status: 'Complete',
@@ -1173,6 +1177,10 @@ export default class SubmissionController {
         accountId,
       );
 
+      if (value.addressLine1 && value.townCity && value.country) {
+        saveAsDraft = false;
+      }
+
       draft.carrier.address = !saveAsDraft
         ? {
             status: 'Complete',
@@ -1319,6 +1327,10 @@ export default class SubmissionController {
         );
       }
 
+      if (value.addressLine1 && value.townCity && value.country) {
+        saveAsDraft = false;
+      }
+
       const draft = await this.repository.getDraft(
         draftsContainerName,
         id,
@@ -1447,6 +1459,15 @@ export default class SubmissionController {
         id,
         accountId,
       );
+
+      if (
+        value.organisationName &&
+        value.organisationName &&
+        value.emailAddress &&
+        value.phoneNumber
+      ) {
+        saveAsDraft = false;
+      }
 
       draft.receiver.contact = !saveAsDraft
         ? {

@@ -368,6 +368,10 @@ export function setDraftProducerAddressDetails(
     return Promise.reject(new NotFoundError('Draft not found.'));
   }
 
+  if (value.addressLine1 && value.townCity && value.country) {
+    saveAsDraft = false;
+  }
+
   draft.producerAndCollection.producer.address = !saveAsDraft
     ? {
         status: 'Complete',
@@ -698,6 +702,10 @@ export function setDraftCarrierAddressDetails(
     return Promise.reject(new NotFoundError('Draft not found.'));
   }
 
+  if (value.addressLine1 && value.townCity && value.country) {
+    saveAsDraft = false;
+  }
+
   draft.carrier.address = !saveAsDraft
     ? {
         status: 'Complete',
@@ -758,6 +766,10 @@ export function setDraftReceiverAddressDetails(
 
   if (draft === undefined) {
     return Promise.reject(new NotFoundError('Draft not found.'));
+  }
+
+  if (value.addressLine1 && value.townCity && value.country) {
+    saveAsDraft = false;
   }
 
   draft.receiver.address = !saveAsDraft
