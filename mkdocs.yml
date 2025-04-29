@@ -44,14 +44,6 @@ extra_css:
 edit_uri: edit/main/docs/
 plugins:
   - material/search
-  - git-revision-date-localized:
-      enable_creation_date: true
-      fallback_to_build_date: true
-      exclude:
-          - README.md
-          - ADRs/README.md
-  - tags:
-      tags_file: ADRs/README.md
 markdown_extensions:
   - admonition
   - pymdownx.details
