@@ -54,12 +54,10 @@ markdown_extensions:
       toc_depth: 2
 extra:
   social:
-    - icon: fontawesome/brands/slack
-      link: https://mojdt.slack.com/archives/CBVUV2613
     - icon: fontawesome/solid/paper-plane 
-      link: mailto:soumaya.mauthoor@digital.justice.gov.uk
+      link: mailto:wasteuserresearch@defra.gov.uk
     - icon: fontawesome/brands/github
-      link: https://github.com/ministryofjustice/mkdocs-tech-docs-template/discussions
+      link: https://github.com/defra/waste-tracking-service
   tags:
     Draft: draft
     Accepted: accepted
