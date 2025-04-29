@@ -1,13 +1,6 @@
 site_name: Defra Digital Waste Tracking
 site_url: https://defra.github.io/digital-waste-tracking
 theme: 
-  name: material
-  logo: img/code-white.png
-  favicon: img/code-black.png
-  palette:
-    primary: black
-  font:
-    text: 'Arial'
-    code: 'Roboto Mono'
+  name: tech_docs_template
 repo_url: https://github.com/DEFRA/digital-waste-tracking
 remote_branch: gh-pages
