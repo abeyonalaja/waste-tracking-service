@@ -1,6 +1,4 @@
 # About Digital Waste Tracking
-<!--
-> These pages are automatically generated from content hosted in this [GitHub repository](https://github.com/DEFRA/waste-tracking-service)-->
 
 The Department for Environment, Food & Rural Affairs (Defra) are working with waste regulators to deliver a digital service for tracking waste movements across all 4 UK nations. Rollout of a new digital service is planned from April 2026. You can read more about the [digital waste tracking policy on GOV.UK](https://www.gov.uk/government/publications/digital-waste-tracking-service/mandatory-digital-waste-tracking).
 
