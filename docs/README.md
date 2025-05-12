@@ -19,4 +19,4 @@ We are currently talking to the following groups of people to help us learn abou
 * waste management software suppliers
 
 ### How you can get involved
-We will be running user research sessions with the above groups to share our designs for the new service as they develop. If you'd like to get involved please contact us.
+We are planning further user research and other opportunities for the above groups to feedback on our designs as they develop. More details about how to get involved will be published here.
