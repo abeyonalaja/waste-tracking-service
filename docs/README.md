@@ -7,7 +7,7 @@ The Department for Environment, Food & Rural Affairs (Defra) are working with wa
 ## New draft Defra APIs
 We are exploring the development of new APIs to integrate with waste management software and other systems. By moving to a new process where waste carriers and receivers submit data via APIs, we think we can give regulators a more joined-up picture of waste movements.
 
-This site contains draft details for the technical design of the service, including a list of data definitions, and a link to the draft API specification.
+This site will contain draft details for the technical design of the service, including a list of data definitions, and a link to the draft API specification.
 
 ## How we are engaging with the waste industry
 We want to get feedback from those working in the waste industry to help us test the feasibility of an API-driven service as early as we can.
