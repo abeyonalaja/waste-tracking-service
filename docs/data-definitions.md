@@ -1,6 +1,4 @@
 # Draft data definitions (work in progress)
-> Last modified on <script type="text/javascript"> document.write(document.lastModified)</script>
-
 These draft data definition tables describe the information we expect to be recorded by the future waste tracking service when a:
 
 * carrier collects waste
@@ -137,3 +135,5 @@ They are a work in progress and may be updated to reflect changes to policy, leg
 | 38       | Estimate or actual tonnage?                                                                                     | Mandatory                                         | Is it estimated or actual waste tonnage?                                                                                                                                                                                                      |
 | 39       | Disposal / recovery code, for each EWC (choose one or more R/D codes per EWC and weight/quantity for each code) | Mandatory                                         | Waste disposal and recovery codes are for categorising waste and determining the most appropriate treatment and recovery options.                                                                                                             |
 | 40       | Waste receipt declaration                                                                                       | Mandatory                                         | A tick box or message to show waste was received.                                                                                                                                                                                             |
+
+Page last updated on 16 May 2025.
