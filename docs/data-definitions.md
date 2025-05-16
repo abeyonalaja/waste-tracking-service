@@ -6,7 +6,7 @@ These draft data definition tables describe the information we expect to be reco
 * carrier collects waste
 * receiving site accepts or rejects waste
 
-They are a work in progess and may be updated to reflect changes to policy, legislation and feedback received from those in the waste industry.
+They are a work in progress and may be updated to reflect changes to policy, legislation and feedback received from those in the waste industry.
 <!-- Start of COLLECTION DATA tables -->
 ## Collection data (when a carrier collects waste)
 
