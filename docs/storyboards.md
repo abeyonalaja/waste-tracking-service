@@ -1,6 +1,6 @@
 # Storyboard - future waste movements (carriers and receivers)
 
-[View a visual image of the storyboard](../wt-storyboard-carriers-receiver.png) described on this page. 
+[View a visual image of the storyboard (.png file)](../wt-storyboard-carriers-receiver.png) described on this page. 
 ## Scenario
 The carrier uses their software to record waste movements, which automatically creates a Waste Tracking (WT) record and generates a unique WT ID.
 
@@ -192,4 +192,4 @@ Data from waste tracking is viewed by the producer in their software or on GOV.U
     * Haz/Non-Haz
 * Collection Details (Date & Time)
 
-<br/>Page last updated on 19 May 2025.
+<br/>Page last updated on 20 May 2025.
