@@ -34,6 +34,4 @@ The following scenarios will not be not be provided for in this use case:
 * rejection and part rejection *after* the waste has entered the site
 * regulatory payments
 * service charge payments
-* undocumented waste arriving at the receiving site 
-
-<br/>Page last updated on 20 May 2025.
+* undocumented waste arriving at the receiving site

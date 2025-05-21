@@ -41,9 +41,15 @@ theme:
         name: Switch to light mode
 extra_css:
   - stylesheets/tags-color.css
+  - stylesheets/extra.css
 edit_uri: edit/main/docs/
 plugins:
   - material/search
+  - git-revision-date-localized:
+      type: custom
+      custom_format: "%d %B %Y"
+  #- document-dates:
+   #   type: date
 markdown_extensions:
   - admonition
   - pymdownx.details

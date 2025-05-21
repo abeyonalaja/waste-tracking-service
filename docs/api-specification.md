@@ -12,5 +12,3 @@ We are designing waste tracking APIs to be flexible and accommodate differences 
 The following draft specifications are all published on the Swagger API hub:
 
 * [receiving waste onto a site](https://app.swaggerhub.com/apis/esynergy-295/DigitalWasteTracking_Receipt/0.1)
-
-<br/>Page last updated on 19 May 2025.

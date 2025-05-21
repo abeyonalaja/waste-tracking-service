@@ -191,5 +191,3 @@ Data from waste tracking is viewed by the producer in their software or on GOV.U
     * POPs
     * Haz/Non-Haz
 * Collection Details (Date & Time)
-
-<br/>Page last updated on 20 May 2025.
