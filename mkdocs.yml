@@ -45,9 +45,9 @@ extra_css:
 edit_uri: edit/main/docs/
 plugins:
   - material/search
-  - git-revision-date-localized:
-      type: custom
-      custom_format: "%d %B %Y"
+  #- git-revision-date-localized
+#      type: custom
+ #     custom_format: "%d %B %Y"
   #- document-dates:
    #   type: date
 markdown_extensions:
