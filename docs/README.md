@@ -21,3 +21,5 @@ We are currently talking to the following groups of people to help us learn abou
 
 ### How to get involved
 We are planning further user research and other opportunities for people in the waste industry to give feedback and test the solutions we're looking to develop. To register an interest in taking part, [sign up for the waste tracking user panel](https://defragroup.eu.qualtrics.com/jfe/form/SV_9QqfQNqEnI7ecDQ).
+
+<br/>Page last updated on 20 May 2025.
