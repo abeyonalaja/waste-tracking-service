@@ -2,6 +2,7 @@ openapi: '3.0.3'
 info:
   title: Digital Waste Tracking Receipt API
   version: '1.0'
+  description: <h1>This API specification is currently draft and subject to change.</h1>
 servers:
   - url: https://api.server.test/v1
 paths:
