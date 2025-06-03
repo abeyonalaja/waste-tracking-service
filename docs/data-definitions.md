@@ -133,4 +133,4 @@ They are a work in progress and may be updated to reflect changes to policy, leg
 | 40       | Disposal / recovery code, for each EWC (choose one or more R/D codes per EWC and weight/quantity for each code) | Mandatory                                         | Waste disposal and recovery codes are for categorising waste and determining the most appropriate treatment and recovery options.                                                                                                             |
 | 41       | Waste receipt declaration                                                                                       | Mandatory                                         | A tick box or message to show waste was received.                                                                                                                                                                                             |
 
-Page last updated on 22 May 2025.
+Page last updated on 3 June 2025.
