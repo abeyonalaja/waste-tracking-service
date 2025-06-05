@@ -36,6 +36,13 @@ The following scenarios will not be not be provided for in this use case:
 * service charge payments
 * undocumented waste arriving at the receiving site
 
+### List of steps
+* [Step 1: before the waste moves](#step-1-before-the-waste-moves)
+* [Step 2: waste collection](#step-2-waste-collection)
+* [Step 3: waste transit](#step-3-waste-transit)
+* [Step 4: waste receipt](#step-4-waste-receipt)
+* [Step 5: after the waste has moved](#step-5-after-the-waste-has-moved)
+
 ### Step 1: before the waste moves
 #### Broker or dealer (or other waste operator outsourcing the transit of their waste)
 1. Creates a waste movement record in their software.
