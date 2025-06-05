@@ -1,8 +1,8 @@
 # Use cases
 ## Moving and receiving waste - waste tracking process (majority of situations)
-The Waste Movement ID is created in advance of the waste being moved and is subsequently passed downstream.
+The Waste Tracking ID (WT-ID) is created in advance of the waste being moved and is subsequently passed downstream.
 
-The current assumption is that job routes and waste tickets are already created ahead of time in the as-is process (before digital waste tracking is introduced). The to-be process in DWT is designed to shadow this approach, capturing the necessary data seamlessly in the background.
+The current assumption is that job routes and waste tickets are already created ahead of time in the as-is process (before digital waste tracking is introduced). The to-be process in digital waste tracking (DWT) is designed to shadow this approach, capturing the necessary data seamlessly in the background.
 
 This methodology accommodates a broad spectrum of operational maturity, from highly advanced organisations equipped with weighbridges and automated load-lift technologies, to less technologically mature entities that rely on manually updating waste movements after the events have occurred in sequence.
 
@@ -34,6 +34,145 @@ The following scenarios will not be not be provided for in this use case:
 * rejection and part rejection *after* the waste has entered the site
 * regulatory payments
 * service charge payments
-* undocumented waste arriving at the receiving site 
+* undocumented waste arriving at the receiving site
 
-<br/>Page last updated on 20 May 2025.
+### Step 1: before the waste moves
+#### Broker or dealer (or other waste operator outsourcing the transit of their waste)
+1. Creates a waste movement record in their software.
+2. Passes the WT-ID to the waste producer.
+3. Passes the WT-ID to the waste carrier.
+
+#### Carrier (back-office employee, typically)
+1. Creates a waste movement record (if not already created, by a broker or dealer for example) in their software.
+2. Passes WT-ID to the waste producer.
+3. Creates a ‘job’ (including a route) for the driver.
+
+#### Defra digital waste tracking (DWT) service 
+1. Receives POST data from broker, dealer or carrier software via the API POST CreationData() method.
+2. If validation fails, error message(s) sent back to broker, dealer or carrier’s software.
+3. If validation passes, success confirmation and a WT-ID is sent to broker, dealer or carrier’s software (format [YY] + 6 alphanumeric characters, e.g. 25 1A3BC6).
+
+#### DWT data 
+The following data is recorded:
+
+* production and/or collection details
+	* contact
+	* permits
+* carrier details
+	* contact
+	* permits
+* waste classification
+	* weight & containers (estimated or actual)
+	* European Waste Catalogue (EWC) code
+	* persistent organic pollutants (POPs)
+	* hazardous or non-hazardous
+* special handling requirements
+
+### Step 2: waste collection
+
+#### Driver (on behalf of carrier)
+1. Arrives at the waste collection point (multiple collection points if collecting in a ‘round’).
+2. Receives WT-ID from producer.
+3. Load lifts waste onto vehicle.
+4. Updates waste movement ‘ticket’ via load lift (software sends data to DWT service).
+
+#### Producer
+1. Passes WT-ID to driver (in any form, but verbally and manually noted down as a minimum).
+2. Updates waste movement ‘ticket’ as driver passes through weighbridge with the waste load (software sends data to DWT service).
+
+#### DWT service
+1. Receives waste movement data from carrier’s software via API POST CollectionDataset() method.
+2. If validation fails, error message(s) sent back to carrier’s software.
+3. If validation passes, success confirmation is sent to carrier’s software.
+
+#### DWT data
+The following data is recorded against the WT-ID:
+
+* carrier details
+	* contact
+	* permits
+	* vehicle registration number
+* receiver details
+	* contact
+	* permits
+* waste classification
+	* weight and containers (estimate or actual)
+	* EWC code
+	* POPs
+	* hazardous or non-hazardous
+* collection details (date and time)
+
+### Step 3: waste transit
+
+#### Driver (on behalf of carrier)
+1. Leaves waste collection point.
+2. Transports waste (sometimes via other sites for additional collections – repeat step 2: waste collection).
+3. Arrives at waste receiving site.
+
+### Step 4: waste receipt
+
+#### Driver (on behalf of carrier)
+1. Passes WT-ID(s) to the receiver. This can be done in any form, but at a minimum it should be done verbally and manually recorded. It could be made easier by software vendors; QR codes, vehicle registration, email etc.
+
+#### Waste receiver (usually a waste receiving facility/site)
+
+1. Accepts all or part of the waste.
+2. Rejects all of part of the waste. If waste is rejected it is either sent back to the producer, or sent to another site that might be able to accept it.
+3. If waste is accepted, the movement ‘ticket’ is updated at incoming weighbridge (software sends data to DWT service).
+4. End of waste movement.
+
+#### DWT service
+
+1. Receives waste movement data from carrier’s software via API POST ReceiptDataset() method.
+2. If validation fails, error message(s) sent back to receiver’s software.
+3. If validation passes, success confirmation is sent to receiver’s software.
+
+#### DWT data
+The following data is recorded against the WT-ID:
+
+* carrier details
+	* contact
+	* permits
+	* vehicle registration number
+* receiver details
+	* contact
+	* permits
+* waste classification
+	* weight and containers (estimate or actual)
+	* EWC code
+	* POPs
+	* hazardous or non-hazardous
+* waste acceptance (yes or no)
+* treatment process (recovery and disposal ‘D’ or ‘R’ codes)
+* receipt details (date and time)
+
+### Step 5: after the waste has moved
+
+#### Carrier
+Updates waste ‘ticket’ with actual data.
+
+#### Producer
+Checks on the ‘fate of the waste’, using the WT-ID to get details of the waste movement.
+
+#### Receiver
+Updates the waste ‘ticket’ with actual data.
+
+#### DWT service
+3 PATCH methods can be called by the carrier or receiver’s software to make updates to the waste movement ‘ticket’:
+
+* CreationDataset()
+* CollectionDataset()
+* ReceiptDataset()
+
+A GET method is also available for use by the producer to check the fate of their waste.
+
+#### DWT Data
+3 datasets are available to be queried by the carrier or receiver’s software:
+
+* Creation dataset
+* Collection dataset
+* Receipt dataset
+
+Waste movement details are also available for the producer to access (and to check the fate of their waste).
+
+<br/>Page last updated on 5 June 2025.
