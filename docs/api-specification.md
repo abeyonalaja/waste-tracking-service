@@ -1,4 +1,4 @@
-# Draft API specifications (work in progress)
+# API specifications (work in progress)
 > These APIs are a work in progress. They may be updated to reflect changes to policy, legislation and user feedback.
 
 <br/>

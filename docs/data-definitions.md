@@ -1,4 +1,4 @@
-# Draft data definitions (work in progress)
+# Data definitions (work in progress)
 These draft data definition tables describe the information we expect to be recorded by the future waste tracking service when a:
 
 * carrier collects waste
