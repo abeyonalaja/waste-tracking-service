@@ -8,7 +8,6 @@ They are a work in progress and may be updated to reflect changes to policy, leg
 
 | Data field                                                                           | Mandatory or optional | Description                                                                                                                                                      |
 | ------------------------------------------------------------------------------------ | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Waste tracking ID                                                                    | Mandatory             | Waste tracking ID generated during the creation stage.                                                                                                           |
 | Haz waste consignment number                                                         | Mandatory             | Hazardous waste consignment number (Reject if EWC is Haz)                                                                                                        |
 | Reasons provided for not having a consignment number                                 | Mandatory             | Reasons provided for not having a consignment number                                                                                                             |
 | Unique reference ID                                                                  | Optional              | This could be a unique weighbridge ticket number, waste transfer note number etc.                                                                                |
@@ -55,11 +54,11 @@ They are a work in progress and may be updated to reflect changes to policy, leg
 
 ## Broker details
 
-| Data field                 | Mandatory or optional | Description                                                                                                                                                                                                                                |
-| -------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Broker organisation name   | Optional              | The business name of the broker.                                                                                                                                                                                                           |
-| Broker address             | Optional              | The business location address of the broker.                                                                                                                                                                                               |
-| Broker registration number | Optional              | A waste carrier registration number is a legal requirement for businesses that transport, buy, sell, or dispose of waste. This license ensures that waste is handled and transported in a responsible and environmentally friendly manner. |
+| Data field                 | Mandatory or optional | Description                                                                                                                                                                                                                               |
+| -------------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Broker organisation name   | Optional              | The business name of the broker.                                                                                                                                                                                                          |
+| Broker address             | Optional              | The business location address of the broker.                                                                                                                                                                                              |
+| Broker registration number | Optional              | A waste broker registration number is a legal requirement for businesses that transport, buy, sell, or dispose of waste. This license ensures that waste is handled and transported in a responsible and environmentally friendly manner. |
 
 ## Receiver's details
 
