@@ -1,11 +1,19 @@
 {
-  "data-definitions.md": {
-    "created": "2025-05-15T12:49:23.681987",
-    "modified": "2025-05-21T14:30:34.557882"
+  "creation-data-definitions.md": {
+    "created": "2025-06-17T11:47:26.267385",
+    "modified": "2025-06-18T10:52:43.391785"
+  },
+  "collection-data-definitions.md": {
+    "created": "2025-06-17T11:44:47.405841",
+    "modified": "2025-06-18T10:58:07.837513"
   },
   "storyboards.md": {
     "created": "2025-05-19T14:23:23.749820",
     "modified": "2025-05-21T14:30:42.612780"
+  },
+  "receipt-data-definitions.md": {
+    "created": "2025-06-17T11:50:55.556626",
+    "modified": "2025-06-18T10:53:09.068391"
   },
   "README.md": {
     "created": "2025-05-12T12:53:06.848060",
@@ -13,10 +21,10 @@
   },
   "api-specification.md": {
     "created": "2025-05-19T13:43:23.114918",
-    "modified": "2025-05-21T14:30:30.327797"
+    "modified": "2025-06-10T12:32:16.674793"
   },
   "use-cases.md": {
     "created": "2025-05-20T12:54:52.287838",
-    "modified": "2025-05-21T14:30:47.233735"
+    "modified": "2025-06-05T17:26:43.565199"
   }
 }
