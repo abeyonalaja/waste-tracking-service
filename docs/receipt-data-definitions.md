@@ -57,9 +57,9 @@ They are a work in progress and may be updated to reflect changes to policy, leg
 
 | Data field                 | Mandatory or optional | Description                                                                                                                                                                                                                                |
 | -------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Broker organisation name   | Mandatory             | The business name of the broker.                                                                                                                                                                                                           |
-| Broker address             | Mandatory             | The business location address of the broker.                                                                                                                                                                                               |
-| Broker registration number | Mandatory             | A waste carrier registration number is a legal requirement for businesses that transport, buy, sell, or dispose of waste. This license ensures that waste is handled and transported in a responsible and environmentally friendly manner. |
+| Broker organisation name   | Optional              | The business name of the broker.                                                                                                                                                                                                           |
+| Broker address             | Optional              | The business location address of the broker.                                                                                                                                                                                               |
+| Broker registration number | Optional              | A waste carrier registration number is a legal requirement for businesses that transport, buy, sell, or dispose of waste. This license ensures that waste is handled and transported in a responsible and environmentally friendly manner. |
 
 ## Receiver's details
 
