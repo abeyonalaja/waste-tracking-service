@@ -1,6 +1,6 @@
-site_name: Defra digital waste tracking
-site_url: https://defra.github.io/waste-tracking-service
-repo_url: https://github.com/DEFRA/waste-tracking-service
+site_name: Defra digital waste tracking - Preview
+site_url: https://defra.github.io/waste-tracking-service-preview
+repo_url: https://github.com/DEFRA/waste-tracking-service-preview
 remote_branch: gh-pages
 theme:
   name: material
