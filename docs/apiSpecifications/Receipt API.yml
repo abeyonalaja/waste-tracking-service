@@ -64,7 +64,7 @@ components:
                 description: This is the unique identifier of the receiving site, found within the Waste Companies service. This might be best as a header?
               hazardousWasteConsignmentNumber:
                 type: string
-                description: Hazardous waste consignment number (Reject if EWC is Haz)
+                description: Hazardous waste consignment number (If EWC is Haz, then mandatory)
               reasonForNoConsignmentNumber:
                 type: string
                 enum:
