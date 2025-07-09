@@ -1,6 +1,6 @@
-# API specifications (work in progress)
+# API specifications (draft)
 
-> These APIs are a work in progress. They may be updated to reflect changes to policy, legislation and user feedback.
+> These APIs are a draft. They may be updated to reflect changes to policy, legislation and user feedback.
 
 <br/>
 We are designing waste tracking APIs to be flexible and accommodate differences in business processes, allowing for:

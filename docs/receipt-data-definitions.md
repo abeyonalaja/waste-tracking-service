@@ -1,14 +1,14 @@
-# Receipt data - when a site accepts waste (work in progress)
+# Receipt data - when a site accepts waste (draft)
 
 These draft data definition tables describe the information we expect to be recorded by the future waste tracking service when a receiving site accepts or rejects waste.
 
-They are a work in progress and may be updated to reflect changes to policy, legislation and feedback received from those in the waste industry.
+They are a draft and may be updated to reflect changes to policy, legislation and feedback received from those in the waste industry.
 
 ## Movement details
 
 | Data field                                           | Mandatory or optional | Description                                                                                                                                                      |
 | ---------------------------------------------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Haz waste consignment number                         | Mandatory             | Hazardous waste consignment number (Reject if EWC is Haz)                                                                                                        |
+| Haz waste consignment number                         | Mandatory             | Hazardous waste consignment number (If EWC is Haz, then mandatory)                                                                                               |
 | Reasons provided for not having a consignment number | Mandatory             | Reasons provided for not having a consignment number                                                                                                             |
 | Unique reference ID                                  | Optional              | This could be a unique weighbridge ticket number, waste transfer note number etc.                                                                                |
 | Other references                                     | Optional              | Other references for this movement                                                                                                                               |
