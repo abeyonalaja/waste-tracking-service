@@ -71,6 +71,6 @@ extra:
     Superseded: superseded
     Deprecated: deprecated
     Rejected: rejected
-  analytics:
-    provider: google
-    property: G-SKK1DY4NVV
+#  analytics:
+#    provider: google
+#    property: G-SKK1DY4NVV
