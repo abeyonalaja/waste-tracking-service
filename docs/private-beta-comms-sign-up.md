@@ -25,7 +25,9 @@ To be eligible to take part, your organisation must:
 
 Organisations that have applied to take part will start to be invited to join the private beta from Autumn 2025\. We will send out invites gradually as we test and learn from running the service.
 
-From Spring 2026 we plan to allow all waste receivers to voluntarily use the service (public beta).**Note:** it will become mandatory for all waste receivers to use the service from October 2026\.
+From Spring 2026 we plan to allow all waste receivers to voluntarily use the public beta service.
+
+**Note:** it will become mandatory for all waste receivers to use the service from October 2026\.
 
 ## How to apply to join the private beta
 
