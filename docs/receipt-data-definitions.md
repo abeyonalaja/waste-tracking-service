@@ -1,4 +1,4 @@
-# Receipt data - when a site accepts waste (draft)
+# Receivers - data requirements
 
 These draft data definition tables describe the information we expect to be recorded by the future waste tracking service when a receiving site accepts or rejects waste.
 

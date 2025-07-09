@@ -1,4 +1,4 @@
-# API specifications (draft)
+# Receivers - draft API specification
 
 > These APIs are a draft. They may be updated to reflect changes to policy, legislation and user feedback.
 

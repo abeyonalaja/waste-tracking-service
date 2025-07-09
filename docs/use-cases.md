@@ -1,4 +1,4 @@
-# Use cases
+# Service vision - process diagram
 ## Moving and receiving waste - high level digital waste tracking process
 The Waste Tracking ID (WT-ID) is created in advance of the waste being moved and is subsequently passed downstream.
 

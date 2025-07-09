@@ -1,4 +1,4 @@
-# Vision for digital waste tracking
+# Service vision – storyboard
 
 [View a visual image of the storyboard (.png file)](../wt-storyboard-carriers-receiver.png) described on this page. 
 ## Scenario

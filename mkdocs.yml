@@ -44,8 +44,8 @@ nav:
   - storyboards.md
   - use-cases.md
   - receipt-data-definitions.md
-  - private-beta-comms-sign-up.md
   - api-specification.md
+  - private-beta-comms-sign-up.md
 extra_css:
   - stylesheets/tags-color.css
   - stylesheets/extra.css

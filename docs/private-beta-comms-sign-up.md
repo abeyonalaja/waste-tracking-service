@@ -1,4 +1,4 @@
-# Apply to voluntarily test the service for reporting waste received (Private beta)
+# Apply to test the service in beta
 
 ## About the private beta
 
