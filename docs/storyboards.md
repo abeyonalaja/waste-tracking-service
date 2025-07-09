@@ -1,4 +1,4 @@
-# Storyboard - future waste movements (carriers and receivers)
+# Vision for digital waste tracking
 
 [View a visual image of the storyboard (.png file)](../wt-storyboard-carriers-receiver.png) described on this page. 
 ## Scenario
