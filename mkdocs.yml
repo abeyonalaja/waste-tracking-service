@@ -39,6 +39,13 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
+nav:
+  - README.md
+  - storyboards.md
+  - use-cases.md
+  - receipt-data-definitions.md
+  - private-beta-comms-sign-up.md
+  - api-specification.md
 extra_css:
   - stylesheets/tags-color.css
   - stylesheets/extra.css

@@ -7,7 +7,7 @@ The current assumption is that job routes and waste tickets are already created 
 This methodology accommodates a broad spectrum of operational maturity, from highly advanced organisations equipped with weighbridges and automated load-lift technologies, to less technologically mature entities that rely on manually updating waste movements after the events have occurred in sequence.
 
 ### Use case diagram
-[View 'moving and receiving waste' use case diagram (.jpg file)](../basic-process-flow.jpg).
+[![View 'moving and receiving waste' use case diagram (.jpg file)](../basic-process-flow.jpg)](../basic-process-flow.jpg)
 
 ### In-scope
 High level process:
