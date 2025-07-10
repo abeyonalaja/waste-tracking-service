@@ -57,8 +57,8 @@ They are a draft and may be updated to reflect changes to policy, legislation an
 | Data field                           | Mandatory or optional | Description                                                        |
 | ------------------------------------ | --------------------- | ------------------------------------------------------------------ |
 | Broker or dealer organisation name   | Optional              | The broker or dealer organisation name who arranged this transfer. |
-| Broker or dealer address             | Optional              | The business location address of the broker.                       |
-| Broker or dealer registration number | Optional              | The Registration number of the Broker                              |
+| Broker or dealer address             | Optional              | The business location address of the broker or dealer.             |
+| Broker or dealer registration number | Optional              | The Registration number of the broker or dealer.                   |
 
 ## Receiver's details
 
