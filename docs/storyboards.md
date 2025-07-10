@@ -1,6 +1,6 @@
 # Service vision – storyboard
 
-[View a visual image of the storyboard (.png file)](../wt-storyboard-carriers-receiver.png) described on this page. 
+[![View a visual image of the storyboard (.png file)](../wt-storyboard-carriers-receiver.png)](../wt-storyboard-carriers-receiver.png)
 ## Scenario
 The carrier uses their software to record waste movements, which automatically creates a Waste Tracking (WT) record and generates a unique WT ID.
 
