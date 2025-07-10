@@ -43,6 +43,7 @@ nav:
   - README.md
   - storyboards.md
   - use-cases.md
+  - initial-scope.md
   - receivers-process-diagram.md
   - receipt-data-definitions.md
   - api-specification.md
