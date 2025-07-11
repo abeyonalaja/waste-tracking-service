@@ -52,7 +52,7 @@ They are a draft and may be updated to reflect changes to policy, legislation an
 | Means of transport (road, rail, air, sea, inland waterway, pipe, others) | Mandatory             | This describes how the waste is transported.                                                                                                                                                                                               |
 | Other means of transport                                                 | Optional              | State any other means of transport                                                                                                                                                                                                         |
 
-## Broker details
+## Broker or dealer details
 
 | Data field                           | Mandatory or optional | Description                                                        |
 | ------------------------------------ | --------------------- | ------------------------------------------------------------------ |

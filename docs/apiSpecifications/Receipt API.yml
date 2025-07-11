@@ -14,7 +14,7 @@ paths:
         required: true
       responses:
         "200":
-          description: The waste movement has been stored.  If we have any async processing to do upon receipt (such as verifying permits etc) this should change to a 202.
+          description: The waste movement has been stored.
           content:
             application/json:
               schema:
@@ -39,7 +39,7 @@ paths:
         required: true
       responses:
         "200":
-          description: The waste movement receipt has been processed. If we have any async processing to do upon receipt (such as verifying permits etc) this should change to a 202.
+          description: The waste movement receipt has been updated.
         "400":
           $ref: "#/components/responses/400"
         "404":
@@ -172,15 +172,18 @@ components:
                   otherMeansOfTransport:
                     type: string
                     description: State any other means of transport
-              broker:
+              brokerOrDealer:
                 type: object
                 properties:
                   organisationName:
                     type: string
+                    description: The broker or dealer organisation name who arranged this transfer.
                   address:
                     type: string
-                  reasonForNoRegistrationNumber:
+                    description: The business location address of the broker or dealer.
+                  registrationNumber:
                     type: string
+                    description: The Registration number of the broker or dealer.
               acceptance:
                 type: object
                 properties:
