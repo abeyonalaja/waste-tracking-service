@@ -13,7 +13,7 @@ paths:
         $ref: "#/components/requestBodies/receiveMovementRequest"
         required: true
       responses:
-        "200":
+        "201":
           description: The waste movement has been stored.
           content:
             application/json:
@@ -23,6 +23,13 @@ paths:
                   wasteTrackingId:
                     type: string
                     description: Globally unique identifier of the movement. This id should be stored and used for any subsequent updates of the movement.
+                  validation:
+                    type: object
+                    properties:
+                      warnings:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/validationResult"
         "400":
           $ref: "#/components/responses/400"
   /movements/{wasteTrackingId}/receive:
@@ -249,6 +256,30 @@ components:
         isEstimate:
           type: boolean
           description: Specifies whether the quantity of waste is estimated or actual.
+    validationResult:
+      type: object
+      properties:
+        key:
+          type: string
+        errorType:
+          type: string
+          enum:
+            - NotProvided
+            - TBC
+        message:
+          type: string
   responses:
     "400":
       description: Input was not in the correct format.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              validation:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/validationResult"
