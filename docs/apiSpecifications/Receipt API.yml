@@ -13,7 +13,7 @@ paths:
         $ref: "#/components/requestBodies/receiveMovementRequest"
         required: true
       responses:
-        "200":
+        "201":
           description: The waste movement has been stored.
           content:
             application/json:
@@ -23,6 +23,13 @@ paths:
                   wasteTrackingId:
                     type: string
                     description: Globally unique identifier of the movement. This id should be stored and used for any subsequent updates of the movement.
+                  validation:
+                    type: object
+                    properties:
+                      warnings:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/validationResult"
         "400":
           $ref: "#/components/responses/400"
   /movements/{wasteTrackingId}/receive:
@@ -40,6 +47,21 @@ paths:
       responses:
         "200":
           description: The waste movement receipt has been updated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  wasteTrackingId:
+                    type: string
+                    description: Globally unique identifier of the movement. This id should be stored and used for any subsequent updates of the movement.
+                  validation:
+                    type: object
+                    properties:
+                      warnings:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/validationResult"
         "400":
           $ref: "#/components/responses/400"
         "404":
@@ -113,7 +135,7 @@ components:
           description: A detailed description of a specific waste material, including its physical characteristics, composition, and any potential hazards associated with it. It's essentially a classification of the waste that helps determine how it should be managed and disposed of safely.
         form:
           type: string
-          enum: [ Gas, Liquid, Solid, Powder, Sludge, Mixed ]
+          enum: [Gas, Liquid, Solid, Powder, Sludge, Mixed]
           description: This is the form of the waste. This could be a gas, liquid, solid, powder, sludge or mixed etc.
         numberOfContainers:
           type: number
@@ -180,7 +202,7 @@ components:
           description: This is the vehicle registration number
         meansOfTransport:
           type: string
-          enum: [ Road, Rail, Air, Sea, Waterway, Pipe, Other ]
+          enum: [Road, Rail, Air, Sea, Waterway, Pipe, Other]
           description: This describes how the waste is transported (road, rail, air, sea, inland waterway, others)
         otherMeansOfTransport:
           type: string
@@ -218,7 +240,7 @@ components:
             properties:
               authorisationType:
                 type: string
-                enum: [ TBD ]
+                enum: [TBD]
                 description: Waste sites have permits or licenses for certain types of waste. E.g. it could be a landfill site.
               authorisationNumber:
                 type: string
@@ -261,6 +283,30 @@ components:
         isEstimate:
           type: boolean
           description: Specifies whether the quantity of waste is estimated or actual.
+    validationResult:
+      type: object
+      properties:
+        key:
+          type: string
+        errorType:
+          type: string
+          enum:
+            - NotProvided
+            - TBC
+        message:
+          type: string
   responses:
     "400":
       description: Input was not in the correct format.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              validation:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/validationResult"
