@@ -159,7 +159,7 @@ components:
                   name:
                     type: string
                     description: E.g. Aldrin, Chlordane, Dieldrin etc.
-                  concentrationValue:
+                  concentration:
                     type: number
                     description: E.g. 50mg per kg of Chlordane.
         hazardous:
@@ -170,7 +170,7 @@ components:
               items:
                 type: object
                 properties:
-                  component:
+                  name:
                     type: string
                     description: E.g. Mercury.
                   concentration:
