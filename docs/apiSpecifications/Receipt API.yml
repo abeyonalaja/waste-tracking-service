@@ -214,7 +214,7 @@ components:
           description: This is the vehicle registration number
         meansOfTransport:
           type: string
-          enum: [Road, Rail, Air, Sea, Waterway, Pipe, Other]
+          enum: [Road, Rail, Air, Sea, "Inland Waterway", Pipe, Other]
           description: This describes how the waste is transported (road, rail, air, sea, inland waterway, others)
         otherMeansOfTransport:
           type: string
