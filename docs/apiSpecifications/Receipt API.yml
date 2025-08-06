@@ -2,7 +2,15 @@ openapi: "3.0.3"
 info:
   title: Digital Waste Tracking Receipt API
   version: "1.0"
-  description: <h1>This API specification is currently draft and subject to change.</h1>
+  description: This API allows waste transport receivers, software developers and third party software users to communicate waste movement reception details to DEFRA. 
+  The aim is to keep a record of all waste movement receipts by waste receivers. Use the API to communicate and store the status of between (array size) waste movement consignment codes passed as an array.
+  The API POST method is used to log a record of received waste movements and returns a waste tracking ID and a validation result.
+  The API PUT method is used to update a particular waste tracking record and returns a XXXXXX
+  
+  The API is based on REST principles and uses both a POST and a PUT method endpoint that return data in JSON format. It uses standard HTTP error response codes. 
+  
+  Note- This API specification is currently a draft and subject to change.
+  
 servers:
   - url: https://api.server.test/v1
 paths:
@@ -14,7 +22,7 @@ paths:
         required: true
       responses:
         "201":
-          description: The waste movement has been stored.
+          description: Success: The waste movement has been stored.
           content:
             application/json:
               schema:
@@ -83,7 +91,7 @@ components:
               receivingSiteId:
                 type: string
                 format: uuid
-                description: This is the unique identifier of the receiving site, found within the Waste Companies service. This might be best as a header?
+                description: This is the unique identifier of the receiving site, found within the Waste Companies service.
               hazardousWasteConsignmentCode:
                 type: string
                 description: Hazardous waste consignment code (If EWC is Haz, then mandatory)
@@ -95,7 +103,7 @@ components:
                     "Carrier did not provide documentation",
                     "Local Authority Receipt",
                   ]
-                description: Reasons provided for not having a consignment number
+                description: Reason provided for not having a consignment number
               yourUniqueReference:
                 type: string
                 description: This could be a unique weighbridge ticket number, waste transfer note number etc.
@@ -322,3 +330,4 @@ components:
                     type: array
                     items:
                       $ref: "#/components/schemas/validationResult"
+
