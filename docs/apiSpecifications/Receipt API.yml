@@ -84,10 +84,10 @@ components:
                 type: string
                 format: uuid
                 description: This is the unique identifier of the receiving site, found within the Waste Companies service. This might be best as a header?
-              hazardousWasteConsignmentNumber:
+              hazardousWasteConsignmentCode:
                 type: string
-                description: Hazardous waste consignment number (If EWC is Haz, then mandatory)
-              reasonForNoConsignmentNumber:
+                description: Hazardous waste consignment code (If EWC is Haz, then mandatory)
+              reasonForNoConsignmentCode:
                 type: string
                 enum:
                   [
@@ -104,6 +104,7 @@ components:
                 description: Other references for this movement
               specialHandlingRequirements:
                 type: string
+                maxLength: 5000
                 description: Usually required only for abnormal hazardous waste that might contain harmful chemical, biological or physical characteristics. These may require some special handling to prevent harm.
               waste:
                 type: array
@@ -131,6 +132,7 @@ components:
           type: array
           items:
             type: string
+          maxItems: 5
           description: An EWC code is a 6 digit code listed in the European Waste Catalogue (EWC). The EWC is a list of waste types which categorises waste based on a combination of what they are, and the process or activity that produces them.
         wasteDescription:
           type: string
@@ -167,6 +169,14 @@ components:
         hazardous:
           type: object
           properties:
+            containsHazardous:
+              type: boolean
+              description: Hazardous waste is any waste that is potentially harmful to human health or the environment.
+            hazCodes:
+              type: array
+              items:
+                type: integer
+              description: Hazardous waste codes are a list of codes that describe the hazardous waste.
             components:
               type: array
               items:
@@ -248,7 +258,7 @@ components:
                 type: string
                 description: This is the site's authorisation (permit or exemption) number that allows it to accept waste for intended recovery and disposal operation.
         regulatoryPositionStatement:
-          type: string
+          type: integer
           description: A regulatory position statement (RPS) is issued when the Environment Agency don’t require you to have a permit to carry out certain activities that they regulate. The statement will state which activities you do not require a permit for.
     receipt:
       type: object
@@ -277,7 +287,7 @@ components:
       properties:
         metric:
           type: string
-          enum: [Tonnes]
+          enum: [ Grams, Kilograms, Tonnes, Litres, "Cubic metres", Each, Milliliters ]
           description: Unit of measurement the waste is being accepted
         amount:
           type: number
