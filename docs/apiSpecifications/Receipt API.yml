@@ -3,11 +3,13 @@ info:
   title: Digital Waste Tracking Receipt API
   version: "1.0"
   description: This API allows waste transport receivers, software developers and third party software users to communicate waste movement reception details to DEFRA. 
-  The aim is to keep a record of all waste movement receipts by waste receivers. Use the API to communicate and store the status of between (array size) waste movement consignment codes passed as an array.
-  The API POST method is used to log a record of received waste movements and returns a waste tracking ID and a validation result.
-  The API PUT method is used to update a particular waste tracking record and returns a XXXXXX
+  The aim is to keep a record of all waste movement receipts by waste receivers. Use the API to communicate and store the status of waste movement consignment codes passed as an array.
   
   The API is based on REST principles and uses both a POST and a PUT method endpoint that return data in JSON format. It uses standard HTTP error response codes. 
+
+  The API POST method is used to initially log a record of received waste movements and returns a waste tracking ID and a validation result. No wqaste tracking 
+  The API PUT method is used to update a particular waste tracking record using a waste tracking ID. It returns the waste tracking ID and a validation result
+  
   
   Note- This API specification is currently a draft and subject to change.
   
@@ -79,7 +81,7 @@ paths:
 components:
   requestBodies:
     receiveMovementRequest:
-      description: Details of the waste movement to be created
+      description: Details of the waste movement to be created. The mandatory paramater to be included in the API call includes the receivingSiteID.
       required: true
       content:
         application/json:
@@ -330,4 +332,5 @@ components:
                     type: array
                     items:
                       $ref: "#/components/schemas/validationResult"
+
 
