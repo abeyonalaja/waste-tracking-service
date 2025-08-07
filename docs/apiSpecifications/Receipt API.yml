@@ -151,6 +151,8 @@ components:
           $ref: "#/components/schemas/quantity"
         pops:
           type: object
+          required:
+            - containsPops
           properties:
             containsPops:
               type: boolean
@@ -168,6 +170,8 @@ components:
                     description: E.g. 50mg per kg of Chlordane.
         hazardous:
           type: object
+          required:
+            - containsHazardous
           properties:
             containsHazardous:
               type: boolean
@@ -188,6 +192,10 @@ components:
                   concentration:
                     type: number
                     description: E.g. 30mg per kg.
+        disposalOrRecoveryCodes:
+          type: array
+          items:
+            $ref: "#/components/schemas/disposalOrRecoveryCode"
     carrier:
       type: object
       properties:
@@ -258,7 +266,9 @@ components:
                 type: string
                 description: This is the site's authorisation (permit or exemption) number that allows it to accept waste for intended recovery and disposal operation.
         regulatoryPositionStatement:
-          type: integer
+          type: array
+          items:
+            type: integer
           description: A regulatory position statement (RPS) is issued when the Environment Agency don’t require you to have a permit to carry out certain activities that they regulate. The statement will state which activities you do not require a permit for.
     receipt:
       type: object
@@ -267,10 +277,6 @@ components:
           type: string
           format: date-time
           description: This is the date and exact time waste was received at the site.
-        disposalOrRecoveryCodes:
-          type: array
-          items:
-            $ref: "#/components/schemas/disposalOrRecoveryCode"
     disposalOrRecoveryCode:
       type: object
       properties:
