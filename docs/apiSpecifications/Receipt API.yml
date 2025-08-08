@@ -84,6 +84,10 @@ components:
                 type: string
                 format: uuid
                 description: This is the unique identifier of the receiving site, found within the Waste Companies service. This might be best as a header?
+              dateTimeReceived:
+                type: string
+                format: date-time
+                description: This is the date and exact time waste was received at the site.
               hazardousWasteConsignmentCode:
                 type: string
                 description: Hazardous waste consignment code (If EWC is Haz, then mandatory)
@@ -224,9 +228,6 @@ components:
           type: string
           enum: [Road, Rail, Air, Sea, "Inland Waterway", Pipe, Other]
           description: This describes how the waste is transported (road, rail, air, sea, inland waterway, others)
-        otherMeansOfTransport:
-          type: string
-          description: State any other means of transport
     brokerOrDealer:
       type: object
       properties:
@@ -241,6 +242,8 @@ components:
           description: The Registration number of the broker or dealer.
     acceptance:
       type: object
+      required:
+        - acceptingAll
       properties:
         acceptingAll:
           type: boolean
@@ -272,11 +275,6 @@ components:
           description: A regulatory position statement (RPS) is issued when the Environment Agency don’t require you to have a permit to carry out certain activities that they regulate. The statement will state which activities you do not require a permit for.
     receipt:
       type: object
-      properties:
-        dateTimeReceived:
-          type: string
-          format: date-time
-          description: This is the date and exact time waste was received at the site.
     disposalOrRecoveryCode:
       type: object
       properties:
