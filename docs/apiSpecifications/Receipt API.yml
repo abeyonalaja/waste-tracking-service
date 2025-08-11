@@ -104,7 +104,9 @@ components:
                 type: string
                 description: This could be a unique weighbridge ticket number, waste transfer note number etc.
               otherReferencesForMovement:
-                type: string
+                type: array
+                items:
+                  type: string
                 description: Other references for this movement
               specialHandlingRequirements:
                 type: string
@@ -217,6 +219,7 @@ components:
           description: The business location address of the carrier.
         emailAddress:
           type: string
+          format: email
           description: The email address of the carrier.
         phoneNumber:
           type: string
@@ -237,6 +240,13 @@ components:
         address:
           type: string
           description: The business location address of the broker or dealer.
+        emailAddress:
+          type: string
+          format: email
+          description: The email address of the broker or dealer.
+        phoneNumber:
+          type: string
+          description: The phone number of the broker or dealer.
         registrationNumber:
           type: string
           description: The Registration number of the broker or dealer.
