@@ -1,30 +1,22 @@
-openapi: "3.0.3"
+openapi: 3.0.3
 info:
   title: Digital Waste Tracking Receipt API
-  version: "1.0"
-  description: This API allows waste transport receivers, software developers and third party software users to communicate waste movement reception details to DEFRA. 
-  The aim is to keep a record of all waste movement receipts by waste receivers. Use the API to communicate and store the status of waste movement consignment codes passed as an array.
-  
-  The API is based on REST principles and uses both a POST and a PUT method endpoint that return data in JSON format. It uses standard HTTP error response codes. 
-
-  The API POST method is used to initially log a record of received waste movements and returns a waste tracking ID and a validation result. No wqaste tracking 
-  The API PUT method is used to update a particular waste tracking record using a waste tracking ID. It returns the waste tracking ID and a validation result
-  
-  
-  Note- This API specification is currently a draft and subject to change.
-  
+  version: 1.0.0
+  description: |-
+    <p>This API allows waste transport receivers, software developers and third party software users to communicate waste movement reception details to DEFRA.</p> <p>The aim is to keep a record of all waste movement receipts by waste receivers. Use the API to store or update the waste movement reception details.</p> <h2>Methods</h2> <p>The API is based on REST principles and uses both a POST and a PUT method that return data in JSON format. It uses standard HTTP error response codes. </p>
+    <p>The API <b>POST</b> method is used to initially log a record of received waste movements and returns a waste tracking ID and a validation result. </p> <p>The API <b>PUT</b> method is used to update a particular waste tracking record using a waste tracking ID. It returns the waste tracking ID and a validation result.</p>
+    <b>Note-</b> This API specification is currently a draft and subject to change.
 servers:
-  - url: https://api.server.test/v1
+  - url: 'https://api.server.test/v1'
 paths:
   /movements/receive:
     post:
       description: Endpoint to be used when waste is received but the carrier has not already recorded the waste movement so has no id.
       requestBody:
-        $ref: "#/components/requestBodies/receiveMovementRequest"
-        required: true
+        $ref: '#/components/requestBodies/receiveMovementRequest'
       responses:
-        "201":
-          description: Success: The waste movement has been stored.
+        '201':
+          description: Success- The waste movement has been stored
           content:
             application/json:
               schema:
@@ -33,55 +25,71 @@ paths:
                   wasteTrackingId:
                     type: string
                     description: Globally unique identifier of the movement. This id should be stored and used for any subsequent updates of the movement.
+                    example: 25HRA0B2
                   validation:
                     type: object
                     properties:
                       warnings:
                         type: array
                         items:
-                          $ref: "#/components/schemas/validationResult"
-        "400":
-          $ref: "#/components/responses/400"
-  /movements/{wasteTrackingId}/receive:
+                          $ref: '#/components/schemas/validationResult'
+        '400':
+          $ref: '#/components/responses/400'
+  '/movements/{wasteTrackingId}/receive':
     put:
-      description: Endpoint to be used when waste is recieved and the carrier has a waste tracking id.
+      description: |
+        Endpoint to be used when waste is received and the waste record is to be updated. The carrier has a waste tracking id and this parameter must be used in the URL path.
+        
+        <p>Example:</p>
+        
+        curl -X PUT "https://waste-movement-external-api.test.cdp-int.defra.cloud/movements/<b>YOUR_WASTE_TRACKING_ID</b>/receive" \ </p>
+        <p> -H "Content-Type: application/json" \</p>
+        <p> -d '{
+              "receivingSiteId": "12345678-1234-1234-1234-123456789012",
+              "yourUniqueReference": "REF-BASIC-UPDATE",
+              "otherReferencesForMovement": "Updated basic movement with additional details",
+              "specialHandlingRequirements": "Standard handling requirements",
+              "waste": ...</p>
+      
+        
       parameters:
         - name: wasteTrackingId
           in: path
+          required: true
           description: The globally unique id of the movement.
+          example: 25HRA0B2
           schema:
             type: string
       requestBody:
-        $ref: "#/components/requestBodies/receiveMovementRequest"
-        required: true
+        $ref: '#/components/requestBodies/receiveMovementRequest'
       responses:
-        "200":
+        '200':
           description: The waste movement receipt has been updated.
           content:
             application/json:
               schema:
                 type: object
+                example: 200
                 properties:
                   wasteTrackingId:
                     type: string
                     description: Globally unique identifier of the movement. This id should be stored and used for any subsequent updates of the movement.
+                    example: 25HRA0B2
                   validation:
                     type: object
                     properties:
                       warnings:
                         type: array
                         items:
-                          $ref: "#/components/schemas/validationResult"
-        "400":
-          $ref: "#/components/responses/400"
-        "404":
-          description: Movement not found.
-            The details will still be stored in the Waste Tracking Service, the response is to inform the receiver that the carrier has provided incorrect details.
-
+                          $ref: '#/components/schemas/validationResult'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          description: 'Movement not found. The details will still be stored in the Waste Tracking Service, the response informs the receiver that the carrier has provided incorrect details.'
 components:
   requestBodies:
     receiveMovementRequest:
-      description: Details of the waste movement to be created. The mandatory paramater to be included in the API call includes the receivingSiteID.
+      description: Details of the waste movement to be created. The mandatory paramater to be included in the API call is the receivingSiteID.
       required: true
       content:
         application/json:
@@ -93,43 +101,91 @@ components:
               receivingSiteId:
                 type: string
                 format: uuid
-                description: This is the unique identifier of the receiving site, found within the Waste Companies service.
+                description: 'This is the unique identifier of the receiving site, found within the Waste Companies service.'
+                example: 12345678-1234-1234-1234-123456789012
               hazardousWasteConsignmentCode:
                 type: string
-                description: Hazardous waste consignment code (If EWC is Haz, then mandatory)
+                description: 'Hazardous waste consignment code (If EWC is Haz, then mandatory)'
+                example: XXXXX
               reasonForNoConsignmentCode:
                 type: string
                 enum:
-                  [
-                    "Non-Haz Waste Transfer",
-                    "Carrier did not provide documentation",
-                    "Local Authority Receipt",
-                  ]
-                description: Reason provided for not having a consignment number
+                  - Non-Haz Waste Transfer
+                  - Carrier did not provide documentation
+                  - Local Authority Receipt
+                description: Reason provided for not having a consignment code
+                example: Carrier did not provide documentation
               yourUniqueReference:
                 type: string
-                description: This could be a unique weighbridge ticket number, waste transfer note number etc.
+                description: 'This could be a unique weighbridge ticket number, waste transfer note number etc.'
+                example: wTBrdgAA020
               otherReferencesForMovement:
                 type: string
                 description: Other references for this movement
+                example: XXXXX
               specialHandlingRequirements:
                 type: string
                 maxLength: 5000
-                description: Usually required only for abnormal hazardous waste that might contain harmful chemical, biological or physical characteristics. These may require some special handling to prevent harm.
+                description: 'Usually required only for abnormal hazardous waste that might contain harmful chemical, biological or physical characteristics. These may require some special handling to prevent harm.'
+                example: XXXXX
               waste:
                 type: array
                 items:
-                  $ref: "#/components/schemas/waste"
+                  $ref: '#/components/schemas/waste'
               carrier:
-                $ref: "#/components/schemas/carrier"
+                $ref: '#/components/schemas/carrier'
               brokerOrDealer:
-                $ref: "#/components/schemas/brokerOrDealer"
+                $ref: '#/components/schemas/brokerOrDealer'
               acceptance:
-                $ref: "#/components/schemas/acceptance"
+                $ref: '#/components/schemas/acceptance'
               receiver:
-                $ref: "#/components/schemas/receiver"
+                $ref: '#/components/schemas/receiver'
               receipt:
-                $ref: "#/components/schemas/receipt"
+                $ref: '#/components/schemas/receipt'
+          example: |
+            curl -X POST "https://waste-movement-external-api.test.cdp-int.defra.cloud/movements/receive" \
+             -H "Content-Type: application/json" \
+             -d '{
+               "receivingSiteId": "12345678-1234-1234-1234-123456789012",
+               "waste": [
+                 {
+                   "ewcCodes": ["020101"],
+                   "wasteDescription": "Basic mixed construction and demolition waste",
+                   "form": "Mixed",
+                   "numberOfContainers": 3,
+                   "typeOfContainers": "Skip containers",
+                   "quantity": {
+                     "metric": "Tonnes",
+                     "amount": 2.5,
+                     "isEstimate": false
+                  }
+                 }
+               ],
+               "carrier": {
+                "organisationName": "Basic Carrier Ltd",
+                "address": "123 Basic Street, Basic City, BC1 2AB",
+                "emailAddress": "basic@carrier.com",
+                "phoneNumber": "01234567890",
+                "meansOfTransport": "Road" 
+               },
+               "acceptance": {
+                 "acceptingAll": true
+               },
+               "receipt": {
+                 "dateTimeReceived": "'$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")'",
+                 "disposalOrRecoveryCodes": [
+                   {
+                     "code": "R1",
+                     "quantity": {
+                       "metric": "Tonnes",
+                       "amount": 2.5,
+                       "isEstimate": false
+                   }
+                }
+               ]
+             }
+            }'
+                
   schemas:
     waste:
       type: object
@@ -143,28 +199,40 @@ components:
           items:
             type: string
           maxItems: 5
-          description: An EWC code is a 6 digit code listed in the European Waste Catalogue (EWC). The EWC is a list of waste types which categorises waste based on a combination of what they are, and the process or activity that produces them.
+          description: 'An EWC code is a 6 digit code listed in the European Waste Catalogue (EWC). The EWC is a list of waste types which categorises waste based on a combination of what they are, and the process or activity that produces them.'
+          example: 020101
         wasteDescription:
           type: string
-          description: A detailed description of a specific waste material, including its physical characteristics, composition, and any potential hazards associated with it. It's essentially a classification of the waste that helps determine how it should be managed and disposed of safely.
+          description: 'A detailed description of a specific waste material, including its physical characteristics, composition and any potential hazards associated with it. It''s essentially a classification of the waste that helps determine how it should be managed and disposed of safely.'
+          example: Basic mixed construction and demolition waste
         form:
           type: string
-          enum: [Gas, Liquid, Solid, Powder, Sludge, Mixed]
-          description: This is the form of the waste. This could be a gas, liquid, solid, powder, sludge or mixed etc.
+          enum:
+            - Gas
+            - Liquid
+            - Solid
+            - Powder
+            - Sludge
+            - Mixed
+          description: 'This is the form of the waste. This could be a gas, liquid, solid, powder, sludge or mixed etc.'
+          example: Sludge
         numberOfContainers:
           type: number
-          description: Number of containers for storing, transporting and disposing of waste materials
+          description: 'Number of containers for storing, transporting and disposing of waste materials'
+          example: 3
         typeOfContainers:
           type: string
-          description: Containers are receptacles used for storing, transporting, and disposing of waste materials. They come in various sizes and types, ranging from small desk-side bins to large industrial skips.
+          description: 'Containers are receptacles used for storing, transporting, and disposing of waste materials. They come in various sizes and types, ranging from small desk-side bins to large industrial skips.'
+          example: skip containers
         quantity:
-          $ref: "#/components/schemas/quantity"
+          $ref: '#/components/schemas/quantity'
         pops:
           type: object
           properties:
             containsPops:
               type: boolean
               description: Persistent organic pollutants (POPs) are chemical substances that do not break down in the environment. They are a danger to human health and the environment. POPs can be present in hazardous and non-hazardous waste.
+              example: XXXXX
             pops:
               type: array
               items:
@@ -172,7 +240,7 @@ components:
                 properties:
                   name:
                     type: string
-                    description: E.g. Aldrin, Chlordane, Dieldrin etc.
+                    description: 'E.g. Aldrin, Chlordane, Dieldrin etc.'
                   concentration:
                     type: number
                     description: E.g. 50mg per kg of Chlordane.
@@ -182,11 +250,13 @@ components:
             containsHazardous:
               type: boolean
               description: Hazardous waste is any waste that is potentially harmful to human health or the environment.
+              example: XXXXX
             hazCodes:
               type: array
               items:
                 type: integer
               description: Hazardous waste codes are a list of codes that describe the hazardous waste.
+              example: XXXXX
             components:
               type: array
               items:
@@ -195,63 +265,86 @@ components:
                   name:
                     type: string
                     description: E.g. Mercury.
+                    example: XXXXX
                   concentration:
                     type: number
                     description: E.g. 30mg per kg.
+                    example: XXXXX
     carrier:
       type: object
       properties:
         registrationNumber:
           type: string
-          description: A waste carrier registration number is a legal requirement for businesses that transport, buy, sell, or dispose of waste. This license ensures that waste is handled and transported in a responsible and environmentally friendly manner.
+          description: 'A waste carrier registration number is a legal requirement for businesses that transport, buy, sell, or dispose of waste. This license ensures that waste is handled and transported in a responsible and environmentally friendly manner.'
+          example: XXXXX
         reasonForNoRegistrationNumber:
           type: string
           description: Provide reasons for not having the carrier registration number
+          example: XXXXX
         organisationName:
           type: string
           description: The business name of the carrier.
+          example: XXXXX
         address:
           type: string
           description: The business location address of the carrier.
+          example: XXXXX
         emailAddress:
           type: string
           description: The email address of the carrier.
+          example: XXXXX
         phoneNumber:
           type: string
-          description: This describes how the waste is transported (road, rail, air, sea, inland waterway, others)
+          description: 'This describes how the waste is transported (road, rail, air, sea, inland waterway, others)'
+          example: XXXXX
         vehicleRegistration:
           type: string
           description: This is the vehicle registration number
+          example: XXXXX
         meansOfTransport:
           type: string
-          enum: [Road, Rail, Air, Sea, "Inland Waterway", Pipe, Other]
-          description: This describes how the waste is transported (road, rail, air, sea, inland waterway, others)
+          enum:
+            - Road
+            - Rail
+            - Air
+            - Sea
+            - Inland Waterway
+            - Pipe
+            - Other
+          description: 'This describes how the waste is transported (road, rail, air, sea, inland waterway, others)'
+          example: XXXXX
         otherMeansOfTransport:
           type: string
           description: State any other means of transport
+          example: XXXXX
     brokerOrDealer:
       type: object
       properties:
         organisationName:
           type: string
           description: The broker or dealer organisation name who arranged this transfer.
+          example: XXXXX
         address:
           type: string
           description: The business location address of the broker or dealer.
+          example: XXXXX
         registrationNumber:
           type: string
           description: The Registration number of the broker or dealer.
+          example: XXXXX
     acceptance:
       type: object
       properties:
         acceptingAll:
           type: boolean
           description: Is any of the waste rejected?
+          example: XXXXX
         quantityNotAccepted:
-          $ref: "#/components/schemas/quantity"
+          $ref: '#/components/schemas/quantity'
         rejectionReason:
           type: string
           description: What are the reasons why all or part of the waste is rejected?
+          example: XXXXX
     receiver:
       type: object
       properties:
@@ -262,14 +355,18 @@ components:
             properties:
               authorisationType:
                 type: string
-                enum: [TBD]
+                enum:
+                  - TBD
                 description: Waste sites have permits or licenses for certain types of waste. E.g. it could be a landfill site.
+                example: XXXXX
               authorisationNumber:
                 type: string
                 description: This is the site's authorisation (permit or exemption) number that allows it to accept waste for intended recovery and disposal operation.
+                example: XXXXX
         regulatoryPositionStatement:
           type: integer
-          description: A regulatory position statement (RPS) is issued when the Environment Agency don’t require you to have a permit to carry out certain activities that they regulate. The statement will state which activities you do not require a permit for.
+          description: A regulatory position statement (RPS) is issued when the Environment Agency doesn't require you to have a permit to carry out certain activities that they regulate. The statement will explain which activities you do not require a permit for.
+          example: XXXXX
     receipt:
       type: object
       properties:
@@ -277,17 +374,19 @@ components:
           type: string
           format: date-time
           description: This is the date and exact time waste was received at the site.
+          example: XXXXX
         disposalOrRecoveryCodes:
           type: array
           items:
-            $ref: "#/components/schemas/disposalOrRecoveryCode"
+            $ref: '#/components/schemas/disposalOrRecoveryCode'
     disposalOrRecoveryCode:
       type: object
       properties:
         code:
           type: string
+          example: XXXXX
         quantity:
-          $ref: "#/components/schemas/quantity"
+          $ref: '#/components/schemas/quantity'
     quantity:
       type: object
       required:
@@ -297,28 +396,46 @@ components:
       properties:
         metric:
           type: string
-          enum: [ Grams, Kilograms, Tonnes, Litres, "Cubic metres", Each, Milliliters ]
+          enum:
+            - Grams
+            - Kilograms
+            - Tonnes
+            - Litres
+            - Cubic metres
+            - Each
+            - Milliliters
           description: Unit of measurement the waste is being accepted
+          example: XXXXX
         amount:
           type: number
           description: Total weight of the waste being accepted
+          example: XXXXX
         isEstimate:
           type: boolean
           description: Specifies whether the quantity of waste is estimated or actual.
+          example: XXXXX
     validationResult:
       type: object
       properties:
         key:
           type: string
+          example: |
+             {
+              "statusCode": 201,
+              "globalMovementId": "25HRA0B2"
+              }
         errorType:
           type: string
           enum:
             - NotProvided
             - TBC
+          example: 201
         message:
           type: string
+          example: Success
+      description: "Waste description successfully stored"
   responses:
-    "400":
+    '400':
       description: Input was not in the correct format.
       content:
         application/json:
@@ -331,6 +448,7 @@ components:
                   errors:
                     type: array
                     items:
-                      $ref: "#/components/schemas/validationResult"
+                      $ref: '#/components/schemas/validationResult'
+
 
 
