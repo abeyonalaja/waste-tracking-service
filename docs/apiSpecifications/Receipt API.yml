@@ -79,6 +79,7 @@ components:
             type: object
             required:
               - receivingSiteId
+              - carrier
             properties:
               receivingSiteId:
                 type: string
@@ -204,6 +205,9 @@ components:
             $ref: "#/components/schemas/disposalOrRecoveryCode"
     carrier:
       type: object
+      required:
+        - registrationNumber
+        - organisationName
       properties:
         registrationNumber:
           type: string
