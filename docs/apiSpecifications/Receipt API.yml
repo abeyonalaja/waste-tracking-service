@@ -91,7 +91,7 @@ paths:
 components:
   requestBodies:
     receiveMovementRequest:
-      description: Details of the waste movement to be created. The mandatory paramater to be included in the API call is the receivingSiteID.
+      description: Details of the waste movement to be created. The mandatory paramater to be included in the API call is the <b>receivingSiteID</b>.
       required: true
       content:
         application/json:
@@ -274,10 +274,10 @@ components:
                     type: number
                     description: E.g. 30mg per kg.
                     example: 100
-        '':
-          type: string
-          x-stoplight:
-            id: kczjm9n3t4n0q
+        disposalOrRecoveryCodes:
+          type: array
+          items:
+            $ref: "#/components/schemas/disposalOrRecoveryCode"
     carrier:
       type: object
       properties:
@@ -398,7 +398,14 @@ components:
         code:
           type: string
           description: XXXXX
-          example: XXXXX
+          example: |
+            {
+                     "code": "R1",
+                     "quantity": {
+                       "metric": "Tonnes",
+                       "amount": 2.5,
+                       "isEstimate": false
+                   }
         quantity:
           $ref: '#/components/schemas/quantity'
     quantity:
@@ -463,6 +470,7 @@ components:
                     type: array
                     items:
                       $ref: '#/components/schemas/validationResult'
+
 
 
 
