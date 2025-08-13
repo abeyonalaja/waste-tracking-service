@@ -2,9 +2,9 @@ openapi: 3.0.3
 info:
   title: Digital Waste Tracking Receipt API
   version: 1.0.0
-  description: |-
+  description: |
     <p>This API allows waste transport receivers, software developers and third party software users to communicate waste movement reception details to DEFRA.</p> <p>The aim is to keep a record of all waste movement receipts by waste receivers. Use the API to store or update the waste movement reception details.</p> <h2>Methods</h2> <p>The API is based on REST principles and uses both a POST and a PUT method that return data in JSON format. It uses standard HTTP error response codes. </p>
-    <p>The API <b>POST</b> method is used to initially log a record of received waste movements and returns a waste tracking ID and a validation result. </p> <p>The API <b>PUT</b> method is used to update a particular waste tracking record using a waste tracking ID. It returns the waste tracking ID and a validation result.</p>
+    <p>The API <font color="green"><b>POST</b></font> method is used to initially log a record of received waste movements and returns a waste tracking ID and a validation result. </p> <p>The API <font color="red"><b>PUT</b></font> method is used to update a particular waste tracking record using a waste tracking ID. It returns the waste tracking ID and a validation result.</p>
     <b>Note-</b> This API specification is currently a draft and subject to change.
 servers:
   # Added by API Auto Mocking Plugin
@@ -14,9 +14,10 @@ servers:
 paths:
   /movements/receive:
     post:
-      description: 'Endpoint used when waste is received but the carrier has not yet recorded the waste movement. Generally at this stage, the receiver does not have or use the waste tracking ID. The waste tracking ID will be returned in the 201 response if the movement is successfully stored.'
+      description: 'Endpoint used when waste is received but the receiver has not yet recorded the waste movement. Generally at this stage, the receiver does not have or use the waste tracking ID. The waste tracking ID will be returned in the 201 response if the movement is successfully stored.'
       requestBody:
         $ref: '#/components/requestBodies/receiveMovementRequest'
+        required: true
       responses:
         '201':
           description: Success- The waste movement has been stored.
@@ -24,6 +25,11 @@ paths:
             application/json:
               schema:
                 type: object
+                example:
+                  {
+                    "statusCode": 201,
+                    "globalMovementId": "25Z34MR9"
+                   }
                 properties:
                   wasteTrackingId:
                     type: string
@@ -43,17 +49,16 @@ paths:
       description: |
         Endpoint to be used when waste is received and the waste record is to be updated. The carrier has a waste tracking ID and this parameter must be used in the URL path.
 
-        <p>Example:</p>
+        <p>Partial example using cURL</p>
 
-        curl -X PUT "https://waste-movement-external-api.test.cdp-int.defra.cloud/movements/<b>YOUR_WASTE_TRACKING_ID</b>/receive" \ </p>
-        <> -H "Content-Type: application/json" \</p>
-        <p> -d '{
+        <p><font color="blue">curl -X PUT "https://waste-movement-external-api.test.cdp-int.defra.cloud/movements/<b>YOUR_WASTE_TRACKING_ID</b>/receive" \ </p>
+         -H "Content-Type: application/json" \</p>
+            -d '{
               "receivingSiteId": "12345678-1234-1234-1234-123456789012",
               "yourUniqueReference": "REF-BASIC-UPDATE",
               "otherReferencesForMovement": "Updated basic movement with additional details",
               "specialHandlingRequirements": "Standard handling requirements",
-              "waste": ...</p>
-              
+              "waste": ...</p></font>
       parameters:
         - name: wasteTrackingId
           in: path
@@ -62,6 +67,52 @@ paths:
           example: 25HRA0B2
           schema:
             type: string
+            example: |
+               curl -X PUT "https://waste-movement-external-api.test.cdp-int.defra.cloud/movements/YOUR_WASTE_TRACKING_ID/receive" \
+                  -H "Content-Type: application/json" \
+                  -d '{
+                        "receivingSiteId": "12345678-1234-1234-1234-123456789012",
+                        "yourUniqueReference": "REF-BASIC-UPDATE",
+                        "otherReferencesForMovement": "Updated basic movement with additional details",
+                        "specialHandlingRequirements": "Standard handling requirements",
+                        "waste": [
+                          {
+                            "ewcCodes": ["020101"],
+                            "wasteDescription": "Updated basic mixed construction and demolition waste",
+                            "form": "Mixed",
+                            "numberOfContainers": 4,
+                            "typeOfContainers": "Updated skip containers",
+                            "quantity": {
+                            "metric": "Tonnes",
+                            "amount": 2.8,
+                            "isEstimate": false
+                          }
+                        }
+                     ],
+                       "carrier": {
+                       "organisationName": "Basic Update Carrier Ltd",
+                       "address": "123 Basic Update Street, Basic Update City, BUC1 2AB",
+                       "emailAddress": "basicupdate@carrier.com",
+                       "phoneNumber": "01234567890",
+                       "meansOfTransport": "Road"
+                     },
+                     "acceptance": {
+                        "acceptingAll": true
+                     },
+                     "receipt": {
+                       "dateTimeReceived": "2025-01-07T10:00:00.000Z",
+                       "disposalOrRecoveryCodes": [
+                         {
+                          "code": "R1",
+                          "quantity": {
+                          "metric": "Tonnes",
+                          "amount": 2.8,
+                          "isEstimate": false
+                        }
+                      }
+                    ]
+                  }
+                }'
       requestBody:
         $ref: '#/components/requestBodies/receiveMovementRequest'
       responses:
@@ -71,7 +122,11 @@ paths:
             application/json:
               schema:
                 type: object
-                example: 200
+                example:
+                  {
+                    "statusCode": 200,
+                    "globalMovementId": "25Z34MR9"
+                   }
                 properties:
                   wasteTrackingId:
                     type: string
@@ -91,24 +146,46 @@ paths:
 components:
   requestBodies:
     receiveMovementRequest:
-      description: Details of the waste movement to be created. The mandatory paramater to be included in the API call is the <b>receivingSiteID</b>.
+      description: | 
+        Details of the waste movement to be created. The mandatory paramater to be included in the API call is the <b>receivingSiteID</b>.
       required: true
       content:
         application/json:
           schema:
             type: object
             required:
-              - receivingSiteId
+               - receivingSiteId
             properties:
               receivingSiteId:
                 type: string
                 format: uuid
-                description: 'This is the unique identifier of the receiving site, found within the Waste Companies service.'
-                example: 12345678-1234-1234-1234-123456789012
+                description: 'This is the unique identifier of the receiving site, found within the Waste Companies service. his isn’t commonly referred to as a “Site Authorisation Number.” More commonly, it’s known as Site Permit Number or EPR number (Environmental Permit Reference)
+
+ 
+
+Permit number format: EPR/AB1234CD
+
+ 
+
+Each permit also has a corresponding Waste Management Licence Number (WML) in the format EAWML123456. Some older sites may only have a WML number, though this is rare.
+
+ 
+
+Mobile plant permits follow the same format as above, but if they have a deployment authorisation, they are also allocated a “D number” in the format D + 4 digits. This is suffixed to their permit number.'
+                example: EPR/AB1234CD/D6789
               hazardousWasteConsignmentCode:
                 type: string
-                description: 'Hazardous waste consignment code (If EWC is HAZ, then mandatory).'
-                example: HAZ
+                description: | 
+                  'Hazardous waste consignment code (If EWC is HAZ, then mandatory). The consignment note code must follow the format: XXXXXX/YYYYY. 
+                  - XXXXXX is made up of 6 letters and must be followed by a forward slash /
+                  - YYYYY is a 5-character unique identifier of the users choice using letters or numbers (no spaces or symbols).'
+                  
+                example: |
+                  Company name: CJTILE Ltd → Code prefix: CJTILE/
+
+                  Unique ID: A0001
+
+                  Full code: CJTILE/A0001
               reasonForNoConsignmentCode:
                 type: string
                 enum:
@@ -129,7 +206,7 @@ components:
                 type: string
                 maxLength: 5000
                 description: 'Usually required only for abnormal hazardous waste that might contain harmful chemical, biological or physical characteristics. These may require some special handling to prevent harm.'
-                example: XXXXX
+                example: The waste must be fully inspected by the waste handler according to the EWC codes provided.
               waste:
                 type: array
                 items:
@@ -144,13 +221,14 @@ components:
                 $ref: '#/components/schemas/receiver'
               receipt:
                 $ref: '#/components/schemas/receipt'
-          example: |
-            curl -X POST "https://waste-movement-external-api.test.cdp-int.defra.cloud/movements/receive" \
-             -H "Content-Type: application/json" \
-             -d '{
-               "receivingSiteId": "12345678-1234-1234-1234-123456789012",
-               "waste": [
-                 {
+            example: |
+            
+                   curl -X POST "https://waste-movement-external-api.test.cdp-int.defra.cloud/movements/receive" \
+                    -H "Content-Type: application/json" \
+                    -d '{
+                         "receivingSiteId": "12345678-1234-1234-1234-123456789012",
+                         "waste": [
+                                   {
                    "ewcCodes": ["020101"],
                    "wasteDescription": "Basic mixed construction and demolition waste",
                    "form": "Mixed",
@@ -160,22 +238,22 @@ components:
                      "metric": "Tonnes",
                      "amount": 2.5,
                      "isEstimate": false
-                  }
-                 }
-               ],
-               "carrier": {
-                "organisationName": "Basic Carrier Ltd",
-                "address": "123 Basic Street, Basic City, BC1 2AB",
-                "emailAddress": "basic@carrier.com",
-                "phoneNumber": "01234567890",
-                "meansOfTransport": "Road" 
-               },
-               "acceptance": {
-                 "acceptingAll": true
-               },
-               "receipt": {
-                 "dateTimeReceived": "'$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")'",
-                 "disposalOrRecoveryCodes": [
+                    }
+                   }
+                   ],
+                     "carrier": {
+                     "organisationName": "Basic Carrier Ltd",
+                     "address": "123 Basic Street, Basic City, BC1 2AB",
+                     "emailAddress": "basic@carrier.com",
+                     "phoneNumber": "01234567890",
+                      "meansOfTransport": "Road" 
+                       },
+                        "acceptance": {
+                        "acceptingAll": true
+                      },
+                         "receipt": {
+                         "dateTimeReceived": "'$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")'",
+                         "disposalOrRecoveryCodes": [
                    {
                      "code": "R1",
                      "quantity": {
@@ -183,11 +261,10 @@ components:
                        "amount": 2.5,
                        "isEstimate": false
                    }
-                }
-               ]
-             }
-            }'
-                
+                   }
+                   ]
+                   }
+                   }'
   schemas:
     waste:
       type: object
@@ -199,14 +276,14 @@ components:
         ewcCodes:
           type: array
           maxItems: 5
-          description: 'An EWC code is a 6 digit code listed in the European Waste Catalogue (EWC). The EWC is a list of waste types which categorises waste based on a combination of what they are, and the process or activity that produces them.'
-          example: 20101
+          description: 'An EWC code is a 6 digit code listed in the European Waste Catalogue (EWC). The EWC is a list of waste types which categorises waste based on a combination of what they are, and the process or activity that produces them.' 
+          example: 201010
           items:
             type: string
         wasteDescription:
           type: string
           description: 'A detailed description of a specific waste material, including its physical characteristics, composition and any potential hazards associated with it. It''s essentially a classification of the waste that helps determine how it should be managed and disposed of safely.'
-          example: Basic mixed construction and demolition waste
+          example: Basic mixed construction and demolition waste, this includes recyclable house bricks, gypsum plaster and slates. 
         form:
           type: string
           enum:
@@ -221,11 +298,11 @@ components:
         numberOfContainers:
           type: number
           description: 'Number of containers for storing, transporting and disposing of waste materials'
-          example: 3
+          example: XXXXX
         typeOfContainers:
           type: string
           description: 'Containers are receptacles used for storing, transporting, and disposing of waste materials. They come in various sizes and types, ranging from small desk-side bins to large industrial skips.'
-          example: skip containers
+          example: XXXXX
         quantity:
           $ref: '#/components/schemas/quantity'
         pops:
@@ -242,23 +319,23 @@ components:
                 properties:
                   name:
                     type: string
-                    description: 'E.g. Aldrin, Chlordane, Dieldrin etc.'
+                    description: 'The name of the waste type, e.g. Aldrin, Chlordane, Dieldrin etc.'
                     example: Aldrin
                   concentration:
                     type: number
-                    description: E.g. 50mg per kg of Chlordane.
+                    description: The concentration of the waste per kilogram, e.g. 50mg per kg of Chlordane.
                     example: 100
         hazardous:
           type: object
           properties:
             containsHazardous:
               type: boolean
-              description: Hazardous waste is any waste that is potentially harmful to human health or the environment.
+              description: Hazardous waste is any waste that is potentially harmful to human health or the environment. This is a boolean value, i.e. true or false.
               example: true
             hazCodes:
               type: array
-              description: Hazardous waste codes are a list of codes that describe the hazardous waste.
-              example: XXXXX
+              description: Hazardous waste codes are a list of codes that describe the hazardous waste. Common types could include codes, HP1 - HP15. For more informaation refer to the waste support website at https://www.wastesupport.co.uk/hazard-codes/. Input should be numeric only.
+              example: 5, 10, 12
               items:
                 type: integer
             components:
@@ -268,12 +345,12 @@ components:
                 properties:
                   name:
                     type: string
-                    description: E.g. Mercury.
+                    description: Name of the hazardous material, e.g. Mercury.
                     example: lead
                   concentration:
                     type: number
-                    description: E.g. 30mg per kg.
-                    example: 100
+                    description: The concentration of the hazardous materrial per Kilo, e.g. 30mg per kg.
+                    example: 50
         disposalOrRecoveryCodes:
           type: array
           items:
@@ -288,20 +365,26 @@ components:
             'England & Wales Waste Carrier Registration: A common format is CBDUXXXXXX (Upper Tier) or CBDLXXXXXX (Lower Tier), where "CBD" likely
             stands for "Carrier, Broker, Dealer" and the "U" or "L" indicates upper or lower tier registration. Scotland Typically starts with WCR
             followed by numbers and potentially letters according to the Scottish Environment Protection Agency (SEPA).     Northern Ireland May
-            include a prefix like ROC followed by UT (Upper Tier) or LT (Lower Tier) and then numbers.' 
-          example: XXXXX
+            include a prefix like ROC followed by UT (Upper Tier) or LT (Lower Tier) and then numbers.
+            
+            All registrations begin with CBD, followed by:
+
+            L = Lower tier
+            U = Upper tier
+            This is then followed by 6 digits.' 
+          example: CBDL123456, CBDU123456
         reasonForNoRegistrationNumber:
           type: string
           description: Provide reasons for not having the carrier registration number
-          example: XXXXX
+          example: Waste carrier did not provide a carrier registration Number.
         organisationName:
           type: string
           description: The business name of the carrier.
-          example: XXXXX
+          example: Waste Carriers Lite Ltd
         address:
           type: string
-          description: The business location address of the carrier.
-          example: XXXXX
+          description: The business location address of the carrier. A valid postcode must be included.
+          example: '26a Oil Drum Lane, Sheperds Bush, W12 7ZL, ondon'
         emailAddress:
           type: string
           description: The email address of the carrier.
@@ -309,11 +392,11 @@ components:
         phoneNumber:
           type: string
           description: The UK or internationl phone number of the carrier.
-          example: XXXXX
+          example: 020 4756 3232
         vehicleRegistration:
           type: string
-          description: This is the vehicle registration number
-          example: XXXXX
+          description: This is the vehicle registration number.
+          example: RNT 473
         meansOfTransport:
           type: string
           enum:
@@ -339,12 +422,23 @@ components:
           example: Waste Desposal Ltd
         address:
           type: string
-          description: The business location address of the broker or dealer.
-          example: '26a Oil Drum Lane, Sheperd''s Bush, London'
+          description: The business location address of the broker or dealer. A valid postcode must be included.
+          example: '26a Oil Drum Lane, Sheperds Bush, W12 7ZL, London'
         registrationNumber:
           type: string
-          description: The Registration number of the broker or dealer.
-          example: XXXXX
+          description: |
+            'A waste carrier registration number is a legal requirement for businesses that transport, buy, sell, or dispose of waste. This license ensures that waste is handled and transported in a responsible and environmentally friendly manner.'
+            'England & Wales Waste Carrier Registration: A common format is CBDUXXXXXX (Upper Tier) or CBDLXXXXXX (Lower Tier), where "CBD" likely
+            stands for "Carrier, Broker, Dealer" and the "U" or "L" indicates upper or lower tier registration. Scotland Typically starts with WCR
+            followed by numbers and potentially letters according to the Scottish Environment Protection Agency (SEPA).     Northern Ireland May
+            include a prefix like ROC followed by UT (Upper Tier) or LT (Lower Tier) and then numbers.
+            
+            All registrations begin with CBD, followed by:
+
+            L = Lower tier
+            U = Upper tier
+            This is then followed by 6 digits.' 
+          example: CBDL123456, CBDU123456
     acceptance:
       type: object
       properties:
@@ -378,8 +472,8 @@ components:
                 example: XXXXX
         regulatoryPositionStatement:
           type: integer
-          description: A regulatory position statement (RPS) is issued when the Environment Agency doesn't require you to have a permit to carry out certain activities that they regulate. The statement will explain which activities you do not require a permit for.
-          example: XXXXX
+          description: A regulatory position statement (RPS) is issued when the Environment Agency doesn't require you to have a permit to carry out certain activities that they regulate. The statement will explain which activities you do not require a permit for. This must be a positive integer.'
+          example: 343
     receipt:
       type: object
       properties:
@@ -397,7 +491,7 @@ components:
       properties:
         code:
           type: string
-          description: XXXXX
+          description: Disposal recovery code used 
           example: |
             {
                      "code": "R1",
@@ -425,12 +519,19 @@ components:
             - Cubic metres
             - Each
             - Milliliters
-          description: Unit of measurement the waste is being accepted.
+          description: Unit of measurement the waste is being accepted. 
           example: Litres
         amount:
           type: number
-          description: Total weight of the waste being accepted.
-          example: XXXXX
+          description: Total weight of the waste being accepted in a unit specified below.
+            - Grams
+            - Kilograms
+            - Tonnes
+            - Litres
+            - Cubic metres
+            - Each
+            - Milliliters.
+          example: 1480
         isEstimate:
           type: boolean
           description: Specifies whether the quantity of waste is estimated or actual.
@@ -454,7 +555,7 @@ components:
         message:
           type: string
           example: Success
-      description: Waste description successfully stored
+      description: Waste description not successfully stored.
   responses:
     '400':
       description: Input was not in the correct format.
@@ -462,6 +563,27 @@ components:
         application/json:
           schema:
             type: object
+            example: |
+              {
+               "validation": {
+                 "errors": [
+                    {
+                      "key": "waste.0.ewcCodes",
+                      "errorType": "NotProvided",
+                      "message": "\"waste[0].ewcCodes\" is required"
+                     },
+                     {
+                       "key": "waste.0.wasteDescription",
+                       "errorType": "NotProvided",
+                       "message": "\"waste[0].wasteDescription\" is required"
+
+        
+                      }
+                    }
+                 ]
+                }
+                }
+
             properties:
               validation:
                 type: object
@@ -470,6 +592,7 @@ components:
                     type: array
                     items:
                       $ref: '#/components/schemas/validationResult'
+
 
 
 
