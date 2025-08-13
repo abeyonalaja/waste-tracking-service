@@ -7,9 +7,6 @@ info:
     <p>The API <font color="green"><b>POST</b></font> method is used to initially log a record of received waste movements and returns a waste tracking ID and a validation result. </p> <p>The API <font color="red"><b>PUT</b></font> method is used to update a particular waste tracking record using a waste tracking ID. It returns the waste tracking ID and a validation result.</p>
     <b>Note-</b> This API specification is currently a draft and subject to change.
 servers:
-  # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: 'https://virtserver.swaggerhub.com/kbirchorganization/waste_management_tracking/1.0.0'
   - url: 'https://api.server.test/v1'
 paths:
   /movements/receive:
@@ -592,6 +589,7 @@ Mobile plant permits follow the same format as above, but if they have a deploym
                     type: array
                     items:
                       $ref: '#/components/schemas/validationResult'
+
 
 
 
