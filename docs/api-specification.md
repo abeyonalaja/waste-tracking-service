@@ -16,6 +16,6 @@ The following draft specifications are all published on the Swagger API hub:
 
 - [receiving waste onto a site](https://defra.github.io/waste-tracking-service/apiSpecifications/index.html)
 
-[![image](defra-spec.png)]
+[![image](defra-spec.png)](defra-spec.png)
 
 <br/>Page last updated on 15 August 2025.
