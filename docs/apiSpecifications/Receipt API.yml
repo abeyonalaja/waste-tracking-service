@@ -7,11 +7,66 @@ info:
     <p>The API <font color="green"><b>POST</b></font> method is used to initially log a record of received waste movements and returns a waste tracking ID and a validation result. </p> <p>The API <font color="red"><b>PUT</b></font> method is used to update a particular waste tracking record using a waste tracking ID. It returns the waste tracking ID and a validation result.</p>
     <b>Note-</b> This API specification is currently a draft and subject to change.
 servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: 'https://virtserver.swaggerhub.com/kbirchorganization/waste_management_tracking/1.0.0'
   - url: 'https://api.server.test/v1'
 paths:
   /movements/receive:
     post:
-      description: 'Endpoint used when waste is received but the receiver has not yet recorded the waste movement. Generally at this stage, the receiver does not have or use the waste tracking ID. The waste tracking ID will be returned in the 201 response if the movement is successfully stored.'
+      description: |
+        Endpoint used when waste is received but the receiver has not yet recorded the waste movement. Generally at this stage, the receiver does not have or use the waste tracking ID. The waste tracking ID will be returned in the 201 response if the movement is successfully stored.
+        
+
+        <p>Example of a POST request using cURL:</p>
+        
+        <p><b>curl -X POST "https://waste-movement-external-api.test.cdp-int.defra.cloud/movements/receive" \</p>
+        <p></p>
+        <P>-H "Content-Type: application/json" \</p>
+             -d '{</b>
+             
+              
+                  "receivingSiteId": "12345678-1234-1234-1234-123456789012",
+                  "waste": [
+                  {
+                   "ewcCodes": ["020101"],
+                   "wasteDescription": "Basic mixed construction and demolition waste",
+                   "form": "Mixed",
+                   "numberOfContainers": 3,
+                   "typeOfContainers": "Skip containers",
+                   "quantity": {
+                     "metric": "Tonnes",
+                     "amount": 2.5,
+                     "isEstimate": false
+                    }
+                   }
+                   ],
+                     "carrier": {
+                     "organisationName": "Basic Carrier Ltd",
+                     "address": "123 Basic Street, Basic City, BC1 2AB",
+                     "emailAddress": "basic@carrier.com",
+                     "phoneNumber": "01234567890",
+                      "meansOfTransport": "Road" 
+                       },
+                        "acceptance": {
+                        "acceptingAll": true
+                      },
+                         "receipt": {
+                         "dateTimeReceived": "'$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")'",
+                         "disposalOrRecoveryCodes": [
+                   {
+                     "code": "R1",
+                     "quantity": {
+                       "metric": "Tonnes",
+                       "amount": 2.5,
+                       "isEstimate": false
+                   }
+                   }
+                   ]
+                   }
+                   },
+        
+        
       requestBody:
         $ref: '#/components/requestBodies/receiveMovementRequest'
         required: true
@@ -30,7 +85,7 @@ paths:
                 properties:
                   wasteTrackingId:
                     type: string
-                    description: Globally unique identifier of the movement. This ID should be stored and used for any subsequent updates of the movement.
+                    description: Globally unique identifier of the movement. This ID should be stored and used for any subsequent updates of the movement. It is returned in the response body when either a POST or PUT request is successful, i.e. return code 201, 200.
                     example: 25HRA0B2
                   validation:
                     type: object
@@ -46,16 +101,55 @@ paths:
       description: |
         Endpoint to be used when waste is received and the waste record is to be updated. The carrier has a waste tracking ID and this parameter must be used in the URL path.
 
-        <p>Partial example using cURL</p>
-
-        <p><font color="blue">curl -X PUT "https://waste-movement-external-api.test.cdp-int.defra.cloud/movements/<b>YOUR_WASTE_TRACKING_ID</b>/receive" \ </p>
-         -H "Content-Type: application/json" \</p>
-            -d '{
-              "receivingSiteId": "12345678-1234-1234-1234-123456789012",
-              "yourUniqueReference": "REF-BASIC-UPDATE",
-              "otherReferencesForMovement": "Updated basic movement with additional details",
-              "specialHandlingRequirements": "Standard handling requirements",
-              "waste": ...</p></font>
+        <p>Example of a PUT request using cURL:</p> 
+        <p><b>curl -X PUT "https://waste-movement-external-api.test.cdp-int.defra.cloud/movements/YOUR_WASTE_TRACKING_ID/receive" \</p>
+        <p>-H "Content-Type: application/json" \</p>
+             <b> -d  '{</b>
+           
+           
+             "receivingSiteId": "12345678-1234-1234-1234-123456789012",
+             "yourUniqueReference": "REF-BASIC-UPDATE",
+             "otherReferencesForMovement": "Updated basic movement with additional details",
+             "specialHandlingRequirements": "Standard handling requirements",
+             "waste": [
+            {
+              "ewcCodes": ["020101"],
+              "wasteDescription": "Updated basic mixed construction and demolition waste",
+              "form": "Mixed",
+              "numberOfContainers": 4,
+              "typeOfContainers": "Updated skip containers",
+              "quantity": {
+              "metric": "Tonnes",
+              "amount": 2.8,
+              "isEstimate": false
+              }
+            }
+            ],
+              "carrier": {
+              "organisationName": "Basic Update Carrier Ltd",
+              "address": "123 Basic Update Street, Basic Update City, BUC1 2AB",
+              "emailAddress": "basicupdate@carrier.com",
+              "phoneNumber": "01234567890",
+              "meansOfTransport": "Road"
+               },
+                "acceptance": {
+                "acceptingAll": true
+              },
+                "receipt": {
+                "dateTimeReceived": "2025-01-07T10:00:00.000Z",
+                "disposalOrRecoveryCodes": [
+               {
+                "code": "R1",
+                "quantity": {
+                "metric": "Tonnes",
+                "amount": 2.8,
+                e"isEstimate": false
+               }
+               }
+               ]
+               }
+              }'   
+        
       parameters:
         - name: wasteTrackingId
           in: path
@@ -107,9 +201,9 @@ paths:
                           "isEstimate": false
                         }
                       }
-                    ]
+                    ],
                   }
-                }'
+                 }'
       requestBody:
         $ref: '#/components/requestBodies/receiveMovementRequest'
       responses:
@@ -156,11 +250,13 @@ components:
               receivingSiteId:
                 type: string
                 format: uuid
-                description: 'This is the unique identifier of the receiving site, found within the Waste Companies service. his isn’t commonly referred to as a “Site Authorisation Number.” More commonly, it’s known as Site Permit Number or EPR number (Environmental Permit Reference)
+                description: 'This is the unique identifier of the receiving site, found within the Waste Companies service. More commonly, it’s known as Site Permit Number or EPR number (Environmental Permit Reference).
 
  
 
-Permit number format: EPR/AB1234CD
+Permit number format: England EPR/AB1234CD, NRW AB309NRW, SEPA PPC/A/1234567, WML/L/1234567
+                 example: EPR/AB1234CD
+
 
  
 
@@ -203,7 +299,7 @@ Mobile plant permits follow the same format as above, but if they have a deploym
                 type: string
                 maxLength: 5000
                 description: 'Usually required only for abnormal hazardous waste that might contain harmful chemical, biological or physical characteristics. These may require some special handling to prevent harm.'
-                example: The waste must be fully inspected by the waste handler according to the EWC codes provided.
+                example: The waste must be fully inspected by the waste handler according to the Hazardous waste consignment and or EWC codes provided.
               waste:
                 type: array
                 items:
@@ -219,10 +315,7 @@ Mobile plant permits follow the same format as above, but if they have a deploym
               receipt:
                 $ref: '#/components/schemas/receipt'
             example: |
-            
-                   curl -X POST "https://waste-movement-external-api.test.cdp-int.defra.cloud/movements/receive" \
-                    -H "Content-Type: application/json" \
-                    -d '{
+                  {
                          "receivingSiteId": "12345678-1234-1234-1234-123456789012",
                          "waste": [
                                    {
@@ -273,7 +366,9 @@ Mobile plant permits follow the same format as above, but if they have a deploym
         ewcCodes:
           type: array
           maxItems: 5
-          description: 'An EWC code is a 6 digit code listed in the European Waste Catalogue (EWC). The EWC is a list of waste types which categorises waste based on a combination of what they are, and the process or activity that produces them.' 
+          description: |
+            'An EWC code is a 6 digit code listed in the European Waste Catalogue (EWC). The EWC is a list of waste types which categorises waste based on a combination of what they are, and the process or activity that produces them. More information can be found here:
+              https://www.csg.co.uk/resources/ewc-codes#:~:text=This%20European%20Waste%20Catalogue%20checker%20helps%20you%20find,either%20by%20waste%20stream%20or%20by%20list%20view.' 
           example: 201010
           items:
             type: string
@@ -294,12 +389,14 @@ Mobile plant permits follow the same format as above, but if they have a deploym
           example: Sludge
         numberOfContainers:
           type: number
-          description: 'Number of containers for storing, transporting and disposing of waste materials'
-          example: XXXXX
+          description: 'Number of containers for storing, transporting and disposing of waste materials. This ia a numeric entry.' 
+          example: 2
         typeOfContainers:
           type: string
-          description: 'Containers are receptacles used for storing, transporting, and disposing of waste materials. They come in various sizes and types, ranging from small desk-side bins to large industrial skips.'
-          example: XXXXX
+          description: |
+           'Containers are receptacles used for storing, transporting, and disposing of waste materials. They come in various sizes and types, ranging from small desk-side bins to large industrial skips. Possible types are: 
+             Bag / Sack (e.g. rubble bag, refuse sack)BaleBox / Carton / CrateCan / JerrycanCarrier (e.g. pallet cage)CaskContainer (unspecified)Drum (typically 205 L)Fibre drumIntermediate Bulk Container (e.g. 1000 L)Loose (no container)Pallet (e.g. shrink‑wrapped items)Roll‑on Roll‑off container (RoRo)SkipTanker / TankWheelie Bin (any size)'.
+          example: rubble bag
         quantity:
           $ref: '#/components/schemas/quantity'
         pops:
@@ -307,7 +404,9 @@ Mobile plant permits follow the same format as above, but if they have a deploym
           properties:
             containsPops:
               type: boolean
-              description: Persistent organic pollutants (POPs) are chemical substances that do not break down in the environment. They are a danger to human health and the environment. POPs can be present in hazardous and non-hazardous waste.
+              description: |
+                Persistent organic pollutants (POPs) are chemical substances that do not break down in the environment. They are a danger to human health and the environment. POPs can be present in hazardous and non-hazardous waste. More information on POPs can be found here:
+                https://www.gov.uk/government/collections/classify-different-types-of-waste#hazardous-waste-and-pops
               example: true
             pops:
               type: array
@@ -316,7 +415,30 @@ Mobile plant permits follow the same format as above, but if they have a deploym
                 properties:
                   name:
                     type: string
-                    description: 'The name of the waste type, e.g. Aldrin, Chlordane, Dieldrin etc.'
+                    description: 'The name of the waste type, e.g. Aldrin, Chlordane, Dieldrin etc.| Aldrin  | Full list-
+    | Chlordane  |
+    | Chlordecone  |
+    | Dicofol  |
+    | Dieldrin |
+    | Endrin  |
+    | Heptachlor |
+    | Hexabromobiphenyl  |
+    | Hexabromocyclododecane (HBCDD) |
+    | Hexabromodiphenyl ether and heptabromodiphenyl ether |
+    | Hexachlorobenzene (HCB) |
+    | Hexachlorobutadiene |
+    | Alpha hexachlorocyclohexane |
+    | Beta hexachlorocyclohexane |
+    | Lindane |
+    | Mirex |
+    | Pentachlorobenzene |
+    | Polychlorinated biphenyls (PCB) |
+    | Toxaphene |
+    | DDT |
+    | Perfluorooctane sulfonic acid (PFOS), its salts and perfluorooctane sulfonyl fluoride (PFOSF) |
+    | Polychlorinated dibenzo-p-dioxins (PCDD) |
+    | Polychlorinated dibenzofurans (PCDF) |
+    | UV-328 |'
                     example: Aldrin
                   concentration:
                     type: number
@@ -331,7 +453,7 @@ Mobile plant permits follow the same format as above, but if they have a deploym
               example: true
             hazCodes:
               type: array
-              description: Hazardous waste codes are a list of codes that describe the hazardous waste. Common types could include codes, HP1 - HP15. For more informaation refer to the waste support website at https://www.wastesupport.co.uk/hazard-codes/. Input should be numeric only.
+              description: Hazardous waste codes are a list of codes that describe the hazardous waste. Common types could include codes, HP1 - HP15. For more informaation refer to the waste support website at https://www.wastesupport.co.uk/hazard-codes/. Input should be numeric only. More information on hazardous waste is avaialable here https://www.gov.uk/government/publications/waste-classification-technical-guidance.
               example: 5, 10, 12
               items:
                 type: integer
@@ -363,6 +485,8 @@ Mobile plant permits follow the same format as above, but if they have a deploym
             stands for "Carrier, Broker, Dealer" and the "U" or "L" indicates upper or lower tier registration. Scotland Typically starts with WCR
             followed by numbers and potentially letters according to the Scottish Environment Protection Agency (SEPA).     Northern Ireland May
             include a prefix like ROC followed by UT (Upper Tier) or LT (Lower Tier) and then numbers.
+            From April 2026, EAS/R/xxxxxx (xxxxxx being actual numbers)
+
             
             All registrations begin with CBD, followed by:
 
@@ -465,8 +589,12 @@ Mobile plant permits follow the same format as above, but if they have a deploym
                 example: XXXXX
               authorisationNumber:
                 type: string
-                description: This is the site's authorisation (permit or exemption) number that allows it to accept waste for intended recovery and disposal operation.
-                example: XXXXX
+                description: |
+                  This is the site's authorisation (permit or exemption) number that allows it to accept waste for intended recovery and disposal operation. Possible values:
+                  England - EPR/AB1234CD, NRW - AB309NRW, AB3190ZZ
+
+
+                example: PPC/A/1234567, WML/L/1234567
         regulatoryPositionStatement:
           type: integer
           description: A regulatory position statement (RPS) is issued when the Environment Agency doesn't require you to have a permit to carry out certain activities that they regulate. The statement will explain which activities you do not require a permit for. This must be a positive integer.'
@@ -488,7 +616,7 @@ Mobile plant permits follow the same format as above, but if they have a deploym
       properties:
         code:
           type: string
-          description: Disposal recovery code used 
+          description: Disposal recovery code used.  
           example: |
             {
                      "code": "R1",
@@ -516,11 +644,11 @@ Mobile plant permits follow the same format as above, but if they have a deploym
             - Cubic metres
             - Each
             - Milliliters
-          description: Unit of measurement the waste is being accepted. 
+          description: Unit of measurement in which the waste is being accepted. 
           example: Litres
         amount:
           type: number
-          description: Total weight of the waste being accepted in a unit specified below.
+          description: Total weight of the waste being accepted in a unit specified below. 
             - Grams
             - Kilograms
             - Tonnes
@@ -528,7 +656,7 @@ Mobile plant permits follow the same format as above, but if they have a deploym
             - Cubic metres
             - Each
             - Milliliters.
-          example: 1480
+          example: 150
         isEstimate:
           type: boolean
           description: Specifies whether the quantity of waste is estimated or actual.
@@ -589,10 +717,6 @@ Mobile plant permits follow the same format as above, but if they have a deploym
                     type: array
                     items:
                       $ref: '#/components/schemas/validationResult'
-
-
-
-
 
 
 
