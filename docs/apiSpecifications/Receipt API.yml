@@ -98,7 +98,7 @@ components:
                   [
                     "Non-Haz Waste Transfer",
                     "Carrier did not provide documentation",
-                    "Local Authority Receipt",
+                    "Household Waste Recycling Centre Receipt",
                   ]
                 description: Reasons provided for not having a consignment number
               yourUniqueReference:
