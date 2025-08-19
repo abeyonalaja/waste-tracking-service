@@ -1,4 +1,4 @@
-# Receivers - draft API specification
+# Receipt of Waste - draft API specification
 
 !!! Note "Private Beta"
     Are you a waste receiver or software provider and want to get involved? [Sign up for our Digital Waste Tracking Private Beta test](private-beta-comms-sign-up.md)
