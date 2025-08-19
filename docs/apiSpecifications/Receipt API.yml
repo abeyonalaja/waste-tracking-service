@@ -275,10 +275,6 @@ components:
           items:
             type: object
             properties:
-              authorisationType:
-                type: string
-                enum: [TBD]
-                description: Waste sites have permits or licenses for certain types of waste. E.g. it could be a landfill site.
               authorisationNumber:
                 type: string
                 description: This is the site's authorisation (permit or exemption) number that allows it to accept waste for intended recovery and disposal operation.
