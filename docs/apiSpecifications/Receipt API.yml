@@ -164,7 +164,7 @@ components:
             containsPops:
               type: boolean
               description: Persistent organic pollutants (POPs) are chemical substances that do not break down in the environment. They are a danger to human health and the environment. POPs can be present in hazardous and non-hazardous waste.
-            pops:
+            components:
               type: array
               items:
                 type: object
