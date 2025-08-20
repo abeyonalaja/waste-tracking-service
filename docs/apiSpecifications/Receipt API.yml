@@ -144,7 +144,7 @@ components:
         wasteDescription:
           type: string
           description: A detailed description of a specific waste material, including its physical characteristics, composition, and any potential hazards associated with it. It's essentially a classification of the waste that helps determine how it should be managed and disposed of safely.
-        form:
+        physicalForm:
           type: string
           enum: [Gas, Liquid, Solid, Powder, Sludge, Mixed]
           description: This is the form of the waste. This could be a gas, liquid, solid, powder, sludge or mixed etc.
