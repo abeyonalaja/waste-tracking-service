@@ -113,10 +113,10 @@ components:
                 type: string
                 maxLength: 5000
                 description: Usually required only for abnormal hazardous waste that might contain harmful chemical, biological or physical characteristics. These may require some special handling to prevent harm.
-              waste:
+              wasteItems:
                 type: array
                 items:
-                  $ref: "#/components/schemas/waste"
+                  $ref: "#/components/schemas/wasteItem"
               carrier:
                 $ref: "#/components/schemas/carrier"
               brokerOrDealer:
@@ -128,7 +128,7 @@ components:
               receipt:
                 $ref: "#/components/schemas/receipt"
   schemas:
-    waste:
+    wasteItem:
       type: object
       required:
         - ewcCodes
