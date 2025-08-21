@@ -149,13 +149,13 @@ components:
           enum: [Gas, Liquid, Solid, Powder, Sludge, Mixed]
           description: This is the form of the waste. This could be a gas, liquid, solid, powder, sludge or mixed etc.
         numberOfContainers:
-          type: number
+          type: integer
           description: Number of containers for storing, transporting and disposing of waste materials
         typeOfContainers:
           type: string
           description: Containers are receptacles used for storing, transporting, and disposing of waste materials. They come in various sizes and types, ranging from small desk-side bins to large industrial skips.
-        quantity:
-          $ref: "#/components/schemas/quantity"
+        weight:
+          $ref: "#/components/schemas/weight"
         pops:
           type: object
           required:
@@ -263,7 +263,7 @@ components:
           type: boolean
           description: Is any of the waste rejected?
         quantityNotAccepted:
-          $ref: "#/components/schemas/quantity"
+          $ref: "#/components/schemas/weight"
         rejectionReason:
           type: string
           description: What are the reasons why all or part of the waste is rejected?
@@ -290,9 +290,9 @@ components:
       properties:
         code:
           type: string
-        quantity:
-          $ref: "#/components/schemas/quantity"
-    quantity:
+        weight:
+          $ref: "#/components/schemas/weight"
+    weight:
       type: object
       required:
         - metric
@@ -301,7 +301,7 @@ components:
       properties:
         metric:
           type: string
-          enum: [ Grams, Kilograms, Tonnes, Litres, "Cubic metres", Each, Milliliters ]
+          enum: [ Grams, Kilograms, Tonnes ]
           description: Unit of measurement the waste is being accepted
         amount:
           type: number
