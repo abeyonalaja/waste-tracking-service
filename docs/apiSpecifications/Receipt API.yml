@@ -121,8 +121,6 @@ components:
                 $ref: "#/components/schemas/carrier"
               brokerOrDealer:
                 $ref: "#/components/schemas/brokerOrDealer"
-              acceptance:
-                $ref: "#/components/schemas/acceptance"
               receiver:
                 $ref: "#/components/schemas/receiver"
               receipt:
@@ -254,19 +252,6 @@ components:
         registrationNumber:
           type: string
           description: The Registration number of the broker or dealer.
-    acceptance:
-      type: object
-      required:
-        - acceptingAll
-      properties:
-        acceptingAll:
-          type: boolean
-          description: Is any of the waste rejected?
-        quantityNotAccepted:
-          $ref: "#/components/schemas/weight"
-        rejectionReason:
-          type: string
-          description: What are the reasons why all or part of the waste is rejected?
     receiver:
       type: object
       properties:
