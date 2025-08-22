@@ -3,12 +3,12 @@ info:
   title: Digital Waste Tracking Receipt API
   version: 1.0.0
   description: |
-    <p>This API is for waste receivers, software developers and third party software users. It enables operators of permitted or licenced waste receiving sites to report details of each waste movement arriving at their site.  This will be mandatory from October 2026. More information about Digital Waste Tracking is available here:
-    <p>https://www.gov.uk/government/publications/digital-waste-tracking-service/digital-waste-tracking-service.</p>
+    <p>This API is for waste receivers, software developers and third party software users. It enables operators of permitted or licenced waste receiving sites to report details  of each waste movement arriving at their site.  This will be mandatory from October 2026. More information about Digital Waste Tracking is available here:
+    <p><a>https://www.gov.uk/government/publications/digital-waste-tracking-service/digital-waste-tracking-service.</a></p>
 
-     <h2>Methods</h2> <p>The API is based on REST principles and uses both a POST and a PUT method that return data in JSON format. It uses standard HTTP error response codes. </p>
-      <p>The API <font color="green"><b>POST</b></font> method is used to initially log a record of received waste receipt details and returns a waste tracking ID and a validation result. </p> <p>The API <font color="orange"><b>PUT</b></font> method is used to update a particular waste tracking record using a waste tracking ID. It returns the waste tracking ID and a validation result.</p>
-    <b>Note-</b> This API specification is currently a draft and subject to change.
+     <h2>Methods</h2> <p>The API is based on REST principles and uses both a <font color="green"><b>POST</b></font> and a <font color="orange"><b>PUT</b></font> method that return data in JSON format. It uses standard HTTP error response codes. </p>
+      <p>The API <font color="green"><b>POST</b></font> method is used to create a record for a waste movement that has arrived at a waste receiving site. It returns a waste tracking ID and a validation result. </p> <p>The API <font color="orange"><b>PUT</b></font> method is used to update a waste tracking record using a waste tracking ID to identify the movement. It returns a validation result.</p>
+    <b>Note-</b> This API specification is currently a draft and is subject to change.
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
@@ -790,3 +790,4 @@ components:
                     type: array
                     items:
                       $ref: '#/components/schemas/validationResult'
+
