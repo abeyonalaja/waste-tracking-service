@@ -10,12 +10,16 @@ info:
       <p>The API <font color="green"><b>POST</b></font> method is used to create a record for a waste movement that has arrived at a waste receiving site. It returns a waste tracking ID and a validation result. </p> <p>The API <font color="orange"><b>PUT</b></font> method is used to update a waste tracking record using a waste tracking ID to identify the movement. It returns a validation result.</p>
     <b>Note-</b> This API specification is currently a draft and is subject to change.
 servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/kbirchorganization/waste_management_tracking/1.0.0
   - url: 'https://api.server.test/v1'
 paths:
   /movements/receive:
     post:
       description: |
         Endpoint used when waste is received but the receiver has not yet recorded the waste movement. Generally at this stage, the receiver does not have or use the waste tracking ID. The waste tracking ID will be returned in the 201 response if the movement is successfully stored.
+
 
         <p>Example of a POST request using cURL:</p>
 
@@ -25,7 +29,7 @@ paths:
              -d '{</b>
              
               
-                  "receivingSiteId": "12345678-1234-1234-1234-123456789012",
+                  "receivingSiteId": "EPR/AB1234CD",
                   "waste": [
                   {
                    "ewcCodes": ["020101"],
@@ -91,7 +95,7 @@ paths:
                           $ref: '#/components/schemas/validationResult'
         '400':
           $ref: '#/components/responses/400'
-  '/movements/{wasteTrackingId}/receive':
+  /movements/{wasteTrackingId}/receive:
     put:
       description: |
         Endpoint to be used when waste is received and the waste record is to be updated. The carrier has a waste tracking ID and this parameter must be used in the URL path.
@@ -200,6 +204,7 @@ paths:
                 }'
       requestBody:
         $ref: '#/components/requestBodies/receiveMovementRequest'
+        required: true
       responses:
         '200':
           description: The waste movement receipt has been updated.
@@ -238,6 +243,7 @@ components:
             type: object
             required:
               - receivingSiteId
+              - carrier
             properties:
               receivingSiteId:
                 type: string
@@ -259,6 +265,11 @@ components:
                   receiveMovementRequest.receivingSiteId be a site registered to organisation submitting waste receipt. 
                   
                 example: EPR/AB1234CD/D6789
+              dateTimeReceived:
+                type: string
+                format: date-time
+                description: This is the date and exact time waste was received at the site. This API uses the ISO 8601 standard for machine-readable dates and times. YYYY-MM-DD-THH:MM-SS
+                example: 2025-05-16T10:30:56 
               hazardousWasteConsignmentCode:
                 type: string
                 description: |
@@ -282,9 +293,11 @@ components:
               reasonForNoConsignmentCode:
                 type: string
                 enum:
-                  - Non-Haz Waste Transfer
-                  - Carrier did not provide documentation
-                  - Local Authority Receipt
+                  [
+                    "Non-Haz Waste Transfer",
+                    "Carrier did not provide documentation",
+                    "Local Authority Receipt"
+                  ]
                 description: Reason provided for not having a consignment code.
                 
                   <p><Business Rule></p>
@@ -298,16 +311,17 @@ components:
                 description: This could be a unique weighbridge ticket number, waste transfer note number etc.
                 example: wTBrdgAA020
               otherReferencesForMovement:
-                type: string
+                type: array
+                items:
+                  type: string
                 description: Other references for this movement
-                example: 
               specialHandlingRequirements:
                 type: string
                 maxLength: 5000
                 description: Usually required only for abnormal hazardous waste that might contain harmful chemical, biological or physical characteristics. These may require some special handling to prevent harm.
                    
                 example: The waste must be fully inspected by the waste handler according to the Hazardous waste consignment and or EWC codes provided.
-              waste:
+              wasteItems:
                 type: array
                 items:
                   $ref: '#/components/schemas/wasteItem'
@@ -315,8 +329,6 @@ components:
                 $ref: '#/components/schemas/carrier'
               brokerOrDealer:
                 $ref: '#/components/schemas/brokerOrDealer'
-              acceptance:
-                $ref: '#/components/schemas/acceptance'
               receiver:
                 $ref: '#/components/schemas/receiver'
               receipt:
@@ -324,14 +336,14 @@ components:
             example: |
               {
                      "receivingSiteId": "12345678-1234-1234-1234-123456789012",
-                     "waste": [
+                     "wasteItem": [
                                {
                "ewcCodes": ["020101"],
                "wasteDescription": "Basic mixed construction and demolition waste",
                "form": "Mixed",
                "numberOfContainers": 3,
                "typeOfContainers": "Skip containers",
-               "quantity": {
+               "weight": {
                  "metric": "Tonnes",
                  "amount": 2.5,
                  "isEstimate": false
@@ -343,7 +355,7 @@ components:
                  "address": "123 Basic Street, Basic City, BC1 2AB",
                  "emailAddress": "basic@carrier.com",
                  "phoneNumber": "01234567890",
-                  "meansOfTransport": "Road" 
+                 "meansOfTransport": "Road" 
                    },
                     "acceptance": {
                     "acceptingAll": true
@@ -372,6 +384,8 @@ components:
       properties:
         ewcCodes:
           type: array
+          items:
+            type: string
           maxItems: 5
           description: |
             'An EWC code is a 6 digit code listed in the European Waste Catalogue (EWC). The EWC is a list of waste types which categorises waste based on a combination of what they are and the process or activity that produces them. <p>More information can be found below:</p>
@@ -381,27 +395,27 @@ components:
               <p>Business Rule:</p>
               Must be 6 digits and in the official waste.ewcCode list. 
           example: 201010
-          items:
-            type: string
         wasteDescription:
           type: string
           description: A detailed description of a specific waste material, including its physical characteristics, composition and any potential hazards associated with it. It''s essentially a classification of the waste that helps determine how it should be managed and disposed of safely.
           example: Basic mixed construction and demolition waste, this includes recyclable house bricks, gypsum plaster and slates.
-        form:
+        physicalForm:
           type: string
           enum:
-            - Gas
-            - Liquid
-            - Solid
-            - Powder
-            - Sludge
-            - Mixed
+            [
+              Gas,
+              Liquid,
+              Solid,
+              Powder,
+              Sludge,
+              Mixed,
+           ]
           description: This is the form of the waste. This could be a gas, liquid, solid, powder, sludge or mixed.
             <p>Business Rule</p>
             Must be “Gas”, “Liquid”, “Solid”, Powder”, “Sludge”, or “Mixed”. 
           example: Sludge
         numberOfContainers:
-          type: number
+          type: integer
           description: Number of containers for storing, transporting and disposing of waste materials. 
             <p>Business rule:</p>
             This must be a positive numeric entry.
@@ -409,14 +423,36 @@ components:
         typeOfContainers:
           type: string
           description: |
-            Containers are receptacles used for storing, transporting, and disposing of waste materials. They come in various sizes and types, ranging from small desk-side bins to large industrial skips. <p>Ongoing Development Note:</p>
-            There is a new GET method endpoint in development which will return a list of container types. <p> Possible types are:</p> 
-              Bag / Sack (e.g. rubble bag, refuse sack)BaleBox / Carton / CrateCan / JerrycanCarrier (e.g. pallet cage)CaskContainer (unspecified)Drum (typically 205 L)Fibre drumIntermediate Bulk Container (e.g. 1000 L)Loose (no container)Pallet (e.g. shrink‑wrapped items)Roll‑on Roll‑off container (RoRo)SkipTanker / TankWheelie Bin (any size).
-          example: rubble bag, pallet
+            Containers are receptacles used for storing, transporting, and disposing of waste materials. They come in various sizes and types, ranging from small desk-side bins to large industrial skips. 
+            <font color="red"><b><p>Ongoing Development Note:</p>There is a new GET method endpoint in development which will return a list of container types.</b></font> <p> Possible types are:</p> 
+            <ul>
+              <li>Bag / Sack e.g.(rubble bag, refuse sack)</li>
+              <li>Carton</li>
+              <li>Crate Can</li>
+              <li>Jerrycan</li>
+              <li>Carrier (e.g. pallet cage)</li>
+              <li>Cask</li>
+              <li<Container (unspecified)</li>
+              <li>Drum (typically 205L)</li>
+              <li>Fibre drum/li>
+              <li>Intermediate drum</li>
+              <li>Bulk Container (e.g. 1000L)</li>
+              <li>Loose (no container)</li>
+              <li>Pallet (e.g. shrink‑wrapped items)</li>
+              <li>Roll‑on Roll‑off container (RoRo)</li>
+              <li>Skip</li>
+              <li>Tanker</li>
+              <li>Tank (any size)</li>
+              <li>Wheelie Bin </li>
+            </ul>
+              
+          example: rubble bag, refuse sack, pallet
         weight:
           $ref: '#/components/schemas/weight'
         pops:
           type: object
+          required:
+            - containsPops
           properties:
             containsPops:
               type: boolean
@@ -424,7 +460,7 @@ components:
                 Persistent organic pollutants (POPs) are chemical substances that do not break down in the environment. They are a danger to human health and the environment. POPs can be present in hazardous and non-hazardous waste. <p>More information on POPs can be found here:</p>
                 <a>https://www.gov.uk/government/collections/classify-different-types-of-waste#hazardous-waste-and-pops</a>
               example: true
-            pops:
+            components:
               type: array
               items:
                 type: object
@@ -433,11 +469,12 @@ components:
                     type: string
                     description: |-
                       The name of the waste type, e.g. Aldrin, Chlordane, Dieldrin etc.
-                      <!DOCTYPE html> <html> <style> table, th, td { border:1px solid red; } </style> <body> <h4> List of Hazardous POPs</h4>
-                      <tr> <td>Aldrin,</td> <td>Chlordane,</td> <td>Chlordecone,</td> <td>Dicofol,</td> <td>Dieldrin,</td> <td>Endrin,</td> <td>Heptachlor,</td> <td>Hexabromobiphenyl,</td> <td>Hexabromocyclododecane (HBCDD),</td> <td>Hexabromodiphenyl ether and heptabromodiphenyl ether,</td> <td>Hexachlorobenzene (HCB),</td> <td>Hexachlorobutadiene,</td> <td>Alpha hexachlorocyclohexane,</td> <td>Beta hexachlorocyclohexane, </td> <td>Lindane,</td> <td>Mirex,</td> <td>Pentachlorobenzene,</td> <td>Polychlorinated biphenyls (PCB),</td> <td>Toxaphene,</td> <td>DDT,</td> <td>Perfluorooctane sulfonic acid (PFOS), its salts and perfluorooctane sulfonyl fluorid,</td> <td>Chlordane,</td> <td>Polychlorinated dibenzo-p-dioxins (PCDD),</td> <td>Polychlorinated dibenzofurans (PCDF),</td> <td>UV-328</td> </tr>
-                      </table> </body> </html>
+                      
+                      <ul>
+                        <li>Aldrin,</li> <li>Chlordane,</li> <li>Chlordecone,</li> <li>Dicofol,</li> <li>Dieldrin,</li> <li>Endrin,</li> <li>Heptachlor,</li> <li>Hexabromobiphenyl,</li> <li>Hexabromocyclododecane (HBCDD),</li> <li>Hexabromodiphenyl ether and heptabromodiphenyl ether,</li> <li>Hexachlorobenzene (HCB),</li> <li>Hexachlorobutadiene,</li> <li>Alpha hexachlorocyclohexane,</li> <li>Beta hexachlorocyclohexane, </li> <li>Lindane,</li> <li>Mirex,</li> <li>Pentachlorobenzene,</li> <li>Polychlorinated biphenyls (PCB),</li> <li>Toxaphene,</li> <li>DDT,</li> <li>Perfluorooctane sulfonic acid (PFOS) its salts and perfluorooctane sulfonyl fluorid,</li> <li>Chlordane,</li> <li>Polychlorinated dibenzo-p-dioxins (PCDD),</li> <li>Polychlorinated dibenzofurans (PCDF),</li> <li>UV-328</li></ul>
+                     
                       <p>A listing of POPS in the Stockholme convention can be found here:</p>
-                      https://www.pops.int/TheConvention/ThePOPs/AllPOPs/tabid/2509/Default.aspx
+                      <a> https://www.pops.int/TheConvention/ThePOPs/AllPOPs/tabid/2509/Default.aspx</a>
                       
                       <p>Business Rule:</p>
                       If waste.pops.containsPops is True then waste.pops.pops.name must be a valid name. 
@@ -451,6 +488,8 @@ components:
                     example: 100
         hazardous:
           type: object
+          required:
+            - containsHazardous
           properties:
             containsHazardous:
               type: boolean
@@ -489,6 +528,9 @@ components:
             $ref: '#/components/schemas/disposalOrRecoveryCode'
     carrier:
       type: object
+      required:
+        - registrationNumber
+        - organisationName
       properties:
         registrationNumber:
           type: string
@@ -595,15 +637,23 @@ components:
         address:
           type: string
           description: |
-             The business location address of the carrier. A valid postcode must be included. The postcode should follow the same structure as DEFRA’s existing register of Waste Carriers, Brokers and Dealers. More information here: 
+            The business location address of the carrier. A valid postcode must be included. The postcode should follow the same structure as DEFRA’s existing register of Waste Carriers, Brokers and Dealers. More information here: 
             
-             <a>https://environment.data.gov.uk/public-register/view/search-waste-carriers-brokers</a>
+            <a>https://environment.data.gov.uk/public-register/view/search-waste-carriers-brokers</a>
             
             
-             <p>Business Rules:</p> 
-             Must be in specified address.postcode format, see example. 
-             <p>Address and post code are optional for Carriers and Brokers/Dealers. However, if they enter either of these, then they must enter both.</p>
-          example: 26a Oil Drum Lane, W12 7ZL
+            <p>Business Rules:</p> 
+            Must be in specified address.postcode format, see example. 
+            <p>Address and post code are optional for Carriers and Brokers/Dealers. However, if they enter either of these, then they must enter both.</p>
+          example: '26a Oil Drum Lane, W12 7ZL'
+        emailAddress:
+          type: string
+          description: The email address of the carrier.
+          example: info@wastecarrierselite.co.uk
+        phoneNumber:
+          type: string
+          description: The UK or internationl phone number of the carrier.
+          example: 020 4756 3232
         registrationNumber:
           type: string
           description: |
@@ -636,23 +686,7 @@ components:
 
             ROC LT ####
 
-             
           example: 'CBDL123456, CBDU123456'
-    acceptance:
-      type: object
-      properties:
-        acceptingAll:
-          type: boolean
-          description: Is any of the waste rejected? This is a boolean value, i.e true or false.
-          example: false
-        quantityNotAccepted:
-          $ref: '#/components/schemas/weight'
-        rejectionReason:
-          type: string
-          description: What are the reasons why all or part of the waste is rejected.
-            <p>Business Rule:</p>
-            If  acceptance.acceptingAll is False and no acceptance.rejectionReason is entered, warning given. 
-          example: No EWC submitted.
     receiver:
       type: object
       properties:
@@ -664,28 +698,18 @@ components:
               authorisationNumber:
                 type: string
                 description: |
-                  This is the site's authorisation (permit or exemption) number that allows it to accept waste for intended recovery and disposal operation. Possible values:
+                  This is the site's authorisation (permit or exemption) number that allows it to accept waste for intended recovery and disposal operation. <p>Possible values:</p>
                     England - EPR/AB1234CD, NRW - AB309NRW, AB3190ZZ
-                example: 'PPC/A/1234567, WML/L/1234567'
-        regulatoryPositionStatement:
-          type: integer
-          description: A regulatory position statement (RPS) is issued when the Environment Agency doesn't require you to have a permit to carry out certain activities that they regulate. The statement will explain which activities you do not require a permit for. This must be a positive integer.
-            <p>Business Rule:</p>
-            Must be a positive value. 
+                example: PPC/A/1234567, WML/L/1234567
+              regulatoryPositionStatement:
+                type: integer
+                description: A regulatory position statement (RPS) is issued when the Environment Agency doesn't require you to have a permit to carry out certain activities that they regulate. The statement will explain which activities you do not require a permit for. This must be a positive integer.
+                  <p>Business Rule:</p>
+                  Must be a positive value. 
           
-          example: 343
+                example: 343
     receipt:
       type: object
-      properties:
-        dateTimeReceived:
-          type: string
-          format: date-time
-          description: 'This is the date and exact time waste was received at the site. It follows the ISO format - $(date -u +"%Y-%m-%dT%H:%M:%S.000Z")'
-          example: '2025-08-11T15:01:47Z'
-        disposalOrRecoveryCodes:
-          type: array
-          items:
-            $ref: '#/components/schemas/disposalOrRecoveryCode'
     disposalOrRecoveryCode:
       type: object
       properties:
@@ -715,9 +739,11 @@ components:
         metric:
           type: string
           enum:
-            - Grams
-            - Kilograms
-            - Tonnes
+            [
+              Grams,
+              Kilograms,
+              Tonnes
+            ]
           description: Unit of measurement in which the waste is being accepted.
             <p>Business Rules:</p>
             If  acceptance.acceptingAll is False and no quantity is entered, warning given.
@@ -744,13 +770,15 @@ components:
         errorType:
           type: string
           enum:
-            - NotProvided
-            - TBC
+            [
+              NotProvided,
+              TBC
+            ]
           example: NotProvided
         message:
           type: string
           example: Success
-      description: Waste description not successfully stored.
+          description: Waste description not successfully stored.
   responses:
     '400':
       description: Input was not in the correct format.
@@ -786,5 +814,3 @@ components:
                     type: array
                     items:
                       $ref: '#/components/schemas/validationResult'
-
-
