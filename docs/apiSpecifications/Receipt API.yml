@@ -16,6 +16,7 @@ paths:
     post:
       description: |
         Endpoint used when waste is received but the receiver has not yet recorded the waste movement. Generally at this stage, the receiver does not have or use the waste tracking ID. The waste tracking ID will be returned in the 201 response if the movement is successfully stored.
+
         <p>Example of a POST request using cURL:</p>
 
         <p><b>curl -X POST "https://waste-movement-external-api.test.cdp-int.defra.cloud/movements/receive" \</p>
@@ -25,14 +26,14 @@ paths:
              
               
                   "receivingSiteId": "EPR/AB1234CD",
-                  "waste": [
+                  "wasteItem": [
                   {
                    "ewcCodes": ["020101"],
                    "wasteDescription": "Basic mixed construction and demolition waste",
-                   "form": "Mixed",
+                   "physicalForm": "Mixed",
                    "numberOfContainers": 3,
                    "typeOfContainers": "Skip containers",
-                   "quantity": {
+                   "weight": {
                      "metric": "Tonnes",
                      "amount": 2.5,
                      "isEstimate": false
@@ -44,17 +45,14 @@ paths:
                      "address": "123 Basic Street, Basic City, BC1 2AB",
                      "emailAddress": "basic@carrier.com",
                      "phoneNumber": "01234567890",
-                      "meansOfTransport": "Road" 
+                     "meansOfTransport": "Road" 
                        },
-                        "acceptance": {
-                        "acceptingAll": true
-                      },
                          "receipt": {
                          "dateTimeReceived": "'$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")'",
                          "disposalOrRecoveryCodes": [
                    {
                      "code": "R1",
-                     "quantity": {
+                     "weight": {
                        "metric": "Tonnes",
                        "amount": 2.5,
                        "isEstimate": false
@@ -125,19 +123,16 @@ paths:
               "emailAddress": "basicupdate@carrier.com",
               "phoneNumber": "01234567890",
               "meansOfTransport": "Road"
-               },
-                "acceptance": {
-                "acceptingAll": true
-              },
+               }
                 "receipt": {
                 "dateTimeReceived": "2025-01-07T10:00:00.000Z",
                 "disposalOrRecoveryCodes": [
                {
                 "code": "R1",
-                "quantity": {
+                "weight": {
                 "metric": "Tonnes",
                 "amount": 2.8,
-                e"isEstimate": false
+                "isEstimate": false
                }
                }
                ]
@@ -323,7 +318,7 @@ components:
               carrier:
                 $ref: '#/components/schemas/carrier'
               brokerOrDealer:
-                $ref: '#/components/schemas/brokerOrDealer'
+                $ref: "#/components/schemas/brokerOrDealer"
               receiver:
                 $ref: '#/components/schemas/receiver'
               receipt:
@@ -809,4 +804,5 @@ components:
                     type: array
                     items:
                       $ref: '#/components/schemas/validationResult'
+
 
