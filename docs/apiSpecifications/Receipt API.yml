@@ -217,8 +217,7 @@ components:
           type: string
           description: The business name of the carrier.
         address:
-          type: string
-          description: The business location address of the carrier.
+          $ref: "#/components/schemas/address"
         emailAddress:
           type: string
           format: email
@@ -240,8 +239,7 @@ components:
           type: string
           description: The broker or dealer organisation name who arranged this transfer.
         address:
-          type: string
-          description: The business location address of the broker or dealer.
+          $ref: "#/components/schemas/address"
         emailAddress:
           type: string
           format: email
@@ -254,7 +252,11 @@ components:
           description: The Registration number of the broker or dealer.
     receiver:
       type: object
+      required:
+        - address
       properties:
+        address:
+          $ref: "#/components/schemas/receiverAddress"
         authorisations:
           type: array
           items:
@@ -305,6 +307,26 @@ components:
             - NotProvided
             - TBC
         message:
+          type: string
+    address:
+      type: object
+      required:
+        - postCode
+      properties:
+        fullAddress:
+          type: string
+        postCode:
+          type: string
+      description: The business location address of the carrier or broker/dealer.
+    receiverAddress:
+      type: object
+      required:
+        - fullAddress
+        - postCode
+      properties:
+        fullAddress:
+          type: string
+        postCode:
           type: string
   responses:
     "400":
