@@ -454,7 +454,7 @@ components:
                 properties:
                   name:
                     type: string
-                    description: |-
+                    description: |
                       The name of the waste type, e.g. Aldrin, Chlordane, Dieldrin etc.
                       
                       <ul>
@@ -801,6 +801,7 @@ components:
                     type: array
                     items:
                       $ref: '#/components/schemas/validationResult'
+
 
 
 
