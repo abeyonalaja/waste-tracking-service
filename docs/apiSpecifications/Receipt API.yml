@@ -103,14 +103,14 @@ paths:
              "yourUniqueReference": "REF-BASIC-UPDATE",
              "otherReferencesForMovement": "Updated basic movement with additional details",
              "specialHandlingRequirements": "Standard handling requirements",
-             "waste": [
+             "wasteItem": [
             {
               "ewcCodes": ["020101"],
               "wasteDescription": "Updated basic mixed construction and demolition waste",
               "form": "Mixed",
               "numberOfContainers": 4,
               "typeOfContainers": "Updated skip containers",
-              "quantity": {
+              "weight": {
               "metric": "Tonnes",
               "amount": 2.8,
               "isEstimate": false
@@ -346,16 +346,13 @@ components:
                  "emailAddress": "basic@carrier.com",
                  "phoneNumber": "01234567890",
                  "meansOfTransport": "Road" 
-                   },
-                    "acceptance": {
-                    "acceptingAll": true
-                  },
+                   }
                      "receipt": {
                      "dateTimeReceived": "'$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")'",
                      "disposalOrRecoveryCodes": [
                {
                  "code": "R1",
-                 "quantity": {
+                 "weight": {
                    "metric": "Tonnes",
                    "amount": 2.5,
                    "isEstimate": false
@@ -370,7 +367,7 @@ components:
       required:
         - ewcCodes
         - wasteDescription
-        - form
+        - physicalForm
       properties:
         ewcCodes:
           type: array
@@ -804,5 +801,6 @@ components:
                     type: array
                     items:
                       $ref: '#/components/schemas/validationResult'
+
 
 
