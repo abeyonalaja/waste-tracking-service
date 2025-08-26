@@ -108,7 +108,7 @@ paths:
             {
               "ewcCodes": ["020101"],
               "wasteDescription": "Updated basic mixed construction and demolition waste",
-              "form": "Mixed",
+              "physicalForm": "Mixed",
               "numberOfContainers": 4,
               "typeOfContainers": "Updated skip containers",
               "weight": {
@@ -811,4 +811,5 @@ components:
                     type: array
                     items:
                       $ref: '#/components/schemas/validationResult'
+
 
