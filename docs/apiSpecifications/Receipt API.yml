@@ -10,17 +10,12 @@ info:
       <p>The API <font color="green"><b>POST</b></font> method is used to create a record for a waste movement that has arrived at a waste receiving site. It returns a waste tracking ID and a validation result. </p> <p>The API <font color="orange"><b>PUT</b></font> method is used to update a waste tracking record using a waste tracking ID to identify the movement. It returns a validation result.</p>
     <b>Note-</b> This API specification is currently a draft and is subject to change.
 servers:
-  # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/kbirchorganization/waste_management_tracking/1.0.0
   - url: 'https://api.server.test/v1'
 paths:
   /movements/receive:
     post:
       description: |
         Endpoint used when waste is received but the receiver has not yet recorded the waste movement. Generally at this stage, the receiver does not have or use the waste tracking ID. The waste tracking ID will be returned in the 201 response if the movement is successfully stored.
-
-
         <p>Example of a POST request using cURL:</p>
 
         <p><b>curl -X POST "https://waste-movement-external-api.test.cdp-int.defra.cloud/movements/receive" \</p>
@@ -814,3 +809,4 @@ components:
                     type: array
                     items:
                       $ref: '#/components/schemas/validationResult'
+
