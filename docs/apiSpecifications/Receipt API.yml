@@ -599,9 +599,8 @@ components:
             This describes how the waste is transported (road, rail, air, sea, inland waterway, others)
             
             <o>Business Rule:</p>
-            Must be either “Road”, “Rail”, “Air”, “Sea”, “Inland Waterway”, “Piped” or "other"
-            
-          
+            Must be either “Road”, “Rail”, “Air”, “Sea”, “Inland Waterway”, “Piped” or "other".
+               
           example: Rail
     brokerOrDealer:
       type: object
@@ -611,17 +610,7 @@ components:
           description: The broker or dealer organisation name who arranged this transfer.
           example: Waste Desposal Ltd
         address:
-          type: string
-          description: |
-            The business location address of the carrier. A valid postcode must be included. The postcode should follow the same structure as DEFRA’s existing register of Waste Carriers, Brokers and Dealers. More information here: 
-            
-            <a>https://environment.data.gov.uk/public-register/view/search-waste-carriers-brokers</a>
-            
-            
-            <p>Business Rules:</p> 
-            Must be in specified address.postcode format, see example. 
-            <p>Address and post code are optional for Carriers and Brokers/Dealers. However, if they enter either of these, then they must enter both.</p>
-          example: '26a Oil Drum Lane, W12 7ZL'
+          $ref: "#/components/schemas/address"
         emailAddress:
           type: string
           description: The email address of the carrier.
@@ -665,6 +654,8 @@ components:
           example: 'CBDL123456, CBDU123456'
     receiver:
       type: object
+      required:
+        - address
       properties:
         authorisations:
           type: array
@@ -790,6 +781,7 @@ components:
                     type: array
                     items:
                       $ref: '#/components/schemas/validationResult'
+
 
 
 
