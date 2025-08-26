@@ -2,14 +2,18 @@ openapi: 3.0.3
 info:
   title: Digital Waste Tracking Receipt API
   version: 1.0.0
-  description: 
+  description: |
     <p>This API is for waste receivers, software developers and third party software users. It enables operators of permitted or licenced waste receiving sites to report details  of each waste movement arriving at their site.  This will be mandatory from October 2026. More information about Digital Waste Tracking is available here:
     <p><a>https://www.gov.uk/government/publications/digital-waste-tracking-service/digital-waste-tracking-service.</a></p>
 
      <h2>Methods</h2> <p>The API is based on REST principles and uses both a <font color="green"><b>POST</b></font> and a <font color="orange"><b>PUT</b></font> method that return data in JSON format. It uses standard HTTP error response codes. </p>
-      <p>The API <font color="green"><b>POST</b></font> method is used to create a record for a waste movement that has arrived at a waste receiving site. It returns a waste tracking ID and a validation result. </p> <p>The API <font color="orange"><b>PUT</b></font> method is used to update a waste tracking record using a waste tracking ID to identify the movement. It returns a validation result.</p>
-    <b>Note-</b> This API specification is currently a draft and is subject to change.
+     <p>The API <font color="green"><b>POST</b></font> method is used to create a record for a waste movement that has arrived at a waste receiving site. It returns a waste tracking ID and a validation result. </p> <p>The API <font color="orange"><b>PUT</b></font> method is used to update a waste tracking record using a waste tracking ID to identify the movement. It returns a validation result.</p>
+     <p> <b>Note-</b> This API specification is currently a draft and is subject to change.</p>
+    
 servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/kbirchorganization/waste_management_tracking/1.0.0
   - url: 'https://api.server.test/v1'
 paths:
   /movements/receive:
@@ -493,8 +497,7 @@ components:
                  If waste.hazardous.containsHazardous is True then waste.hazardous.hazCodes must be a vailid code. 
 
               example: '5, 10, 12'
-              items:
-                type: integer
+              
             components:
               type: array
               items:
@@ -759,7 +762,8 @@ components:
           example: 26a Oil Drum Lane, London, UK'
         postCode:
           type: string
-          description: A valid postcode must be included. The postcode should follow the same structure as DEFRA’s existing register of Waste Carriers, Brokers and Dealers. More information here: 
+          description: |
+            A valid postcode must be included. The postcode should follow the same structure as DEFRA’s existing register of Waste Carriers, Brokers and Dealers. More information here: 
             <a>https://environment.data.gov.uk/public-register/view/search-waste-carriers-brokers</a>
           example: W12 7ZL
     receiverAddress:
@@ -770,11 +774,12 @@ components:
       properties:
         fullAddress:
           type: string
-          description: The business location address of the carrier or broker/dealer. 
+          description: The business location address of the carrier or broker/dealer.
           example: 26a Oil Drum Lane, London, UK'
         postCode:
           type: string
-          description: A valid postcode must be included. The postcode should follow the same structure as DEFRA’s existing register of Waste Carriers, Brokers and Dealers. More information here: 
+          description: |
+            A valid postcode must be included. The postcode should follow the same structure as DEFRA’s existing register of Waste Carriers, Brokers and Dealers. More information here: 
             <a>https://environment.data.gov.uk/public-register/view/search-waste-carriers-brokers</a>
   responses:
     '400':
@@ -809,14 +814,3 @@ components:
                     type: array
                     items:
                       $ref: '#/components/schemas/validationResult'
-
-
-
-
-
-
-
-
-
-
-
