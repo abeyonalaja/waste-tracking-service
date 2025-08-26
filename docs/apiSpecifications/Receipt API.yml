@@ -755,7 +755,7 @@ components:
       properties:
         fullAddress:
           type: string
-          description: The business location address of the carrier or broker/dealer. The business location address of the carrier.
+          description: The business location address of the carrier or broker/dealer. 
           example: 26a Oil Drum Lane, London, UK'
         postCode:
           type: string
@@ -770,7 +770,7 @@ components:
       properties:
         fullAddress:
           type: string
-          description: The business location address of the carrier or broker/dealer. The business location address of the carrier.
+          description: The business location address of the carrier or broker/dealer. 
           example: 26a Oil Drum Lane, London, UK'
         postCode:
           type: string
@@ -809,6 +809,7 @@ components:
                     type: array
                     items:
                       $ref: '#/components/schemas/validationResult'
+
 
 
 
