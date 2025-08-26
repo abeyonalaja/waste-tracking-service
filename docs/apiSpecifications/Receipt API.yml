@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Digital Waste Tracking Receipt API
   version: 1.0.0
-  description: |
+  description: 
     <p>This API is for waste receivers, software developers and third party software users. It enables operators of permitted or licenced waste receiving sites to report details  of each waste movement arriving at their site.  This will be mandatory from October 2026. More information about Digital Waste Tracking is available here:
     <p><a>https://www.gov.uk/government/publications/digital-waste-tracking-service/digital-waste-tracking-service.</a></p>
 
@@ -454,9 +454,8 @@ components:
                 properties:
                   name:
                     type: string
-                    description: |
-                      The name of the waste type, e.g. Aldrin, Chlordane, Dieldrin etc.
-                      
+                    description: 
+                      The name of the waste type, e.g. Aldrin, Chlordane, Dieldrin etc.                    
                       <ul>
                         <li>Aldrin,</li> <li>Chlordane,</li> <li>Chlordecone,</li> <li>Dicofol,</li> <li>Dieldrin,</li> <li>Endrin,</li> <li>Heptachlor,</li> <li>Hexabromobiphenyl,</li> <li>Hexabromocyclododecane (HBCDD),</li> <li>Hexabromodiphenyl ether and heptabromodiphenyl ether,</li> <li>Hexachlorobenzene (HCB),</li> <li>Hexachlorobutadiene,</li> <li>Alpha hexachlorocyclohexane,</li> <li>Beta hexachlorocyclohexane, </li> <li>Lindane,</li> <li>Mirex,</li> <li>Pentachlorobenzene,</li> <li>Polychlorinated biphenyls (PCB),</li> <li>Toxaphene,</li> <li>DDT,</li> <li>Perfluorooctane sulfonic acid (PFOS) its salts and perfluorooctane sulfonyl fluorid,</li> <li>Chlordane,</li> <li>Polychlorinated dibenzo-p-dioxins (PCDD),</li> <li>Polychlorinated dibenzofurans (PCDF),</li> <li>UV-328</li></ul>
                      
@@ -468,8 +467,8 @@ components:
                     example: Aldrin
                   concentration:
                     type: number
-                    description: |
-                      'The concentration of the waste per kilogram, e.g. 50mg per kg of Chlordane.'
+                    description: 
+                      The concentration of the waste per kilogram, e.g. 50mg per kg of Chlordane.
                       <p>Business Rule:</p>
                       If waste.pops.containsPops is True then waste.pops.components.concentration must be a valid decimal.
                     example: 100
@@ -484,12 +483,14 @@ components:
               example: true
             hazCodes:
               type: array
+              items:
+                type: integer
               description: |
                 Hazardous waste codes are a list of codes that describe the hazardous waste. Common types could include codes, HP1 - HP15. For more informaation refer to the waste support website at:  <p><a>https://www.wastesupport.co.uk/hazard-codes/</a></p> Input should be numeric only. <p>More information on hazardous waste is avaialable here</p> <a>https://www.gov.uk/government/publications/waste-classification-technical-guidance</a>.
                  <a>https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1021051/Waste_classification_technical_guidance_WM3.pdf</a>
               
                 <p>Business Rule:</p>
-                 If waste.hazardous.containsHazardous is True then waste.hazardous.hazCodes must be a vailid code 
+                 If waste.hazardous.containsHazardous is True then waste.hazardous.hazCodes must be a vailid code. 
 
               example: '5, 10, 12'
               items:
@@ -502,10 +503,10 @@ components:
                   name:
                     type: string
                     description: 'Name of the hazardous material, e.g. Mercury.'
-                    example: lead
+                    example: lead, mercury
                   concentration:
                     type: number
-                    description: 'The concentration of the hazardous materrial per Kilo, e.g. 30mg per kg.
+                    description: The concentration of the hazardous materrial per Kilo, e.g. 30mg per kg.
                       <p>Business Rule:</p>
                       Must be a positive value.  
                     example: 50
@@ -548,10 +549,8 @@ components:
             include a prefix like ROC followed by UT (Upper Tier) or LT (Lower Tier) and then numbers.<p></p>
             
             ROC UT ####
-
+            
             ROC LT ####
-
-             
           example: England - 'CBDL123456, CBDU123456, Scotland - WCR/R/522048, Northern Ireland - ROCUT979195'
         reasonForNoRegistrationNumber:
           type: string
@@ -569,17 +568,7 @@ components:
           description: The business name of the carrier.
           example: Waste Carriers Lite Ltd
         address:
-          type: string
-          description: |
-            The business location address of the carrier. A valid postcode must be included. The postcode should follow the same structure as DEFRA’s existing register of Waste Carriers, Brokers and Dealers. More information here: 
-            
-            <a>https://environment.data.gov.uk/public-register/view/search-waste-carriers-brokers</a>
-            
-            
-            <p>Business Rules:</p> 
-            Must be in specified address.postcode format, see example. 
-            <p>Address and post code are optional for Carriers and Brokers/Dealers. However, if they enter either of these, then they must enter both.</p>
-          example: '26a Oil Drum Lane, W12 7ZL'
+          $ref: "#/components/schemas/address"
         emailAddress:
           type: string
           description: The email address of the carrier.
@@ -801,6 +790,7 @@ components:
                     type: array
                     items:
                       $ref: '#/components/schemas/validationResult'
+
 
 
 
