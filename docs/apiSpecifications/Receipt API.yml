@@ -746,8 +746,8 @@ components:
           example: NotProvided
         message:
           type: string
-          example: Success
-          description: Waste description not successfully stored.
+          example: Success/failure
+          description: Waste description is/is not successfully stored.
     address:
       type: object
       required:
@@ -755,9 +755,29 @@ components:
       properties:
         fullAddress:
           type: string
+          description: See address description tag
         postCode:
           type: string
-      description: The business location address of the carrier or broker/dealer.
+          description: See address description tag
+      description: | 
+        The business location address of the carrier or broker/dealer.
+         The business location address of the carrier. A valid postcode must be included. The postcode should follow the same structure as DEFRA’s existing register of Waste Carriers, Brokers and Dealers. More information here: 
+            
+            <a>https://environment.data.gov.uk/public-register/view/search-waste-carriers-brokers</a>
+            
+            
+            <p>Business Rules:</p> 
+            Must be in specified address.postcode format, see example. 
+            <p>Address and post code are optional for Carriers and Brokers/Dealers. However, if they enter either of these, then they must enter both.</p>
+          example: '26a Oil Drum Lane, W12 7ZL' The business location address of the carrier. A valid postcode must be included. The postcode should follow the same structure as DEFRA’s existing register of Waste Carriers, Brokers and Dealers. More information here: 
+            
+            <a>https://environment.data.gov.uk/public-register/view/search-waste-carriers-brokers</a>
+            
+            
+            <p>Business Rules:</p> 
+            Must be in specified address.postcode format, see example. 
+            <p>Address and post code are optional for Carriers and Brokers/Dealers. However, if they enter either of these, then they must enter both.</p>
+          example: '26a Oil Drum Lane, W12 7ZL'
     receiverAddress:
       type: object
       required:
@@ -803,6 +823,7 @@ components:
                     type: array
                     items:
                       $ref: '#/components/schemas/validationResult'
+
 
 
 
