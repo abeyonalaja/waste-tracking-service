@@ -657,6 +657,8 @@ components:
       required:
         - address
       properties:
+        address:
+          $ref: "#/components/schemas/receiverAddress"
         authorisations:
           type: array
           items:
@@ -781,6 +783,7 @@ components:
                     type: array
                     items:
                       $ref: '#/components/schemas/validationResult'
+
 
 
 
