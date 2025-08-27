@@ -78,13 +78,15 @@ components:
           schema:
             type: object
             required:
-              - receivingSiteId
+              - organisationId
+              - dateTimeReceived
               - carrier
+              - wasteItems
             properties:
-              receivingSiteId:
+              organisationId:
                 type: string
                 format: uuid
-                description: This is the unique identifier of the receiving site, found within the Waste Companies service. This might be best as a header?
+                description: This is the unique identifier of the organisation.
               dateTimeReceived:
                 type: string
                 format: date-time
@@ -115,6 +117,7 @@ components:
                 description: Usually required only for abnormal hazardous waste that might contain harmful chemical, biological or physical characteristics. These may require some special handling to prevent harm.
               wasteItems:
                 type: array
+                minItems: 1
                 items:
                   $ref: "#/components/schemas/wasteItem"
               carrier:
@@ -131,7 +134,10 @@ components:
       required:
         - ewcCodes
         - wasteDescription
-        - form
+        - physicalForm
+        - typeOfContainers
+        - numberOfContainers
+        - weight
       properties:
         ewcCodes:
           type: array
@@ -148,9 +154,12 @@ components:
           description: This is the form of the waste. This could be a gas, liquid, solid, powder, sludge or mixed etc.
         numberOfContainers:
           type: integer
+          minimum: 0
+          nullable: true
           description: Number of containers for storing, transporting and disposing of waste materials
         typeOfContainers:
           type: string
+          nullable: true
           description: Containers are receptacles used for storing, transporting, and disposing of waste materials. They come in various sizes and types, ranging from small desk-side bins to large industrial skips.
         weight:
           $ref: "#/components/schemas/weight"
@@ -166,6 +175,9 @@ components:
               type: array
               items:
                 type: object
+                required:
+                  - name
+                  - concentration
                 properties:
                   name:
                     type: string
@@ -190,6 +202,9 @@ components:
               type: array
               items:
                 type: object
+                required:
+                  - name
+                  - concentration
                 properties:
                   name:
                     type: string
