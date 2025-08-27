@@ -3,14 +3,17 @@ info:
   title: Digital Waste Tracking Receipt API
   version: 1.0.0
   description: |
-    <p>This API is for waste receivers, software developers and third party software users. It enables operators of permitted or licenced waste receiving sites to report details  of each waste movement arriving at their site.  This will be mandatory from October 2026. More information about Digital Waste Tracking is available here:
+    <p>This API is for waste receivers, software developers and third party software users. It enables operators of permitted or licenced waste receiving sites to report details of each waste movement arriving at their site. This will be mandatory from October 2026. More information about Digital Waste Tracking is available here:
     <p><a>https://www.gov.uk/government/publications/digital-waste-tracking-service/digital-waste-tracking-service.</a></p>
 
      <h2>Methods</h2> <p>The API is based on REST principles and uses both a <font color="green"><b>POST</b></font> and a <font color="orange"><b>PUT</b></font> method that return data in JSON format. It uses standard HTTP error response codes. </p>
      <p>The API <font color="green"><b>POST</b></font> method is used to create a record for a waste movement that has arrived at a waste receiving site. It returns a waste tracking ID and a validation result. </p> <p>The API <font color="orange"><b>PUT</b></font> method is used to update a waste tracking record using a waste tracking ID to identify the movement. It returns a validation result.</p>
-     <p> <b>Note-</b> This API specification is currently a draft and is subject to change.</p>
+     <p> <b>Note-</b> This API specification is currently in draft stage and is subject to change.</p>
     
 servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/kbirchorganization/waste_management_tracking/1.0.0
   - url: 'https://api.server.test/v1'
 paths:
   /movements/receive:
@@ -42,11 +45,14 @@ paths:
                    }
                    ],
                      "carrier": {
-                     "organisationName": "Basic Carrier Ltd",
-                     "address": "123 Basic Street, Basic City, BC1 2AB",
-                     "emailAddress": "basic@carrier.com",
-                     "phoneNumber": "01234567890",
-                     "meansOfTransport": "Road" 
+                        "organisationName": "Basic Carrier Ltd",
+                        "emailAddress": "basic@carrier.com",
+                        "phoneNumber": "01234567890",
+                        "meansOfTransport": "Road" 
+                       },
+                     "address": {
+                        "fullAdress": "123 Basic Street, Basic City, BC1 2AB",
+                        "postCode":  "BC1 2AB"
                        },
                          "receipt": {
                          "dateTimeReceived": "'$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")'",
@@ -95,7 +101,7 @@ paths:
         Endpoint to be used when waste is received and the waste record is to be updated. The carrier has a waste tracking ID and this parameter must be used in the URL path.
 
         <p>Example of a PUT request using cURL:</p> 
-        <p><b>curl -X PUT "https://waste-movement-external-api.test.cdp-int.defra.cloud/movements/YOUR_WASTE_TRACKING_ID/receive" \</p>
+        <p><b>curl -X PUT "https://waste-movement-external-api.test.cdp-int.defra.cloud/movements/<font color="red"><b>your_waste_tracking_Id</b></font>/receive" \</p>
         <p>-H "Content-Type: application/json" \</p>
              <b> -d  '{</b>
            
@@ -108,32 +114,35 @@ paths:
             {
               "ewcCodes": ["020101"],
               "wasteDescription": "Updated basic mixed construction and demolition waste",
-              "physicalForm": "Mixed",
+              "form": "Mixed",
               "numberOfContainers": 4,
               "typeOfContainers": "Updated skip containers",
               "weight": {
-              "metric": "Tonnes",
-              "amount": 2.8,
-              "isEstimate": false
+                "metric": "Tonnes",
+                "amount": 2.8,
+                "isEstimate": false
               }
             }
             ],
               "carrier": {
               "organisationName": "Basic Update Carrier Ltd",
-              "address": "123 Basic Update Street, Basic Update City, BUC1 2AB",
               "emailAddress": "basicupdate@carrier.com",
               "phoneNumber": "01234567890",
               "meansOfTransport": "Road"
-               }
+               },
+              "address": {
+                "fullAdress": "123 Basic Street, Basic City, BC1 2AB",
+                "postCode":  "BC1 2AB"
+                 }
                 "receipt": {
                 "dateTimeReceived": "2025-01-07T10:00:00.000Z",
                 "disposalOrRecoveryCodes": [
                {
                 "code": "R1",
                 "weight": {
-                "metric": "Tonnes",
-                "amount": 2.8,
-                "isEstimate": false
+                  "metric": "Tonnes",
+                  "amount": 2.8,
+                  "isEstimate": false
                }
                }
                ]
@@ -162,32 +171,34 @@ paths:
                            "form": "Mixed",
                            "numberOfContainers": 4,
                            "typeOfContainers": "Updated skip containers",
-                           "quantity": {
-                           "metric": "Tonnes",
-                           "amount": 2.8,
-                           "isEstimate": false
+                           "weight": {
+                             "metric": "Tonnes",
+                             "amount": 2.8,
+                             "isEstimate": false
                          }
                        }
                     ],
                       "carrier": {
                       "organisationName": "Basic Update Carrier Ltd",
-                      "address": "123 Basic Update Street, Basic Update City, BUC1 2AB",
+                      
                       "emailAddress": "basicupdate@carrier.com",
                       "phoneNumber": "01234567890",
                       "meansOfTransport": "Road"
                     },
-                    "acceptance": {
-                       "acceptingAll": true
-                    },
+                      "address": {
+                         "fullAdress": "123 Basic Street, Basic City, BC1 2AB",
+                          "posttCode":  "BC1 2AB"
+                 },
+                    
                     "receipt": {
                       "dateTimeReceived": "2025-01-07T10:00:00.000Z",
                       "disposalOrRecoveryCodes": [
                         {
                          "code": "R1",
-                         "quantity": {
-                         "metric": "Tonnes",
-                         "amount": 2.8,
-                         "isEstimate": false
+                         "weight": {
+                           "metric": "Tonnes",
+                           "amount": 2.8,
+                           "isEstimate": false
                        }
                      }
                    ],
@@ -287,7 +298,7 @@ components:
                   [
                     "Non-Haz Waste Transfer",
                     "Carrier did not provide documentation",
-                    "Local Authority Receipt"
+                    "Household Waste Recycling Centre Receipt"
                   ]
                 description: Reason provided for not having a consignment code.
                 
@@ -342,12 +353,15 @@ components:
                }
                ],
                  "carrier": {
-                 "organisationName": "Basic Carrier Ltd",
-                 "address": "123 Basic Street, Basic City, BC1 2AB",
+                 "organisationName": "Basic Carrier Ltd"
                  "emailAddress": "basic@carrier.com",
                  "phoneNumber": "01234567890",
                  "meansOfTransport": "Road" 
                    }
+                  "address": {
+                     fullAdress: "123 Basic Street, Basic City, BC1 2AB",
+                     posttCode:  "BC1 2AB"
+                 }
                      "receipt": {
                      "dateTimeReceived": "'$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")'",
                      "disposalOrRecoveryCodes": [
@@ -385,7 +399,7 @@ components:
           example: 201010
         wasteDescription:
           type: string
-          description: A detailed description of a specific waste material, including its physical characteristics, composition and any potential hazards associated with it. It''s essentially a classification of the waste that helps determine how it should be managed and disposed of safely.
+          description: A detailed description of a specific waste material, including its physical characteristics, composition and any potential hazards associated with it. It's essentially a classification of the waste that helps determine how it should be managed and disposed of safely.
           example: Basic mixed construction and demolition waste, this includes recyclable house bricks, gypsum plaster and slates.
         physicalForm:
           type: string
@@ -411,7 +425,7 @@ components:
         typeOfContainers:
           type: string
           description: |
-            Containers are receptacles used for storing, transporting, and disposing of waste materials. They come in various sizes and types, ranging from small desk-side bins to large industrial skips. 
+            Containers are receptacles used for storing, transportingef and disposing of waste materials. They come in various sizes and types, ranging from small desk-side bins to large industrial skips. 
             <font color="red"><b><p>Ongoing Development Note:</p>There is a new GET method endpoint in development which will return a list of container types.</b></font> <p> Possible types are:</p> 
             <ul>
               <li>Bag / Sack e.g.(rubble bag, refuse sack)</li>
@@ -460,7 +474,7 @@ components:
                       <ul>
                         <li>Aldrin,</li> <li>Chlordane,</li> <li>Chlordecone,</li> <li>Dicofol,</li> <li>Dieldrin,</li> <li>Endrin,</li> <li>Heptachlor,</li> <li>Hexabromobiphenyl,</li> <li>Hexabromocyclododecane (HBCDD),</li> <li>Hexabromodiphenyl ether and heptabromodiphenyl ether,</li> <li>Hexachlorobenzene (HCB),</li> <li>Hexachlorobutadiene,</li> <li>Alpha hexachlorocyclohexane,</li> <li>Beta hexachlorocyclohexane, </li> <li>Lindane,</li> <li>Mirex,</li> <li>Pentachlorobenzene,</li> <li>Polychlorinated biphenyls (PCB),</li> <li>Toxaphene,</li> <li>DDT,</li> <li>Perfluorooctane sulfonic acid (PFOS) its salts and perfluorooctane sulfonyl fluorid,</li> <li>Chlordane,</li> <li>Polychlorinated dibenzo-p-dioxins (PCDD),</li> <li>Polychlorinated dibenzofurans (PCDF),</li> <li>UV-328</li></ul>
                      
-                      <p>A listing of POPS in the Stockholme convention can be found here:</p>
+                      <p>This is not an exhaustive list, a listing of POPS in the Stockholme convention can be found here:</p>
                       <a> https://www.pops.int/TheConvention/ThePOPs/AllPOPs/tabid/2509/Default.aspx</a>
                       
                       <p>Business Rule:</p>
@@ -480,7 +494,7 @@ components:
           properties:
             containsHazardous:
               type: boolean
-              description: 'Hazardous waste is any waste that is potentially harmful to human health or the environment. This is a boolean value, i.e. true (contains hazourda waste) or false.'
+              description: Hazardous waste is any waste that is potentially harmful to human health or the environment. This is a boolean value, i.e. true (contains hazourda waste) or false.
               example: true
             hazCodes:
               type: array
@@ -506,7 +520,7 @@ components:
                     example: lead, mercury
                   concentration:
                     type: number
-                    description: The concentration of the hazardous materrial per Kilo, e.g. 30mg per kg.
+                    description: The concentration of the hazardous material per Kilo, e.g. 30mg per kg.
                       <p>Business Rule:</p>
                       Must be a positive value.  
                     example: 50
@@ -523,7 +537,7 @@ components:
         registrationNumber:
           type: string
           description: |
-            <p>A waste carrier registration number is a legal requirement for businesses that transport, buy, sell, or dispose of waste. This license ensures that waste is handled and transported in a responsible and environmentally friendly manner.</p>
+            <p>A waste carrier registration number is a legal requirement for businesses that transport, buy, sell or dispose of waste. This license ensures that waste is handled and transported in a responsible and environmentally friendly manner.</p>
             
             <p><font color="green"><b>England & Wales</b></font></p> Waste Carrier Registration: A common format is CBDUXXXXXX (Upper Tier) or CBDLXXXXXX (Lower Tier), where "CBD" likely
             stands for "Carrier, Broker, Dealer" and the "U" or "L" indicates upper or lower tier registration.
@@ -562,7 +576,7 @@ components:
 
             If a string is entered into carrier.registrationNumber then carrier.reasonForNoRegistrationNumber is not required.
 
-          example: Waste carrier did not provide a carrier registration Number.
+          example: Waste carrier did not provide a carrier registration number.
         organisationName:
           type: string
           description: The business name of the carrier.
@@ -596,9 +610,9 @@ components:
             - Pipe
             - Other
           description: |
-            This describes how the waste is transported (road, rail, air, sea, inland waterway, others)
+            This describes how the waste is transported (road, rail, air, sea, inland waterway, other)
             
-            <o>Business Rule:</p>
+            <p>Business Rule:</p>
             Must be either “Road”, “Rail”, “Air”, “Sea”, “Inland Waterway”, “Piped” or "other".
                
           example: Rail
@@ -671,7 +685,9 @@ components:
                     England - EPR/AB1234CD, NRW - AB309NRW, AB3190ZZ
                 example: PPC/A/1234567, WML/L/1234567
               regulatoryPositionStatement:
-                type: integer
+                type: array
+                items:
+                  type: integer
                 description: A regulatory position statement (RPS) is issued when the Environment Agency doesn't require you to have a permit to carry out certain activities that they regulate. The statement will explain which activities you do not require a permit for. This must be a positive integer.
                   <p>Business Rule:</p>
                   Must be a positive value. 
@@ -756,7 +772,7 @@ components:
         fullAddress:
           type: string
           description: The business location address of the carrier or broker/dealer. 
-          example: 26a Oil Drum Lane, London, UK'
+          example: 26a Oil Drum Lane, London, UK
         postCode:
           type: string
           description: |
@@ -811,5 +827,3 @@ components:
                     type: array
                     items:
                       $ref: '#/components/schemas/validationResult'
-
-
