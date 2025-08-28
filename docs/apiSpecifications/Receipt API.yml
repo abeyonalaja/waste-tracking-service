@@ -224,6 +224,7 @@ components:
       properties:
         registrationNumber:
           type: string
+          nullable: true
           description: A waste carrier registration number is a legal requirement for businesses that transport, buy, sell, or dispose of waste. This license ensures that waste is handled and transported in a responsible and environmentally friendly manner.
         reasonForNoRegistrationNumber:
           type: string
@@ -242,6 +243,7 @@ components:
           description: This describes how the waste is transported (road, rail, air, sea, inland waterway, others)
         vehicleRegistration:
           type: string
+          maxLength: 10
           description: This is the vehicle registration number
         meansOfTransport:
           type: string
@@ -267,11 +269,7 @@ components:
           description: The Registration number of the broker or dealer.
     receiver:
       type: object
-      required:
-        - address
       properties:
-        address:
-          $ref: "#/components/schemas/receiverAddress"
         authorisations:
           type: array
           items:
@@ -287,8 +285,16 @@ components:
                 description: A regulatory position statement (RPS) is issued when the Environment Agency don’t require you to have a permit to carry out certain activities that they regulate. The statement will state which activities you do not require a permit for.
     receipt:
       type: object
+      required:
+        - address
+      properties:
+        address:
+          $ref: "#/components/schemas/receiptAddress"
     disposalOrRecoveryCode:
       type: object
+      required:
+        - code
+        - weight
       properties:
         code:
           type: string
@@ -333,7 +339,7 @@ components:
         postCode:
           type: string
       description: The business location address of the carrier or broker/dealer.
-    receiverAddress:
+    receiptAddress:
       type: object
       required:
         - fullAddress
