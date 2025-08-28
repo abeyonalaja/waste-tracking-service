@@ -269,7 +269,19 @@ components:
           description: The Registration number of the broker or dealer.
     receiver:
       type: object
+      required:
+        - organisationName
       properties:
+        organisationName:
+          type: string
+          description: The name of the organisation receiving the waste.
+        phoneNumber:
+          type: string
+          description: The phone number of the organisation receiving the waste.
+        emailAddress:
+          type: string
+          format: email
+          description: The email address of the organisation receiving the waste.
         authorisations:
           type: array
           minItems: 1
