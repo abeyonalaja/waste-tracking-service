@@ -307,7 +307,7 @@ components:
                       The name of the waste type, e.g. Aldrin, Chlordane, Dieldrin etc.                    
                       <ul>
                         <li>Aldrin,</li> <li>Chlordane,</li> <li>Chlordecone,</li> <li>Dicofol,</li> <li>Dieldrin,</li> <li>Endrin,</li> <li>Heptachlor,</li> <li>Hexabromobiphenyl,</li> <li>Hexabromocyclododecane (HBCDD),</li> <li>Hexabromodiphenyl ether and heptabromodiphenyl ether,</li> <li>Hexachlorobenzene (HCB),</li> <li>Hexachlorobutadiene,</li> <li>Alpha hexachlorocyclohexane,</li> <li>Beta hexachlorocyclohexane, </li> <li>Lindane,</li> <li>Mirex,</li> <li>Pentachlorobenzene,</li> <li>Polychlorinated biphenyls (PCB),</li> <li>Toxaphene,</li> <li>DDT,</li> <li>Perfluorooctane sulfonic acid (PFOS) its salts and perfluorooctane sulfonyl fluorid,</li> <li>Chlordane,</li> <li>Polychlorinated dibenzo-p-dioxins (PCDD),</li> <li>Polychlorinated dibenzofurans (PCDF),</li> <li>UV-328
-                        </li><li>Not provided by carrier</li></ul>
+                        </li><li>Details not provided by carrier</li></ul>
                      
                       <p>This is not an exhaustive list, a listing of POPS in the Stockholme convention can be found here:</p>
                       <a> https://www.pops.int/TheConvention/ThePOPs/AllPOPs/tabid/2509/Default.aspx</a>
@@ -407,7 +407,7 @@ components:
             Provide reasons for not having the carrier registration number.
             <p>Business Rule:</p>
             
-            If “N/A” is entered into carrier.registrationNumber then carrier.reasonForNoRegistrationNumber is required. 
+            If “Null” is entered into carrier.registrationNumber then carrier.reasonForNoRegistrationNumber is required. 
 
             If a string is entered into carrier.registrationNumber then carrier.reasonForNoRegistrationNumber is not required.
 
@@ -432,7 +432,7 @@ components:
             <p>Business Rule:</p>
             If carrier.meansOfTransport is “Road” then carrier.vehicleRegistration is required.  
 
-            If carrier.meansOfTransport is not “Road” then carrier.vehicleRegistration is not required
+            If carrier.meansOfTransport is not “Road” then carrier.vehicleRegistration is not applicable.
           example: RNT 493
         meansOfTransport:
           type: string
@@ -523,9 +523,9 @@ components:
                 type: array
                 items:
                   type: integer
-                description: A regulatory position statement (RPS) is issued when the Environment Agency doesn't require you to have a permit to carry out certain activities that they regulate. The statement will explain which activities you do not require a permit for. This must be a positive integer.
+                description: A regulatory position statement (RPS) is issued when the Regulator, e.g the Environment Agency, doesn't require you to have a permit to carry out certain activities that they regulate. The statement will explain which activities you do not require a permit for. This must be a positive integer.
                   <p>Business Rule:</p>
-                  Must be a positive value. 
+                  Must be a positive integer. 
           
                 example: 343
     receipt:
@@ -536,15 +536,11 @@ components:
         code:
           type: string
           description: Disposal recovery code used. More information can be found here <p>EU Directive Annex I and Annex II define Disposal and Recovery Codes <p><a> https://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:L:2008:312:0003:0030:en:PDF</a></p> 
-            <p>Business rule:</p>
-            If disposalOrRecoveryCode.code entered, then it should be in the disposalOrRecoveryCode.code list. Warning returned. 
+            <p>Business Rule:</p>
+            If disposalOrRecoveryCode.code entered, then it should be in the disposalOrRecoveryCode.code list. 
 
           example: |
-            "code": "R1",
-            "weight": 
-              "metric": "Tonnes",
-              "amount": 2.5,
-              "isEstimate": false
+            "code": "R1"
         weight:
           $ref: '#/components/schemas/weight'
     weight: 
@@ -563,19 +559,20 @@ components:
               Tonnes
             ]
           description: Unit of measurement in which the waste is being accepted.
-            <p>Business Rules:</p>
-            If  acceptance.acceptingAll is False and no quantity is entered, warning given.
+            <p>Business Rule:</p>
             <p>Must be “Grams”, “Kilograms”, “Tonnes”. </p>
           example: Tonnes
         amount:
           type: number
-          description: Total weight of the waste being accepted in a unit specified below. - Grams - Kilograms - Tonnes 
+          description: Total weight of the waste in a unit specified - Grams - Kilograms - Tonnes 
             <p>Business Rule:</p>
-            Must be a positive value. 
+            Must be a positive number. 
+            <p><font color="red"><b>Note-</b></font></p> <p> Weight in terms of the Waste Item is the total weight of the waste being received.</p>
+            <p> Weight in terms of the DisposalRecoveryCode is the total weight of the waste being disposed of or recovered for final treatment.</p>
           example: 150
         isEstimate:
           type: boolean
-          description: Specifies whether the quantity of waste is estimated or actual. This a boolean value, i.e. true or false.
+          description: Specifies whether the weight of waste is estimated. This a boolean value, i.e. true or false. 
           example: true
     validationResult:
       type: object
@@ -609,11 +606,10 @@ components:
         postCode:
           type: string
           description: 
-            A valid postcode must be included. The postcode should follow the same structure as DEFRA’s existing register of Waste Carriers, Brokers and Dealers. More information here. 
-            <a>https://environment.data.gov.uk/public-register/view/search-waste-carriers-brokers</a>
-            <p><b>Note></b> Carriers, Brokers/Dealers accept UK and Irish post codes. Receivers accept only UK post codes.</p>
+            A valid postcode must be included. 
+            <p><font color="green"><b>Note-</b></font></p> Carriers, Brokers/Dealers accept UK and Irish post codes. 
           example: W12 7ZL
-    receiverAddress:
+    receiptAddress:
       type: object
       required:
         - fullAddress
@@ -621,14 +617,13 @@ components:
       properties:
         fullAddress:
           type: string
-          description: The business location address of the carrier or broker/dealer.
+          description: This is the address the waste is received at.
           example: 26a Oil Drum Lane, London, UK'
         postCode:
           type: string
           description: 
-            A valid postcode must be included. The postcode should follow the same structure as DEFRA’s existing register of Waste Carriers, Brokers and Dealers. More information here. 
-            <a>https://environment.data.gov.uk/public-register/view/search-waste-carriers-brokers</a>
-            <p><b>Note></b> Carriers, Brokers/Dealers accept UK and Irish post codes. Receivers accept only UK post codes.</p>
+            A valid postcode must be included. 
+            <p><b>Note- </b></p> <p>Carriers, Brokers/Dealers accept UK post codes. Receivers accept only UK post codes.</p>
   responses:
     '400':
       description: Input was not in the correct format.
