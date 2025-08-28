@@ -11,6 +11,9 @@ info:
      <p> <b>Note-</b> This API specification is currently in draft stage and is subject to change.</p>
     
 servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/kbirchorganization/waste_management_tracking/1.0.0
   - url: 'https://api.server.test/v1'
 paths:
   /movements/receive:
@@ -533,7 +536,7 @@ components:
                 type: array
                 items:
                   type: integer
-                description: A regulatory position statement (RPS) is issued when the Regulator, e.g the Environment Agency, doesn't require you to have a permit to carry out certain activities that they regulate. The statement will explain which activities you do not require a permit for. This must be a positive integer.
+                description: A regulatory position statement (RPS) is issued when the Regulator (EA, SEPA, NIEA, NRW), doesn't require you to have a permit to carry out certain activities that they regulate. The statement will explain which activities you do not require a permit for. This must be a positive integer.
                   <p>Business Rule:</p>
                   Must be a positive integer. 
           
