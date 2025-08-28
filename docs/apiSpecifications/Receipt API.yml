@@ -272,6 +272,7 @@ components:
       properties:
         authorisations:
           type: array
+          minItems: 1
           items:
             type: object
             properties:
@@ -324,9 +325,6 @@ components:
           type: string
         errorType:
           type: string
-          enum:
-            - NotProvided
-            - TBC
         message:
           type: string
     address:
