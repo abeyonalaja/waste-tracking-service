@@ -11,9 +11,6 @@ info:
      <p> <b>Note-</b> This API specification is currently in draft stage and is subject to change.</p>
     
 servers:
-  # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/kbirchorganization/waste_management_tracking/1.0.0
   - url: 'https://api.server.test/v1'
 paths:
   /movements/receive:
@@ -677,3 +674,4 @@ components:
                     type: array
                     items:
                       $ref: "#/components/schemas/validationResult"
+
