@@ -11,6 +11,7 @@ They are a draft and may be updated to reflect changes to policy, legislation an
 
 | Data field                                           | Mandatory or optional | Description                                                                                                                                                      |
 | ---------------------------------------------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Organisation ID                                      | Mandatory             | This is the unique identifier of the organisation, provided during registration.                                                                                 |
 | Haz waste consignment number                         | Mandatory             | Hazardous waste consignment number (If EWC is Haz, then mandatory)                                                                                               |
 | Reasons provided for not having a consignment number | Mandatory             | Reasons provided for not having a consignment number                                                                                                             |
 | Unique reference ID                                  | Optional              | This could be a unique weighbridge ticket number, waste transfer note number etc.                                                                                |
