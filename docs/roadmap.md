@@ -12,7 +12,8 @@ We have published a revised API specification based on the feedback we gathered 
 We will publish additional documentation such as details of the business rules and validation that apply to the API.
 
 ### Enabling developers to test their integration with the API
-By the end of August we will publish an initial set of test scenarios. We are also working to provide a test environment for the Receipt of Waste API in early September.
+We are working to provide a test environment for the Receipt of Waste API in September. We will also publish a set of test scenarios.
+
 ### Validation and authentication
 We are completing the development of the API so that the behaviour is aligned with the API specification and business rules.
 
