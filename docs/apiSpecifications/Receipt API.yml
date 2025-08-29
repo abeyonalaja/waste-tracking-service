@@ -9,7 +9,7 @@ info:
      <p>The API <font color="green"><b>POST</b></font> method is used to create a record for a waste movement that has arrived at a waste receiving site. It returns a waste tracking ID and a validation result. </p> <p>The API <font color="orange"><b>PUT</b></font> method is used to update a waste tracking record using a waste tracking ID to identify the movement. It returns a validation result.</p>
      <p> <b>Note-</b> This API specification is currently in draft stage and is subject to change.</p>
 servers:
-  - url: "https://api.server.test/v1"
+  - url: https://api.server.test/v1
 paths:
   /movements/receive:
     post:
@@ -199,15 +199,7 @@ components:
           example: Basic mixed construction and demolition waste, this includes recyclable house bricks, gypsum plaster and slates.
         physicalForm:
           type: string
-          enum:
-            [
-              Gas,
-              Liquid,
-              Solid,
-              Powder,
-              Sludge,
-              Mixed,
-           ]
+          enum: [Gas, Liquid, Solid, Powder, Sludge, Mixed]
           description: This is the form of the waste. This could be a gas, liquid, solid, powder, sludge or mixed.
             <p>Business Rule</p>
             Must be “Gas”, “Liquid”, “Solid”, Powder”, “Sludge” or “Mixed”. 
@@ -389,14 +381,7 @@ components:
           example: RNT 493
         meansOfTransport:
           type: string
-          enum:
-            - Road
-            - Rail
-            - Air
-            - Sea
-            - Inland Waterway
-            - Pipe
-            - Other
+          enum: [Road, Rail, Air, Sea, "Inland Waterway", Pipe, Other]
           description: |
             This describes how the waste is transported (road, rail, air, sea, inland waterway, other)
             <p>Business Rule:</p>
@@ -493,7 +478,7 @@ components:
         - code
         - weight
       properties:
-        code: 
+        code:
           type: string
           description: Disposal recovery code used. More information can be found here <p>EU Directive Annex I and Annex II define Disposal and Recovery Codes <p><a> https://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:L:2008:312:0003:0030:en:PDF</a></p> 
             <p>Business Rule:</p>
@@ -504,7 +489,7 @@ components:
             "code": "R1"
         weight:
           $ref: "#/components/schemas/weight"
-    weight: 
+    weight:
       type: object
       required:
         - metric
@@ -513,12 +498,7 @@ components:
       properties:
         metric:
           type: string
-          enum:
-            [
-              Grams,
-              Kilograms,
-              Tonnes
-            ]
+          enum: [Grams, Kilograms, Tonnes]
           description: Unit of measurement in which the waste is being accepted.
             <p>Business Rule:</p>
             <p>Must be “Grams”, “Kilograms” or “Tonnes”. </p>
@@ -545,11 +525,6 @@ components:
             "globalMovementId": "25HRA0B2"
         errorType:
           type: string
-          enum:
-            [
-              NotProvided,
-              TBC
-            ]
           example: NotProvided
         message:
           type: string
