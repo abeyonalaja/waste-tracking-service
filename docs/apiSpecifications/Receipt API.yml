@@ -11,10 +11,7 @@ info:
      <p> <b>Note-</b> This API specification is currently in draft stage and is subject to change.</p>
     
 servers:
-  # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/kbirchorganization/waste_management_tracking/1.0.0
-  - url: 'https://api.server.test/v1'
+  - url: "https://api.server.test/v1"
 paths:
   /movements/receive:
     post:
@@ -61,7 +58,6 @@ paths:
           example: 25HRA0B2
           schema:
             type: string
-            example: 
               
       requestBody:
         $ref: "#/components/requestBodies/receiveMovementRequest"
@@ -186,17 +182,16 @@ components:
                 type: array
                 minItems: 1
                 items:
-                  $ref: '#/components/schemas/wasteItem'
+                  $ref: "#/components/schemas/wasteItem"
               carrier:
-                $ref: '#/components/schemas/carrier'
+                $ref: "#/components/schemas/carrier"
               brokerOrDealer:
                 $ref: "#/components/schemas/brokerOrDealer"
               receiver:
-                $ref: '#/components/schemas/receiver'
+                $ref: "#/components/schemas/receiver"
               receipt:
-                $ref: '#/components/schemas/receipt'
-            example: |
-              
+                $ref: "#/components/schemas/receipt"
+
   schemas:
     wasteItem:
       type: object
@@ -255,24 +250,22 @@ components:
             Containers are receptacles used for storing, transportingef and disposing of waste materials. They come in various sizes and types, ranging from small desk-side bins to large industrial skips. 
             <font color="red"><b><p>Ongoing Development Note:</p>There is a new GET method endpoint in development which will return a list of container types.</b></font> <p> Possible types are:</p> 
             <ul>
-              <li>Bag / Sack e.g.(rubble bag, refuse sack)</li>
-              <li>Carton</li>
-              <li>Crate Can</li>
-              <li>Jerrycan</li>
-              <li>Carrier (e.g. pallet cage)</li>
-              <li>Cask</li>
-              <li<Container (unspecified)</li>
-              <li>Drum (typically 205L)</li>
-              <li>Fibre drum/li>
-              <li>Intermediate drum</li>
-              <li>Bulk Container (e.g. 1000L)</li>
-              <li>Loose (no container)</li>
-              <li>Pallet (e.g. shrink‑wrapped items)</li>
-              <li>Roll‑on Roll‑off container (RoRo)</li>
-              <li>Skip</li>
-              <li>Tanker</li>
-              <li>Tank (any size)</li>
-              <li>Wheelie Bin </li>
+              <li>[BAG] Bag / Sack e.g.(rubble bag, refuse sack)</li>
+              <li>[BAL] Bale</li>
+              <li>[BOX] Box, Carton, Crate</li>
+              <li>[CAN] Can/Jerrycan</li>
+              <li>[CAR] Carrier (e.g. pallet cage)</li>
+              <li>[CAS] Cask</li>
+              <li>[CON] Container (unspecified)</li>
+              <li>[DRU] Drum (typically 205L)</li>
+              <li>[FIB] Fibre drum/li>
+              <li>[IBC] Intermediate Bulk Container (e.g. 1000L)</li>
+              <li>[LOO] Loose (no container)</li>
+              <li>[PAL] Pallet (e.g. shrink‑wrapped items)</li>
+              <li>[ROR] Roll‑on Roll‑off container (RoRo)</li>
+              <li>[SKI] Skip</li>
+              <li>[TAN] Tanker/Tank</li>
+              <li>[WBI]Wheelie Bin (any size)</li>
             </ul>
             
             <p>Business Rule</p>
@@ -290,6 +283,7 @@ components:
               type: boolean
               description: 
                 Persistent organic pollutants (POPs) are chemical substances that do not break down in the environment. They are a danger to human health and the environment. POPs can be present in hazardous and non-hazardous waste. <p>More information on POPs can be found here:</p>
+                <a>https://www.pops.int/TheConvention/ThePOPs/AllPOPs/tabid/2509/Default.aspx</a>
                 <a>https://www.gov.uk/government/collections/classify-different-types-of-waste#hazardous-waste-and-pops</a>
               example: true
             components:
@@ -341,7 +335,7 @@ components:
                 <p>Business Rule:</p>
                  If waste.hazardous.containsHazardous is True then waste.hazardous.hazCodes must be a vailid code. 
 
-              example: '5, 10, 12'
+              example: 5, 10, 12
             components:
               type: array
               items:
@@ -349,7 +343,7 @@ components:
                 properties:
                   name:
                     type: string
-                    description: 'Name of the hazardous material, e.g. Mercury.'
+                    description: Name of the hazardous material, e.g. Mercury.
                     example: lead, mercury
                   concentration:
                     type: number
@@ -399,13 +393,12 @@ components:
             ROC UT ####
             
             ROC LT ####
-          example: England - 'CBDL123456, CBDU123456, Scotland - WCR/R/522048, Northern Ireland - ROC UT 36, ROC LT 5432'
+          example: England - CBDL123456, CBDU123456, Scotland - WCR/R/522048, Northern Ireland - ROC UT 36, ROC LT 5432
         reasonForNoRegistrationNumber:
           type: string
           description: |
             Provide reasons for not having the carrier registration number.
             <p>Business Rule:</p>
-            
             If “Null” is entered into carrier.registrationNumber then carrier.reasonForNoRegistrationNumber is required. 
 
             If a string is entered into carrier.registrationNumber then carrier.reasonForNoRegistrationNumber is not required.
@@ -565,7 +558,7 @@ components:
           example: |
             "code": "R1"
         weight:
-          $ref: '#/components/schemas/weight'
+          $ref: "#/components/schemas/weight"
     weight: 
       type: object
       required:
@@ -631,6 +624,9 @@ components:
           description: 
             A valid postcode must be included. 
             <p><font color="green"><b>Note-</b></font></p> Carriers, Brokers/Dealers accept UK and Irish post codes. 
+            <p>Business Rule</p> |
+            Regex ensures postcode adheres to valid UK format- ^(GIR 0AA)|((([A-Z][0-9]{1,2})|(([A-Z][A-HJ-Y][0-9]{1,2})|(([A- Z][0-9][A-Z])|([-Z][A-HJ-Y][0-9]?[A-Z])))) [0-9][A-Z]{2})$
+            Regex ensures postcode adheres to valid Ireland format- ^(D6W|[A-Z]{1}[0-9]{1,2}|[A-Z]{2}[0-9]{1,2}|[A-Z]{1}[0-9]{1}[A-Z]{1}|[A-Z]{2}[0-9]{1}[A-Z]{1})$
           example: W12 7ZL
     receiptAddress:
       type: object
@@ -649,6 +645,7 @@ components:
             <p><b>Note- </b></p> <p>Carriers, Brokers/Dealers accept UK post codes. Receivers accept only UK post codes.</p>
             <p>Business Rule</p>
             Must be in specified receiptAddress.postCode format.
+           <p> Regex ensures postcode adheres to valid UK format- ^(GIR 0AA)|((([A-Z][0-9]{1,2})|(([A-Z][A-HJ-Y][0-9]{1,2})|(([A- Z][0-9][A-Z])|([A-Z][A-HJ-Y][0-9]?[A-Z])))) [0-9][A-Z]{2})$</p>
             
   responses:
     "400":
