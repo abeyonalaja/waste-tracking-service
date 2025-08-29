@@ -89,4 +89,4 @@ They are a draft and may be updated to reflect changes to policy, legislation an
 | Receipt post code          | Mandatory               | Post code if the address the waste is received at.          |
 
 
-Page last updated on 08 July 2025.
+Page last updated on 29 August 2025.
