@@ -1,4 +1,4 @@
-# Receivers - draft API specification
+# Receipt of Waste - draft API specification
 
 !!! Note "Private Beta"
     Are you a waste receiver or software provider and want to get involved? [Sign up for our Digital Waste Tracking Private Beta test](private-beta-comms-sign-up.md)
@@ -16,4 +16,6 @@ The following draft specifications are all published on the Swagger API hub:
 
 - [receiving waste onto a site](https://defra.github.io/waste-tracking-service/apiSpecifications/index.html)
 
-<br/>Page last updated on 08 July 2025.
+[![image](defra-spec.png)](defra-spec.png)
+
+<br/>Page last updated on 15 August 2025.
