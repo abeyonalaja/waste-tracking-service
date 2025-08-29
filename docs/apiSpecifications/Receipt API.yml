@@ -11,7 +11,7 @@ info:
      <p> <b>Note-</b> This API specification is currently in draft stage and is subject to change.</p>
     
 servers:
-  - url: 'https://api.server.test/v1'
+  - url: "https://api.server.test/v1"
 paths:
   /movements/receive:
     post:
@@ -47,9 +47,7 @@ paths:
   /movements/{wasteTrackingId}/receive:
     put:
       description: |
-        Endpoint to be used when waste is received and the waste record is to be updated. The carrier has a waste tracking ID and this parameter must be used in the URL path.
-
-        
+        Endpoint to be used when waste is received and the waste record is to be updated. The carrier has a waste tracking ID and this parameter must be used in the URL path.        
       parameters:
         - name: wasteTrackingId
           in: path
@@ -58,8 +56,7 @@ paths:
           example: 25HRA0B2
           schema:
             type: string
-            example: 
-              
+            example:               
       requestBody:
         $ref: "#/components/requestBodies/receiveMovementRequest"
         required: true
@@ -185,15 +182,15 @@ components:
                 type: array
                 minItems: 1
                 items:
-                  $ref: '#/components/schemas/wasteItem'
+                  $ref: "#/components/schemas/wasteItem"
               carrier:
-                $ref: '#/components/schemas/carrier'
+                $ref: "#/components/schemas/carrier"
               brokerOrDealer:
                 $ref: "#/components/schemas/brokerOrDealer"
               receiver:
-                $ref: '#/components/schemas/receiver'
+                $ref: "#/components/schemas/receiver"
               receipt:
-                $ref: '#/components/schemas/receipt'
+                $ref: "#/components/schemas/receipt"
             example: |
               
   schemas:
@@ -276,7 +273,7 @@ components:
               
           example: rubble bag, refuse sack, pallet
         weight:
-          $ref: '#/components/schemas/weight'
+          $ref: "#/components/schemas/weight"
         pops:
           type: object
           required:
@@ -559,7 +556,7 @@ components:
           example: |
             "code": "R1"
         weight:
-          $ref: '#/components/schemas/weight'
+          $ref: "#/components/schemas/weight"
     weight: 
       type: object
       required:
