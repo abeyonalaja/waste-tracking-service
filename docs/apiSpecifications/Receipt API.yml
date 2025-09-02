@@ -103,13 +103,7 @@ components:
                 type: string
                 format: uuid
                 description: 
-                  This is the unique identifier of the receiving organisation found within the Waste Companies service. More commonly, it’s known as Site Permit Number or EPR number (Environmental Permit Reference).
-                  Permit number format- England EPR/AB1234CD, NRW AB309NRW, SEPA PPC/A/1234567, WML/L/1234567 example- EPR/AB1234CD
-                  Each permit also has a corresponding Waste Management Licence Number (WML) in the format EAWML123456. Some older sites may only have a WML number, though this is rare.
-                  Mobile plant permits follow the same format as above, but if they have a deployment authorisation, they are also allocated a “D number” in the format D + 4 digits. This is suffixed to their permit number.
-                  <p>Business Rule:</p>
-                  receiveMovementRequest.receivingSiteId be a site registered to organisation submitting waste receipt. 
-                example: EPR/AB1234CD/D6789
+                  This is the unique identifier of the receiving organisation found within the Waste Tracking Service. 
               dateTimeReceived:
                 type: string
                 format: date-time
