@@ -144,8 +144,29 @@ components:
               otherReferencesForMovement:
                 type: array
                 items:
-                  type: string
-                description: Other references for this movement
+                  type: object
+                  required:
+                    - label
+                    - reference
+                  properties:
+                    label:
+                      type: string
+                      minLength: 1
+                      description: The type/label of the reference (e.g., 'PO Number', 'Waste Ticket', 'Haulier Note')
+                      example: PO Number
+                    reference:
+                      type: string
+                      minLength: 1
+                      description: The actual reference value
+                      example: PO-12345
+                description: Optional array of label-reference pairs for additional tracking information
+                example:
+                  - label: PO Number
+                    reference: PO-12345
+                  - label: Waste Ticket
+                    reference: WT-67890
+                  - label: Haulier Note
+                    reference: HN-11111
               specialHandlingRequirements:
                 type: string
                 maxLength: 5000
