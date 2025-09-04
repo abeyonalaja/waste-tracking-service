@@ -105,11 +105,11 @@ components:
               dateTimeReceived:
                 type: string
                 format: date-time
-                description: 'This is the date and exact time waste was received at the site. This API uses the ISO 8601 standard for machine-readable dates and times. YYYY-MM-DD-THH:MM-SS'
+                description: This is the date and exact time waste was received at the site. This API uses the ISO 8601 standard for machine-readable dates and times. YYYY-MM-DD-THH:MM-SS
                 example: '2025-05-16T10:30:56'
               hazardousWasteConsignmentCode:
                 type: string
-                description: 'Hazardous waste consignment code (If EWC is HAZ, then mandatory). The consignment note code must follow the format- XXXXXX/YYYYY. - XXXXXX is made up of 6 letters and must be followed by a forward slash / - YYYYY is a 5-character unique identifier of the users choice using letters or numbers (no spaces or symbols). <p>More information here</p> <a>https://www.gov.uk/guidance/hazardous-waste-consignment-note-supplementary-guidance#a1-consignment-note-code</a> <p><Business Rule></p> If receiveMovementRequest.hazardousWasteConsignmentCode is provided it must be in specified format. If any waste.ewcCodes provided are considered “not hazardous” receiveMovementRequest.hazardousWasteConsignmentCode is not required'
+                description: Hazardous waste consignment code (If EWC is HAZ, then mandatory). The consignment note code must follow the format- XXXXXX/YYYYY. - XXXXXX is made up of 6 letters and must be followed by a forward slash / - YYYYY is a 5-character unique identifier of the users choice using letters or numbers (no spaces or symbols). <p>More information here</p> <a>https://www.gov.uk/guidance/hazardous-waste-consignment-note-supplementary-guidance#a1-consignment-note-code</a> <p><Business Rule></p> If receiveMovementRequest.hazardousWasteConsignmentCode is provided it must be in specified format. If any waste.ewcCodes provided are considered “not hazardous” receiveMovementRequest.hazardousWasteConsignmentCode is not required.
                 example: |
                   Company name: CJTILE Ltd → Code prefix: CJTILE/
                   Unique ID: A0001
@@ -120,7 +120,7 @@ components:
                   - Non-Haz Waste Transfer
                   - Carrier did not provide documentation
                   - Household Waste Recycling Centre Receipt
-                description: 'Reason provided for not having a consignment code. <p><Business Rule></p> If any waste.ewcCodes provided are considered hazardous and receiveMovementRequest.hazardousWasteConsignmentCode is not provided a receiveMovementRequest.reasonForNoConsignmentCode is required. If receiveMovementRequest.hazardousWasteConsignmentCode is provided it must be either “Non Hazardous Waste Transfer”, “Carrier did not provide documentation” or “Local Authority Receipt”.'
+                description: Reason provided for not having a consignment code. <p><Business Rule></p> If any waste.ewcCodes provided are considered hazardous and receiveMovementRequest.hazardousWasteConsignmentCode is not provided a receiveMovementRequest.reasonForNoConsignmentCode is required. If receiveMovementRequest.hazardousWasteConsignmentCode is provided it must be either “Non Hazardous Waste Transfer”, “Carrier did not provide documentation” or “Local Authority Receipt”.
                 example: Carrier did not provide documentation
               yourUniqueReference:
                 type: string
@@ -155,7 +155,7 @@ components:
               specialHandlingRequirements:
                 type: string
                 maxLength: 5000
-                description: 'Usually required only for abnormal hazardous waste that might contain harmful chemical, biological or physical characteristics. These may require some special handling to prevent harm.'
+                description: Usually required only for abnormal hazardous waste that might contain harmful chemical, biological or physical characteristics. These may require some special handling to prevent harm.
                 example: The waste must be fully inspected by the waste handler according to the Hazardous waste consignment and or EWC codes provided.
               wasteItems:
                 type: array
@@ -186,7 +186,7 @@ components:
           maxItems: 5
           description: |
             An EWC code is a six digit code listed in the European Waste Catalogue (EWC) and the List of Wastes Regulations 2005 for the UK.  
-            The EWC catalog is a list of waste types that categorise waste based on a combination of what they are and the process or activity that produces them. 
+            The EWC catalog is a list of waste types which categorise waste based on a combination of what they are and the process or activity that produces them. 
             To find an EWC code for a particular waste item, use the following waste thesaurus:
             <p><a>https://dsposal.uk/your/waste-thesaurus?keyword=Sludge&type=low</a></p>
             <p><font color="red"><b>The official EWC legislation decision EUR-Lex from the European Union 2000/532 is contained here:</b></font></p> 
@@ -204,8 +204,8 @@ components:
             type: string
         wasteDescription:
           type: string
-          description: 'A detailed description of a specific waste material, including its physical characteristics, composition and any potential hazards associated with it. It''s essentially a classification of the waste that helps determine how it should be managed and disposed of safely.'
-          example: 'Basic mixed construction and demolition waste, this includes recyclable house bricks, gypsum plaster and slates.'
+          description: A detailed description of a specific waste material, including its physical characteristics, composition and any potential hazards associated with it. It''s essentially a classification of the waste that helps determine how it should be managed and disposed of safely.
+          example: Basic mixed construction and demolition waste, this includes recyclable house bricks, gypsum plaster and slates.
         physicalForm:
           type: string
           enum:
@@ -215,7 +215,7 @@ components:
             - Powder
             - Sludge
             - Mixed
-          description: 'This is the form of the waste. This could be a gas, liquid, solid, powder, sludge or mixed. <p>Business Rule</p> Must be “Gas”, “Liquid”, “Solid”, Powder”, “Sludge” or “Mixed”.'
+          description: This is the form of the waste. This could be a gas, liquid, solid, powder, sludge or mixed. <p>Business Rule</p> Must be “Gas”, “Liquid”, “Solid”, Powder”, “Sludge” or “Mixed”.
           example: Sludge
         numberOfContainers:
           type: integer
@@ -597,5 +597,3 @@ components:
                     type: array
                     items:
                       $ref: "#/components/schemas/validationResult"
-
-                      
