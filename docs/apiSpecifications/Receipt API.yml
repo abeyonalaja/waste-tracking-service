@@ -42,7 +42,7 @@ paths:
                           $ref: "#/components/schemas/validationResult"
         "400":
           $ref: "#/components/responses/400"
-  '/movements/{wasteTrackingId}/receive':
+  /movements/{wasteTrackingId}/receive:
     put:
       description: |
         Endpoint to be used when waste is received and the waste record is to be updated. The carrier has a waste tracking ID and this parameter must be used in the URL path.
@@ -137,7 +137,7 @@ components:
                     label:
                       type: string
                       minLength: 1
-                      description: 'The type/label of the reference (e.g., ''PO Number'', ''Waste Ticket'', ''Haulier Note'')'
+                      description: The type/label of the reference (e.g., ''PO Number'', ''Waste Ticket'', ''Haulier Note'')
                       example: PO Number
                     reference:
                       type: string
@@ -186,7 +186,7 @@ components:
           maxItems: 5
           description: |
             An EWC code is a six digit code listed in the European Waste Catalogue (EWC) and the List of Wastes Regulations 2005 for the UK.  
-            The EWC is a list of waste types which categorise waste based on a combination of what they are and the process or activity that produces them. 
+            The EWC catalog is a list of waste types that categorise waste based on a combination of what they are and the process or activity that produces them. 
             To find an EWC code for a particular waste item, use the following waste thesaurus:
             <p><a>https://dsposal.uk/your/waste-thesaurus?keyword=Sludge&type=low</a></p>
             <p><font color="red"><b>The official EWC legislation decision EUR-Lex from the European Union 2000/532 is contained here:</b></font></p> 
@@ -220,7 +220,7 @@ components:
         numberOfContainers:
           type: integer
           minimum: 0
-          description: 'Number of containers for storing, transporting and disposing of waste materials. <p>Business rule:</p> This must be a positive integer entry.
+          description: Number of containers for storing, transporting and disposing of waste materials. <p>Business rule:</p> This must be a positive integer entry.
           example: 2
           nullable: true
         typeOfContainers:
@@ -278,11 +278,12 @@ components:
                 properties:
                   name:
                     type: string
-                    description: 'The name of the waste type i.e. Persistant Organic Pollutant (POP). <ul> <li>Aldrin,</li> <li>Chlordane,</li> <li>Chlordecone,</li> <li>Dicofol,</li> <li>Dieldrin,</li> <li>Endrin,</li> <li>Heptachlor,</li> <li>Hexabromobiphenyl,</li> <li>Hexabromocyclododecane (HBCDD),</li> <li>Hexabromodiphenyl ether and heptabromodiphenyl ether,</li> <li>Hexachlorobenzene (HCB),</li> <li>Hexachlorobutadiene,</li> <li>Alpha hexachlorocyclohexane,</li> <li>Beta hexachlorocyclohexane, </li> <li>Lindane,</li> <li>Mirex,</li> <li>Pentachlorobenzene,</li> <li>Polychlorinated biphenyls (PCB),</li> <li>Toxaphene,</li> <li>DDT,</li> <li>Perfluorooctane sulfonic acid (PFOS) its salts and perfluorooctane sulfonyl fluorid,</li> <li>Chlordane,</li> <li>Polychlorinated dibenzo-p-dioxins (PCDD),</li> <li>Polychlorinated dibenzofurans (PCDF),</li> <li>UV-328 </li><li>Details not provided by carrier</li></ul> <p> A full list is provided in the Stockholm Convention on Persistent Organic Pollutants (POPs) which can be found here:</p> <a> https://www.pops.int/TheConvention/ThePOPs/AllPOPs/tabid/2509/Default.aspx</a> <p>See also Annex B and Annex C in the document for Restricted and Unintentional releases of chemicals respectively.</p> <p>Business Rule:</p> If wasteItem.pops.containsPops is True then wasteItem.pops.components.name must be a valid name.'
-                    example: 'Aldrin, Chlordane, Dieldrin.'
+                    description: |
+                      The name of the waste type i.e. Persistant Organic Pollutant (POP). <ul> <li>Aldrin,</li> <li>Chlordane,</li> <li>Chlordecone,</li> <li>Dicofol,</li> <li>Dieldrin,</li> <li>Endrin,</li> <li>Heptachlor,</li> <li>Hexabromobiphenyl,</li> <li>Hexabromocyclododecane (HBCDD),</li> <li>Hexabromodiphenyl ether and heptabromodiphenyl ether,</li> <li>Hexachlorobenzene (HCB),</li> <li>Hexachlorobutadiene,</li> <li>Alpha hexachlorocyclohexane,</li> <li>Beta hexachlorocyclohexane, </li> <li>Lindane,</li> <li>Mirex,</li> <li>Pentachlorobenzene,</li> <li>Polychlorinated biphenyls (PCB),</li> <li>Toxaphene,</li> <li>DDT,</li> <li>Perfluorooctane sulfonic acid (PFOS) its salts and perfluorooctane sulfonyl fluorid,</li> <li>Chlordane,</li> <li>Polychlorinated dibenzo-p-dioxins (PCDD),</li> <li>Polychlorinated dibenzofurans (PCDF),</li> <li>UV-328 </li><li>Details not provided by carrier</li></ul> <p> A full list is provided in the Stockholm Convention on Persistent Organic Pollutants (POPs) which can be found here:</p> <a> https://www.pops.int/TheConvention/ThePOPs/AllPOPs/tabid/2509/Default.aspx</a> <p>See also Annex B and Annex C in the document for Restricted and Unintentional releases of chemicals respectively.</p> <p>Business Rule:</p> If wasteItem.pops.containsPops is True then wasteItem.pops.components.name must be a valid name.
+                    example: Aldrin, Chlordane, Dieldrin.
                   concentration:
                     type: number
-                    description: 'The concentration of the hazourdous waste in mg per kg, e.g. 50 mg per kg of Chlordane. <p>Business Rule:</p> If waste.pops.containsPops is True then waste.pops.components.concentration must be a valid decimal.'
+                    description: The concentration of the hazourdous waste in mg per kg, e.g. 50 mg per kg of Chlordane. <p>Business Rule:</p> If waste.pops.containsPops is True then waste.pops.components.concentration must be a valid decimal.
                     example: 100
         hazardous:
           type: object
@@ -291,7 +292,7 @@ components:
           properties:
             containsHazardous:
               type: boolean
-              description: 'Does the waste consignment contain Hazourdous waste, true or false? Hazardous waste is any waste that is potentially harmful to human health or the environment. This is a boolean value, i.e. true (contains hazourda waste) or false.'
+              description: Does the waste consignment contain Hazourdous waste, true or false? Hazardous waste is any waste that is potentially harmful to human health or the environment. This is a boolean value, i.e. true (contains hazourda waste) or false.
               example: true
             hazCodes:
               type: array
@@ -309,7 +310,7 @@ components:
                  <p>In this document refer to Table 2.1 Hazardous properties and hazard statement codes, Page 11. </p>
                 <p>Business Rule:</p>
                  If wasteItem.hazardous.containsHazardous is true then wasteItem.hazardous.hazCodes must be a vailid code. 
-              example: '5 - Wastes from petroleum refining, Natural Gas Purification and pyrolitic treatment of coal, 10 - Wastes from Thermal Processes</p>'
+              example: 5 - Wastes from petroleum refining, Natural Gas Purification and pyrolitic treatment of coal, 10 - Wastes from Thermal Processes</p>
               items:
                 type: integer
             components:
@@ -326,7 +327,7 @@ components:
                     example: lead, mercury
                   concentration:
                     type: number
-                    description: 'The concentration of the hazardous material in milligrams per kilo, e.g. 30mg per kg. <p>Business Rule:</p> Must be a numeric value.
+                    description: The concentration of the hazardous material in milligrams per kilo, e.g. 30mg per kg. <p>Business Rule:</p> Must be a numeric value.
                     example: 50
         disposalOrRecoveryCodes:
           type: array
@@ -348,7 +349,7 @@ components:
             <p>All registrations begin with CBD, followed by:
             L = Lower tier
             U = Upper tier
-            This is then followed by 6 digits.' </p>
+            This is then followed by 6 digits. </p>
             <p><font color="green"><b>Scotland (SEPA)</b></font></p> Typically starts with WCR
             followed by numbers and potentially letters according to the Scottish Environment Protection Agency (SEPA).</p>  
             Current format – WCR/R/1234567
@@ -358,7 +359,7 @@ components:
             include a prefix like ROC followed by UT (Upper Tier) or LT (Lower Tier) and then numbers.<p></p>
             ROC UT ####
             ROC LT ####
-          example: 'England - CBDL123456, CBDU123456, Scotland - WCR/R/522048, Northern Ireland - ROC UT 36, ROC LT 5432'
+          example: England - CBDL123456, CBDU123456, Scotland - WCR/R/522048, Northern Ireland - ROC UT 36, ROC LT 5432
         reasonForNoRegistrationNumber:
           type: string
           description: |
@@ -385,7 +386,7 @@ components:
         vehicleRegistration:
           type: string
           maxLength: 10
-          description: 'This is the carrier''s vehicle registration number. <p>Business Rule:</p> If carrier.meansOfTransport is “Road” then carrier.vehicleRegistration is required. If carrier.meansOfTransport is not “Road” then carrier.vehicleRegistration is not applicable.'
+          description: This is the carrier''s vehicle registration number. <p>Business Rule:</p> If carrier.meansOfTransport is “Road” then carrier.vehicleRegistration is required. If carrier.meansOfTransport is not “Road” then carrier.vehicleRegistration is not applicable.
           example: RNT 493
         meansOfTransport:
           type: string
@@ -429,7 +430,7 @@ components:
             <p>All registrations begin with CBD, followed by:
             L = Lower tier
             U = Upper tier
-            This is then followed by 6 digits.' </p>
+            This is then followed by 6 digits. </p>
             <p><font color="green"><b>Scotland (SEPA)</b></font></p> Typically starts with WCR
             followed by numbers and potentially letters according to the Scottish Environment Protection Agency (SEPA).</p>  
             Current format – WCR/R/1234567
@@ -439,7 +440,7 @@ components:
             include a prefix like ROC followed by UT (Upper Tier) or LT (Lower Tier) and then numbers.<p></p>
             ROC UT ####
             ROC LT ####
-          example: 'England - ''CBDL123456, CBDU123456, Scotland - WCR/R/522048, Northern Ireland - ROC UT 36, ROC LT 5432'''
+          example: England - CBDL123456, CBDU123456, Scotland - WCR/R/522048, Northern Ireland - ROC UT 36, ROC LT 5432
     receiver:
       type: object
       required:
@@ -464,13 +465,13 @@ components:
             properties:
               authorisationNumber:
                 type: string
-                description: 'This is the site''s authorisation (permit or exemption) number that allows it to accept waste for intended recovery and disposal operation. <p>Possible values:</p> England - EPR/AB1234CD, NRW - AB309NRW, AB3190ZZ <p>Current format – PPC/A/1234567, WML/L/1234567</p> <p>Previous formats – PPC/A/SEPA2021-1234, PPC/W/1234567, PPC/N/1234567, PPC/E/1234567, WML/L/SEPA2021-1234, WML/W/1234567, WML/E/1234567, WML/N/1234567</p> <p>Proposed format under new regulations - EAS/P/xxxxxx (xxxxxx being actual numbers). Please note that part of the regulations came in force in June 25 and the remaining activities will come in force in Nov 25. </p>'
-                example: 'PPC/A/1234567, WML/L/1234567'
+                description: This is the site''s authorisation (permit or exemption) number that allows it to accept waste for intended recovery and disposal operation. <p>Possible values:</p> England - EPR/AB1234CD, NRW - AB309NRW, AB3190ZZ <p>Current format – PPC/A/1234567, WML/L/1234567</p> <p>Previous formats – PPC/A/SEPA2021-1234, PPC/W/1234567, PPC/N/1234567, PPC/E/1234567, WML/L/SEPA2021-1234, WML/W/1234567, WML/E/1234567 WML/N/1234567</p> <p>Proposed format under new regulations - EAS/P/xxxxxx (xxxxxx being actual numbers). Please note that part of the regulations came in force in June 25 and the remaining activities will come in force in Nov 25. </p>
+                example: PPC/A/1234567, WML/L/1234567
               regulatoryPositionStatement:
                 type: array
                 items:
                   type: integer
-                description: 'A regulatory position statement (RPS) is issued when the Regulator (EA, SEPA, NIEA, NRW), doesn''t require you to have a permit to carry out certain activities that they regulate. The statement will explain which activities you do not require a permit for. This must be a positive integer. <p>Business Rule:</p> Must be a positive integer.'
+                description: A regulatory position statement (RPS) is issued when the Regulator (EA, SEPA, NIEA, NRW), doesn''t require you to have a permit to carry out certain activities that they regulate. The statement will explain which activities you do not require a permit for. This must be a positive integer. <p>Business Rule:</p> Must be a positive integer.
                 example: 343
     receipt:
       type: object
@@ -512,15 +513,15 @@ components:
             - Grams
             - Kilograms
             - Tonnes
-          description: 'Unit of measurement in which the waste is being accepted. <p>Business Rule:</p> <p>Must be “Grams”, “Kilograms” or “Tonnes”. </p>'
+          description: Unit of measurement in which the waste is being accepted. <p>Business Rule:</p> <p>Must be “Grams”, “Kilograms” or “Tonnes”. </p>
           example: Tonnes
         amount:
           type: number
-          description: 'Total weight of the waste in a unit specified - Grams - Kilograms - Tonnes <p>Business Rule:</p> Must be a positive number. <p><font color="red"><b>Note-</b></font></p> <p> Weight in terms of the Waste Item is the total weight of the waste being received.</p> <p> Weight in terms of the DisposalRecoveryCode is the total weight of the waste being disposed of or recovered for final treatment.</p>'
+          description: Total weight of the waste in a unit specified - Grams - Kilograms - Tonnes <p>Business Rule:</p> Must be a positive number. <p><font color="red"><b>Note-</b></font></p> <p> Weight in terms of the Waste Item is the total weight of the waste being received.</p> <p> Weight in terms of the DisposalRecoveryCode is the total weight of the waste being disposed of or recovered for final treatment.</p>
           example: 150
         isEstimate:
           type: boolean
-          description: 'Specifies whether the weight of waste is estimated. This a boolean value, i.e. true for estimated or false for not estimated.'
+          description: Specifies whether the weight of waste is estimated. This a boolean value, i.e. true for estimated or false for not estimated.
           example: true
     validationResult:
       type: object
@@ -545,10 +546,10 @@ components:
         fullAddress:
           type: string
           description: The business location address of the carrier or broker/dealer.
-          example: '26a Oil Drum Lane, London, UK'
+          example: 26a Oil Drum Lane, London, UK
         postCode:
           type: string
-          description: 'A valid postcode must be included. <p><font color="green"><b>Note-</b></font></p> Carriers, Brokers/Dealers accept UK and Irish post codes. 
+          description: A valid postcode must be included. <p><font color="green"><b>Note-</b></font></p> Carriers, Brokers/Dealers accept UK and Irish post codes. 
           example: W12 7ZL
     receiptAddress:
       type: object
@@ -596,4 +597,5 @@ components:
                     type: array
                     items:
                       $ref: "#/components/schemas/validationResult"
-2
+
+                      
