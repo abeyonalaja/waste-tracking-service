@@ -97,6 +97,8 @@ components:
               - dateTimeReceived
               - carrier
               - wasteItems
+              - receiver
+              - receipt
             properties:
               organisationApiId:
                 type: string
@@ -186,8 +188,6 @@ components:
         - typeOfContainers
         - numberOfContainers
         - weight
-        - receiver
-        - receipt
       properties:
         ewcCodes:
           type: array
