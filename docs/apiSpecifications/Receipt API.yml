@@ -93,15 +93,16 @@ components:
           schema:
             type: object
             required:
-              - organisationId
+              - organisationApiId
               - dateTimeReceived
               - carrier
               - wasteItems
             properties:
-              organisationId:
+              organisationApiId:
                 type: string
                 format: uuid
-                description: This is the unique identifier of the receiving organisation found within the Waste Tracking Service.
+                description: This is the unique 16 byte identifier of the receiving organisation produced by the registration process found within the Waste Tracking Service.
+                example: ba6eb330-4f7f-11eb-a2fb-67c34e9ac07cg
               dateTimeReceived:
                 type: string
                 format: date-time
@@ -287,7 +288,7 @@ components:
                   name:
                     type: string
                     description: |
-                      The name of the waste type i.e. Persistant Organic Pollutant (POP). <ul> <li>Aldrin,</li> <li>Chlordane,</li> <li>Chlordecone,</li> <li>Dicofol,</li> <li>Dieldrin,</li> <li>Endrin,</li> <li>Heptachlor,</li> <li>Hexabromobiphenyl,</li> <li>Hexabromocyclododecane (HBCDD),</li> <li>Hexabromodiphenyl ether and heptabromodiphenyl ether,</li> <li>Hexachlorobenzene (HCB),</li> <li>Hexachlorobutadiene,</li> <li>Alpha hexachlorocyclohexane,</li> <li>Beta hexachlorocyclohexane, </li> <li>Lindane,</li> <li>Mirex,</li> <li>Pentachlorobenzene,</li> <li>Polychlorinated biphenyls (PCB),</li> <li>Toxaphene,</li> <li>DDT,</li> <li>Perfluorooctane sulfonic acid (PFOS) its salts and perfluorooctane sulfonyl fluorid,</li> <li>Chlordane,</li> <li>Polychlorinated dibenzo-p-dioxins (PCDD),</li> <li>Polychlorinated dibenzofurans (PCDF),</li> <li>UV-328 </li><li>Details not provided by carrier</li></ul> <p> A full list is provided in the Stockholm Convention on Persistent Organic Pollutants (POPs) which can be found here:</p> <a> https://www.pops.int/TheConvention/ThePOPs/AllPOPs/tabid/2509/Default.aspx</a> <p>See also Annex B and Annex C in this document for Restricted and Unintentional releases of chemicals respectively.</p> 
+                      The name of the POP e.g.  Persistant Organic Pollutant (POP). <ul> <li>Aldrin,</li> <li>Chlordane,</li> <li>Chlordecone,</li> <li>Dicofol,</li> <li>Dieldrin,</li> <li>Endrin,</li> <li>Heptachlor,</li> <li>Hexabromobiphenyl,</li> <li>Hexabromocyclododecane (HBCDD),</li> <li>Hexabromodiphenyl ether and heptabromodiphenyl ether,</li> <li>Hexachlorobenzene (HCB),</li> <li>Hexachlorobutadiene,</li> <li>Alpha hexachlorocyclohexane,</li> <li>Beta hexachlorocyclohexane, </li> <li>Lindane,</li> <li>Mirex,</li> <li>Pentachlorobenzene,</li> <li>Polychlorinated biphenyls (PCB),</li> <li>Toxaphene,</li> <li>DDT,</li> <li>Perfluorooctane sulfonic acid (PFOS) its salts and perfluorooctane sulfonyl fluorid,</li> <li>Chlordane,</li> <li>Polychlorinated dibenzo-p-dioxins (PCDD),</li> <li>Polychlorinated dibenzofurans (PCDF),</li> <li>UV-328 </li><li>Details not provided by carrier</li></ul> <p> A full list is provided in the Stockholm Convention on Persistent Organic Pollutants (POPs) which can be found here:</p> <a> https://www.pops.int/TheConvention/ThePOPs/AllPOPs/tabid/2509/Default.aspx</a> <p>See also Annex B and Annex C in this document for Restricted and Unintentional releases of chemicals respectively.</p> 
                         <p><font color="green"><b>Business Rule:</b></font></p> 
                         If wasteItem.pops.containsPops is True then wasteItem.pops.components.name must be a valid name.
                     example: Aldrin, Chlordane, Dieldrin.
@@ -588,6 +589,7 @@ components:
           description: A valid postcode must be included. <p><b>Note- </b></p> <p>Carriers, Brokers/Dealers accept UK post codes. Receivers accept only UK post codes.</p> 
             <p><font color="green"><b>Business Rule:</b></font></p> 
             Must be in specified receiptAddress.postCode format.
+          example: W12 7ZL
   responses:
     "400":
       description: Input was not in the correct format.
