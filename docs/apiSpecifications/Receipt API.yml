@@ -183,12 +183,16 @@ components:
         - ewcCodes
         - wasteDescription
         - physicalForm
-        - numberOfContainers
         - typeOfContainers
+        - numberOfContainers
         - weight
+        - receiver
+        - receipt
       properties:
         ewcCodes:
           type: array
+          items:
+            type: string
           maxItems: 5
           description: |
             An EWC code is a six digit code listed in the European Waste Catalogue (EWC) and the List of Wastes Regulations 2005 for the UK.  
@@ -205,8 +209,6 @@ components:
               <p><font color="green"><b>Business Rule:</b></font></p> 
               Must be six digits (no spaces) and in the official wasteItem.ewcCode EWC catalog EUR-Lex. 
           example: 200108 biodegradable kitchen and canteen waste, 150109 textile packaging
-          items:
-            type: string
         wasteDescription:
           type: string
           description: A detailed description of a specific waste material, including its physical characteristics, composition and any potential hazards associated with it. It''s essentially a classification of the waste that helps determine how it should be managed and disposed of safely.
@@ -227,11 +229,11 @@ components:
         numberOfContainers:
           type: integer
           minimum: 0
+          nullable: true
           description: Number of containers for storing, transporting and disposing of waste materials. 
             <p><font color="green"><b>Business Rule:</b></font></p> 
             This must be a positive integer entry.
           example: 2
-          nullable: true
         typeOfContainers:
           type: string
           nullable: true
@@ -422,6 +424,8 @@ components:
           example: Rail
     brokerOrDealer:
       type: object
+      required:
+        - organisationName
       properties:
         organisationName:
           type: string
@@ -482,7 +486,7 @@ components:
             properties:
               authorisationNumber:
                 type: string
-                description: This is the site''s authorisation (permit or exemption) number that allows it to accept waste for intended recovery and disposal operation. <p>Possible values:</p> England - EPR/AB1234CD, NRW - AB309NRW, AB3190ZZ <p>Current format – PPC/A/1234567, WML/L/1234567</p> <p>Previous formats – PPC/A/SEPA2021-1234, PPC/W/1234567, PPC/N/1234567, PPC/E/1234567, WML/L/SEPA2021-1234, WML/W/1234567, WML/E/1234567 WML/N/1234567</p> <p>Proposed format under new regulations - EAS/P/xxxxxx (xxxxxx being actual numbers). Please note that part of the regulations came in force in June 25 and the remaining activities will come in force in Nov 25. </p>
+                description: This is the site's authorisation (permit or exemption) number that allows it to accept waste for intended recovery and disposal operation. <p>Possible values:</p> England - EPR/AB1234CD, NRW - AB309NRW, AB3190ZZ <p>Current format – PPC/A/1234567, WML/L/1234567</p> <p>Previous formats – PPC/A/SEPA2021-1234, PPC/W/1234567, PPC/N/1234567, PPC/E/1234567, WML/L/SEPA2021-1234, WML/W/1234567, WML/E/1234567 WML/N/1234567</p> <p>Proposed format under new regulations - EAS/P/xxxxxx (xxxxxx being actual numbers). Please note that part of the regulations came in force in June 25 and the remaining activities will come in force in Nov 25. </p>
                 example: PPC/A/1234567, WML/L/1234567
               regulatoryPositionStatement:
                 type: array
@@ -623,4 +627,3 @@ components:
                     type: array
                     items:
                       $ref: "#/components/schemas/validationResult"
-
