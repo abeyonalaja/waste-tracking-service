@@ -130,7 +130,7 @@ components:
                 example: Carrier did not provide documentation
               yourUniqueReference:
                 type: string
-                description: 'This could be a unique weighbridge ticket number, waste transfer note number etc.'
+                description: This could be a unique weighbridge ticket number, waste transfer note number etc.
                 example: wTBrdgAA020
               otherReferencesForMovement:
                 type: array
@@ -623,3 +623,4 @@ components:
                     type: array
                     items:
                       $ref: "#/components/schemas/validationResult"
+
