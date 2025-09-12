@@ -19,7 +19,7 @@ The following draft specifications are all published on the Swagger API hub:
 [![image](defra-spec.png)](defra-spec.png)
 
 ##API Change Log
-The following pages lists all of the changes to the API specification since it was first published:
+The following page lists all of the changes to the API specification since it was first published:
 
 - [receipt of waste API change log](https://github.com/DEFRA/waste-tracking-service/wiki/Waste-Tracking-Service-API-Changelog)
 
