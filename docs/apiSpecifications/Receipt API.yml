@@ -147,7 +147,7 @@ components:
                     label:
                       type: string
                       minLength: 1
-                      description: The type/label of the reference (e.g. 'PO Number', 'Waste Ticket', 'Haulier Note')
+                      description: The type/label of the reference (e.g., 'PO Number', 'Waste Ticket', 'Haulier Note')
                       example: PO Number
                     reference:
                       type: string
@@ -646,5 +646,6 @@ components:
                     type: array
                     items:
                       $ref: "#/components/schemas/validationResult"
+
 
 
