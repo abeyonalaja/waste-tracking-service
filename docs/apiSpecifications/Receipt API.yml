@@ -123,7 +123,7 @@ components:
                   Full code: CJTILE/A0001
               reasonForNoConsignmentCode:
                 type: string
-                enum: 
+                enum:
                   [
                     "Non-Haz Waste Transfer",
                     "Carrier did not provide documentation",
@@ -632,6 +632,7 @@ components:
                     type: array
                     items:
                       $ref: "#/components/schemas/validationResult"
+
 
 
 
