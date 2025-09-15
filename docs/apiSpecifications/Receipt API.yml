@@ -86,7 +86,7 @@ paths:
 components:
   requestBodies:
     receiveMovementRequest:
-      description: Details of the waste movement to be created. The mandatory paramaters to be included in the API call are the <b>organisationId, dateTimeReceived, carrier and wasteItem</b>.
+      description: Details of the waste movement to be created. The mandatory paramaters to be included in the API call are the <b>organisationApiId, dateTimeReceived, carrier and wasteItem</b>.
       required: true
       content:
         application/json:
@@ -654,6 +654,7 @@ components:
                     type: array
                     items:
                       $ref: "#/components/schemas/validationResult"
+
 
 
 
