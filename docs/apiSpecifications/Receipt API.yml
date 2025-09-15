@@ -218,7 +218,7 @@ components:
           example: Basic mixed construction and demolition waste, this includes recyclable house bricks, gypsum plaster and slates.
         physicalForm:
           type: string
-          enum: ["Gas", "Liquid", "Solid", "Powder", "Sludge",  "Mixed"]
+          enum: [Gas, Liquid, Solid, Powder, Sludge,  Mixed]
           description: This is the form of the waste. This could be a gas, liquid, solid, powder, sludge or mixed. 
             <p><font color="green"><b>Business Rule:</b></font></p> 
             Must be “Gas”, “Liquid”, “Solid”, Powder”, “Sludge” or “Mixed”.
@@ -405,11 +405,11 @@ components:
           description: This is the carrier''s vehicle registration number. 
             <p><font color="green"><b>Business Rule:</b></font></p> 
             If carrier.meansOfTransport is “Road” then carrier.vehicleRegistration is required. 
-            If carrier.meansOfTransport is not “Road” then carrier.vehicleRegistration is not required.
+            If carrier.meansOfTransport is not “Road” then carrier.vehicleRegistration is not applicable.
           example: RNT 493
         meansOfTransport:
           type: string
-          enum: [Road, Rail, Air, Sea, Inland Waterway, Pipe, Other]
+          enum: [Road, Rail, Air, Sea, "Inland Waterway", Pipe, Other]
           description: |
             This describes how the waste is transported (road, rail, air, sea, inland waterway, other)
             <p><font color="green"><b>Business Rule:</b></font></p> 
@@ -528,7 +528,7 @@ components:
               <p><font color="green"><b>Business Rule:</b></font></p> 
               If disposalOrRecoveryCode.code entered, then it should be in the disposalOrRecoveryCode.code listed in EUR-Lex. 
           example: |
-            "code" "R1"
+            "code": "R1"
         weight:
           $ref: "#/components/schemas/weight"
     weight:
@@ -561,8 +561,8 @@ components:
         key:
           type: string
           example:
-            "statusCode": "201"
-            "globalMovementId": 25HRA0B2
+            "statusCode": 201,
+            "globalMovementId": "25HRA0B2"
         errorType:
           type: string
           example: NotProvided
@@ -632,10 +632,3 @@ components:
                     type: array
                     items:
                       $ref: "#/components/schemas/validationResult"
-
-
-
-
-
-
-
