@@ -2,12 +2,9 @@
 
 | Topic                 | Question                                             | Answer                                                                                                                                                           |
 | --------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |          
-|When to update data with PUT?
-|Do we have to update the receipt or is the initial receipt the only required one? For example, after processing on the receiving site “general waste” on the initial receipt, but then grading process to two materials, general waste and wood, each with a weight. 
-|There are a few other scenarios similar to this, such as the disposal or recovery codes, where that will not be known at the point of receiving the waste. However, it should later be identified and the policy expectation is that this should then be submitted within 2 working days of receiving the waste.|
-|Impact on RoPA (GDPR)
-|An email address is a form of personal information. Do I assume this falls under our RoPA obligation for documenting also?
-|Yes, under GDPR legislation, you would need to update your Record of Processing Activities (RoPA) to note that email addresses will be stored within the Defra DWT service.|
+|When to update data with PUT?|Do we have to update the receipt or is the initial receipt the only required one? For example, after processing on the receiving site “general waste” on the initial receipt, but then grading process to two materials, general waste and wood, each with a weight. |There are a few other scenarios similar to this, such as the disposal or recovery codes, where that will not be known at the point of receiving the waste. However, it should later be identified and the policy expectation is that this should then be submitted within 2 working days of receiving the waste.|
+
+|Impact on RoPA (GDPR)|An email address is a form of personal information. Do I assume this falls under our RoPA obligation for documenting also?|Yes, under GDPR legislation, you would need to update your Record of Processing Activities (RoPA) to note that email addresses will be stored within the Defra DWT service.|
 
 |Carriers based overseas
 |How do we record carriers that are registered overseas i.e. not in UK or Ireland? It could refer to a third party courier which is a foreign company that's been contracted to remove the material. That does happen quite frequently.
