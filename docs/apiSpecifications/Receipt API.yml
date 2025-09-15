@@ -123,10 +123,12 @@ components:
                   Full code: CJTILE/A0001
               reasonForNoConsignmentCode:
                 type: string
-                enum:
-                  - Non-Haz Waste Transfer
-                  - Carrier did not provide documentation
-                  - Household Waste Recycling Centre Receipt
+                enum: 
+                  [
+                  "Non-Haz Waste Transfer",
+                  "Carrier did not provide documentation",
+                  "Household Waste Recycling Centre Receipt"
+                  ]
                 description: Reason provided for not having a consignment code. 
                   <p><font color="green"><b>Business Rule:</b></font></p> 
                   If any waste.ewcCodes provided are considered hazardous and receiveMovementRequest.hazardousWasteConsignmentCode is not provided a receiveMovementRequest.reasonForNoConsignmentCode is required.
@@ -217,12 +219,14 @@ components:
         physicalForm:
           type: string
           enum:
-            - Gas
-            - Liquid
-            - Solid
-            - Powder
-            - Sludge
-            - Mixed
+            [
+             "Gas",
+             "Liquid",
+             "Solid",
+             "Powder",
+             "Sludge",
+             "Mixed"
+            ]
           description: This is the form of the waste. This could be a gas, liquid, solid, powder, sludge or mixed. 
             <p><font color="green"><b>Business Rule:</b></font></p> 
             Must be “Gas”, “Liquid”, “Solid”, Powder”, “Sludge” or “Mixed”.
@@ -414,13 +418,15 @@ components:
         meansOfTransport:
           type: string
           enum:
-            - Road
-            - Rail
-            - Air
-            - Sea
-            - Inland Waterway
-            - Pipe
-            - Other
+            [
+             "Road",
+             "Rail",
+             "Air",
+             "Sea",
+             "Inland Waterway",
+             "Pipe",
+             "Other"
+            ]
           description: |
             This describes how the waste is transported (road, rail, air, sea, inland waterway, other)
             <p><font color="green"><b>Business Rule:</b></font></p> 
@@ -552,9 +558,11 @@ components:
         metric:
           type: string
           enum:
-            - Grams
-            - Kilograms
-            - Tonnes
+            [
+              "Grams",
+              "Kilograms",
+              "Tonnes"
+            ]
           description: Unit of measurement in which the waste is being accepted. 
             <p><font color="green"><b>Business Rule:</b></font></p> 
              Must be “Grams”, “Kilograms” or “Tonnes”
@@ -646,6 +654,7 @@ components:
                     type: array
                     items:
                       $ref: "#/components/schemas/validationResult"
+
 
 
 
