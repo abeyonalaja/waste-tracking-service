@@ -203,7 +203,6 @@ components:
             <a>https://eu-west-1.protection.sophos.com/?d=europa.eu&u=aHR0cHM6Ly9ldXItbGV4LmV1cm9wYS5ldS9lbGkvZGVjLzIwMDAvNTMyL29qL2VuZw==&i=NjU1NTQ1ZDA2MjBmMmMyMzA0ZGU5OWE0&t=dndtSlJYTVNkNERFS2d2UnNFNngwalE3V0tRQjkwT1B5RU1xMXZZYjRaQT0=&h=f9ea9cc09d6c410680eff4844744d130&s=AVNPUEhUT0NFTkNSWVBUSVbCUuLW1BJQM24jxeEUkI7MFw6mlbrW6RR5p-gchkg9NA</a>
             <p><p><font color="red"><b>Below is the list of Waste Regulations 2005 for the UK (specifically England):</b></font></p>
             <p><a>https://www.legislation.gov.uk/uksi/2005/895/schedule/1/made</a></p>
-
             <p>More non-official information on the EWC codes can also be found in the European Waste Catalogue produced by CSG below:</p>
               <a>https://www.csg.co.uk/resources/ewc-codes#:~:text=This%20European%20Waste%20Catalogue%20checker%20helps%20you%20find, either%20by%20waste%20stream%20or%20by%20list%20view</a>.
               <p><font color="green"><b>Business Rule:</b></font></p> 
@@ -229,7 +228,7 @@ components:
         numberOfContainers:
           type: integer
           minimum: 0
-          nullable: true
+          nullable: false
           description: Number of containers for storing, transporting and disposing of waste materials. 
             <p><font color="green"><b>Business Rule:</b></font></p> 
             This must be a positive integer entry.
@@ -273,7 +272,6 @@ components:
               description: |
                 Does the waste consignment contain POPs? This should be a boolean value, i.e. true or false.
                 Persistent organic pollutants (POPs) are chemical substances that do not break down in the environment. They are a danger thuman health and the environment. POPs can be present in hazardous and non-hazardous waste.
-
                 <p><a>https://dsposal.uk/your/waste-thesaurus?keyword=Sludge&type=low</a></p>
                 <p>More information on POPs can be found here:</p>
                 <a>https://www.pops.int/TheConvention/ThePOPs/AllPOPs/tabid/2509/Default.aspx</a>
@@ -314,8 +312,7 @@ components:
               description: |
                 Hazardous waste codes are a list of codes that identify the hazardous waste and the potential risks associated with waste materials, guiding their safe transportation and handling protocols. Common types could include codes, HP1 - HP15. 
                 To find a code for a potential hazourdous waste item, use the following waste thesaurus:
-                <p><a>https://dsposal.uk/your/waste-thesaurus?keyword=Petrol+Containing+Acidum+Salis&type=low</a></p> 
-                
+                <p><a>https://dsposal.uk/your/waste-thesaurus?keyword=Petrol+Containing+Acidum+Salis&type=low</a></p>                
                  <p><b><font color="red">The official EWC code legislation decision EUR-Lex from the European Union 2000/532 is contained here in Annex III:</font></b><p>
                 <a>https://eu-west-1.protection.sophos.com/?d=europa.eu&u=aHR0cHM6Ly9ldXItbGV4LmV1cm9wYS5ldS9lbGkvZGVjLzIwMDAvNTMyL29qL2VuZw==&i=NjU1NTQ1ZDA2MjBmMmMyMzA0ZGU5OWE0&t=dndtSlJYTVNkNERFS2d2UnNFNngwalE3V0tRQjkwT1B5RU1xMXZZYjRaQT0=&h=f9ea9cc09d6c410680eff4844744d130&s=AVNPUEhUT0NFTkNSWVBUSVbCUuLW1BJQM24jxeEUkI7MFw6mlbrW6RR5p-gchkg9NA</a>
                 <p><font color="red">Below you can find the hazcodes (HP1 - HP15) for each of the common waste types. In this document refer to Table 2.1 Hazardous properties and hazard statement codes, Page 11.</font></p>
@@ -361,25 +358,18 @@ components:
           description: |
             <p>A waste carrier registration number is a legal requirement for businesses that transport, buy, sell or dispose of waste. This license ensures that waste is handled and transported in a responsible and environmentally friendly manner.</p>
             <p>Home Nations Codes:</p>
-            
             <p><font color="blue"><b>Wales:</b></font></p>
                 CBDL999999, CBDU999999
-                <p>i.e. CBD<font color="red"><b>U</b></font>999999 (Upper Tier) or CBD<font color="red"><b>L</b></font>999999 (Lower Tier), where "CBD" stands for "Carrier, Broker, Dealer"</p>
-                
-                
+                <p>i.e. CBD<font color="red"><b>U</b></font>999999 (Upper Tier) or CBD<font color="red"><b>L</b></font>999999 (Lower Tier), where "CBD" stands for "Carrier, Broker, Dealer"</p>       
             <p><font color="blue"><b>England:</b></font></p>
                 CBDL999999, CBDU999999
-                 <p>i.e. CBD<font color="red"><b>U</b></font>999999 (Upper Tier) or CBD<font color="red"><b>L</b></font>999999 (Lower Tier), where "CBD" stands for "Carrier, Broker, Dealer"</p>
-                
-                
+                 <p>i.e. CBD<font color="red"><b>U</b></font>999999 (Upper Tier) or CBD<font color="red"><b>L</b></font>999999 (Lower Tier), where "CBD" stands for "Carrier, Broker, Dealer"</p>      
             <p><font color="blue"><b>Scotland:</b></font></p>
                 WCR/R/9999999, SCO/999999, SEA/999999, SNO/999999, SWE/999999, WCR/999999
                 <p>Typically starts with WCR followed by numbers and potentially letters according to the Scottish Environment Protection Agency (SEPA).</p>  
                <p>Current format – WCR/R/1234567</p>
                <p>Previous formats – SCO/123456, SEA/123456, SNO/123456, SWE/123456, WCR/123456</p>
                <p>Proposed format under new regulations (from April 2026) - EAS/R/xxxxxx (xxxxxx being actual numbers).</p>
-                
-                
             <p><font color="blue"><b>Northern Ireland</b></font></p>
                 ROC UT 9,ROC UT 99,ROC UT 999, ROC UT 9999,ROC UT 99999, ROC LT 9, ROC LT 99, ROC LT 999, ROC LT 9999, ROC LT 99999<p></p><p></p>
                 Include a prefix like ROC followed by UT (Upper Tier) or LT (Lower Tier) and then numbers. Note the spaces.<p></p>
@@ -388,7 +378,6 @@ components:
                 <p></p><p></p>
                 <p><b>General Format:</b> 9 is a digit 0-9</p>
           example: England - CBDL123456, CBDU123456, Scotland - WCR/R/522048, Northern Ireland - ROC UT 36, ROC LT 5432
-      
         reasonForNoRegistrationNumber:
           type: string
           description: |
@@ -460,25 +449,18 @@ components:
           description: |
              <p>A waste carrier registration number is a legal requirement for businesses that transport, buy, sell or dispose of waste. This license ensures that waste is handled and transported in a responsible and environmentally friendly manner.</p>
             <p>Home Nations Codes:</p>
-            
             <p><font color="blue"><b>Wales:</b></font></p>
                 CBDL999999, CBDU999999
-                <p>i.e. CBD<font color="red"><b>U</b></font>999999 (Upper Tier) or CBD<font color="red"><b>L</b></font>999999 (Lower Tier), where "CBD" stands for "Carrier, Broker, Dealer"</p>
-                
-                
+                <p>i.e. CBD<font color="red"><b>U</b></font>999999 (Upper Tier) or CBD<font color="red"><b>L</b></font>999999 (Lower Tier), where "CBD" stands for "Carrier, Broker, Dealer"</p>              
             <p><font color="blue"><b>England:</b></font></p>
                 CBDL999999, CBDU999999
-                 <p>i.e. CBD<font color="red"><b>U</b></font>999999 (Upper Tier) or CBD<font color="red"><b>L</b></font>999999 (Lower Tier), where "CBD" stands for "Carrier, Broker, Dealer"</p>
-                
-                
+                 <p>i.e. CBD<font color="red"><b>U</b></font>999999 (Upper Tier) or CBD<font color="red"><b>L</b></font>999999 (Lower Tier), where "CBD" stands for "Carrier, Broker, Dealer"</p>             
             <p><font color="blue"><b>Scotland:</b></font></p>
                 WCR/R/9999999, SCO/999999, SEA/999999, SNO/999999, SWE/999999, WCR/999999
                 <p>Typically starts with WCR followed by numbers and potentially letters according to the Scottish Environment Protection Agency (SEPA).</p>  
                <p>Current format – WCR/R/1234567</p>
                <p>Previous formats – SCO/123456, SEA/123456, SNO/123456, SWE/123456, WCR/123456</p>
                <p>Proposed format under new regulations (from April 2026) - EAS/R/xxxxxx (xxxxxx being actual numbers).</p>
-                
-                
             <p><font color="blue"><b>Northern Ireland</b></font></p>
                 ROC UT 9,ROC UT 99,ROC UT 999, ROC UT 9999,ROC UT 99999, ROC LT 9, ROC LT 99, ROC LT 999, ROC LT 9999, ROC LT 99999<p></p><p></p>
                 Include a prefix like ROC followed by UT (Upper Tier) or LT (Lower Tier) and then numbers. Note the spaces.<p></p>
@@ -662,3 +644,4 @@ components:
                     type: array
                     items:
                       $ref: "#/components/schemas/validationResult"
+
