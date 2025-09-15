@@ -218,7 +218,7 @@ components:
           example: Basic mixed construction and demolition waste, this includes recyclable house bricks, gypsum plaster and slates.
         physicalForm:
           type: string
-          enum: [Gas, Liquid, Solid, Powder, Sludge,  Mixed]
+          enum: [Gas, Liquid, Solid, Powder, Sludge, Mixed]
           description: This is the form of the waste. This could be a gas, liquid, solid, powder, sludge or mixed. 
             <p><font color="green"><b>Business Rule:</b></font></p> 
             Must be “Gas”, “Liquid”, “Solid”, Powder”, “Sludge” or “Mixed”.
@@ -632,3 +632,4 @@ components:
                     type: array
                     items:
                       $ref: "#/components/schemas/validationResult"
+
