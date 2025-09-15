@@ -125,9 +125,9 @@ components:
                 type: string
                 enum: 
                   [
-                  "Non-Haz Waste Transfer",
-                  "Carrier did not provide documentation",
-                  "Household Waste Recycling Centre Receipt"
+                    "Non-Haz Waste Transfer",
+                    "Carrier did not provide documentation",
+                    "Household Waste Recycling Centre Receipt"
                   ]
                 description: Reason provided for not having a consignment code. 
                   <p><font color="green"><b>Business Rule:</b></font></p> 
@@ -218,15 +218,7 @@ components:
           example: Basic mixed construction and demolition waste, this includes recyclable house bricks, gypsum plaster and slates.
         physicalForm:
           type: string
-          enum:
-            [
-             "Gas",
-             "Liquid",
-             "Solid",
-             "Powder",
-             "Sludge",
-             "Mixed"
-            ]
+          enum: ["Gas", "Liquid", "Solid", "Powder", "Sludge",  "Mixed"]
           description: This is the form of the waste. This could be a gas, liquid, solid, powder, sludge or mixed. 
             <p><font color="green"><b>Business Rule:</b></font></p> 
             Must be “Gas”, “Liquid”, “Solid”, Powder”, “Sludge” or “Mixed”.
@@ -417,16 +409,7 @@ components:
           example: RNT 493
         meansOfTransport:
           type: string
-          enum:
-            [
-             "Road",
-             "Rail",
-             "Air",
-             "Sea",
-             "Inland Waterway",
-             "Pipe",
-             "Other"
-            ]
+          enum: [Road, Rail, Air, Sea, Inland Waterway, Pipe, Other]
           description: |
             This describes how the waste is transported (road, rail, air, sea, inland waterway, other)
             <p><font color="green"><b>Business Rule:</b></font></p> 
@@ -501,7 +484,7 @@ components:
               authorisationNumber:
                 type: string
                 description: |
-                  This is the sites authorisation (permit or exemption) number that allows it to accept waste for intended recovery and disposal operation. 
+                  This is the site's authorisation (permit or exemption) number that allows it to accept waste for intended recovery and disposal operation. 
                     <p>Home Nations Codes:</p>
                     <p><font color="blue"><b>Wales (NRW):</b></font></p>
                     XX9999XX, EPR/XX9999XX
@@ -557,12 +540,7 @@ components:
       properties:
         metric:
           type: string
-          enum:
-            [
-              "Grams",
-              "Kilograms",
-              "Tonnes"
-            ]
+          enum: [Grams, Kilograms, Tonnes]
           description: Unit of measurement in which the waste is being accepted. 
             <p><font color="green"><b>Business Rule:</b></font></p> 
              Must be “Grams”, “Kilograms” or “Tonnes”
@@ -583,8 +561,8 @@ components:
         key:
           type: string
           example:
-            statusCode: "201"
-            globalMovementId: 25HRA0B2
+            "statusCode": "201"
+            "globalMovementId": 25HRA0B2
         errorType:
           type: string
           example: NotProvided
@@ -654,6 +632,7 @@ components:
                     type: array
                     items:
                       $ref: "#/components/schemas/validationResult"
+
 
 
 
