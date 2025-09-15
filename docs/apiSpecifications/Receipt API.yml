@@ -108,9 +108,11 @@ components:
               dateTimeReceived:
                 type: string
                 format: date-time
-                description: This is the date and exact time waste was received at the site. This API uses the ISO 8601 standard for machine-readable dates and times. YYYY-MM-DD-THH:MM-SS
-                example: '2025-05-16T10:30:56'
-              hazardousWasteConsignmentCode:
+                description: |
+                  This is the date and exact time waste was received at the site. This API uses the UTC ISO 8601 and BST standards for machine-readable dates and times. <p>Key Differences:</p>
+                  UTC is the global time standard and does not observe daylight saving time.
+                  BST is UTC+1, used in the UK during daylight saving time (typically from late March to late October).
+                example: UTC - 2025-09-15T12:12:28Z, BST - 2025-09-15T13:12:28+01:00
                 type: string
                 description: Hazardous waste consignment code (If EWC is HAZ, then mandatory). The consignment note code must follow the format- XXXXXX/YYYYY. - XXXXXX is made up of 6 letters and must be followed by a forward slash / - YYYYY is a 5-character unique identifier of the users choice using letters or numbers (no spaces or symbols). <p>More information here</p> <a>https://www.gov.uk/guidance/hazardous-waste-consignment-note-supplementary-guidance#a1-consignment-note-code</a>
                   <p><font color="green"><b>Business Rule:</b></font></p> 
@@ -644,4 +646,5 @@ components:
                     type: array
                     items:
                       $ref: "#/components/schemas/validationResult"
+
 
