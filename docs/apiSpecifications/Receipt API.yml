@@ -131,10 +131,15 @@ components:
                     "Carrier did not provide documentation",
                     "Household Waste Recycling Centre Receipt"
                   ]
-                description: Reason provided for not having a consignment code. 
+                description: Reason provided for not having a consignment code. There are three reasons you can choose to provide.
+                  <ul>
+                      <li>"Non-Haz Waste Transfer"</li>
+                      <li>"Carrier did not provide documentation"</li>
+                      <li>"Household Waste Recycling Centre Receipt"</li>
+                  </ul>
                   <p><font color="green"><b>Business Rule:</b></font></p> 
                   If any waste.ewcCodes provided are considered hazardous and receiveMovementRequest.hazardousWasteConsignmentCode is not provided a receiveMovementRequest.reasonForNoConsignmentCode is required.
-                  If receiveMovementRequest.hazardousWasteConsignmentCode is provided it must be either “Non Hazardous Waste Transfer”, “Carrier did not provide documentation” or “Local Authority Receipt”. 
+                  If receiveMovementRequest.hazardousWasteConsignmentCode is provided it must be either “Non Hazardous Waste Transfer”, “Carrier did not provide documentation” or “Household Waste Recycling Centre Receipt”. 
                 example: Carrier did not provide documentation
               yourUniqueReference:
                 type: string
@@ -232,7 +237,7 @@ components:
           description: Number of containers for storing, transporting and disposing of waste materials.
             <p><font color="green"><b>Business Rule:</b></font></p>
             This must be a non-negative integer (0 or greater).
-          example: 2
+          example: 2, 3
         typeOfContainers:
           type: string
           nullable: false
@@ -349,7 +354,7 @@ components:
                     description: The concentration of the POP in mg per kg, e.g. 50 mg per kg of Chlordane.
                       <p><font color="green"><b>Business Rule:</b></font></p>
                       Optional field. If provided, must be a positive decimal number (greater than 0).
-                    example: 100
+                    example: 12.5, 9,21234, 500
               description: |
                 The list of POP components.
                 <p><font color="green"><b>Business Rules:</b></font></p>
@@ -451,7 +456,7 @@ components:
                 <p></p><p>ROC UT 9,ROC UT 99,ROC UT 999,ROC UT 9999,ROC UT 99999,  ROC LT 9, ROC LT 99, ROC LT 999, ROC LT 9999, ROC LT 99999 </p>
                 Include a prefix like ROC followed by UT (Upper Tier) or LT (Lower Tier) and then numbers. Note the spaces are not mandatory.<p></p> For example:
                 ROC UT 9999
-                ROC LT 9999<p></p><p></p>
+                ROCLT9999<p></p><p></p>
                 <p><b>General Format</b> where 9 is a digit 0-9</p>
         reasonForNoRegistrationNumber:
           type: string
@@ -531,9 +536,9 @@ components:
                <p>Previous formats – SCO/123456, SEA/123456, SNO/123456, SWE/123456, WCR/123456</p>
              <p><font color="blue"><b>Northern Ireland (NI)</b></font></p>
                 ROC UT 9,ROC UT 99,ROC UT 999, ROC UT 9999,ROC UT 99999, ROC LT 9, ROC LT 99, ROC LT 999, ROC LT 9999, ROC LT 99999<p></p><p></p>
-                Include a prefix like ROC followed by UT (Upper Tier) or LT (Lower Tier) and then numbers. Note the spaces.<p></p>
+                Include a prefix like ROC followed by UT (Upper Tier) or LT (Lower Tier) and then numbers. Note that spaces are not mandatory.<p></p>
                 ROC UT 9999
-                ROC LT 9999<p></p><p></p>
+                ROCLT9999<p></p><p></p>
                 <p><b>Note:</b> where 9 is a digit 0-9</p>
           example: England - CBDL123456, CBDU123456, Wales - CBDL124351, CBDU33435, Scotland - WCR/R/522048, Northern Ireland - ROC UT 36, ROC LT 5432
     receiver:
