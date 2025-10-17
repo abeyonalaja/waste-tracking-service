@@ -1,84 +1,85 @@
-name: Deploy Versioned Documentation
+name: docs-release
 
 on:
-  push:
-    branches:
-      - main
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Tag to deploy (e.g. v1.2.0)'
+        required: true
 
 permissions:
   contents: write
-
-concurrency:
-  group: docs-pages
-  cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Resolve version
+        id: version
+        run: |
+          if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="${{ github.event.release.tag_name }}"
+          fi
+
+          if [ -z "$VERSION" ]; then
+            echo "::error::Release version could not be determined." >&2
+            exit 1
+          fi
+
+          if ! [[ "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z\.-]+)?$ ]]; then
+            echo "::error::Version must follow semantic versioning and start with 'v'." >&2
+            exit 1
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "ref=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ steps.version.outputs.ref }}
 
-      - name: Configure Git
+      - name: Validate tag ancestry
+        run: |
+          git fetch origin main
+          if ! git merge-base --is-ancestor HEAD origin/main; then
+            echo "::error::Tags must point to commits on the main branch." >&2
+            exit 1
+          fi
+
+      - name: Configure Git Credentials
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
-      - name: Prepare cache key
-        run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
+      - name: Prime cache key
+        run: echo "cache_id=$(date --utc '+%G-%V')" >> "$GITHUB_ENV"
 
-      - name: Cache dependencies
+      - name: Cache MkDocs dependencies
         uses: actions/cache@v4
         with:
-          key: mkdocs-material-${{ env.cache_id }}
+          key: mkdocs-${{ env.cache_id }}
           path: .cache
           restore-keys: |
-            mkdocs-material-
+            mkdocs-
 
-      - name: Install dependencies
+      - name: Install MkDocs tooling
         run: pip install mkdocs-material mike
 
-      - name: Determine deployment target
-        id: target
-        run: |
-          if [[ "${{ github.event_name }}" == "release" ]]; then
-            VERSION="${GITHUB_REF#refs/tags/}"
-            ALIAS="latest"
-            SET_DEFAULT=true
-            echo "Publishing release documentation for ${VERSION}"
-          else
-            VERSION="next"
-            ALIAS="preview"
-            SET_DEFAULT=false
-            echo "Publishing preview documentation for main"
-          fi
-          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
-          echo "alias=${ALIAS}" >> "$GITHUB_OUTPUT"
-          echo "set-default=${SET_DEFAULT}" >> "$GITHUB_OUTPUT"
-
-      - name: Deploy documentation with mike
+      - name: Deploy documentation version
         env:
-          VERSION: ${{ steps.target.outputs.version }}
-          ALIAS: ${{ steps.target.outputs.alias }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          set -euo pipefail
-          echo "Deploying ${VERSION} (alias: ${ALIAS})"
-          mike deploy --push --remote origin --branch gh-pages --update-aliases "${VERSION}" "${ALIAS}"
-          mike list
-
-      - name: Update default alias
-        if: steps.target.outputs.set-default == 'true'
-        run: |
-          set -euo pipefail
-          echo "Setting default documentation to 'latest'"
+          mike deploy --push --remote origin --branch gh-pages --update-aliases "$VERSION" latest
           mike set-default --push --remote origin --branch gh-pages latest
-          mike list
+
+      - name: List published versions
+        run: mike list --remote origin --branch gh-pages
